@@ -38,9 +38,14 @@ if [ "$ARCH"="x86_64" ]; then
 #else arch
 fi
  
+echo "find $RELEASE_DIR/release -name .svn -exec rm -rf {} \;"
 find $RELEASE_DIR/release -name .svn -exec rm -rf {} \;
+
+echo "tar -czf  $RELEASE_DIR/sequoiadb.tar.gz *"
 cd $RELEASE_DIR/release
-tar -czf  $RELEASE_DIR/sequoiadb.tar.gz *
+tar -czf  sequoiadb.tar.gz *
+echo "mv sequoiadb.tar.gz $RELEASE_DIR/sequoiadb.tar.gz"
+mv sequoiadb.tar.gz $RELEASE_DIR/sequoiadb.tar.gz
 
 echo "completed make release package"
 
