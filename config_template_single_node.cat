@@ -1,2 +1,2 @@
 {"Role":2, "Host":"HostName","GroupName":"catalogueGroup","GroupID":00000001,"NodeID":00000001,"Service":[{"Type":2,"Name":"60003"},{"Type":0,"Name":"60001"},{"Type":1, "Name":"60002"}]}
-{"GroupID":00001000, "Role":0, "Version":2, "GroupName":"dataNodeGroup1", "Group":[{"Host":"HostName","NodeID":00001001,"Service":[{"Type":2,"Name":"50003"},{"Type":0,"Name":"50001"},{"Type":1, "Name":"50002"}]}]}
+{"GroupID":00001000, "Role":0, "Version":2, "GroupName":"dataNodeGroup1", "Group":[{"Host":"HostName","NodeID":00001001,"Service":[{"Type":2,"Name":"51003"},{"Type":0,"Name":"51001"},{"Type":1, "Name":"51002"}]}]}
