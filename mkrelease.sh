@@ -2,13 +2,14 @@
 echo "Begin to make release package"
 
 echo $#
-if [ $# -ne 2 ]; then
-    echo "usage:mkrelease.sh code_dir release_dir"
+if [ $# -ne 3 ]; then
+    echo "usage:mkrelease.sh code_dir release_dir tar_file_name"
     exit 0
 fi
 
 CODE_DIR=$1
 RELEASE_DIR=$2
+TAR_FILE_NAME=$3
 
 mkdir -p $RELEASE_DIR/sequoiadb/bin
 mkdir -p $RELEASE_DIR/sequoiadb/lib
@@ -45,11 +46,11 @@ cp $CODE_DIR/conf/samples/* $RELEASE_DIR/sequoiadb/conf/samples/
 echo "find $RELEASE_DIR/sequoiadb -name .svn -exec rm -rf {} \;"
 find $RELEASE_DIR/sequoiadb -name .svn -exec rm -rf {} \;
 
-echo "tar -czf  $RELEASE_DIR/sequoiadb.tar.gz sequoiadb"
+echo "tar -czf  $RELEASE_DIR/$TAR_FILE_NAME.tar.gz sequoiadb"
 cd $RELEASE_DIR/
-tar -czf  sequoiadb.tar.gz * sequoiadb
-echo "mv sequoiadb.tar.gz $RELEASE_DIR/sequoiadb.tar.gz"
-mv sequoiadb.tar.gz $RELEASE_DIR/sequoiadb.tar.gz
+tar -czf  $TAR_FILE_NAME.tar.gz * sequoiadb
+echo "mv $TAR_FILE_NAME.tar.gz $RELEASE_DIR/$TAR_FILE_NAME.tar.gz"
+mv $TAR_FILE_NAME.tar.gz $RELEASE_DIR/$TAR_FILE_NAME.tar.gz
 
 echo "completed make release package"
 
