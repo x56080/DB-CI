@@ -34,6 +34,6 @@ cp -f $DB_PATH/conf/samples/sdb.conf.data $DB_PATH/conf/local/sdb.data.conf/sdb.
 cp -f $DB_PATH/conf/samples/sdb.conf.coord $DB_PATH/conf/local/sdb.coord.conf/sdb.conf
 
 #start sequoiadb proc
-$DB_PATH/sequoiadb -c $DB_PATH/conf/local/sdb.cata.conf &
-$DB_PATH/sequoiadb -c $DB_PATH/conf/local/sdb.data.conf &
-$DB_PATH/sequoiadb -c $DB_PATH/conf/local/sdb.coord.conf &
+$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.cata.conf &
+$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.data.conf &
+$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.coord.conf &
