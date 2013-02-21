@@ -22,6 +22,7 @@ mkdir -p $DB_PATH/database/cata
 mkdir -p $DB_PATH/database/data
 mkdir -p $DB_PATH/database/log/cata
 mkdir -p $DB_PATH/database/log/data
+mkdir -p $DB_PATH/database/log/coord
 
 #copy configure file
 mkdir -p $DB_PATH/conf/local/sdb.cata.conf
