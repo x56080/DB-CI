@@ -46,7 +46,7 @@ cp $CODE_DIR/conf/samples/* $RELEASE_DIR/sequoiadb/conf/samples/
 echo "find $RELEASE_DIR/sequoiadb -name .svn -exec rm -rf {} \;"
 find $RELEASE_DIR/sequoiadb -name .svn -exec rm -rf {} \;
 
-echo "tar -czf  $RELEASE_DIR/$TAR_FILE_NAME.tar.gz sequoiadb"
+echo "tar -czf  $RELEASE_DIR/$TAR_FILE_NAME sequoiadb"
 cd $RELEASE_DIR/
 tar -czf  $TAR_FILE_NAME * sequoiadb
 

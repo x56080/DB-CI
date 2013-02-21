@@ -2,7 +2,7 @@
 
 echo "Start sequoiadb..."
 
-if [ $# -ne 1 ]; then
+if [ $# -ne 2 ]; then
     echo "usage:startDB.sh db_path"
     exit 0
 fi
@@ -13,7 +13,7 @@ TAR_FILE_NAME=$2
 #unzip tar file
 cd $DB_PATH
 rm -rf $DB_PATH/sequoiadb
-tar -xzf $TAR_FILE_NAME .
+tar -xzf $TAR_FILE_NAME
 
 DB_PATH=$DB_PATH/sequoiadb
 
