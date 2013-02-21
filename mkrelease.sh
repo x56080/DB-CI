@@ -49,8 +49,6 @@ find $RELEASE_DIR/sequoiadb -name .svn -exec rm -rf {} \;
 echo "tar -czf  $RELEASE_DIR/$TAR_FILE_NAME.tar.gz sequoiadb"
 cd $RELEASE_DIR/
 tar -czf  $TAR_FILE_NAME.tar.gz * sequoiadb
-echo "mv $TAR_FILE_NAME.tar.gz $RELEASE_DIR/$TAR_FILE_NAME.tar.gz"
-mv $TAR_FILE_NAME.tar.gz $RELEASE_DIR/$TAR_FILE_NAME.tar.gz
 
 echo "completed make release package"
 
