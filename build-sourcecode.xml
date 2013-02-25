@@ -1,12 +1,6 @@
-<project name="build-all" default="main">
-	<target name="clean" depends="">
-		<echo message="Begin to clean environments" />
-		<delete dir="${WORKSPACE}/release/" />
-		<delete dir="${WORKSPACE}/reports" />
-		<echo message="clean environments completed." />
-	</target>
+<project name="build-srccode" default="main">
 
-	<target name="compile-src" depends="clean">
+	<target name="compile-src" depends="">
 		<echo message="Begin to compile source code..." />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb">
 			<arg value="--all" />
@@ -18,7 +12,7 @@
 
 	<target name="mk-release" depends="compile-src">
 		<echo message="Begin to make relase package ..." />
-		<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
+		<property name="RELEASE_DIR" value="${WORKSPACE}/${release.dirname}" />
 		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
 
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
@@ -74,7 +68,7 @@
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
 
-		<tar destfile="${RELEASE_DIR}/${TAR_FILE_NAME}" basedir="${RELEASE_DIR}/" includes="sequoiadb" compression="gzip"/>
+		<tar destfile="${depoly.path}/${install.packege.name}" basedir="${RELEASE_DIR}/" includes="sequoiadb" compression="gzip"/>
 
 		<echo message="Make relase package completed." />
 	</target>

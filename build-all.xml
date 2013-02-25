@@ -1,17 +1,38 @@
 <project name="build-all" default="main">
-	<target name="main" depends="">
+	<property name="deploy.path" value="${WORKSPACE}/deploy" />
+	<property name="release.dirname" value="/release" />
+	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases" />
+	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci"/>
+
+	<target name="clean" depends="">
+		<echo message="Begin to clean environments" />
+		<delete dir="${deploy.path}/" />
+		<delete dir="${WORKSPACE}/${release.dirname}" />
+		<delete dir="${build.testcases}/build" />
+		<echo message="clean environments completed." />
+	</target>
+
+	<target name="main" depends="clean">
+		<mkdir dir="${deploy.path}" />
+
 		<echo message="Begin to compile source code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="mk-release">
 			<property name="WORKSPACE" value="${WORKSPACE}" />
-			<property name="TAR_FILE_NAME" value="${TAR_FILE_NAME}" />
+			<property name="install.packege.name" value="${tar.file.name}" />
+			<property name="depoly.path" value="${deploy.path}" />
+			<property name="release.dirname" value="${release.dirname}" />
 		</ant>
 		<echo message="Compile source code completed." />
 
 		<echo message="Begin to compile test code..." />
-		<ant antfile="${WORKSPACE}/testcases/hlt/junit_testcases/build.xml" target="compile">
-			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases" />
+		<ant antfile="${WORKSPACE}/testcases/hlt/junit_testcases/src/build.xml" target="compile">
+			<property name="build.testcases" value="${build.testcases}" />
+			<property name="depoly.path" value="${depoly.path}" />
 		</ant>
 		<echo message="Compile source test completed." />
+
+		<copy file="${ci.script.path}/ci.properties" todir="depoly.path"/>
+		<copy file="${ci.script.path}/install-singlehost.xml" todir="depoly.path"/>
 	</target>
 
 </project>
