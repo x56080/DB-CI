@@ -22,7 +22,7 @@
 		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="mk-release">
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="install.packege.name" value="${tar.file.name}" />
-			<property name="depoly.path" value="${deploy.path}" />
+			<property name="deploy.path" value="${deploy.path}" />
 			<property name="release.dirname" value="${release.dirname}" />
 		</ant>
 		<echo message="Compile source code completed." />
@@ -30,12 +30,12 @@
 		<echo message="Begin to compile test code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases/src/build.xml" target="compile-test">
 			<property name="build.testcases" value="${build.testcases}" />
-			<property name="depoly.path" value="${deploy.path}" />
+			<property name="deploy.path" value="${deploy.path}" />
 		</ant>
 		<echo message="Compile source test completed." />
 
-		<copy file="${ci.script.path}/ci.properties" todir="${depoly.path}"/>
-		<copy file="${ci.script.path}/install-singlehost.xml" todir="${depoly.path}"/>
+		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}"/>
+		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}"/>
 		
 		<tar destfile="${WORKSPACE}/deploy.tar.gz" basedir="${deploy.path}"/>
 	</target>
