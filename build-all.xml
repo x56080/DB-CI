@@ -1,8 +1,11 @@
 <project name="build-all" default="main">
+	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci"/>
+	<property file="${ci.script.path}/ci.properties"/>
+		
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="/release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases" />
-	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci"/>
+	
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
