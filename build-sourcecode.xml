@@ -1,0 +1,87 @@
+<project name="build-all" default="main">
+	<target name="clean" depends="">
+		<echo message="Begin to clean environments" />
+		<delete dir="${WORKSPACE}/release/" />
+		<delete dir="${WORKSPACE}/reports" />
+		<echo message="clean environments completed." />
+	</target>
+
+	<target name="compile-src" depends="clean">
+		<echo message="Begin to compile source code..." />
+		<exec executable="scons" dir="${WORKSPACE}/sequoiadb">
+			<arg value="--all" />
+		</exec>
+		<echo message="compile source code completed." />
+	</target>
+
+
+
+	<target name="mk-release" depends="compile-src">
+		<echo message="Begin to make relase package ..." />
+		<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
+		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
+
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/samples" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/java" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/doc" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/samples" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
+
+		<copy file="${CODE_DIR}/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdblist" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
+			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so"/>
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
+			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
+			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/include/CPP/include">
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h"/>
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
+			<fileset dir="${CODE_DIR}/client/samples/" />
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/java">
+			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
+		</copy>
+
+		<copy todir="${RELEASE_DIR}/sequoiadb/conf/samples/">
+			<fileset dir="${CODE_DIR}/conf/samples/" />
+		</copy>
+
+
+		<delete includeemptydirs="true">
+			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
+		</delete>
+
+		<tar destfile="${RELEASE_DIR}/${TAR_FILE_NAME}" basedir="${RELEASE_DIR}/" includes="sequoiadb" compression="gzip"/>
+
+		<echo message="Make relase package completed." />
+	</target>
+
+	<target name="main" depends="mk-release">
+
+
+	</target>
+
+</project>
