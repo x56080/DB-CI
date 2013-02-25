@@ -1,7 +1,7 @@
 <project name="build-all" default="main">
 	<target name="main" depends="">
 		<echo message="Begin to compile source code..." />
-		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="compile">
+		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="mk-release">
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="TAR_FILE_NAME" value="${TAR_FILE_NAME}" />
 		</ant>
