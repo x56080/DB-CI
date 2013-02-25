@@ -34,8 +34,10 @@
 		</ant>
 		<echo message="Compile source test completed." />
 
-		<copy file="${ci.script.path}/ci.properties" todir="depoly.path"/>
-		<copy file="${ci.script.path}/install-singlehost.xml" todir="depoly.path"/>
+		<copy file="${ci.script.path}/ci.properties" todir="${depoly.path}"/>
+		<copy file="${ci.script.path}/install-singlehost.xml" todir="${depoly.path}"/>
+		
+		<tar destfile="${WORKSPACE}/deploy.tar.gz" basedir="${deploy.path}"/>
 	</target>
 
 </project>
