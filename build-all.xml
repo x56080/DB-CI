@@ -25,7 +25,7 @@
 		<echo message="Compile source code completed." />
 
 		<echo message="Begin to compile test code..." />
-		<ant antfile="${WORKSPACE}/testcases/hlt/junit_testcases/src/build.xml" target="compile-test">
+		<ant antfile="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases/src/build.xml" target="compile-test">
 			<property name="build.testcases" value="${build.testcases}" />
 			<property name="depoly.path" value="${deploy.path}" />
 		</ant>
