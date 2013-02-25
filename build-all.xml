@@ -42,23 +42,23 @@
 		<copy file="${CODE_DIR}/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
-			<fileset dir="${CODE_DIR}/client/C/lib/*.so" />
+			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so"/>
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
-			<fileset dir="${CODE_DIR}/client/CPP/lib/*.so" />
+			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
-			<fileset dir="${CODE_DIR}/client/C/include/*.h" />
+			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/*.h" />
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h"/>
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
-			<fileset dir="${CODE_DIR}/client/samples/*" />
+			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/java">
@@ -66,7 +66,7 @@
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/conf/samples/">
-			<fileset dir="${CODE_DIR}/conf/samples/*" />
+			<fileset dir="${CODE_DIR}/conf/samples/" />
 		</copy>
 
 
