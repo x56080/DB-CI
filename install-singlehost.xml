@@ -10,7 +10,7 @@
 	<target name="install" depends="clean-install">
 		<echo message="Begin to install..." />
 
-		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" />
+		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip"/>
 		<property name="db.path" value="${install.package.path}/sequoiadb" />
 
 		<mkdir dir="${db.path}/database/cata" />
