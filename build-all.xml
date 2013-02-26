@@ -37,7 +37,7 @@
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}"/>
 		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}"/>
 		
-		<tar destfile="${WORKSPACE}/deploy.tar.gz" basedir="${deploy.path}"/>
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${deploy.path} compression="gzip""/>
 	</target>
 
 </project>
