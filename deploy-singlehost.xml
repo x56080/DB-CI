@@ -5,7 +5,7 @@
 			<property environment="env"/>
 			<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},test.machine.deploy.ip1=${test.machine.deploy.ip1}"/>
 
-			<echo msesage="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM"/>
+			<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM"/>
 			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
