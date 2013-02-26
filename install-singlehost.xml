@@ -1,5 +1,5 @@
 <project name="install" default="install">
-	<propety file="${install.package.path}/ci.properties" />
+	<property file="${install.package.path}/ci.properties" />
 
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
