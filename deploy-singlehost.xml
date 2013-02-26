@@ -1,6 +1,6 @@
 <project name="deploy" default="deploy">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
-	<property test.machine.deploy.path="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}"/>
+	<property name="test.machine.deploy.path" value="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}"/>
 
 		<target name="clean-deploy" depends="">
 			<echo message="Begin to clean deploy env..."/>

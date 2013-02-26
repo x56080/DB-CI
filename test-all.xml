@@ -1,7 +1,4 @@
 <project name="test-all" default="test-all">
-	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
-	<property test.machine.deploy.path="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}" />
-
 	<target name="clean-test" depends="">
 		<echo message="Begin to clean test env..." />
 		<delete dir="${test.basedir}/deploy" />
