@@ -2,8 +2,8 @@
 
 	<target name="compile-src" depends="">
 		<echo message="Begin to compile source code..." />
-		<exec executable="scons" dir="${WORKSPACE}/sequoiadb">
-			<arg value="--all" />
+		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
+			<arg value="--all --dd" />
 		</exec>
 		<echo message="compile source code completed." />
 	</target>

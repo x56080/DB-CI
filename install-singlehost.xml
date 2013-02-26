@@ -14,19 +14,32 @@
 		<property name="db.path" value="${install.package.path}/sequoiadb" />
 
 		<mkdir dir="${db.path}/database/cata" />
+		<mkdir dir="${db.path}/database/cata/diag"/>
+		<mkdir dir="${db.path}/database/cata/log" />
+		<mkdir dir="${db.path}/database/cata/bkup" />
+
 		<mkdir dir="${db.path}/database/data" />
-		<mkdir dir="${db.path}/database/log/cata" />
-		<mkdir dir="${db.path}/database/log/data" />
-		<mkdir dir="${db.path}/database/log/coord" />
+		<mkdir dir="${db.path}/database/data/diag" />
+		<mkdir dir="${db.path}/database/data/log" />
+		<mkdir dir="${db.path}/database/data/bkup" />
+
+		<mkdir dir="${db.path}/database/coord" />
+		<mkdir dir="${db.path}/database/coord/diag" />
+		<mkdir dir="${db.path}/database/coord/log" />
+		<mkdir dir="${db.path}/database/coord/bkup" />
+
+
 		<mkdir dir="${db.path}/database/conf/local/sdb.cata.conf" />
 		<mkdir dir="${db.path}/database/conf/local/sdb.data.conf" />
 		<mkdir dir="${db.path}/database/conf/local/sdb.coord.conf" />
 
 		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.cat" />
 		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.conf" />
+		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}"/>
+		
 		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/sdb.data.conf/sdb.conf" />
 		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/sdb.coord.conf/sdb.conf" />
-		
+
 		<chmod file="${db.path}/bin/sequoiadb" perm="u+x"/>
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
