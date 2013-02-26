@@ -35,12 +35,17 @@
 
 		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.cat" />
 		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.conf" />
-		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}"/>
-		
 		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/sdb.data.conf/sdb.conf" />
 		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/sdb.coord.conf/sdb.conf" />
 
-		<chmod file="${db.path}/bin/sequoiadb" perm="u+x"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
+
+		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
 			<arg line="-c $${db.path}/conf/local/sdb.cata.conf" />
