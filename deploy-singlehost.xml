@@ -24,6 +24,7 @@
 		<target name="deploy" depends="clean-deploy">
 			<echo message="Begin to deploy softeware and test..."/>
 			
+			<property environment="env"/>
 			<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
 			<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />

@@ -47,18 +47,19 @@
 
 		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
 
+		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf"/>
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c $${db.path}/conf/local/sdb.cata.conf" />
+			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c $${db.path}/conf/local/sdb.data.conf" />
+			<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c $${db.path}/conf/local/sdb.coord.conf" />
+			<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
