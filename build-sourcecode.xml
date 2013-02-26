@@ -68,7 +68,7 @@
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
 
-		<tar destfile="${RELEASE_DIR}/${install.packege.name}" basedir="${RELEASE_DIR}/" includes="sequoiadb" compression="gzip"/>
+		<tar destfile="${RELEASE_DIR}/${install.packege.name}" basedir="${RELEASE_DIR}/sequoiadb" compression="gzip"/>
 		<move file="${RELEASE_DIR}/${install.packege.name}" tofile="${deploy.path}/${install.packege.name}"/>
 
 		<echo message="Make relase package completed." />
