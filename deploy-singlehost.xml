@@ -5,12 +5,14 @@
 			<property environment="env"/>
 			<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},test.machine.deploy.ip1=${test.machine.deploy.ip1}"/>
 
-			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} CONFIRM" failonerror="true" failifexecutionfails="true">
+			<echo msesage="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM"/>
+			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 
+			<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}"/>
 			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
@@ -21,19 +23,23 @@
 
 		<target name="deploy" depends="clean-deploy">
 			<echo message="Begin to deploy softeware and test..."/>
+			
+			<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
 			<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 
+			<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
 			<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 			
-			<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<echo message="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m"/>
+			<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
