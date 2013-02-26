@@ -1,54 +1,51 @@
 <project name="deploy" default="deploy">
-	<propety file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties"/>
+	<propety file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
+	<propety test.machine.deploy.path="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}"/>
 
-	<target name="deploy">
-		<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
-			<arg line="LOCAL FS COPY FILE ${WORKSPACE}/release/${tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
-			<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
-			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
-		</exec>
+		<target name="clean-deploy" depends="">
+			<echo message="Begin to clean deploy env..."/>
+			<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
+				<arg line="${test.machine.deploy.ip1} FS DELETE ENTRY test.machine.deploy.path  CONFIRM" />
+				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			</exec>
 
-		<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
-			<arg line="LOCAL FS COPY FILE ${WORKSPACE}/release/${tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
-			<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin"/>
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib"/>
-			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage"/>
-		</exec>
-
-		<delete dir="${test.machine.deploy.path}"/>
-		<mkdir dir="${test.machine.deploy.path}"/>
-		<tar>
-
+			<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
+				<arg line="${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.dir} ${test.machine.deploy.parent.path}" />
+				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			</exec>
+			<echo message="Clean deploy env compeleted."/>
 		</target>
-	
+
+		<target name="deploy" depends="clean-deploy">
+			<echo message="Begin to deploy softeware and test..."/>
+			<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
+				<arg line="LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
+				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			</exec>
+
+			<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
+				<arg line="LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
+				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			</exec>
+			
+			<exec executable="staf" dir="${STAF_PATH}" failonerror="true" failifexecutionfails="true">
+				<arg line="${test.machine.deploy.ip1} PROCESS START COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m" />
+				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			</exec>
+
+			<echo message="Deploy softeware and test compeleted."/>
+		</target>
+	</project>
 
 
-	#unzip tar file
-	cd $DB_PATH
-	rm -rf $DB_PATH/sequoiadb
-	tar -xzf $TAR_FILE_NAME
 
-	DB_PATH=$DB_PATH/sequoiadb
-
-	#create data directory
-	mkdir -p $DB_PATH/database/cata
-	mkdir -p $DB_PATH/database/data
-	mkdir -p $DB_PATH/database/log/cata
-	mkdir -p $DB_PATH/database/log/data
-	mkdir -p $DB_PATH/database/log/coord
-
-	#copy configure file
-	mkdir -p $DB_PATH/conf/local/sdb.cata.conf
-	mkdir -p $DB_PATH/conf/local/sdb.data.conf
-	mkdir -p $DB_PATH/conf/local/sdb.coord.conf
-
-	cp -f $DB_PATH/conf/samples/sdb.cat $DB_PATH/conf/local/sdb.cata.conf/sdb.cat
-	cp -f $DB_PATH/conf/samples/sdb.conf.catalog $DB_PATH/conf/local/sdb.cata.conf/sdb.conf
-	cp -f $DB_PATH/conf/samples/sdb.conf.data $DB_PATH/conf/local/sdb.data.conf/sdb.conf
-	cp -f $DB_PATH/conf/samples/sdb.conf.coord $DB_PATH/conf/local/sdb.coord.conf/sdb.conf
-
-	#start sequoiadb proc
-	$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.cata.conf &
-	$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.data.conf &
-	$DB_PATH/bin/sequoiadb -c $DB_PATH/conf/local/sdb.coord.conf &

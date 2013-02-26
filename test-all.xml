@@ -1,0 +1,21 @@
+<project name="test-all" default="test-all">
+	<propety file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
+	<propety test.machine.deploy.path="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}" />
+
+	<target name="clean-test" depends="">
+		<echo message="Begin to clean test env..." />
+		<delete dir="${test.basedir}/deploy" />
+		<echo message="Clean deploy env compeleted." />
+	</target>
+
+	<target name="test-all" depends="clean-test">
+		<echo message="Begin test all..." />
+		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
+		<property file="${test.basedir}/deploy/ci.properties" />
+
+		<ant antfile="${test.basedir}/deploy/install-singlehost.xml">
+			<property name="install.package.path" value="${test.basedir}/deploy" />
+			<property name="install.package.name" value="${install.tar.file.name}" />
+		</ant>
+	</target>
+</project>
