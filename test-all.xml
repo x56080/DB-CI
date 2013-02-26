@@ -1,17 +1,17 @@
 <project name="test-all" default="test-all">
 	<target name="clean-test" depends="">
 		<echo message="Begin to clean test env..." />
-		<delete dir="${test.basedir}/deploy" />
+		
 		<echo message="Clean deploy env compeleted." />
 	</target>
 
 	<target name="test-all" depends="clean-test">
 		<echo message="Begin test all..." />
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
-		<property file="${test.basedir}/deploy/ci.properties" />
+		<property file="${test.basedir}/ci.properties" />
 
-		<ant antfile="${test.basedir}/deploy/install-singlehost.xml">
-			<property name="install.package.path" value="${test.basedir}/deploy" />
+		<ant antfile="${test.basedir}/install-singlehost.xml">
+			<property name="install.package.path" value="${test.basedir}" />
 			<property name="install.package.name" value="${install.tar.file.name}" />
 		</ant>
 	</target>

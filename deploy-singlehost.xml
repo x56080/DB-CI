@@ -38,8 +38,8 @@
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 			
-			<echo message="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m"/>
-			<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<echo message="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/test-all.log -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m"/>
+			<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/test-all.log -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
