@@ -11,7 +11,8 @@
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
 		<property file="${test.basedir}/deploy/ci.properties" />
 
-		<ant antfile="${test.basedir}/deploy/install-singlehost.xml">
+		<property environment="env"/>
+		<ant antfile="${test.basedir}/deploy/install-singlehost.xml"">
 			<property name="install.package.path" value="${test.basedir}/deploy" />
 			<property name="install.package.name" value="${install.tar.file.name}" />
 			<property name="host.ip" value="${host.ip}"/>
