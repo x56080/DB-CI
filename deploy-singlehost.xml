@@ -1,19 +1,18 @@
 <project name="deploy" default="deploy">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
-	<property name="test.machine.deploy.path" value="${test.machine.deploy.parent.path}/${test.machine.deploy.dir}"/>
-
+	
 		<target name="clean-deploy" depends="">
-			<echo message="Begin to clean deploy env..."/>
-			<exec executable="staf" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				<arg line="${test.machine.deploy.ip1} FS DELETE ENTRY test.machine.deploy.path  CONFIRM" />
-				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+			<property environment="env"/>
+			<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},test.machine.deploy.ip1=${test.machine.deploy.ip1}"/>
+
+			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} CONFIRM" failonerror="true" failifexecutionfails="true">
+				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 
-			<exec executable="staf" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				<arg line="${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.dir} ${test.machine.deploy.parent.path}" />
-				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+			<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
@@ -22,23 +21,20 @@
 
 		<target name="deploy" depends="clean-deploy">
 			<echo message="Begin to deploy softeware and test..."/>
-			<exec executable="staf" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				<arg line="LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
-				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+			<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 
-			<exec executable="staf" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				<arg line="LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
-				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+			<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
 			
-			<exec executable="staf" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				<arg line="${test.machine.deploy.ip1} PROCESS START COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m" />
-				<env key="PATH" path="${env.PAHT}:${STAF.PATH}/bin" />
+			<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START COMMAND  ant -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=deploy.tar.file.name WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+				<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			</exec>
