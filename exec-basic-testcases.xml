@@ -18,17 +18,16 @@
 		<mkdir dir="${testcase.path}/reports" />
 		<tstamp />
 		<echo message="perform the base-bussiness testcases,with testcase.path=${testcase.path}" />
-		<chmod file="${sdb.path}/sdb" perm="u+x"/>
+		<chmod file="${sdb.path}/sdb" perm="u+x" />
 		<property name="js.name" value="createCS_1.js" />
 
 		<foreach target="test-one-case" param="js.fullname">
 			<fileset dir="${testcase.path}/js" includes="*.js" />
-			<param>
-				<property name="testcase.path" value="${testcase.path}"/>
-				<property name="sdb.fullname" value="${sdb.path}/sdb"/>
-				<property name="testcases.jar.fullname" value="${testcase.path}/sequoiadb-hlt.jar"/>
-				<property name="junit.jar.fullname" value="${testcase.path}/lib/junit.jar"/>
-			</param>
+
+			<param name="testcase.path" value="${testcase.path}" />
+			<param name="sdb.fullname" value="${sdb.path}/sdb" />
+			<param name="testcases.jar.fullname" value="${testcase.path}/sequoiadb-hlt.jar" />
+			<param name="junit.jar.fullname" value="${testcase.path}/lib/junit.jar" />
 		</foreach>
 
 		<tar destfile="${junitreport.path}/${junitreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
@@ -37,9 +36,9 @@
 	</target>
 
 	<target name="test-one-case" depends="">
-		
-		<basename property="js.name" file="${js.fullname}"/>
-		
+
+		<basename property="js.name" file="${js.fullname}" />
+
 		<junit printsummary="true" fork="yes" haltonfailure="no">
 			<sysproperty key="jsFullName" value="js.fullname" />
 			<sysproperty key="sdbProcFullName" value="${sdb.fullname}" />
