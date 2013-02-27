@@ -9,34 +9,53 @@
 	<target name="test-basic-testcases" depends="clean-test-reports">
 		<echo message="Begin test basic testcases..." />
 
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="/usr/share/java/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+
 		<mkdir dir="${testcase.path}/reports" />
 		<tstamp />
 		<echo message="perform the base-bussiness testcases,with testcase.path=${testcase.path}" />
 
-		<property name="js.name" value="createCS_1.js"/>
-		
-		<junit printsummary="true" fork="yes" haltonfailure="no">
-			<sysproperty key="jsFullName" value="${testcase.path}/js/${js.name}"/>
-			<sysproperty key="sdbProcFullName" value="${sdb.path}/sdb"/>
-			
-			<classpath>
-				<pathelement location="${testcase.path}/sequoiadb-hlt.jar" />
-				<pathelement location="${testcase.path}/lib/junit.jar" />
-			</classpath>
-			<formatter type="xml" />
-			
-			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" todir="${testcase.path}/reports"/>
+		<property name="js.name" value="createCS_1.js" />
 
-				
-			<!--batchtest fork="yes" todir="${testcase.path}/reports">
-				<fileset>
-					<includes name="com/sequoiadb/testcase/basebussiness/**/*.class"/>
-				</filese>
-			</batchtest-->
-		</junit>
+		<foreach target="test-one-case" param="js.name">
+			<filesets dir="${testcase.path}/js" includes="*.js" />
+			<param>
+				<property name="testcase.path" value="${testcase.path}"/>
+				<property name="sdb.fullname" value="${sdb.path}/sdb"/>
+				<property name="testcases.jar.fullname" value="${testcase.path}/sequoiadb-hlt.jar"/>
+				<property name="junit.jar.fullname" value="${testcase.path}/lib/junit.jar"/>
+			</param>
+		</foreach>
 
 		<tar destfile="${junitreport.path}/${junitreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
 		</tar>
 
+	</target>
+
+	<target name="test-one-case" depends="">
+		
+		<junit printsummary="true" fork="yes" haltonfailure="no">
+			<sysproperty key="jsFullName" value="${testcase.path}/js/${js.name}" />
+			<sysproperty key="sdbProcFullName" value="${sdb.fullname}" />
+
+			<classpath>
+				<pathelement location="${testcases.jar.fullname}" />
+				<pathelement location="${junit.jar.fullname}" />
+			</classpath>
+			<formatter type="xml" />
+
+			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" todir="${testcase.path}/reports" />
+
+
+			<!--batchtest fork="yes" todir="${testcase.path}/reports">
+						<fileset>
+							<includes name="com/sequoiadb/testcase/basebussiness/**/*.class"/>
+						</filese>
+					</batchtest-->
+		</junit>
 	</target>
 </project>
