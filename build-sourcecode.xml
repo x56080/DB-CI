@@ -1,16 +1,30 @@
 <project name="build-srccode" default="main">
 
 	<target name="compile-src" depends="">
-		<taskdef resource="net/sf/antcontrib/antlib.xml"/>
-		<echo message="Begin to compile source code..." />
-		<property name="compile.arg.line" value="--all" />
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="/usr/share/java/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
 
+
+		<echo message="Begin to compile source code..." />
+
+		<property name="compile.arg.line.default" value="--all" />
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
-				<property name="compile.arg.line" value="${compile.arg.line} --dd" />
+				<echo message="compile.debug is ture" />
+				<property name="compile.arg.line" value="${compile.arg.line.default} --dd" />
+				<echo message="${compile.arg.line}" />
 			</then>
+			<else>
+				<echo message="compile.debug is false" />
+				<property name="compile.arg.line" value="${compile.arg.line.default}" />
+				<echo message="${compile.arg.line}" />
+			</else>
 		</if>
+
 
 		<echo message="exec scons ${compile.arg.line}" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">

@@ -24,6 +24,7 @@
 			<property name="install.packege.name" value="${install.tar.file.name}" />
 			<property name="deploy.path" value="${deploy.path}" />
 			<property name="release.dirname" value="${release.dirname}" />
+			<property name="compile.debug" value="${compile.debug}"/>
 		</ant>
 		<echo message="Compile source code completed." />
 
