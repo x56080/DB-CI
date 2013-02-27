@@ -1,6 +1,7 @@
 <project name="build-srccode" default="main">
 
 	<target name="compile-src" depends="">
+		<taskdef resource="net/sf/antcontrib/antlib.xml"/>
 		<echo message="Begin to compile source code..." />
 		<property name="compile.arg.line" value="--all" />
 
