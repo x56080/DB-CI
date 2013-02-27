@@ -18,7 +18,7 @@
 			<property name="host.ip" value="${host.ip}" />
 		</ant>
 
-		<ant antfile="${test.basedir}/depoly/exec-basic-testcases.xml">
+		<ant antfile="${test.basedir}/deploy/exec-basic-testcases.xml">
 			<property name="testcase.path" value="${test.basedir}/deploy/hlt" />
 			<property name="sdb.path" value="${test.basedir}/deploy/sequoiadb/bin" />
 		</ant>
