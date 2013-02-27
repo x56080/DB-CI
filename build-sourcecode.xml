@@ -2,8 +2,18 @@
 
 	<target name="compile-src" depends="">
 		<echo message="Begin to compile source code..." />
+		<property name="compile.arg.line" value="--all" />
+
+		<if>
+			<equals arg1="${compile.debug}" arg2="true" />
+			<then>
+				<property name="compile.arg.line" value="${compile.arg.line} --dd" />
+			</then>
+		</if>
+
+		<echo message="exec scons ${compile.arg.line}" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
-			<arg line="--all --dd" />
+			<arg line="${compile.arg.line}" />
 		</exec>
 		<echo message="compile source code completed." />
 	</target>
@@ -36,7 +46,7 @@
 		<copy file="${CODE_DIR}/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
-			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so"/>
+			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
@@ -48,7 +58,7 @@
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h"/>
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
@@ -68,7 +78,7 @@
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
 
-		<tar destfile="${deploy.path}/${install.packege.name}" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip"/>
+		<tar destfile="${deploy.path}/${install.packege.name}" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
 
 		<echo message="Make relase package completed." />
 	</target>
