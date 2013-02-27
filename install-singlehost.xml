@@ -65,9 +65,9 @@
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
-				<scoket server="${host.ip}" port="60000" />
-				<scoket server="${host.ip}" port="51000" />
-				<scoket server="${host.ip}" port="50000" />
+				<socket server="${host.ip}" port="60000" />
+				<socket server="${host.ip}" port="51000" />
+				<socket server="${host.ip}" port="50000" />
 			</and>
 		</waitfor>
 		
