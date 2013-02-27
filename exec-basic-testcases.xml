@@ -18,11 +18,11 @@
 		<mkdir dir="${testcase.path}/reports" />
 		<tstamp />
 		<echo message="perform the base-bussiness testcases,with testcase.path=${testcase.path}" />
-
+		<chmod file="${sdb.path}/sdb" perm="u+x"/>
 		<property name="js.name" value="createCS_1.js" />
 
-		<foreach target="test-one-case" param="js.name">
-			<filesets dir="${testcase.path}/js" includes="*.js" />
+		<foreach target="test-one-case" param="js.fullname">
+			<fileset dir="${testcase.path}/js" includes="*.js" />
 			<param>
 				<property name="testcase.path" value="${testcase.path}"/>
 				<property name="sdb.fullname" value="${sdb.path}/sdb"/>
@@ -38,8 +38,10 @@
 
 	<target name="test-one-case" depends="">
 		
+		<basename property="js.name" file="${js.fullname}"/>
+		
 		<junit printsummary="true" fork="yes" haltonfailure="no">
-			<sysproperty key="jsFullName" value="${testcase.path}/js/${js.name}" />
+			<sysproperty key="jsFullName" value="js.fullname" />
 			<sysproperty key="sdbProcFullName" value="${sdb.fullname}" />
 
 			<classpath>
