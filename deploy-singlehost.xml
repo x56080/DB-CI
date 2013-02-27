@@ -53,7 +53,7 @@
 		<echo message="Begin to collect test result..."/>
 
 		<property environment="env"/>
-		<exec executable="${STAF.PATH}\bin\staf " dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<exec executable="${STAF.PATH}\bin\staf " dir="${STAF.PATH}\bin" failonerror="true" failifexecutionfails="true">
 			<arg line="${test.machine.deploy.ip1} FS COPY FILE ${test.machine.deploy.path}/${deploy.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE local" />
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
