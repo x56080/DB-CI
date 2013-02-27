@@ -37,6 +37,7 @@
 
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}"/>
 		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}"/>
+		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}"/>
 		
 		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip"/>
 	</target>

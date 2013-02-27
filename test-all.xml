@@ -11,11 +11,16 @@
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
 		<property file="${test.basedir}/deploy/ci.properties" />
 
-		<property environment="env"/>
+		<property environment="env" />
 		<ant antfile="${test.basedir}/deploy/install-singlehost.xml">
 			<property name="install.package.path" value="${test.basedir}/deploy" />
 			<property name="install.package.name" value="${install.tar.file.name}" />
-			<property name="host.ip" value="${host.ip}"/>
+			<property name="host.ip" value="${host.ip}" />
+		</ant>
+
+		<ant antfile="${test.basedir}/depoly/exe-basic-testcases.xml">
+			<property name="testcase.path" value="${test.basedir}/deploy/hlt" />
+			<property name="sdb.path" value="${test.basedir}/deploy/sequoiadb/bin" />
 		</ant>
 	</target>
 </project>

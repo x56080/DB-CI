@@ -10,11 +10,11 @@
 	<target name="install" depends="clean-install">
 		<echo message="Begin to install..." />
 
-		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip"/>
+		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 		<property name="db.path" value="${install.package.path}/sequoiadb" />
 
 		<mkdir dir="${db.path}/database/cata" />
-		<mkdir dir="${db.path}/database/cata/diag"/>
+		<mkdir dir="${db.path}/database/cata/diag" />
 		<mkdir dir="${db.path}/database/cata/log" />
 		<mkdir dir="${db.path}/database/cata/bkup" />
 
@@ -38,16 +38,16 @@
 		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/sdb.data.conf/sdb.conf" />
 		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/sdb.coord.conf/sdb.conf" />
 
-		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
-		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
-		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
-		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
-		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g"/>
-		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g"/>
+		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 
 		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
 
-		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf"/>
+		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
 			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
@@ -63,6 +63,15 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
+		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
+			<and>
+				<scoket server="${host.ip}" port="60000" />
+				<scoket server="${host.ip}" port="51000" />
+				<scoket server="${host.ip}" port="50000" />
+			</and>
+		</waitfor>
+		
 		<echo message="Install compeleted." />
+
 	</target>
 </project>

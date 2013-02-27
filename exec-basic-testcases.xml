@@ -1,0 +1,42 @@
+<project name="test-basic-testcases" default="test-basic-testcases">
+
+	<target name="clean-test-reports" depends="">
+		<echo message="Begin to clean test result reports..." />
+		<delete dir="${testcase.path}/reports" />
+		<echo message="Clean deploy result reports compeleted." />
+	</target>
+
+	<target name="test-basic-testcases" depends="clean-test-reports">
+		<echo message="Begin test basic testcases..." />
+
+		<mkdir dir="${testcase.path}/reports" />
+		<tstamp />
+		<echo message="perform the base-bussiness testcases,with testcase.path=${testcase.path}" />
+
+		<property name="js.name" value="createCS_1.js"/>
+		
+		<junit printsummary="true" fork="yes" haltonfailure="no">
+			<sysproperty key="jsFullName" value="${testcase.path}/js/${js.name}"/>
+			<sysproperty key="sdbProcFullName" value="${sdb.path}/sdb"/>
+			
+			<classpath>
+				<pathelement location="${testcase.path}/sequoiadb-hlt.jar" />
+				<pathelement location="${testcase.path}/lib/junit.jar" />
+			</classpath>
+			<formatter type="xml" />
+			
+			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" todir="${testcase.path}/reports"/>
+
+				
+			<!--batchtest fork="yes" todir="${testcase.path}/reports">
+				<fileset>
+					<includes name="com/sequoiadb/testcase/basebussiness/**/*.class"/>
+				</filese>
+			</batchtest-->
+		</junit>
+
+		<tar destfile="${testcase.path}/reports/junit_report.tar.gz" basedir="${testcase.path}/reports" compression="gzip">
+		</tar>
+
+	</target>
+</project>
