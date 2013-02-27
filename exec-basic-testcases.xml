@@ -35,7 +35,7 @@
 			</batchtest-->
 		</junit>
 
-		<tar destfile="${testcase.path}/reports/junit_report.tar.gz" basedir="${testcase.path}/reports" compression="gzip">
+		<tar destfile="${junitreport.path}/${junitreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
 		</tar>
 
 	</target>

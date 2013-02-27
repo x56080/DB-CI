@@ -21,6 +21,8 @@
 		<ant antfile="${test.basedir}/deploy/exec-basic-testcases.xml">
 			<property name="testcase.path" value="${test.basedir}/deploy/hlt" />
 			<property name="sdb.path" value="${test.basedir}/deploy/sequoiadb/bin" />
+			<property name="junitreport.path" value="${test.basedir}" />
+			<property name="junitreport.tar.file.name" value="${junitreport.tar.file.name}" />
 		</ant>
 	</target>
 </project>
