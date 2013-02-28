@@ -37,7 +37,7 @@
 
 	<target name="test-one-case" depends="">
 
-		<basename property="js.name" file="${js.fullname}" />
+		<basename property="js.name" file="${js.fullname}" suffix=".js"/>
 
 		<junit printsummary="true" timeout="2000" haltonfailure="no">
 			<sysproperty key="jsFullName" value="${js.fullname}" />
@@ -49,7 +49,7 @@
 			</classpath>
 			<formatter type="xml" />
 
-			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" todir="${testcase.path}/reports" />
+			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}" todir="${testcase.path}/reports" />
 
 			<!--batchtest fork="yes" todir="${testcase.path}/reports">
 						<fileset>
@@ -58,6 +58,6 @@
 					</batchtest-->
 		</junit>
 		
-		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}.xml" match="testCaseForAllJSScript" replace="testCase_${js.name}"/>
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="collectionstest" replace="test_${js.name}"/>
 	</target>
 </project>
