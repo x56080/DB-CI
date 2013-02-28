@@ -59,5 +59,6 @@
 		</junit>
 		
 		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="collectionstest" replace="test_${js.name}"/>
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="testCaseForAllJSScript" replace="testCase_${js.name}"/>
 	</target>
 </project>
