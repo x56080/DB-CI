@@ -51,12 +51,13 @@
 
 			<test name="com.sequoiadb.testcase.basebussiness.collectionstest" outfile="TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" todir="${testcase.path}/reports" />
 
-
 			<!--batchtest fork="yes" todir="${testcase.path}/reports">
 						<fileset>
 							<includes name="com/sequoiadb/testcase/basebussiness/**/*.class"/>
 						</filese>
 					</batchtest-->
 		</junit>
+		
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" match="testCaseForAllJSScript" replace="testCase_&{js.name}"/>
 	</target>
 </project>
