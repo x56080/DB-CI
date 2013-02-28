@@ -4,6 +4,11 @@
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
 		<delete dir="${install.package.path}/sequoiadb" />
+
+		<exec executable="sh" spawn="false" failonerror="false">
+			<arg line="-c killall -s 9 -r sequoiadb" />
+		</exec>
+
 		<echo message="Clean install env compeleted." />
 	</target>
 
@@ -70,9 +75,9 @@
 				<socket server="${host.ip}" port="50000" />
 			</and>
 		</waitfor>
-		
-		<sleep seconds="20"/>
-		
+
+		<sleep seconds="20" />
+
 		<echo message="Install compeleted." />
 
 	</target>

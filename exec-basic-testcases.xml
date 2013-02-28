@@ -39,7 +39,7 @@
 
 		<basename property="js.name" file="${js.fullname}" />
 
-		<junit printsummary="true" fork="yes" haltonfailure="no">
+		<junit printsummary="true" timeout="2000" haltonfailure="no">
 			<sysproperty key="jsFullName" value="${js.fullname}" />
 			<sysproperty key="sdbProcFullName" value="${sdb.fullname}" />
 
