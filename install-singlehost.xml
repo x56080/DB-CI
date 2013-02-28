@@ -71,6 +71,8 @@
 			</and>
 		</waitfor>
 		
+		<sleep seconds="20"/>
+		
 		<echo message="Install compeleted." />
 
 	</target>

@@ -58,6 +58,6 @@
 					</batchtest-->
 		</junit>
 		
-		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}" match="testCaseForAllJSScript" replace="testCase_${js.name}"/>
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.collectionstest.${js.name}.xml" match="testCaseForAllJSScript" replace="testCase_${js.name}"/>
 	</target>
 </project>
