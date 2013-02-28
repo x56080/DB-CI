@@ -2,66 +2,66 @@
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 
 	<target name="clean-deploy" depends="">
-		<property environment="env"/>
-		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},test.machine.deploy.ip1=${test.machine.deploy.ip1}"/>
+		<property environment="env" />
+		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},test.machine.deploy.ip1=${test.machine.deploy.ip1}" />
 
-		<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM"/>
+		<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM" />
 		<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS DELETE ENTRY ${test.machine.deploy.path} RECURSE CONFIRM" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}"/>
+		<echo message="exec ${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}" />
 		<exec command="${STAF.PATH}/bin/staf ${test.machine.deploy.ip1} FS CREATE DIRECTORY ${test.machine.deploy.path}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-		<echo message="Clean deploy env compeleted."/>
+		<echo message="Clean deploy env compeleted." />
 	</target>
 
 	<target name="deploy" depends="clean-deploy">
-		<echo message="Begin to deploy softeware and test..."/>
+		<echo message="Begin to deploy softeware and test..." />
 
-		<property environment="env"/>
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
+		<property environment="env" />
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}"/>
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" />
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/test-all.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${test.machine.deploy.ip1}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/test-all.log -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dhost.ip=${test.machine.deploy.ip1} WORKDIR ${test.machine.deploy.path} WAIT 30m"/>
+		<echo message="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/test-all.log -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dhost.ip=${test.machine.deploy.ip1} WORKDIR ${test.machine.deploy.path} WAIT 30m" />
 		<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/test-all.log -f ${test.machine.deploy.path}/test-all.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dhost.ip=${test.machine.deploy.ip1} -Djunitreport.tar.file.name=${junitreport.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="Deploy softeware and test compeleted."/>
+		<echo message="Deploy softeware and test compeleted." />
 	</target>
 
 	<target name="collect-test-result" depends="deploy">
-		<echo message="Begin to collect test result..."/>
+		<echo message="Begin to collect test result..." />
 
-		<property environment="env"/>
+		<property environment="env" />
 		<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} FS COPY FILE ${test.machine.deploy.path}/${junitreport.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE ${jenkins.master.ip}" dir="${STAF.PATH}\bin" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-		
+
 		<untar src="${WORKSPACE}/${junitreport.tar.file.name}" dest="${WORKSPACE}" compression="gzip" />
 
-		<echo message="Collect test result compeleted."/>
+		<echo message="Collect test result compeleted." />
 	</target>
 </project>
 

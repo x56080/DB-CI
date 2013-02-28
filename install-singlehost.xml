@@ -15,6 +15,12 @@
 	<target name="install" depends="clean-install">
 		<echo message="Begin to install..." />
 
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+			<classpath>
+				<pathelement location="/usr/share/java/ant-contrib.jar" />
+			</classpath>
+		</taskdef>
+
 		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 		<property name="db.path" value="${install.package.path}/sequoiadb" />
 
@@ -52,21 +58,23 @@
 
 		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
 
-		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
-		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec>
+		<forget daemon="true">
+			<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
+			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
+				<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+			</exec>
 
-		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec>
+			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
+				<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+			</exec>
 
-		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec>
+			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
+				<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
+				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+			</exec>
+		</forget>
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>

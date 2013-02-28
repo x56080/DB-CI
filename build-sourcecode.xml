@@ -10,7 +10,7 @@
 
 		<echo message="Begin to compile source code..." />
 
-		<property name="compile.arg.line.default" value="--all --noscreenout" />
+		<property name="compile.arg.line.default" value="--all" />
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
