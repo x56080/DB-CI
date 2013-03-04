@@ -6,7 +6,7 @@
 		<delete dir="${install.package.path}/sequoiadb" />
 
 		<exec executable="sh" spawn="false" failonerror="false">
-			<arg line="-c killall -s 9 -r sequoiadb" />
+			<arg line="-c 'killall -s 9 -r sequoiadb'" />
 		</exec>
 
 		<echo message="Clean install env compeleted." />
