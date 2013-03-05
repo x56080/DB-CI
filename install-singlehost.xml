@@ -5,7 +5,7 @@
 		<echo message="Begin to clean install env..." />
 		<delete dir="${install.package.path}/sequoiadb" />
 
-		<exec executable="${db.path}/bin/sdbstart" spawn="false" failonerror="false"/>
+		<exec executable="${db.path}/bin/sdbstop" spawn="false" failonerror="false"/>
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
