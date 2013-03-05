@@ -9,6 +9,20 @@
 			<arg line="-c 'killall -s 9 -r sequoiadb'" />
 		</exec>
 
+		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
+			<and>
+				<not>
+					<socket server="${host.ip}" port="60000" />
+				</not>
+				<not>
+					<socket server="${host.ip}" port="51000" />
+				</not>
+				<not>
+					<socket server="${host.ip}" port="50000" />
+				</not>
+			</and>
+		</waitfor>
+
 		<echo message="Clean install env compeleted." />
 	</target>
 
@@ -58,23 +72,21 @@
 
 		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
 
-		<forget daemon="true">
-			<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
-			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
-				<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
-				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-			</exec>
+		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
+		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
+			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+		</exec>
 
-			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
-				<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
-				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-			</exec>
+		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
+			<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+		</exec>
 
-			<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb">
-				<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
-				<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-			</exec>
-		</forget>
+		<exec dir="${db.path}/bin" executable="${db.path}/bin/sequoiadb" spawn="true">
+			<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+		</exec>
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
