@@ -51,14 +51,24 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
 
-		<copy file="${CODE_DIR}/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdblist" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<if>
+			<equals arg1="${compile.debug}" arg2="true" />
+			<then>
+				<property name="build.result.dir" value="dd" />
+			</then>
+			<else>
+				<property name="build.result.dir" value="normal" />
+			</else>
+		</if>
+
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdblist" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
