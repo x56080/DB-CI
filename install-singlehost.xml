@@ -88,6 +88,9 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
+
+		<sleep seconds="40" />
+
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
 				<socket server="${host.ip}" port="60000" />
@@ -95,8 +98,6 @@
 				<socket server="${host.ip}" port="50000" />
 			</and>
 		</waitfor>
-
-		<sleep seconds="20" />
 
 		<echo message="Install compeleted." />
 
