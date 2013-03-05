@@ -62,8 +62,8 @@
 		</if>
 
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/shell/engine/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/shell/engine/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
