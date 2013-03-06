@@ -1,11 +1,19 @@
 <project name="install" default="install">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
 	<property file="${install.package.path}/ci.properties" />
+	<property name="db.path" value="${install.package.path}/sequoiadb" />
 
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
-		<delete dir="${install.package.path}/sequoiadb" />
+		<delete dir="${db.path}" />
 
-		<exec executable="${db.path}/bin/sdbstop" spawn="false" failonerror="false"/>
+		<exec executable="sh" spawn="false" failonerror="false">
+			<arg line="-c 'killall -s 9 -r sequoiadb'" />
+		</exec>
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
@@ -27,14 +35,7 @@
 	<target name="install" depends="clean-install">
 		<echo message="Begin to install..." />
 
-		<taskdef resource="net/sf/antcontrib/antlib.xml">
-			<classpath>
-				<pathelement location="/usr/share/java/ant-contrib.jar" />
-			</classpath>
-		</taskdef>
-
 		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
-		<property name="db.path" value="${install.package.path}/sequoiadb" />
 
 		<mkdir dir="${db.path}/database/cata" />
 		<mkdir dir="${db.path}/database/cata/diag" />
