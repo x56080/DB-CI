@@ -69,9 +69,9 @@
 		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 
-		<chmod file="${db.path}/bin/sequoiadb" perm="u+x" />
+		<chmod file="${db.path}/bin/*" perm="u+x" />
 
-		<echo message="${db.path}/bin/sequoiadb -c ${db.path}/conf/local/sdb.cata.conf" />
+		<echo message="${db.path}/bin/sdbstart -c ${db.path}/conf/local/sdb.cata.conf" />
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
