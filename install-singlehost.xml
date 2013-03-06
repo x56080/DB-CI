@@ -53,9 +53,9 @@
 		<mkdir dir="${db.path}/database/coord/bkup" />
 
 
-		<mkdir dir="${db.path}/database/conf/local/sdb.cata.conf" />
-		<mkdir dir="${db.path}/database/conf/local/sdb.data.conf" />
-		<mkdir dir="${db.path}/database/conf/local/sdb.coord.conf" />
+		<mkdir dir="${db.path}/conf/local/sdb.cata.conf" />
+		<mkdir dir="${db.path}/conf/local/sdb.data.conf" />
+		<mkdir dir="${db.path}/conf/local/sdb.coord.conf" />
 
 		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.cat" />
 		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.conf" />
