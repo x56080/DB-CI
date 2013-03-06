@@ -1,15 +1,16 @@
 <project name="build-all" default="main">
-	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci"/>
-	<property file="${ci.script.path}/ci.properties"/>
-		
+	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci" />
+	<property file="${ci.script.path}/ci.properties" />
+
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="/release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases" />
-	
+
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
 		<delete dir="${deploy.path}/" />
+		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
 		<delete dir="${WORKSPACE}/${release.dirname}" />
 		<delete dir="${build.testcases}/build" />
 		<echo message="clean environments completed." />
@@ -24,7 +25,7 @@
 			<property name="install.packege.name" value="${install.tar.file.name}" />
 			<property name="deploy.path" value="${deploy.path}" />
 			<property name="release.dirname" value="${release.dirname}" />
-			<property name="compile.debug" value="${compile.debug}"/>
+			<property name="compile.debug" value="${compile.debug}" />
 		</ant>
 		<echo message="Compile source code completed." />
 
@@ -35,11 +36,12 @@
 		</ant>
 		<echo message="Compile source test completed." />
 
-		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}"/>
-		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}"/>
-		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}"/>
-		
-		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip"/>
+		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
+
+
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
 
 </project>
