@@ -89,8 +89,6 @@
 			</then>
 		</if>
 
-
 		<echo file="${testcase.path}/reports/TEST-${test.suite.class.name}.xml" append="true" message="&lt;/testcase&gt;" />
-
 	</target>
 </project>
