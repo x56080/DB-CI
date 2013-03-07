@@ -28,7 +28,7 @@
 			<param name="testcase.path" value="${testcase.path}" />
 		</foreach>
 
-		<tar destfile="${junitreport.path}/${junitreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
+		<tar destfile="${junitreport.path}/${antreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
 		</tar>
 	</target>
 
