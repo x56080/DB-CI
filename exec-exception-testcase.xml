@@ -27,12 +27,15 @@
 
 			<param name="testcase.path" value="${testcase.path}" />
 		</foreach>
+
+		<tar destfile="${junitreport.path}/${junitreport.tar.file.name}" basedir="${testcase.path}" includes="reports/**" compression="gzip">
+		</tar>
 	</target>
 
 	<target name="test-one-suite" depends="">
 		<basename property="test.suite.name" file="${test.suite.fullname}" />
 		<echo message="Execute test suite(${test.suite.name}) test.suite.fullname=${test.suite.fullname}" />
-		<property name="test.suite.class.name" value="com.sequoiadb.testcase.exceptions.${test.suite.name}" />
+		<property name="test.suite.class.name" value="com.sequoiadb.testcase.ant.${test.suite.name}" />
 
 		<echo file="${testcase.path}/reports/TEST-${test.suite.class.name}.xml" message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
 		            &lt;testsuite errors=&quot;0&quot; failures=&quot;0&quot; hostname=&quot;ubun-test2&quot; name=&quot;${test.suite.class.name}&quot; tests=&quot;1&quot; time=&quot;0.55&quot; timestamp=&quot;2013-02-28T08:15:31&quot;&gt;" />

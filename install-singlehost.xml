@@ -88,7 +88,7 @@
 		</exec>
 
 
-		<sleep seconds="40" />
+		<sleep seconds="60" />
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
