@@ -62,6 +62,7 @@
 		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/sdb.data.conf/sdb.conf" />
 		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/sdb.coord.conf/sdb.conf" />
 
+                <replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.cat" match="ubun-test2" replace="${host.name}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />

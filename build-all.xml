@@ -4,7 +4,7 @@
 
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="/release" />
-	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases" />
+	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
 
 
 	<target name="clean" depends="">
@@ -29,17 +29,24 @@
 		</ant>
 		<echo message="Compile source code completed." />
 
-		<echo message="Begin to compile test code..." />
+		<echo message="Begin to compile js test code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases/src/build.xml" target="compile-test">
-			<property name="build.testcases" value="${build.testcases}" />
+			<property name="build.testcases" value="${build.testcases}/junit_testcases" />
 			<property name="deploy.path" value="${deploy.path}" />
 		</ant>
 		<echo message="Compile source test completed." />
 
+                <echo message="Begin to compile ant test code..." />
+                <ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-ant-testcase.xml" target="dist-ant-testcase">
+                        <property name="build.testcases" value="${build.testcases}/ant_testcases" />
+                        <property name="deploy.path" value="${deploy.path}" />
+                </ant>
+                <echo message="Compile ant test completed." />
+
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/install-singlehost.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
-
+                <copy file="${ci.script.path}/exec-exception-testcases.xml" todir="${deploy.path}" />
 
 		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>

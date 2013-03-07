@@ -1,12 +1,20 @@
-<project name="build-ant-testcase" default="build-ant-testcase">
+<project name="build-ant-testcase" default="dist-ant-testcase">
 
 	<target name="clean-ant-testcase">
 		<echo message="Begin to clean ant testcase evn.." />
 		<delete dir="${deploy.path}/hlt/ant_testcase/" failonerror="false" />
+                <delete dir="${build.testcases}/cmds/builds/*" failonerror="false" />
 		<echo message="Clean ant testcase evn completed." />
 	</target>
 
-	<target name="build-ant-testcase" depends="clean-ant-testcase">
+        <target name="compile-ant-cmds" depends="clean-ant-testcase">
+                <echo message="Begin to compile and cmds..."/>
+                <exec executable="scons" dir="${build.testcases}/cmds/">
+		    <arg line="--dd"/>
+                </exec>
+        </target>
+
+	<target name="dist-ant-testcase" depends="compile-ant-cmds">
 		<echo message="build the base-bussiness testcases,with build.testcase=${build.testcases}" />
 
 		<mkdir dir="${deploy.path}/hlt/ant_testcase/ant-lib" />
@@ -22,7 +30,7 @@
 		</copy>
 
 		<copy todir="${deploy.path}/hlt/ant_testcase/cmds/bin">
-			<fileset dir="${build.testcases}/cmds/bin" includes="**/*" />
+			<fileset dir="${build.testcases}/cmds/build/dd/" includes="*" />
 		</copy>
 	</target>
 

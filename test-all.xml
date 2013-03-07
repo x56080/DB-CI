@@ -11,11 +11,15 @@
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
 		<property file="${test.basedir}/deploy/ci.properties" />
 
-		<property environment="env" />
+		<hostinfo/>
+                <echo message="test machine name=${NAME},ip=${ADDR4}"/>
+
+                <property environment="env" />
 		<ant antfile="${test.basedir}/deploy/install-singlehost.xml">
 			<property name="install.package.path" value="${test.basedir}/deploy" />
 			<property name="install.package.name" value="${install.tar.file.name}" />
-			<property name="host.ip" value="${host.ip}" />
+			<property name="host.name" value="${NAME}" />
+                        <property name="host.ip" value="${ADDR4}" />
 		</ant>
 
 		<ant antfile="${test.basedir}/deploy/exec-basic-testcases.xml">
@@ -24,5 +28,14 @@
 			<property name="junitreport.path" value="${test.basedir}" />
 			<property name="junitreport.tar.file.name" value="${junitreport.tar.file.name}" />
 		</ant>
+
+                <ant antfile="${test.basedir}/deploy/exec-exception-testcases.xml">
+			<property name="testcase.path" value="${test.basedir}/deploy/hlt/ant_testcase/" />
+                        <property name="host.name" value="${NAME}"/>
+                        <property name="host.ip" value="${ADDR4}" />
+			<property name="junitreport.path" value="${test.basedir}" />
+			<property name="junitreport.tar.file.name" value="${junitreport.tar.file.name}" />
+		</ant>
+
 	</target>
 </project>
