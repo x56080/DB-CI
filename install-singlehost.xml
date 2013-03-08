@@ -18,13 +18,13 @@
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
 				<not>
-					<socket server="${host.ip}" port="60000" />
+					<socket server="${host.ip}" port="${cata.service.port}" />
 				</not>
 				<not>
-					<socket server="${host.ip}" port="51000" />
+					<socket server="${host.ip}" port="${data.service.port}" />
 				</not>
 				<not>
-					<socket server="${host.ip}" port="50000" />
+					<socket server="${host.ip}" port="${coord.service.port}" />
 				</not>
 			</and>
 		</waitfor>
@@ -34,6 +34,10 @@
 
 	<target name="install" depends="clean-install">
 		<echo message="Begin to install..." />
+
+		<property name="cata.service.port" value="60000" />
+		<property name="data.service.port" value="51000" />
+		<property name="coord.service.port" value="50000" />
 
 		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 
@@ -53,38 +57,43 @@
 		<mkdir dir="${db.path}/database/coord/bkup" />
 
 
-		<mkdir dir="${db.path}/conf/local/sdb.cata.conf" />
-		<mkdir dir="${db.path}/conf/local/sdb.data.conf" />
-		<mkdir dir="${db.path}/conf/local/sdb.coord.conf" />
+		<mkdir dir="${db.path}/conf/local/${cata.service.port}" />
+		<mkdir dir="${db.path}/conf/local/${data.service.port}" />
+		<mkdir dir="${db.path}/conf/local/${coord.service.port}" />
 
-		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.cat" />
-		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/sdb.cata.conf/sdb.conf" />
-		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/sdb.data.conf/sdb.conf" />
-		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/sdb.coord.conf/sdb.conf" />
+		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/${cata.service.port}/sdb.cat" />
+		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/${cata.service.port}/sdb.conf" />
+		<copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/${data.service.port}/sdb.conf" />
+		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 
-                <replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.cat" match="ubun-test2" replace="${host.name}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.cata.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.data.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/sdb.coord.conf/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.cat" match="ubun-test2" replace="${host.name}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 
 		<chmod dir="${db.path}/bin" includes="*" perm="u+x" />
 
-		<echo message="${db.path}/bin/sdbstart -c ${db.path}/conf/local/sdb.cata.conf" />
+		<echo message="${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.cata.conf" />
+			<arg line="-c ${db.path}/conf/local/${cata.service.port}" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.data.conf" />
+			<arg line="-c ${db.path}/conf/local/${data.service.port}" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/sdb.coord.conf" />
+			<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+		</exec>
+
+		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbcmart" spawn="true">
+			<arg line="-c ${db.path}/conf/local/${data.service.port}" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
@@ -93,9 +102,9 @@
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
-				<socket server="${host.ip}" port="60000" />
-				<socket server="${host.ip}" port="51000" />
-				<socket server="${host.ip}" port="50000" />
+				<socket server="${host.ip}" port="${cata.service.port}" />
+				<socket server="${host.ip}" port="${data.service.port}" />
+				<socket server="${host.ip}" port="${coord.service.port}" />
 			</and>
 		</waitfor>
 
