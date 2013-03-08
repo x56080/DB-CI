@@ -45,7 +45,7 @@
 			<property name="data.service.port" value="${data.service.port}" />
 			<property name="coord.service.port" value="${coord.service.port}" />
 			<property name="junitreport.path" value="${test.basedir}" />
-			<property name="junitreport.tar.file.name" value="${junitreport.tar.file.name}" />
+			<property name="antreport.tar.file.name" value="${antreport.tar.file.name}" />
 		</ant>
 
 	</target>
