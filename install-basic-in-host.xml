@@ -30,23 +30,24 @@
 			<equals arg1="${sdb.installed}" arg2="true" />
 			<then>
 				<!-- the sdb be installed-->
-				<foreach target="stop-sdb" param="service.name">
-					<path>
-						<dirset dir="${db.path}/conf/local" includes="*" />
-					</path>
-					<param name="db.path" value="${db.path}" />
-				</foreach>
-
-				<exec executable="sh" dir="${db.path}/sdbuninst" failonerror="true">
+				<!-- stop cm-->
+				<exec executable="service" dir="" faileonerror="true">
+					<arg value="sequoiadb" />
+					<arg value="stop" />
 				</exec>
 
-
+				<!-- stop db service-->>
 				<foreach target="stop-sdb" param="service.name">
 					<path>
 						<dirset dir="${db.path}/conf/local" includes="*" />
 					</path>
 					<param name="db.path" value="${db.path}" />
 				</foreach>
+
+				<!-- unstall software-->
+				<exec executable="sh" dir="${db.path}" failonerror="true">
+					<arg line="-c ${db.path}/sdbuninst"/>
+				</exec>
 
 				<echo message="Clean install env compeleted." />
 			</then>
