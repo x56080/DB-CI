@@ -17,7 +17,7 @@
 	<property name="db.path" value="${install.path}/sequoiadb" />
 
 	<target name="stop-sdb" depends="">
-		<exec executable="sdbstop" dir="${db.path}/bin" faileonerror="true">
+		<exec executable="sdbstop" dir="${db.path}/bin" failonerror="true">
 			<arg line="-p ${service.name}" />
 		</exec>
 	</target>
@@ -31,7 +31,7 @@
 			<then>
 				<!-- the sdb be installed-->
 				<!-- stop cm-->
-				<exec executable="service" dir="" faileonerror="true">
+				<exec executable="service" dir="" failonerror="true">
 					<arg value="sequoiadb" />
 					<arg value="stop" />
 				</exec>
@@ -61,12 +61,13 @@
 
 		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 
-		<exec executable="sh" dir="${install.package.path}/sequoiadb" faileonerror="true">
-			<arg line="-c sdbinst.sh -u sdbadmin -d ${install.path}" />
+		<chmod file="${install.package.path}/sequoiadb/sdbinst.sh" perm="u+x"/>
+		<exec executable="sh" dir="${install.package.path}/sequoiadb" failonerror="true">
+			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
 		</exec>
 
 		<!-- Check the status of serivce-->
-		<exec executable="service" dir="" faileonerror="true">
+		<exec executable="service" dir="" failonerror="true">
 			<arg value="sequoiadb" />
 			<arg value="status" />
 		</exec>
