@@ -27,7 +27,7 @@
 
 		<available file="${db.path}/bin/sdbstop" property="sdb.installed" />
 		<if>
-			<equal arg1="${sdb.installed}" arg2="true" />
+			<equals arg1="${sdb.installed}" arg2="true" />
 			<then>
 				<!-- the sdb be installed-->
 				<foreach target="stop-sdb" param="service.name">
