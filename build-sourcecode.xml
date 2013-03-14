@@ -100,6 +100,9 @@
 			<fileset dir="${CODE_DIR}/conf/samples/" />
 		</copy>
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
+		
+		<copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
+		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
 
 
 		<delete includeemptydirs="true">
