@@ -25,25 +25,32 @@
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
 
-		<foreach target="stop-sdb" param="service.name">
-			<path>
-				<dirset dir="${db.path}/conf/local" includes="*" />
-			</path>
-			<param name="db.path" value="${db.path}" />
-		</foreach>
+		<available file="${db.path}/bin/sdbstop" property="sdb.installed" />
+		<if>
+			<equal arg1="${sdb.installed}" arg2="true" />
+			<then>
+				<!-- the sdb be installed-->
+				<foreach target="stop-sdb" param="service.name">
+					<path>
+						<dirset dir="${db.path}/conf/local" includes="*" />
+					</path>
+					<param name="db.path" value="${db.path}" />
+				</foreach>
 
-		<exec executable="sh" dir="${db.path}/sdbuninst" faileonerror="true">
-		</exec>
+				<exec executable="sh" dir="${db.path}/sdbuninst" failonerror="true">
+				</exec>
 
 
-		<foreach target="stop-sdb" param="service.name">
-			<path>
-				<dirset dir="${db.path}/conf/local" includes="*" />
-			</path>
-			<param name="db.path" value="${db.path}" />
-		</foreach>
+				<foreach target="stop-sdb" param="service.name">
+					<path>
+						<dirset dir="${db.path}/conf/local" includes="*" />
+					</path>
+					<param name="db.path" value="${db.path}" />
+				</foreach>
 
-		<echo message="Clean install env compeleted." />
+				<echo message="Clean install env compeleted." />
+			</then>
+		</if>
 	</target>
 
 
