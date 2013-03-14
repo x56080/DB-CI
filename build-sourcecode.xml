@@ -102,9 +102,12 @@
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
 		
 		<copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
+		<replace file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" token="&#13;&#10;" value="&#10;" />
+		
 		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
-
-
+		<replace file="${RELEASE_DIR}/sequoiadb/sequoiadb" token="&#13;&#10;" value="&#10;" />
+		
+		
 		<delete includeemptydirs="true">
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
