@@ -36,7 +36,7 @@
 					<arg value="stop" />
 				</exec>
 
-				<!-- stop db service-->>
+				<!-- stop db service-->
 				<foreach target="stop-sdb" param="service.name">
 					<path>
 						<dirset dir="${db.path}/conf/local" includes="*" />
@@ -46,7 +46,7 @@
 
 				<!-- unstall software-->
 				<exec executable="sh" dir="${db.path}" failonerror="true">
-					<arg line="-c ${db.path}/sdbuninst"/>
+					<arg line="-c ${db.path}/sdbuninst" />
 				</exec>
 
 				<echo message="Clean install env compeleted." />
@@ -61,7 +61,7 @@
 
 		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 
-		<chmod file="${install.package.path}/sequoiadb/sdbinst.sh" perm="u+x"/>
+		<chmod file="${install.package.path}/sequoiadb/sdbinst.sh" perm="u+x" />
 		<exec executable="sh" dir="${install.package.path}/sequoiadb" failonerror="true">
 			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
 		</exec>
