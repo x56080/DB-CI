@@ -48,6 +48,7 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/doc" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/log" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
 
