@@ -28,7 +28,7 @@
 
 		<echo message="exec scons ${compile.arg.line}" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
-			<arg line="${compile.arg.line}" />
+			<!--arg line="${compile.arg.line}" /-->
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
