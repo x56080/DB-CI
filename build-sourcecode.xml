@@ -28,11 +28,11 @@
 
 		<echo message="exec scons ${compile.arg.line}" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
-			<!--arg line="${compile.arg.line}" /-->
+			<arg line="${compile.arg.line}" />
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
-			<arg line="${compile.arg.line}" />
+			<!--arg line="${compile.arg.line}" /-->
 		</exec>
 		<echo message="compile source code completed." />
 	</target>
@@ -98,7 +98,7 @@
 		</copy>
 
 		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" todir="${RELEASE_DIR}/sequoiadb/java" />
-		
+
 		<copy todir="${RELEASE_DIR}/sequoiadb/java/jdk">
 			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
 		</copy>
