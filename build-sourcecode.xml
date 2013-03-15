@@ -30,6 +30,10 @@
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
 			<arg line="${compile.arg.line}" />
 		</exec>
+
+		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
+			<arg line="${compile.arg.line}" />
+		</exec>
 		<echo message="compile source code completed." />
 	</target>
 
@@ -44,7 +48,7 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/samples" />
-		<mkdir dir="${RELEASE_DIR}/sequoiadb/java" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/java/jdk" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/doc" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
@@ -93,7 +97,9 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
-		<copy todir="${RELEASE_DIR}/sequoiadb/java">
+		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" todir="${RELEASE_DIR}/sequoiadb/java" />
+		
+		<copy todir="${RELEASE_DIR}/sequoiadb/java/jdk">
 			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
 		</copy>
 
@@ -101,14 +107,14 @@
 			<fileset dir="${CODE_DIR}/conf/samples/" />
 		</copy>
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
-		
+
 		<copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
-		<replace file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" token="&#13;&#10;" value="&#10;" />
-		
+		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" match="&#13;&#10;" replace="&#10;" flags="g" />
+
 		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
-		<replace file="${RELEASE_DIR}/sequoiadb/sequoiadb" token="&#13;&#10;" value="&#10;" />
-		
-		
+		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sequoiadb" match="&#13;&#10;" replace="&#10;" flags="g" />
+
+
 		<delete includeemptydirs="true">
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
