@@ -59,14 +59,14 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} FS COPY FILE ${test.machine.deploy.path}/${antreport.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE ${jenkins.master.ip}" dir="${STAF.PATH}\bin" failonerror="true" failifexecutionfails="true">
+		<exec command="${STAF.PATH}\bin\staf ${test.machine.deploy.ip1} FS COPY FILE ${test.machine.deploy.path}/${antreport.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE ${jenkins.master.ip}" dir="${STAF.PATH}\bin" failonerror="false" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
 		<untar src="${WORKSPACE}/${junitreport.tar.file.name}" dest="${WORKSPACE}" compression="gzip" />
-		<untar src="${WORKSPACE}/${antreport.tar.file.name}" dest="${WORKSPACE}" compression="gzip" />
+		<untar src="${WORKSPACE}/${antreport.tar.file.name}" dest="${WORKSPACE}" compression="gzip" faileonerror="false"/>
 		<echo message="Collect test result compeleted." />
 	</target>
 </project>
