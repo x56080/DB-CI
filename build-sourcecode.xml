@@ -60,9 +60,11 @@
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
 				<property name="build.result.dir" value="dd" />
+				<property name="java.driver.jar.name" value="sequoiadb-debug.jar"/>
 			</then>
 			<else>
 				<property name="build.result.dir" value="normal" />
+				<property name="java.driver.jar.name" value="sequoiadb-release.jar"/>
 			</else>
 		</if>
 
@@ -97,7 +99,7 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" todir="${RELEASE_DIR}/sequoiadb/java" />
+		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/java/jdk">
 			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
