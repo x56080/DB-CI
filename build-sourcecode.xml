@@ -10,17 +10,16 @@
 
 		<echo message="Begin to compile source code..." />
 
-		<property name="compile.arg.line.default" value="--all" />
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
 				<echo message="compile.debug is ture" />
-				<property name="compile.arg.line" value="${compile.arg.line.default} --dd" />
+				<property name="compile.arg.line" value="--dd" />
 				<echo message="${compile.arg.line}" />
 			</then>
 			<else>
 				<echo message="compile.debug is false" />
-				<property name="compile.arg.line" value="${compile.arg.line.default}" />
+				<property name="compile.arg.line" value="" />
 				<echo message="${compile.arg.line}" />
 			</else>
 		</if>
@@ -28,11 +27,11 @@
 
 		<echo message="exec scons ${compile.arg.line}" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
-			<arg line="${compile.arg.line}" />
+			<arg line="${compile.arg.line} --all" />
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
-			<!--arg line="${compile.arg.line}" /-->
+			<arg line="${compile.arg.line}" />
 		</exec>
 		<echo message="compile source code completed." />
 	</target>
