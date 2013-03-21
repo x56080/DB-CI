@@ -1,0 +1,37 @@
+
+<!--@param ${deploy.file.fullname} : the deploy file path and name -->
+<!--@param ${ci.script.file.path} : the ci-script file path -->
+
+<project name="deploy-test-all" default="deploy-test-all">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
+	<property file="${ci.script.file.path}/ci.properties" />
+
+	<target name="deploy-test-all" depends="">
+		<echo message="Begin deploy and test all ..." />
+
+		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
+			<path>
+				<dirset dir="${deploy.config.path}" includes="*.xml" />
+			</path>
+
+			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />
+		</foreach>
+
+	</target>
+
+	<target name="deploy-one-case-and-test" depends="">
+		<ant file="${deploy.case.fullname}">
+			<param name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" inheritAll="false" />
+			<param name="install.path" value="${install.path}" />
+			<param name="test.machine.no1" value="${test.machine.no1}" />
+			<param name="test.machine.no2" value="${test.machine.no2}" />
+			<param name="test.machine.no3" value="${test.machine.no3}" />
+		</ant>
+	</target>
+
+</project>

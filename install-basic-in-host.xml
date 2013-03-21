@@ -153,6 +153,7 @@
 		<antcall target="install" inheritAll="true">
 			<param name="install.package.path" value="${test.basedir}/deploy" />
 			<param name="install.package.name" value="${install.tar.file.name}" />
+			<param name="install.path" value="${install.path}"/>
 		</antcall>
 
 	</target>

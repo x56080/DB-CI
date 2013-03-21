@@ -1,6 +1,6 @@
 
 <!--@param deploy.host.name :  The host name for deploy test scripts and install software-->
-
+<!--@param test.machine.deploy.path:  The path where deploy install package and test scripts-->
 <project name="deploy" default="deploy">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 
