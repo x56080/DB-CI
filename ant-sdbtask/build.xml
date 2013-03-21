@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="ant-sdbtasks" default="jar" basedir=".">
+	<property name="root.dir" value="." />
+	<property name="java.driver.jar" value="../../../../driver/java/sequoiadb.jar" />
+
+	<property name="target.dir" value="${root.dir}/build" />
+	<property name="source.dir" value="${root.dir}/src" />
+
+	<target name="clean" depends="">
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="compile" depends="">
+		<mkdir dir="${target.dir}" />
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="${java.driver.jar}" />
+		<copy todir="${target.dir}">
+			<fileset dir="${source.dir}" includes="**/*.properties,**/*.xml" />
+		</copy>
+	</target>
+
+	<target name="jar" depends="compile">
+		<tstamp>
+			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
+		</tstamp>
+
+		<jar file="${root.dir}/ant-sdbtasks.jar">
+			<manifest>
+				<attribute name="Version" value="1.0" />
+				<attribute name="Build-Timestamp" value="${tstamp}" />
+			</manifest>
+			<fileset dir="${target.dir}" includes="**/*"/>
+		</jar>
+	</target>
+</project>

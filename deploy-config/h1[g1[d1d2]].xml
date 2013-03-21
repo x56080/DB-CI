@@ -1,0 +1,50 @@
+<!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
+<!--@param ${install.path}: The path where install sequoiadb -->
+<!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no3}: The host name or host ip of test machine No.1 -->
+
+<project name="deploy" default="deploy">
+	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
+		<classpath>
+			<pathelement location="${ant.sdb.tasks.path}/ant-sdbtasks.jar" />
+			<pathelement location="${install.path}/java/sequoiadb.jar" />
+		</classpath>
+	</taskdef>
+
+	<target name="deploy" depends="">
+
+		<!--parallel> <sequential -->
+		<echo message="Begin install software and test files to ${test.machine1}" />
+
+		<ant antfile="deploy-singlehost.xml">
+			<property name="host" value="${test.machine.no2}" />
+		</ant>
+
+		<sdbdeploy host="${test.machine.no2}" coordport="50000">
+			<!--catalog baseport="60000" dbpath="cata"> <configitem name="loglevel" 
+				value="5" /> </catalog -->
+
+			<datagroup name="group1">
+				<datanode baseport="51000" dbpath="${install.path}/database/data/51000">
+					<confitem name="loglevel" value="5" />
+				</datanode>
+				<datanode baseport="52000" dbpath="${install.path}/database/data/52000">
+					<confitem name="loglevel" value="5" />
+				</datanode>
+			</datagroup>
+		</sdbdeploy>
+		<!-- /sequential -->
+
+		<!--sequential> <sdbdeploy host="ubunt-3" -->
+		<!--catalog baseport="60000" dbpath="cata"> <configitem name="loglevel" 
+			value="5" /> </catalog -->
+		<!--data baseport="51000" catalogaddr="local:60000" groupname="group1" 
+			dbpath="data1_3"> <configitem name="loglevel" value="5" /> </data> <data 
+			baseport="52000" catalogaddr="local:60000" groupname="group2" dbpath="data2_1"> 
+			<configitem name="loglevel" value="5" /> </data> <data baseport="53000" catalogaddr="local:60000" 
+			groupname="group2" dbpath="data2_1"> <configitem name="loglevel" value="5" 
+			/> </data> </sdbdeploy> </sequential> </parallel -->
+	</target>
+</project>
