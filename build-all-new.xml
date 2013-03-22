@@ -46,7 +46,7 @@
 	<target name="build-ant-tasks" depends="build-src-test">
 		<mkdir dir="${ci.script.path}/ant-sdbtask/build" />
 
-		<javac srcdir="${ci.script.path}/ant-sdbtask/src" destdir="${ci.script.path}/ant-sdbtask/build">
+		<javac srcdir="${ci.script.path}/ant-sdbtask/src" destdir="${ci.script.path}/ant-sdbtask/build" fork="yes" executable="${WORKSPACE}/sequoiadb/java/jdk_win64/bin/javac">
 			<classpath>
 				<pathelement location="${WORKSPACE}/sequoiadb/driver/java/sequoiadb.jar" />
 			</classpath>
