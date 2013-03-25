@@ -17,7 +17,7 @@
 
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
 			<path>
-				<dirset dir="${deploy.config.path}" includes="*.xml" />
+				<fileset dir="${deploy.config.path}" includes="*.xml" />
 			</path>
 
 			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />
