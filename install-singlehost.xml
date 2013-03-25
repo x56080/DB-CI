@@ -12,22 +12,10 @@
 		<delete dir="${db.path}" />
 
 		<exec executable="sh" spawn="false" failonerror="false">
-			<arg line="-c 'killall -s 15 -r sequoiadb'" />
+			<arg line="-c 'killall -s 9 -r sequoiadb'" />
 		</exec>
 
-		<exec executable="sh" spawn="false" failonerror="false">
-			<arg line="-c 'killall -s 15 -r sdbcm" />
-		</exec>
-
-		<foreach target="stop-sdb" param="service name">
-			<path>
-				<dirset dir="${testcase.path}/ant-tests" includes="*" />
-			</path>
-
-			<param name="testcase.path" value="${testcase.path}" />
-		</foreach>
-
-		<!--waitfor maxwait="30" maxwaitunit="second" checkevery="500" timeoutproperty="is.time.out">
+		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
 				<not>
 					<socket server="${host.ip}" port="${cata.service.port}" />
@@ -39,23 +27,7 @@
 					<socket server="${host.ip}" port="${coord.service.port}" />
 				</not>
 			</and>
-		</waitfor-->
-
-		<if>
-			<isset property="is.time.out" />
-			<then>
-				<echo message="Error: Process exit timeout." />
-
-				<exec executable="sh" spawn="false" failonerror="false">
-					<arg line="-c 'killall -s 9 -r sequoiadb'" />
-				</exec>
-
-				<exec executable="sh" spawn="false" failonerror="false">
-					<arg line="-c 'killall -s 9 -r sdbcm" />
-				</exec>
-			</then>
-		</if>
-
+		</waitfor>
 
 		<echo message="Clean install env compeleted." />
 	</target>
