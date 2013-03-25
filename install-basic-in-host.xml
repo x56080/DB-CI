@@ -32,7 +32,7 @@
 				</exec>
 
 				<!-- stop db service-->
-				<exec executable="sdbstop" dir="${db.path}/bin" failonerror="true">
+				<exec executable="${db.path}/bin/sdbstop" dir="${db.path}/bin" failonerror="true">
 				</exec>
 				
 				<!-- unstall software-->
