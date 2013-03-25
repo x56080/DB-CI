@@ -12,7 +12,7 @@
 	<property file="${ci.script.file.path}/ci.properties" />
 
 	<target name="deploy-test-all" depends="">
-		<echo message="Begin deploy and test all ..." />
+		<echo message="Begin deploy and test all ...deploy.config.path= ${deploy.config.path}" />
 
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
 			<path>
@@ -25,6 +25,7 @@
 	</target>
 
 	<target name="deploy-one-case-and-test" depends="">
+		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}">
 		<ant file="${deploy.case.fullname}">
 			<param name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" inheritAll="false" />
 			<param name="install.path" value="${install.path}" />
