@@ -1,5 +1,7 @@
 <!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
 <!--@param ${install.path}: The path where install sequoiadb -->
+<!--@param ${deploy.file.fullnam}: The file full path where deploy file name for test -->
+<!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
@@ -8,8 +10,8 @@
 <project name="deploy" default="deploy">
 	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
 		<classpath>
-			<pathelement location="${ant.sdb.tasks.path}/ant-sdbtasks.jar" />
-			<pathelement location="${install.path}/java/sequoiadb.jar" />
+			<pathelement location="${deploy.path}/ant-sdbtasks/ant-sdbtasks.jar" />
+			<pathelement location="${deploy.path}/ant-sdbtasks/sequoiadb.jar" />
 		</classpath>
 	</taskdef>
 
