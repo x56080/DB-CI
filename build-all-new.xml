@@ -52,7 +52,7 @@
 			</classpath>
 		</javac>
 
-		<jar destfile="${ci.script.path}/ant-sdbtask/">
+		<jar destfile="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar">
 			<fileset dir="${ci.script.path}/ant-sdbtask/build" />
 		</jar>
 	</target>
