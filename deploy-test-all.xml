@@ -26,11 +26,12 @@
 
 	<target name="deploy-one-case-and-test" depends="">
 		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}"/>
-		<ant file="${deploy.case.fullname}">
-			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" inheritAll="false" />
+		<ant antfile="${deploy.case.fullname}" inheritAll="false">
+			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks"  />
 			<property name="install.path" value="${install.path}" />
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}"/>
-			<property name="deploy.path" value="${deploy.path}"/>	
+			<property name="deploy.path" value="${deploy.path}"/>
+			<property name="STAF.PATH" value="${STAF.PATH}"/>
 			<property name="test.machine.no1" value="${test.machine.no1}" />
 			<property name="test.machine.no2" value="${test.machine.no2}" />
 			<property name="test.machine.no3" value="${test.machine.no3}" />

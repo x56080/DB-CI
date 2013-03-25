@@ -1,3 +1,4 @@
+<!--@param ${STAF.PATH}: The path where is staf binary directory-->
 <!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
 <!--@param ${install.path}: The path where install sequoiadb -->
 <!--@param ${deploy.file.fullnam}: The file full path where deploy file name for test -->
@@ -20,7 +21,8 @@
 		<!--parallel> <sequential -->
 		<echo message="Begin install software and test files to ${test.machine1}" />
 
-		<ant antfile="deploy-singlehost.xml">
+		<ant antfile="../deploy-singlehost.xml">
+			<property name="STAF.PATH" value="${STAF.PATH}"/>
 			<property name="host" value="${test.machine.no2}" />
 		</ant>
 
