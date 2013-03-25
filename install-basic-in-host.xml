@@ -16,11 +16,6 @@
 	<property name="install.path" value="/opt" />
 	<property name="db.path" value="${install.path}/sequoiadb" />
 
-	<target name="stop-sdb" depends="">
-		<exec executable="sdbstop" dir="${db.path}/bin" failonerror="true">
-			<arg line="-p ${service.name}" />
-		</exec>
-	</target>
 
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
@@ -37,13 +32,9 @@
 				</exec>
 
 				<!-- stop db service-->
-				<foreach target="stop-sdb" param="service.name">
-					<path>
-						<dirset dir="${db.path}/conf/local" includes="*" />
-					</path>
-					<param name="db.path" value="${db.path}" />
-				</foreach>
-
+				<exec executable="sdbstop" dir="${db.path}/bin" failonerror="true">
+				</exec>
+				
 				<!-- unstall software-->
 				<exec executable="sh" dir="${db.path}" failonerror="true">
 					<arg line="-c ${db.path}/sdbuninst" />
@@ -153,7 +144,7 @@
 		<antcall target="install" inheritAll="true">
 			<param name="install.package.path" value="${test.basedir}/deploy" />
 			<param name="install.package.name" value="${install.tar.file.name}" />
-			<param name="install.path" value="${install.path}"/>
+			<param name="install.path" value="${install.path}" />
 		</antcall>
 
 	</target>
