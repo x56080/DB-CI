@@ -23,7 +23,7 @@
 
 		<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}"/>
-			<property name="host" value="${test.machine.no2}" />
+			<property name="deploy.host.name" value="${test.machine.no2}" />
 		</ant>
 
 		<sdbdeploy host="${test.machine.no2}" coordport="50000">
