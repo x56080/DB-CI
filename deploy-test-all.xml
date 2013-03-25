@@ -1,5 +1,6 @@
 
 <!--@param ${deploy.file.fullname} : the deploy file path and name -->
+<!--@param ${deploy.path}: The path where the deploy directory -->
 <!--@param ${ci.script.file.path} : the ci-script file path -->
 
 <project name="deploy-test-all" default="deploy-test-all">
@@ -21,17 +22,18 @@
 
 			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />
 		</foreach>
-
 	</target>
 
 	<target name="deploy-one-case-and-test" depends="">
-		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}">
+		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}"/>
 		<ant file="${deploy.case.fullname}">
-			<param name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" inheritAll="false" />
-			<param name="install.path" value="${install.path}" />
-			<param name="test.machine.no1" value="${test.machine.no1}" />
-			<param name="test.machine.no2" value="${test.machine.no2}" />
-			<param name="test.machine.no3" value="${test.machine.no3}" />
+			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" inheritAll="false" />
+			<property name="install.path" value="${install.path}" />
+			<property name="deploy.file.fullnam" value="${deploy.file.fullname}"/>
+			<property name="deploy.path" value="${deploy.path}"/>	
+			<property name="test.machine.no1" value="${test.machine.no1}" />
+			<property name="test.machine.no2" value="${test.machine.no2}" />
+			<property name="test.machine.no3" value="${test.machine.no3}" />
 		</ant>
 	</target>
 
