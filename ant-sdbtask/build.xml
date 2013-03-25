@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="ant-sdbtasks" default="jar" basedir=".">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
 	<property name="root.dir" value="." />
-	<property name="java.driver.jar" value="../../../../driver/java/sequoiadb.jar" />
+	<property name="java.driver.jar" value="../../../driver/java/sequoiadb.jar" />
 
 	<property name="target.dir" value="${root.dir}/build" />
 	<property name="source.dir" value="${root.dir}/src" />
@@ -11,9 +17,31 @@
 		<delete dir="${target.dir}" />
 	</target>
 
-	<target name="compile" depends="">
+	<target name="compile" depends="clean">
 		<mkdir dir="${target.dir}" />
-		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="${java.driver.jar}" />
+
+		<if>
+			<equals arg1="os.name" arg2="Linux" />
+			<then>
+				<property name="jdk.name.os" value="java_linux" />
+			</then>
+			<else>
+				<property name="jdk.name.os" value="java_win" />
+			</else>
+		</if>
+
+		<if>
+			<equals arg1="os.arch" arg2="amd64" />
+			<then>
+				<property name="jdk.name" value="${jdk.name.os}64" />
+			</then>
+			<else>
+				<property name="jdk.name" value="${jdk.name.os}32" />
+			</else>
+		</if>
+
+
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="${java.driver.jar}" fork="yes" executable="../../../java/${jdk.name}/bin/javac" />
 		<copy todir="${target.dir}">
 			<fileset dir="${source.dir}" includes="**/*.properties,**/*.xml" />
 		</copy>
@@ -29,7 +57,7 @@
 				<attribute name="Version" value="1.0" />
 				<attribute name="Build-Timestamp" value="${tstamp}" />
 			</manifest>
-			<fileset dir="${target.dir}" includes="**/*"/>
+			<fileset dir="${target.dir}" includes="**/*" />
 		</jar>
 	</target>
 </project>
