@@ -3,16 +3,17 @@
 	<target name="clean-ant-testcase">
 		<echo message="Begin to clean ant testcase evn.." />
 		<delete dir="${deploy.path}/hlt/ant_testcase/" failonerror="false" />
-                <delete dir="${build.testcases}/cmds/builds/*" failonerror="false" />
+		<delete dir="${build.testcases}/cmds/builds/*" failonerror="false" />
 		<echo message="Clean ant testcase evn completed." />
 	</target>
 
-        <target name="compile-ant-cmds" depends="clean-ant-testcase">
-                <echo message="Begin to compile and cmds..."/>
-                <exec executable="scons" dir="${build.testcases}/cmds/">
-		    <arg line="--dd"/>
-                </exec>
-        </target>
+	<target name="compile-ant-cmds" depends="clean-ant-testcase">
+		<echo message="Begin to compile ant cmds..." />
+		<exec executable="scons" dir="${build.testcases}/cmds/">
+			<arg line="--dd" />
+		</exec>
+	</target>
+
 
 	<target name="dist-ant-testcase" depends="compile-ant-cmds">
 		<echo message="build the base-bussiness testcases,with build.testcase=${build.testcases}" />

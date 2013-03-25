@@ -1,7 +1,7 @@
 <!--@param ${STAF.PATH}: The path where is staf binary directory-->
 <!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
 <!--@param ${install.path}: The path where install sequoiadb -->
-<!--@param ${deploy.file.fullnam}: The file full path where deploy file name for test -->
+<!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
@@ -21,8 +21,8 @@
 		<!--parallel> <sequential -->
 		<echo message="Begin install software and test files to ${test.machine1}" />
 
-		<ant antfile="../deploy-singlehost.xml">
-			<property name="STAF.PATH" value="${STAF.PATH}"/>
+		<ant antfile="../deploy-singlehost.xml" dir=".." ineritAll="false">
+			<property name="deploy.file.fullname" value="${deploy.file.fullname}"/>
 			<property name="host" value="${test.machine.no2}" />
 		</ant>
 

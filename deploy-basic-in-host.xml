@@ -2,7 +2,7 @@
 <!--@param deploy.host.name :  The host name for deploy test scripts and install software-->
 <!--@param test.machine.deploy.path:  The path where deploy install package and test scripts-->
 <project name="deploy" default="deploy">
-	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
+	<property file="ci.properties" />
 
 	<target name="clean-deploy" depends="">
 		<property environment="env" />
@@ -28,15 +28,15 @@
 		<echo message="Begin to deploy softeware and test..." />
 
 		<property environment="env" />
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${deploy.file.fullname} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${deploy.file.fullname} TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
