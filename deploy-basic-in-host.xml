@@ -35,8 +35,8 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${basedir}/install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${basedir}/install-basic-in-host.xml TODIRECTORY ${test.machine.deploy.path} TOMACHINE ${deploy.host.name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
