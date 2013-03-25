@@ -20,8 +20,9 @@
 	<target name="compile" depends="clean">
 		<mkdir dir="${target.dir}" />
 
+		<echo message="os.name=${os.name}, os.arch=${os.arch}"/>
 		<if>
-			<equals arg1="os.name" arg2="Linux" />
+			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="java_linux" />
 			</then>
@@ -31,7 +32,7 @@
 		</if>
 
 		<if>
-			<equals arg1="os.arch" arg2="amd64" />
+			<equals arg1="${os.arch}" arg2="amd64" />
 			<then>
 				<property name="jdk.name" value="${jdk.name.os}64" />
 			</then>
