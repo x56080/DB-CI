@@ -26,7 +26,7 @@
 
 	<target name="deploy-one-case-and-test" depends="">
 		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}"/>
-		<ant antfile="${deploy.case.fullname}" inheritAll="false">
+		<ant antfile="${deploy.case.fullname}" dir="ci.script.file.path" inheritAll="false">
 			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks"  />
 			<property name="install.path" value="${install.path}" />
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}"/>

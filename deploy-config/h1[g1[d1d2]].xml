@@ -21,7 +21,7 @@
 		<!--parallel> <sequential -->
 		<echo message="Begin install software and test files to ${test.machine1}" />
 
-		<ant antfile="../deploy-singlehost.xml" dir=".." ineritAll="false">
+		<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}"/>
 			<property name="host" value="${test.machine.no2}" />
 		</ant>
