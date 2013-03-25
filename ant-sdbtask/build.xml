@@ -24,10 +24,10 @@
 		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
-				<property name="jdk.name.os" value="java_linux" />
+				<property name="jdk.name.os" value="jdk_linux" />
 			</then>
 			<else>
-				<property name="jdk.name.os" value="java_win" />
+				<property name="jdk.name.os" value="jdk_win" />
 			</else>
 		</if>
 
