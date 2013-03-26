@@ -33,6 +33,8 @@
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
 			<arg line="${compile.arg.line}" />
 		</exec>
+		
+		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java//sequoiadb.jar" />
 		<echo message="compile source code completed." />
 	</target>
 
@@ -98,7 +100,7 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
+		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/java/jdk">
 			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
