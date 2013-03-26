@@ -17,7 +17,7 @@ import com.ibm.staf.STAFHandle;
  * @author qiushanggao
  *
  */
-public class sdbTest  extends Task{
+public class SdbTest  extends Task{
 	private String maxWaitTime = "30m";
 	
 	private String hostName = "localhost";
