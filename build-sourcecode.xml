@@ -1,4 +1,5 @@
 <project name="build-srccode" default="main">
+	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
 
 	<target name="compile-src" depends="">
 		<taskdef resource="net/sf/antcontrib/antlib.xml">
