@@ -8,7 +8,7 @@
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no3}: The host name or host ip of test machine No.1 -->
 
-<project name="deploy" default="deploy">
+<project name="deploy" default="test">
 	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
 		<classpath>
 			<pathelement location="${deploy.path}/ant-sdbtasks/ant-sdbtasks.jar" />
@@ -25,9 +25,10 @@
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 			<property name="deploy.host.name" value="${test.machine.no2}" />
 		</ant>
+		
 	</target>
 
-	<target name="deploy" depends="">
+	<target name="deploy" depends="clean">
 
 		<!--parallel> <sequential -->
 		<echo message="Begin install software and test files to ${test.machine1}" />
@@ -63,7 +64,7 @@
 			/> </data> </sdbdeploy> </sequential> </parallel -->
 	</target>
 
-	<target name="test" depends="">
+	<target name="test" depends="deploy">
 
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases.xml" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/junit_testcase/" />
