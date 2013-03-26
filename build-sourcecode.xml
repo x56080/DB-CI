@@ -33,7 +33,17 @@
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
 			<arg line="${compile.arg.line}" />
 		</exec>
-		
+
+		<if>
+			<equals arg1="${compile.debug}" arg2="true" />
+			<then>
+				<property name="java.driver.jar.name" value="sequoiadb-debug.jar" />
+			</then>
+			<else>
+				<property name="java.driver.jar.name" value="sequoiadb-release.jar" />
+			</else>
+		</if>
+
 		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java//sequoiadb.jar" />
 		<echo message="compile source code completed." />
 	</target>
@@ -57,15 +67,14 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
 
+
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
 				<property name="build.result.dir" value="dd" />
-				<property name="java.driver.jar.name" value="sequoiadb-debug.jar"/>
 			</then>
 			<else>
 				<property name="build.result.dir" value="normal" />
-				<property name="java.driver.jar.name" value="sequoiadb-release.jar"/>
 			</else>
 		</if>
 
