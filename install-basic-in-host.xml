@@ -34,7 +34,7 @@
 				<!-- stop db service-->
 				<exec executable="${db.path}/bin/sdbstop" dir="${db.path}/bin" failonerror="true">
 				</exec>
-				
+
 				<!-- unstall software-->
 				<exec executable="sh" dir="${db.path}" failonerror="true">
 					<arg line="-c ${db.path}/sdbuninst" />
@@ -96,8 +96,11 @@
 		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 
-		<chown file="${db.path}/database" owner="sdbadmin:sdbadmin"/>
-		
+		<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
+		<chown owner="sdbadmin:sdbadmin" type="both">
+			<fileset dir="${db.path}/" includes="database/**/*" />
+		</chown>
+
 		<echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 			<arg line="-c ${db.path}/conf/local/${cata.service.port}" />
