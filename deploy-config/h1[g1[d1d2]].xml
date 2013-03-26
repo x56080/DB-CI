@@ -11,8 +11,7 @@
 <project name="deploy" default="test">
 	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
 		<classpath>
-			<pathelement location="${deploy.path}/ant-sdbtasks/ant-sdbtasks.jar" />
-			<pathelement location="${deploy.path}/ant-sdbtasks/sequoiadb.jar" />
+			<fileset dir="${deploy.path}/ant-sdbtasks/" includes="*.jar" />
 		</classpath>
 	</taskdef>
 

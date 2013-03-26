@@ -4,6 +4,7 @@
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
+			<pathelement location="C:\Tools\ant-contrib-1.0b3-bin\ant-contrib\ant-contrib-1.0b5.jar" />
 		</classpath>
 	</taskdef>
 
@@ -12,6 +13,7 @@
 
 	<property name="target.dir" value="${root.dir}/build" />
 	<property name="source.dir" value="${root.dir}/src" />
+	<property name="library.dir" value="${root.dir}/lib" />
 
 	<target name="clean" depends="">
 		<delete dir="${target.dir}" />
@@ -20,7 +22,7 @@
 	<target name="compile" depends="clean">
 		<mkdir dir="${target.dir}" />
 
-		<echo message="os.name=${os.name}, os.arch=${os.arch}"/>
+		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
@@ -42,7 +44,12 @@
 		</if>
 
 
-		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="${java.driver.jar}" fork="yes" executable="../../../java/${jdk.name}/bin/javac" />
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="../../../java/${jdk.name}/bin/javac">
+			<classpath>
+				<fileset dir="${library.dir}" includes="*.jar"/>
+			</classpath>
+		</javac>
+		
 		<copy todir="${target.dir}">
 			<fileset dir="${source.dir}" includes="**/*.properties,**/*.xml" />
 		</copy>
