@@ -132,7 +132,7 @@
 		<echo message="Clean deploy env compeleted." />
 	</target>
 
-	<target name="install-all" depends="clean-install">
+	<target name="install-all" depends="clean-install-all">
 		<echo message="Begin test all..." />
 
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
