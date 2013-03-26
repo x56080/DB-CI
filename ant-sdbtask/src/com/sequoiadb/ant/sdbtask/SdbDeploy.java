@@ -10,7 +10,6 @@ import com.sequoiadb.ant.datatype.*;
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.ReplicaNode;
 import com.sequoiadb.base.Sequoiadb;
-import com.sequoiadb.exception.BaseException;
 
 public class SdbDeploy extends Task {
 	private String hostName;

@@ -25,6 +25,7 @@
 	</target>
 
 	<target name="deploy-one-case-and-test" depends="">
+		
 		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}"/>
 		<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" inheritAll="false">
 			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks"  />
@@ -36,6 +37,12 @@
 			<property name="test.machine.no2" value="${test.machine.no2}" />
 			<property name="test.machine.no3" value="${test.machine.no3}" />
 		</ant>
+		<echo message="Deploy ${deploy.case.fullname} complete. "/>
+		
+		<echo message="Begion to exec all test case... "/>
+			
+			
+		<echo message="Exec all test case complete. "/>
 	</target>
 
 </project>
