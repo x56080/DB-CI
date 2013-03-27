@@ -48,7 +48,7 @@
 
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/install-basic-in-host.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-basic-testcases_new.xml" todir="${deploy.path}" />
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<!--copy file="${ci.script.path}/ant-sdbtask/lib/JSTAF.jar" todir="${deploy.path}/ant-sdbtasks" /-->
