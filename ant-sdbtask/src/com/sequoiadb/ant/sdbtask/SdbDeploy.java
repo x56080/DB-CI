@@ -75,7 +75,9 @@ public class SdbDeploy extends Task {
 				ReplicaGroup group = sdb.getReplicaGroupByName(groupInfo
 						.getName());
 				
-				while(true)
+				//Wait for group select master, max wait time is 120sec;
+				int i = 0;
+				for(i = 0; i < 120; i++)
 				{
 					try
 					{
@@ -92,6 +94,12 @@ public class SdbDeploy extends Task {
 					this.log("Wait group:" + groupInfo.getName() + " select master...");
 					Thread.sleep(1000);
 				}
+				if (i >= 120)
+				{
+					throw new BuildException("Error: Group " + groupInfo.getName() + " select master time out.");
+				}
+				
+				this.log("group:" + groupInfo.getName() + " select master compeleted.");
 			}
 			
 		} catch (Exception e) {
