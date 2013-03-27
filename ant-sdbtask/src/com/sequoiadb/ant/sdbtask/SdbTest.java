@@ -49,6 +49,11 @@ public class SdbTest  extends Task{
 		return param;
 	}
 	
+	private String STAFResultToString(STAFResult result)
+	{
+		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
+		return msg;
+	}
 	
 	public void execute() {
 		try{
@@ -69,12 +74,11 @@ public class SdbTest  extends Task{
 				System.out.println("exec: staf " + hostName + " PROCESS " + request);
 				STAFResult result = handle.submit2(hostName, "PROCESS", request);
 				
-				System.out.println(result.toString());
+				System.out.println(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok)
 				{
-					throw new BuildException(result.toString());
+					throw new BuildException(STAFResultToString(result));
 				}
-				
 			}
 			finally{
 				handle.unRegister();
@@ -82,7 +86,7 @@ public class SdbTest  extends Task{
 		}
 		catch (STAFException e)
 		{
-			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg=" + e.getMessage();
+			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg=" + e.getLocalizedMessage();
 			System.out.println(errorMsg);
 			e.printStackTrace();
 			
