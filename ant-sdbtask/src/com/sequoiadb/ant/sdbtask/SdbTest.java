@@ -75,10 +75,11 @@ public class SdbTest  extends Task{
 		}
 		catch (STAFException e)
 		{
-			System.out.println("Exception message:" + e.toString());
+			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg=" + e.getMessage();
+			System.out.println(errorMsg);
 			e.printStackTrace();
 			
-			throw new BuildException(e.toString());
+			throw new BuildException(errorMsg);
 		}
 	}
 }
