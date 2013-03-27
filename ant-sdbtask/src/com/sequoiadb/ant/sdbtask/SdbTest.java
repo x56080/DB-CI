@@ -55,7 +55,7 @@ public class SdbTest  extends Task{
 			try{
 				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
 				
-				String request = "SHELL COMMAND ant -f " + scriptFileName;
+				String request = "START SHELL COMMAND ant -f " + scriptFileName;
 				
 				for(Parameter param: params)
 				{
