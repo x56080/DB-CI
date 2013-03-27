@@ -12,6 +12,7 @@ import org.apache.tools.ant.types.Parameter;
 
 import com.ibm.staf.STAFException;
 import com.ibm.staf.STAFHandle;
+import com.ibm.staf.STAFResult;
 
 /**
  * @author qiushanggao
@@ -66,7 +67,13 @@ public class SdbTest  extends Task{
 				request += " WAIT " + maxWaitTime;
 				
 				System.out.println("exec: staf " + hostName + " PROCESS " + request);
-				handle.submit(hostName, "PROCESS", request);
+				STAFResult result = handle.submit2(hostName, "PROCESS", request);
+				
+				System.out.println(result.toString());
+				if (result.rc != STAFResult.Ok)
+				{
+					throw new BuildException(result.toString());
+				}
 				
 			}
 			finally{
