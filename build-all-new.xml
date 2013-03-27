@@ -28,12 +28,6 @@
 		</ant>
 		<echo message="Compile source code completed." />
 
-		<echo message="Begin to compile js test code..." />
-		<ant antfile="${WORKSPACE}/sequoiadb/testcases/hlt/junit_testcases/src/build.xml" target="compile-test">
-			<property name="build.testcases" value="${build.testcases}/junit_testcases" />
-			<property name="deploy.path" value="${deploy.path}" />
-		</ant>
-		<echo message="Compile source test completed." />
 
 		<echo message="Begin to compile ant test code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-ant-testcase.xml" target="dist-ant-testcase">
@@ -44,17 +38,21 @@
 	</target>
 
 	<target name="build-ant-tasks" depends="build-src-test">
-		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml" inheritAll="false"/>
+		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml" inheritAll="false" />
 	</target>
 
 	<target name="build-all" depends="build-src-test, build-ant-tasks">
+		<copy todir="${deploy.path}/hlt/js_testcase/js">
+			<fileset dir="${build.testcases}/js_testcase/js" />
+		</copy>
+
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/install-basic-in-host.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<!--copy file="${ci.script.path}/ant-sdbtask/lib/JSTAF.jar" todir="${deploy.path}/ant-sdbtasks" /-->
-		<copy file="${WORKSPACE}/release/sequoiadb/java/sequoiadb.jar" todir="${deploy.path}/ant-sdbtasks"/>
+		<copy file="${WORKSPACE}/release/sequoiadb/java/sequoiadb.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
 
