@@ -36,7 +36,6 @@
 			<property name="test.machine.no1" value="${test.machine.no1}" />
 			<property name="test.machine.no2" value="${test.machine.no2}" />
 			<property name="test.machine.no3" value="${test.machine.no3}" />
-			<property name="java.library.path" value="${java.library.path}:${deploy.path}/ant-sdbtasks/"/>
 		</ant>
 		<echo message="Deploy ${deploy.case.fullname} complete. "/>
 		
