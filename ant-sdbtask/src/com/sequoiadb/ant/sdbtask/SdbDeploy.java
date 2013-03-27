@@ -10,6 +10,7 @@ import com.sequoiadb.ant.datatype.*;
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.ReplicaNode;
 import com.sequoiadb.base.Sequoiadb;
+import com.sequoiadb.exception.BaseException;
 
 public class SdbDeploy extends Task {
 	private String hostName;
@@ -41,10 +42,13 @@ public class SdbDeploy extends Task {
 		try {
 			for (DataNodeGroup groupInfo : dataNodeGroups) {
 
-				ReplicaGroup group = sdb.getReplicaGroupByName(groupInfo
-						.getName());
+				ReplicaGroup group = sdb.getReplicaGroupByName(groupInfo.getName());
+				
+				
 				if (group == null) {
 					group = sdb.createReplicaGroup(groupInfo.getName());
+					
+					this.log("Create group:" + groupInfo.getName());
 				}
 
 				for (DataNode nodeInfo : groupInfo.getDataNode()) {
@@ -54,6 +58,8 @@ public class SdbDeploy extends Task {
 					if (node == null) {
 						group.createNode(this.hostName, nodeInfo.getBasePort(),
 								nodeInfo.getDbpath(), nodeInfo.getConfigMap());
+						
+						this.log("Create node host:" + this.hostName + ", port:" + nodeInfo.getBasePort());
 					} else {
 						throw new BuildException("Node repeat: hostname="
 								+ this.hostName + "servicename:"
@@ -63,6 +69,31 @@ public class SdbDeploy extends Task {
 				
 				group.start();
 			}
+			
+			for (DataNodeGroup groupInfo : dataNodeGroups)
+			{
+				ReplicaGroup group = sdb.getReplicaGroupByName(groupInfo
+						.getName());
+				
+				while(true)
+				{
+					try
+					{
+						ReplicaNode masterNode = group.getMaster();
+						if (masterNode != null)
+						{
+							break;
+						}
+					}
+					catch(BaseException baseException)
+					{
+					}
+					
+					this.log("Wait group:" + groupInfo.getName() + " select master...");
+					Thread.sleep(1000);
+				}
+			}
+			
 		} catch (Exception e) {
 
 			e.printStackTrace();
