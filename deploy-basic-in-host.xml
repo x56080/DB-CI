@@ -1,10 +1,10 @@
 
 <!--@param deploy.host.name :  The host name for deploy test scripts and install software-->
 <!--@param test.machine.deploy.path:  The path where deploy install package and test scripts-->
-<project name="deploy" default="deploy">
+<project name="deploy-basic-in-host" default="deploy-basic-in-host">
 	<property file="ci.properties" />
 
-	<target name="clean-deploy" depends="">
+	<target name="clean-deploy-basic-in-host" depends="">
 		<property environment="env" />
 
 		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
@@ -33,7 +33,7 @@
 		<echo message="Clean deploy env compeleted." />
 	</target>
 
-	<target name="deploy" depends="clean-deploy">
+	<target name="deploy-basic-in-host" depends="clean-deploy-basic-in-host">
 		<echo message="Begin to deploy softeware and test..." />
 
 		<property environment="env" />

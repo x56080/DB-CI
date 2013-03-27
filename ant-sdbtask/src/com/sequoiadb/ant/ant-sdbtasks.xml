@@ -1,4 +1,4 @@
 <antlib>
-	<typedef name="sdbdeploy" classname="com.sequoiadb.ant.sdbtask.SdbDeploy" />
-	<typedef name="sdbtest" classname="com.sequoiadb.ant.sdbtask.SdbTest" />
+	<typedef name="sdbdeploy" classname="com.sequoiadb.ant.sdbtask.SdbDeploy" onerror="ignore"/>
+	<typedef name="sdbtest" classname="com.sequoiadb.ant.sdbtask.SdbTest" onerror="ignore"/>
 </antlib>

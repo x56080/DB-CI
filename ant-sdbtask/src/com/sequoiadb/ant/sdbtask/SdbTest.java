@@ -65,6 +65,7 @@ public class SdbTest  extends Task{
 				
 				request += " WAIT " + maxWaitTime;
 				
+				System.out.println("exec: staf " + hostName + " PROCESS " + request);
 				handle.submit(hostName, "PROCESS", request);
 				
 			}
@@ -74,7 +75,9 @@ public class SdbTest  extends Task{
 		}
 		catch (STAFException e)
 		{
+			System.out.println("Exception message:" + e.toString());
 			e.printStackTrace();
+			
 			throw new BuildException(e.toString());
 		}
 	}
