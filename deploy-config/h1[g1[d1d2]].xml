@@ -68,7 +68,7 @@
 		<basename property="this.file.name" file="${ant.file}" suffix=".xml"/>
 		
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases_new.xml" timeout="30m">
-			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcase/" />
+			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
 			<param name="sdb.path" value="${install.path}/sequoiadb/bin" />
 			<param name="test.suite.name.prefix" value="com.sequoiadb.testcases.${this.file.name}"/>
 		</sdbtest>
