@@ -13,11 +13,11 @@
 	<property file="${ci.script.file.path}/ci.properties" />
 
 	<target name="clean" depends="">
-		<delete dir="${work.path}/reports"/>
-		<mkdir dir="${work.path}/reports"/>
+		<delete dir="${work.path}/reports" />
+		<mkdir dir="${work.path}/reports" />
 	</target>
 
-	<target name="deploy-test-all" depends="">
+	<target name="deploy-test-all" depends="clean">
 		<echo message="Begin deploy and test all ...deploy.config.path= ${deploy.config.path}" />
 
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
@@ -32,7 +32,19 @@
 	<target name="deploy-one-case-and-test" depends="">
 
 		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}" />
-		<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" inheritAll="false">
+		<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="test" inheritAll="false">
+			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
+			<property name="install.path" value="${install.path}" />
+			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
+			<property name="deploy.path" value="${work.path}/deploy" />
+			<property name="test.reports.path" value="${work.path}/reports" />
+			<property name="STAF.PATH" value="${STAF.PATH}" />
+			<property name="test.machine.no1" value="${test.machine.no1}" />
+			<property name="test.machine.no2" value="${test.machine.no2}" />
+			<property name="test.machine.no3" value="${test.machine.no3}" />
+		</ant>
+
+		<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="clean" inheritAll="false">
 			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
 			<property name="install.path" value="${install.path}" />
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
