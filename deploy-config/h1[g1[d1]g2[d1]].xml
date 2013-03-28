@@ -45,9 +45,12 @@
 				<datanode baseport="51000" dbpath="${install.path}/sequoiadb/database/data/51000">
 					<confitem name="loglevel" value="5" />
 				</datanode>
-				<!--datanode baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
+			</datagroup>
+			<datagroup name="group2">
+				
+				<datanode baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
 					<confitem name="loglevel" value="5" />
-				</datanode-->
+				</datanode>
 			</datagroup>
 		</sdbdeploy>
 
