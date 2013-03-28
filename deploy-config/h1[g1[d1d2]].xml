@@ -31,6 +31,7 @@
 
 	<target name="deploy" depends="clean">
 		<echo message="Begin install software and test files to ${test.machine1}" />
+		<hostinfo prefix="host"/>
 
 		<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
@@ -62,8 +63,8 @@
 			<param name="test.suite.name.prefix" value="com.sequoiadb.testcases.${this.file.name}" />
 		</sdbtest>
 
-		<echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE localhost" />
-		<exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE localhost" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" />
+		<exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
