@@ -68,6 +68,7 @@ public class SdbTest  extends Task{
 	
 	private String STAFResultToString(STAFResult result)
 	{
+		
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
@@ -79,7 +80,7 @@ public class SdbTest  extends Task{
 				
 				
 				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
-				String request = "START SHELL COMMAND ant -f " + scriptFileName; // + " -l " + scriptFileName + ".log";
+				String request = "START SHELL COMMAND ant -f " + scriptFileName + " -l " + scriptFileName + ".log";
 				
 				String antFileFullName = this.getProject().getProperty("ant.file");
 				File tempFile = new File(antFileFullName);
@@ -105,6 +106,14 @@ public class SdbTest  extends Task{
 				{
 					throw new BuildException(STAFResultToString(result));
 				}
+				
+				
+				//Staf ${test.machine.no2} FS GET FILE scriptFileName + ".log" TEXT  
+				request = "GET FILE " + scriptFileName + ".log TEXT";
+				log("exec: staf " + hostName + " FS " + request);
+				result = handle.submit2(hostName, "FS", request);
+				
+				log(result.result);
 				
 				//<echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" />
 				//<exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
