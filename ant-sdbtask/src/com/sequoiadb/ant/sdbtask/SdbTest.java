@@ -84,6 +84,7 @@ public class SdbTest  extends Task{
 				String antFileFullName = this.getProject().getProperty("ant.file");
 				File tempFile = new File(antFileFullName);
 				String antFileName = tempFile.getName();
+				antFileName = antFileName.substring(0, antFileName.indexOf("."));
 				
 				request += " -Dtest.package.name=" + antFileName + "-" + hostName;
 				request += " -Dreports.path=" + this.remoteReportsPath;
