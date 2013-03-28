@@ -3,6 +3,8 @@
  */
 package com.sequoiadb.ant.sdbtask;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,10 @@ public class SdbTest  extends Task{
 	
 	private String scriptFileName;
 	
+	private String remoteReportsPath;
+	
+	private String masterReportsPath;
+	
 	private List<Parameter> params = new ArrayList<Parameter>();
 	
 	public void setHost(String value)
@@ -40,6 +46,16 @@ public class SdbTest  extends Task{
 	public void setTimeout(String value)
 	{
 		maxWaitTime = value;
+	}
+	
+	public void setRemotereports(String value)
+	{
+		remoteReportsPath = value;
+	}
+	
+	public void setMasterreports(String value)
+	{
+		masterReportsPath = value;
 	}
 	
 	public Parameter createParam()
@@ -60,7 +76,6 @@ public class SdbTest  extends Task{
 			STAFHandle handle = new STAFHandle("ant-sdbtasks");
 			try{
 				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
-				
 				String request = "START SHELL COMMAND ant -f " + scriptFileName + " -l " + scriptFileName + ".log";
 				
 				for(Parameter param: params)
@@ -71,10 +86,47 @@ public class SdbTest  extends Task{
 				
 				request += " WAIT " + maxWaitTime;
 				
-				System.out.println("exec: staf " + hostName + " PROCESS " + request);
+				log("exec: staf " + hostName + " PROCESS " + request);
 				STAFResult result = handle.submit2(hostName, "PROCESS", request);
 				
-				System.out.println(STAFResultToString(result));
+				log(STAFResultToString(result));
+				if (result.rc != STAFResult.Ok)
+				{
+					throw new BuildException(STAFResultToString(result));
+				}
+				
+				//<echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" />
+				//<exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+				//	<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+				//	<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				//	<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+				//</exec>
+				
+				request = "COPY DIRECTORY " + this.remoteReportsPath + " TODIRECTORY " + this.masterReportsPath + " TOMACHINE " + InetAddress.getLocalHost().getHostName();
+				
+				log("exec: staf " + hostName + " FS " + request);
+				result = handle.submit2(hostName, "FS", request);
+				
+				log(STAFResultToString(result));
+				if (result.rc != STAFResult.Ok)
+				{
+					throw new BuildException(STAFResultToString(result));
+				}
+				
+				
+				
+				//<echo message="exec ${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM" />
+				//<exec command="${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM" failifexecutionfails="true">
+				//	<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+				//	<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+				//	<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+				//</exec>
+				request = "DELETE ENTRY " + this.remoteReportsPath + " RECURSE CONFIRM";
+				
+				log("exec: staf " + hostName + " FS " + request);
+				result = handle.submit2(hostName, "FS", request);
+				
+				log(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok)
 				{
 					throw new BuildException(STAFResultToString(result));
@@ -83,11 +135,16 @@ public class SdbTest  extends Task{
 			finally{
 				handle.unRegister();
 			}
+		} 
+		catch (UnknownHostException e) {
+			e.printStackTrace();
+			
+			throw new BuildException(e.getMessage());
 		}
 		catch (STAFException e)
 		{
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg=" + e.getLocalizedMessage();
-			System.out.println(errorMsg);
+			log(errorMsg);
 			e.printStackTrace();
 			
 			throw new BuildException(errorMsg);
