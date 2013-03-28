@@ -1,7 +1,7 @@
 <!--@param ${testcase.path}: The path where test case direcotry.-->
 <!--@param ${install.path}: The path where sequoiadb installed.-->
 <!--@param ${reports.path}: The path where test case direcotry.-->
-<!--@param ${test.suite.name.prefix}: The prefix of test suite name, form:  com.sequoiadb.testcases.${deploy.conf.name}.-->
+<!--@param ${test.package.name}: The name of test package name,.-->
 <project name="test-basic-testcases" default="test-basic-testcases">
 
 	<target name="clean-test-reports" depends="">
@@ -38,7 +38,7 @@
 		<basename property="test.suite.name" file="${test.suite.fullname}" />
 		<hostinfo prefix="host" />
 
-		<property name="test.suite.class.name" value="${test.suite.name.prefix}-${host.NAME}.${test.suite.name}" />
+		<property name="test.suite.class.name" value="com.sequoiadb.testcases.${test.package.name}.${test.suite.name}" />
 
 		<tstamp>
 			<format property="current.time" pattern="MM-dd hh:mm:ss" />

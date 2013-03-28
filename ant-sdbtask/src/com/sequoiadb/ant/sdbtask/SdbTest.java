@@ -3,6 +3,7 @@
  */
 package com.sequoiadb.ant.sdbtask;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -75,8 +76,17 @@ public class SdbTest  extends Task{
 		try{
 			STAFHandle handle = new STAFHandle("ant-sdbtasks");
 			try{
+				
+				
 				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
 				String request = "START SHELL COMMAND ant -f " + scriptFileName + " -l " + scriptFileName + ".log";
+				
+				String antFileFullName = this.getProject().getProperty("ant.file");
+				File tempFile = new File(antFileFullName);
+				String antFileName = tempFile.getName();
+				
+				request += " -Dtest.package.name=" + antFileName + "-" + hostName;
+				request += " -Dreports.path=" + this.remoteReportsPath;
 				
 				for(Parameter param: params)
 				{
@@ -101,7 +111,6 @@ public class SdbTest  extends Task{
 				//	<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 				//	<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 				//</exec>
-				
 				request = "COPY DIRECTORY " + this.remoteReportsPath + " TODIRECTORY " + this.masterReportsPath + " TOMACHINE " + InetAddress.getLocalHost().getHostName();
 				
 				log("exec: staf " + hostName + " FS " + request);
@@ -148,6 +157,12 @@ public class SdbTest  extends Task{
 			e.printStackTrace();
 			
 			throw new BuildException(errorMsg);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			
+			throw new BuildException(e.toString());
 		}
 	}
 }
