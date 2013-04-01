@@ -2,7 +2,7 @@
 <!--@param ${deploy.file.fullname} : the deploy file path and name -->
 <!--@param ${work.path}: The path where the deploy directory -->
 <!--@param ${ci.script.file.path} : the ci-script file path -->
-
+<!--@param ${deploy.conffile.wildcard}: deploy config file wildcard. just for debug -->
 <project name="deploy-test-all" default="deploy-test-all">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
@@ -20,9 +20,11 @@
 	<target name="deploy-test-all" depends="clean">
 		<echo message="Begin deploy and test all ...deploy.config.path= ${deploy.config.path}" />
 
+		<property name="deploy.conffile.wildcard" value="*"/>
+		
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
 			<path>
-				<fileset dir="${deploy.config.path}" includes="*.xml" />
+				<fileset dir="${deploy.config.path}" includes="${deploy.conffile.wildcard}.xml" />
 			</path>
 
 			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />

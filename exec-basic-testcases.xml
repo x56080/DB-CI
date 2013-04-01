@@ -1,3 +1,5 @@
+<!--@param ${testcase.path}: The path where test case direcotry.-->
+<!--@param ${install.path}: The path where sequoiadb installed.-->
 <project name="test-basic-testcases" default="test-basic-testcases">
 
 	<target name="clean-test-reports" depends="">
@@ -18,14 +20,14 @@
 		<mkdir dir="${testcase.path}/reports" />
 		<tstamp />
 		<echo message="perform the base-bussiness testcases,with testcase.path=${testcase.path}" />
-		<chmod file="${sdb.path}/sdb" perm="u+x" />
+		<chmod file="${install.path}/bin/sdb" perm="u+x" />
 		<property name="js.name" value="createCS_1.js" />
 
 		<foreach target="test-one-case" param="js.fullname">
 			<fileset dir="${testcase.path}/js" includes="*.js" />
 
 			<param name="testcase.path" value="${testcase.path}" />
-			<param name="sdb.fullname" value="${sdb.path}/sdb" />
+			<param name="sdb.fullname" value="${install.path}/bin/sdb" />
 			<param name="testcases.jar.fullname" value="${testcase.path}/sequoiadb-hlt.jar" />
 			<param name="junit.jar.fullname" value="${testcase.path}/lib/junit.jar" />
 		</foreach>
@@ -37,7 +39,7 @@
 
 	<target name="test-one-case" depends="">
 
-		<basename property="js.name" file="${js.fullname}" suffix=".js"/>
+		<basename property="js.name" file="${js.fullname}" suffix=".js" />
 
 		<junit printsummary="true" timeout="2000" haltonfailure="no">
 			<sysproperty key="jsFullName" value="${js.fullname}" />
@@ -57,8 +59,8 @@
 						</filese>
 					</batchtest-->
 		</junit>
-		
-		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="collectionstest" replace="test_${js.name}"/>
-		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="testCaseForAllJSScript" replace="testCase_${js.name}"/>
+
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="collectionstest" replace="test_${js.name}" />
+		<replaceregexp file="${testcase.path}/reports/TEST.com.sequoiadb.testcase.basebussiness.test_${js.name}.xml" match="testCaseForAllJSScript" replace="testCase_${js.name}" />
 	</target>
 </project>
