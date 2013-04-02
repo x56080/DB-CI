@@ -37,8 +37,9 @@ public class SdbDeploy extends Task {
 	public void execute() {
 
 		String connString = this.hostName + ":" + this.coordport;
-		Sequoiadb sdb = new Sequoiadb(connString);
-
+		//Sequoiadb sdb = new Sequoiadb(connString);
+		Sequoiadb sdb = new Sequoiadb(this.hostName, Integer.parseInt(this.coordport), "", "");
+		
 		try {
 			for (DataNodeGroup groupInfo : dataNodeGroups) {
 
