@@ -42,8 +42,10 @@
 	</target>
 
 	<target name="build-all" depends="build-src-test, build-ant-tasks">
-		<copy todir="${deploy.path}/hlt/js_testcases/js">
-			<fileset dir="${build.testcases}/js_testcases/js" />
+		
+		<mkdir dir="${deploy.path}/hlt/" />
+		<copy todir="${deploy.path}/hlt/">
+			<fileset dir="${build.testcases}/js_testcases/" />
 		</copy>
 
 		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
