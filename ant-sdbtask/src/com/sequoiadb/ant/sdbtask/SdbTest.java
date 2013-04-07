@@ -83,15 +83,14 @@ public class SdbTest  extends Task{
 				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
 				String request = "START SHELL COMMAND ant -f " + scriptFileName + " -l " + scriptFileName + ".log";
 				
-				
-				
 				String antFileFullName = this.getProject().getProperty("ant.file");
 				File tempFile = new File(antFileFullName);
 				String antFileName = tempFile.getName();
 				antFileName = antFileName.substring(0, antFileName.indexOf("."));
 				
-				request += " -Dtest.package.name=" + antFileName + "-" + hostName;
+				request += " -Dtest.package.name=" + antFileName;
 				request += " -Dreports.path=" + this.remoteReportsPath;
+				request += " -Dparallel.num=" + Integer.toString(this.getLocation().getLineNumber());
 				
 				for(Parameter param: params)
 				{
