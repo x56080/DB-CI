@@ -43,8 +43,9 @@
 
 	<target name="build-all" depends="build-src-test, build-ant-tasks">
 		
-		<mkdir dir="${deploy.path}/hlt/" />
-		<copy todir="${deploy.path}/hlt/">
+		<mkdir dir="${deploy.path}/hlt/js_testcases/" />
+		
+		<copy todir="${deploy.path}/hlt/js_testcases/">
 			<fileset dir="${build.testcases}/js_testcases/" />
 		</copy>
 
