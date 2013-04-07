@@ -73,7 +73,7 @@
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;testcase classname=&quot;${test.suite.class.name}&quot; name=&quot;${test.case.name}&quot; time=&quot;${current.time}&quot;&gt;" />
 
 		<echo message="Exec:${sdb.fullname} -f ${test.case.fullname}"/>
-		<exec executable="${sdb.fullname}" dir="" timeout="60000" outputproperty="screen.output" errorproperty="error.output" resultproperty="ret.code">
+		<exec executable="${sdb.fullname}" dir="" timeout="120000" outputproperty="screen.output" errorproperty="error.output" resultproperty="ret.code">
 			<arg line="-f ${test.case.fullname}" />
 		</exec>
 
