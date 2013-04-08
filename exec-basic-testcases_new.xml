@@ -72,8 +72,9 @@
 		<!-- Add function to js test case -->
 		<loadfile property="js.context" srcFile="${test.case.fullname}"/>
 		<loadfile property="js.functions.context" srcFile="${testcase.path}/libs/func.js" />
-		<echo message="${js.context}" file="${test.case.fullname}" />
+		
 		<echo message="${js.functions.context}" file="${test.case.fullname}" append="true" />
+		<echo message="${js.context}" file="${test.case.fullname}" />
 		<!-- end -->
 		
 		<tstamp>
