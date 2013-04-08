@@ -52,7 +52,7 @@
 			<fileset dir="${test.suite.fullname}" includes="*.js" />
 			<param name="testcase.path" value="${testcase.path}" />
 			<param name="sdb.fullname" value="${sdb.fullname}" />
-			<param name="host.Name" value="${host.Name}"/>
+			<param name="host.NAME" value="${host.NAME}"/>
 			<param name="parallel.num" value="${parallel.num}"/>
 			<param name="test.suite.class.name" value="${test.suite.class.name}"/>
 		</foreach>
@@ -85,7 +85,7 @@
 
 		<echo message="Exec:${sdb.fullname} -e &quot;var CSPREFIX=&quot;${host.Name}_${parallel.num}&quot; -f ${test.case.fullname}"/>
 		<exec executable="${sdb.fullname}" dir="" timeout="120000" outputproperty="screen.output" errorproperty="error.output" resultproperty="ret.code">
-			<arg line="-e &quot;var CSPREFIX='${host.Name}_${parallel.num}'&quot; -f ${test.case.fullname}" />
+			<arg line="-e &quot;var CSPREFIX='${host.NAME}_${parallel.num}'&quot; -f ${test.case.fullname}" />
 		</exec>
 
 		<echo message="the result = ${ret.code} after exec ant testcase." />
