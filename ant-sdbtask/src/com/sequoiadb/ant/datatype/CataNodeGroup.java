@@ -12,58 +12,88 @@ import com.sequoiadb.exception.BaseException;
 
 /**
  * @author qiushanggao
- *
+ * 
  */
 public class CataNodeGroup extends NodeGroup {
 
 	private static String CATALOG_GROUP_NAME = "SYSCatalogGroup";
-	
+
 	@Override
 	public void start(Sequoiadb sdb) throws BuildException {
-		try {
-
-			ReplicaGroup group = null;
-			
+		
+		ReplicaGroup group = null;
+		try
+		{
+			setName(CATALOG_GROUP_NAME);
+			group = sdb.getReplicaGroup(getName());
+		}
+		catch(BaseException e)
+		{
+			group = null;
+		}
+		
+		
+		if (group == null)
+		{
+			//group is not exist
+			Node nodeInfo = getNodeList().get(0);
+			getNodeList().remove(0);
+				
 			try
 			{
-				setName(CATALOG_GROUP_NAME);
-				group = sdb.getReplicaGroup(getName());
+				//create group
+				sdb.createReplicaCataGroup(nodeInfo.getHost(), nodeInfo.getBasePort(), nodeInfo.getDbpath(), nodeInfo.getConfigMap());
 			}
 			catch(BaseException e)
 			{
-				group = null;
+				//不处理异常
 			}
-
-			for (Node nodeInfo : getNodeList()) {
-				
-				if (group == null)
-				{
-					group = sdb.createReplicaCataGroup(nodeInfo.getHost(), nodeInfo.getBasePort(), nodeInfo.getDbpath(), nodeInfo.getConfigMap());
-				}
-				else
-				{
-					ReplicaNode node = group.getNode(nodeInfo.getHost(),
-							nodeInfo.getBasePort());
-	
-					if (node == null) {
-						group.createNode(nodeInfo.getHost(),
-								nodeInfo.getBasePort(), nodeInfo.getDbpath(),
-								nodeInfo.getConfigMap());
-					} else {
-						throw new BuildException("Node repeat: hostname="
-								+ nodeInfo.getHost() + "servicename:"
-								+ nodeInfo.getBasePort());
-					}
-				}
-			}
-			group.start();
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-
-			throw new BuildException(e.toString());
 		}
+
+
+	}
+	
+	@Override
+	public void waitForStart(Sequoiadb sdb, long timeout) throws BuildException {
 		
+		ReplicaGroup group = null;
+		
+		//Wait for cata select group.
+		int i = 0;
+		while (true) {
+			try {
+				group = sdb.getReplicaGroup(getName());
+				if (group != null) {
+					break;
+				}
+
+				Thread.sleep(1000);
+			} catch (BaseException baseException) {
+			} catch (InterruptedException e) {
+			}
+			
+			
+			if (i > timeout) {
+				throw new BuildException("Group:" + this.getName()
+						+ " select master timeout.");
+			}
+			i++;
+		}
+
+		
+		for (Node nodeInfo : getNodeList()) {
+			ReplicaNode node = group.getNode(nodeInfo.getHost(),
+					nodeInfo.getBasePort());
+
+			if (node == null) {
+				group.createNode(nodeInfo.getHost(),
+						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
+						nodeInfo.getConfigMap());
+			} else {
+				throw new BuildException("Node repeat: hostname="
+						+ nodeInfo.getHost() + "servicename:"
+						+ nodeInfo.getBasePort());
+			}
+		}
 	}
 }
