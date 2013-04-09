@@ -8,14 +8,16 @@ import org.apache.tools.ant.BuildException;
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.ReplicaNode;
 import com.sequoiadb.base.Sequoiadb;
-
 import com.sequoiadb.exception.BaseException;
+
 /**
  * @author qiushanggao
  *
  */
 public class CataNodeGroup extends NodeGroup {
 
+	private static String CATALOG_GROUP_NAME = "SYSCatalogGroup";
+	
 	@Override
 	public void start(Sequoiadb sdb) throws BuildException {
 		try {
@@ -24,6 +26,7 @@ public class CataNodeGroup extends NodeGroup {
 			
 			try
 			{
+				setName(CATALOG_GROUP_NAME);
 				group = sdb.getReplicaGroup(getName());
 			}
 			catch(BaseException e)
