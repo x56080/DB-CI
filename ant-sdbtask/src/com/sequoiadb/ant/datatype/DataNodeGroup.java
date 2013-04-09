@@ -19,7 +19,7 @@ public class DataNodeGroup extends NodeGroup {
 	@Override
 	public void start(Sequoiadb sdb) throws BuildException {
 		try {
-			ReplicaGroup group = sdb.getReplicaGroupByName(getName());
+			ReplicaGroup group = sdb.getReplicaGroup(getName());
 
 			if (group == null) {
 				group = sdb.createReplicaGroup(getName());

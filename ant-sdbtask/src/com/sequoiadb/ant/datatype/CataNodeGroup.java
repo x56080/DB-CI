@@ -19,7 +19,7 @@ public class CataNodeGroup extends NodeGroup {
 	public void start(Sequoiadb sdb) throws BuildException {
 		try {
 
-			ReplicaGroup group = sdb.getReplicaGroupByName(getName());
+			ReplicaGroup group = sdb.getReplicaGroup(getName());
 
 			for (Node nodeInfo : getNodeList()) {
 				

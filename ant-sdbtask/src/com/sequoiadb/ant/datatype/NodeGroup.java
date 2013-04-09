@@ -26,7 +26,7 @@ public abstract class NodeGroup {
 	
 	public void waitForStart(Sequoiadb sdb, long timeout) throws BuildException {
 		
-		ReplicaGroup group = sdb.getReplicaGroupByName(getName());
+		ReplicaGroup group = sdb.getReplicaGroup(getName());
 		
 		//Wait for group select master, max wait time is 120sec;
 		int i = 0;
