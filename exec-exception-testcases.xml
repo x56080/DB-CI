@@ -27,7 +27,7 @@
 
 		<foreach target="test-one-suite" param="test.suite.fullname">
 			<path>
-				<dirset dir="${testcase.path}/ant-tests" includes="*" />
+				<fileset dir="${testcase.path}/ant-tests" includes="*.xml" />
 			</path>
 
 			<param name="testcase.path" value="${testcase.path}" />

@@ -10,7 +10,8 @@ import java.util.Map;
 
 //import org.apache.tools.ant.types.*;
 
-public class DataNode {
+public class Node {
+	private String host;
 	private String baseport;
 	//private String catalogaddr;
 	private String groupname;
@@ -26,6 +27,16 @@ public class DataNode {
 	public String getDbpath()
 	{
 		return dbpath;
+	}
+	
+	public void setHost(String value)
+	{
+		host = value;
+	}
+	
+	public String getHost()
+	{
+		return host;
 	}
 	
 	public void setBaseport(String value)

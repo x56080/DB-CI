@@ -8,8 +8,8 @@
 	<hostinfo />
 	<property name="host.name" value="${NAME}" />
 	<property name="host.ip" value="${ADDR4}" />
-	<property name="cata.service.port" value="60000" />
-	<property name="data.service.port" value="51000" />
+	<!--property name="cata.service.port" value="60000" /-->
+	<!--property name="data.service.port" value="51000" /-->
 	<property name="coord.service.port" value="50000" />
 
 	<property name="install.package.path" value="${test.basedir}/deploy" />
@@ -63,10 +63,10 @@
 			<arg value="status" />
 		</exec>
 
-		<mkdir dir="${db.path}/database/cata" />
+		<!--mkdir dir="${db.path}/database/cata" />
 		<mkdir dir="${db.path}/database/cata/diag" />
 		<mkdir dir="${db.path}/database/cata/log" />
-		<mkdir dir="${db.path}/database/cata/bkup" />
+		<mkdir dir="${db.path}/database/cata/bkup" /-->
 
 		<!--mkdir dir="${db.path}/database/data" />
 		<mkdir dir="${db.path}/database/data/diag" />
@@ -78,19 +78,19 @@
 		<mkdir dir="${db.path}/database/coord/log" />
 		<mkdir dir="${db.path}/database/coord/bkup" />
 
-		<mkdir dir="${db.path}/conf/local/${cata.service.port}" />
+		<!--mkdir dir="${db.path}/conf/local/${cata.service.port}" /-->
 		<!--mkdir dir="${db.path}/conf/local/${data.service.port}" /-->
 		<mkdir dir="${db.path}/conf/local/${coord.service.port}" />
 		<!--mkdir dir="${db.path}/conf/log" /-->
 
-		<copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/${cata.service.port}/sdb.cat" />
-		<copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/${cata.service.port}/sdb.conf" />
+		<!--copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/${cata.service.port}/sdb.cat" /-->
+		<!--copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/${cata.service.port}/sdb.conf" /-->
 		<!--copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/${data.service.port}/sdb.conf" /-->
 		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 
-		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.cat" match="localhost" replace="${host.name}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+		<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.cat" match="localhost" replace="${host.name}" flags="g" /-->
+		<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
 		<!--replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
 		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
@@ -101,11 +101,11 @@
 			<fileset dir="${db.path}/" includes="database/**/*" />
 		</chown>
 
-		<echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
+		<!--echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
 		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 			<arg line="-c ${db.path}/conf/local/${cata.service.port}" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec>
+		</exec-->
 
 		<!--exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 			<arg line="-c ${db.path}/conf/local/${data.service.port}" />
@@ -118,11 +118,11 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 		</exec>
 
-		<sleep seconds="60" />
+		<!--sleep seconds="60" /-->
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
-				<socket server="${host.ip}" port="${cata.service.port}" />
+				<!--socket server="${host.ip}" port="${cata.service.port}" /-->
 				<socket server="${host.ip}" port="${coord.service.port}" />
 			</and>
 		</waitfor>
