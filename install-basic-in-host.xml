@@ -93,6 +93,7 @@
 		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
 		<!--replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
+		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="50000" replace="${coord.service.port}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 

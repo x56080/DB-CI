@@ -3,14 +3,10 @@ package com.sequoiadb.ant.sdbtask;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 import com.sequoiadb.ant.datatype.*;
-import com.sequoiadb.base.ReplicaGroup;
-import com.sequoiadb.base.ReplicaNode;
 import com.sequoiadb.base.Sequoiadb;
-import com.sequoiadb.exception.BaseException;
 
 public class SdbDeploy extends Task {
 	private String hostName;
@@ -29,20 +25,20 @@ public class SdbDeploy extends Task {
 	}
 
 	public NodeGroup createCatagroup() {
-		NodeGroup group = new DataNodeGroup();
-		NodeGroups.add(group);
-		return group;
-	}
-
-	public NodeGroup createDatagroup() {
 		NodeGroup group = new CataNodeGroup();
 		NodeGroups.add(group);
 		return group;
 	}
 
+	public NodeGroup createDatagroup() {
+		NodeGroup group = new DataNodeGroup();
+		NodeGroups.add(group);
+		return group;
+	}
+
 	public void execute() {
-		String connString = this.hostName + ":" + this.coordport;
-		// Sequoiadb sdb = new Sequoiadb(connString);
+		
+		
 		Sequoiadb sdb = new Sequoiadb(this.hostName,
 				Integer.parseInt(this.coordport), "", "");
 

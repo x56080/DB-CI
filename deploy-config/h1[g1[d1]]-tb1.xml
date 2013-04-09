@@ -18,6 +18,7 @@
 			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
 		</classpath>
 	</taskdef>
+	
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean test env..." />
@@ -25,6 +26,7 @@
 		<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 			<property name="deploy.host.name" value="${test.machine.no2}" />
+			<property name="coord.service.port" value="${coord.service.port}" />
 		</ant>
 
 	</target>
@@ -36,6 +38,7 @@
 		<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 			<property name="deploy.host.name" value="${test.machine.no2}" />
+			<property name="coord.service.port" value="${coord.service.port}" />
 		</ant>
 
 		<sdbdeploy host="${test.machine.no2}" coordport="50000">
