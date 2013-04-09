@@ -3,8 +3,6 @@
  */
 package com.sequoiadb.ant.datatype;
 
-import java.util.concurrent.TimeoutException;
-
 import org.apache.tools.ant.BuildException;
 
 import com.sequoiadb.base.ReplicaGroup;
