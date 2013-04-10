@@ -46,7 +46,7 @@ public class CataNodeGroup extends NodeGroup {
 			}
 			catch(BaseException e)
 			{
-				//不处理异常
+				//Do nothing
 			}
 		}
 
@@ -67,6 +67,7 @@ public class CataNodeGroup extends NodeGroup {
 					break;
 				}
 			} catch (BaseException baseException) {
+				//Do nothing
 			} 
 			
 			try{
