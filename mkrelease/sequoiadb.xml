@@ -53,6 +53,58 @@
             </startMenuShortcutList>
         </component>
     </componentList>
+    <preInstallationActionList>
+        <addGroup>
+            <abortOnError>1</abortOnError>
+            <groupname>sdbadmin</groupname>
+            <showMessageOnError>1</showMessageOnError>
+        </addGroup>
+        <addUser>
+            <abortOnError>1</abortOnError>
+            <password>${userpasswd}</password>
+            <showMessageOnError>1</showMessageOnError>
+            <username>${username}</username>
+        </addUser>
+        <addGroupToUser>
+            <groupname>sdbadmin</groupname>
+            <username>${username}</username>
+        </addGroupToUser>
+    </preInstallationActionList>
+    <postInstallationActionList>
+        <createWindowsService>
+            <abortOnError>1</abortOnError>
+            <description>SequoiaDB Cluster Manager</description>
+            <displayName>SequoiaDB Cluster Manager</displayName>
+            <program>${installdir}\bin\sdbcm.exe</program>
+            <programArguments></programArguments>
+            <serviceName>sdbcm</serviceName>
+            <startType>auto</startType>
+        </createWindowsService>
+        <addUnixService>
+            <description>SequoiaDB Cluster Manager</description>
+            <name>sdbcm</name>
+            <program>${installdir}/bin/sdbcm</program>
+        </addUnixService>
+    </postInstallationActionList>
+    <postUninstallerCreationActionList>
+        <startWindowsService>
+            <delay>15000</delay>
+            <displayName>SequoiaDB Cluster Manager</displayName>
+            <serviceName>sdbcm</serviceName>
+        </startWindowsService>
+    </postUninstallerCreationActionList>
+    <preUninstallationActionList>
+        <deleteWindowsService>
+            <abortOnError>1</abortOnError>
+            <displayName>SequoiaDB Cluster Manager</displayName>
+            <serviceName>sdbcm</serviceName>
+        </deleteWindowsService>
+        <removeUnixService>
+            <name>sdbcm</name>
+        </removeUnixService>
+    </preUninstallationActionList>
+    <defaultUnixGroup>sdbadmin</defaultUnixGroup>
+    <defaultUnixOwner>${username}</defaultUnixOwner>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <saveRelativePaths>1</saveRelativePaths>
@@ -63,7 +115,7 @@
             <description>Installer.Parameter.installdir.description</description>
             <explanation>Installer.Parameter.installdir.explanation</explanation>
             <value></value>
-            <default>${platform_install_prefix}/${product_shortname}-${product_version}</default>
+            <default>${platform_install_prefix}/${product_shortname}</default>
             <allowEmptyValue>0</allowEmptyValue>
             <ask>yes</ask>
             <cliOptionName>prefix</cliOptionName>
@@ -71,6 +123,45 @@
             <mustExist>0</mustExist>
             <width>40</width>
         </directoryParameter>
+        <parameterGroup>
+            <name>user_data</name>
+            <title>User data</title>
+            <explanation>Please insert the desired username and password</explanation>
+            <value></value>
+            <default></default>
+            <parameterList>
+                <stringParameter>
+                    <name>username</name>
+                    <description>User Name</description>
+                    <explanation></explanation>
+                    <value>sdbadmin</value>
+                    <default>sdbadmin</default>
+                    <allowEmptyValue>0</allowEmptyValue>
+                    <width>40</width>
+                </stringParameter>
+                <passwordParameter>
+                    <name>userpasswd</name>
+                    <title>User Password</title>
+                    <description>Password</description>
+                    <explanation></explanation>
+                    <value></value>
+                    <default></default>
+                    <allowEmptyValue>1</allowEmptyValue>
+                    <descriptionRetype>Re-enter</descriptionRetype>
+                    <width>20</width>
+
+	<!-- throw an error if password is empty -->
+	<validationActionList>
+                        <throwError>
+                            <text>You need to provide a non-empty password</text>
+                            <ruleList>
+                                <compareText logic="equals" text="${userpasswd}" value=""/>
+                            </ruleList>
+                        </throwError>
+                    </validationActionList>
+                </passwordParameter>
+            </parameterList>
+        </parameterGroup>
     </parameterList>
 </project>
 
