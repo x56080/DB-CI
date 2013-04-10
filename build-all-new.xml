@@ -1,15 +1,22 @@
+<!--@param ${os.publish.name}: os name for example suse/ubuntu/redhat-->
+<!--@param ${WORKSPACE}: the path where for this job-->
+
 <project name="build-all" default="build-all">
 	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci" />
+	
+	<delete file="${ci.script.path}/ci.properties" />
+	<copy file="${ci.script.path}/ci.properties.${os.publish.name}" todir="${ci.script.path}/ci.properties"/>
 	<property file="${ci.script.path}/ci.properties" />
 
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
-	<property name="release.dirname" value="/release" />
+	<property name="release.dirname" value="release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
 		<delete dir="${deploy.path}/" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
+		
 		<delete dir="${WORKSPACE}/${release.dirname}" />
 		<delete dir="${build.testcases}/build" />
 		<echo message="clean environments completed." />
@@ -42,9 +49,9 @@
 	</target>
 
 	<target name="build-all" depends="build-src-test, build-ant-tasks">
-		
+
 		<mkdir dir="${deploy.path}/hlt/js_testcases/" />
-		
+
 		<copy todir="${deploy.path}/hlt/js_testcases/">
 			<fileset dir="${build.testcases}/js_testcases/" />
 		</copy>
