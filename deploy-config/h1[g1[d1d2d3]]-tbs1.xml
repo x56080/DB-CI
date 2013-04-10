@@ -3,6 +3,7 @@
 <!--@param ${install.path}: The path where install sequoiadb -->
 <!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
+<!--@param ${test.reports.path}: The path where test reports directory. -->
 <!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
 <!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
@@ -25,14 +26,17 @@
 			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no1}" />
+			        <property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no2}" />
+				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no3}" />
+				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 		</parallel>
 
@@ -46,24 +50,27 @@
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no1}" />
-			</ant>
+			        <property name="coord.service.port" value="${coord.service.port}" />
+		</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no2}" />
+				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no3}" />
+				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 		</parallel>
 
 		<sdbdeploy host="${test.machine.no1}" coordport="50000">
 			<catagroup name="cata1">
 				<node host="${test.machine.no1}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
-					<configitem name="loglevel" value="5" />
+					<confitem name="loglevel" value="5" />
 				</node>
 				<node host="${test.machine.no2}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
-					<configitem name="loglevel" value="5" />
+					<confitem name="loglevel" value="5" />
 				</node>
 			</catagroup>
 		</sdbdeploy>
