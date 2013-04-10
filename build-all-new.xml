@@ -3,10 +3,8 @@
 
 <project name="build-all" default="build-all">
 	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci" />
-	
-	<delete file="${ci.script.path}/ci.properties" />
-	<copy file="${ci.script.path}/ci.properties.${os.publish.name}" todir="${ci.script.path}/ci.properties"/>
-	<property file="${ci.script.path}/ci.properties" />
+
+
 
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="release" />
@@ -14,9 +12,13 @@
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
+		<delete file="${ci.script.path}/ci.properties" />
+		<copy file="${ci.script.path}/ci.properties.${os.publish.name}" todir="${ci.script.path}/ci.properties" />
+		<property file="${ci.script.path}/ci.properties" />
+
 		<delete dir="${deploy.path}/" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
-		
+
 		<delete dir="${WORKSPACE}/${release.dirname}" />
 		<delete dir="${build.testcases}/build" />
 		<echo message="clean environments completed." />

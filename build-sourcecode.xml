@@ -26,7 +26,7 @@
 		</if>
 
 
-		<echo message="exec scons ${compile.arg.line}" />
+		<echo message="exec scons ${compile.arg.line}  --all -j 4" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
 			<arg line="${compile.arg.line} --all -j 4" />
 		</exec>
