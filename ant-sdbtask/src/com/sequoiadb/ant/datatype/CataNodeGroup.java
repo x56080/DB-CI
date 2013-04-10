@@ -66,10 +66,13 @@ public class CataNodeGroup extends NodeGroup {
 				if (group != null) {
 					break;
 				}
-
-				Thread.sleep(1000);
 			} catch (BaseException baseException) {
-			} catch (InterruptedException e) {
+			} 
+			
+			try{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e) {
 			}
 			
 			
