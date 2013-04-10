@@ -70,18 +70,18 @@ public class CataNodeGroup extends NodeGroup {
 				//Do nothing
 			} 
 			
+			i++;
+			if (i > timeout) {
+				throw new BuildException("Group:" + this.getName()
+						+ " select master timeout.");
+			}
+			
+			
 			try{
 				Thread.sleep(1000);
 			}
 			catch (InterruptedException e) {
 			}
-			
-			
-			if (i > timeout) {
-				throw new BuildException("Group:" + this.getName()
-						+ " select master timeout.");
-			}
-			i++;
 		}
 
 		

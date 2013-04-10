@@ -56,23 +56,30 @@ public class DataNodeGroup extends NodeGroup {
 
 		// Wait for group select master, max wait time is 120sec;
 		int i = 0;
-		for (i = 0; i < timeout; i++) {
+		while (true) {
 			try {
 				ReplicaNode masterNode = group.getMaster();
 				if (masterNode != null) {
 					break;
 				}
-
-				Thread.sleep(1000);
 			} catch (BaseException baseException) {
-			} catch (InterruptedException e) {
+			} 
+			
+			i++;
+			if (i >= timeout) {
+				throw new BuildException("Group:" + this.getName()
+						+ " select master timeout.");
+			}
+			
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e) {
 			}
 		}
 
-		if (i >= timeout) {
-			throw new BuildException("Group:" + this.getName()
-					+ " select master timeout.");
-		}
+		
 
 	}
 
