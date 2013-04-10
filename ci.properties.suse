@@ -1,0 +1,14 @@
+STAF.PATH=/usr/local/staf
+
+install.tar.file.name=sequoiadb_1.0_suse_x64.tar.gz
+deploy.tar.file.name=deploy.tar.gz
+junitreport.tar.file.name=junit_report.tar.gz
+antreport.tar.file.name=ant_report.tar.gz
+test.machine.deploy.path=/tmp/sequoiadb_test
+install.path=/opt
+
+coord.service.port=50000
+jenkins.master.ip=suse-test1
+test.machine.no1=suse-test1
+test.machine.no2=suse-test2
+test.machine.no3=suse-test3
