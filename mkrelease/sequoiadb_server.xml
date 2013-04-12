@@ -55,7 +55,6 @@
     </componentList>
     <readyToInstallActionList>
         <addGroup>
-            <abortOnError>1</abortOnError>
             <groupname>sdbadmin</groupname>
             <showMessageOnError>1</showMessageOnError>
         </addGroup>
@@ -64,6 +63,12 @@
             <password>${userpasswd}</password>
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
+            <ruleList>
+                <userTest>
+                    <logic>not_exists</logic>
+                    <username>${username}</username>
+                </userTest>
+            </ruleList>
         </addUser>
         <addGroupToUser>
             <groupname>sdbadmin</groupname>
@@ -115,6 +120,7 @@
     <defaultUnixOwner>${username}</defaultUnixOwner>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
+    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <saveRelativePaths>1</saveRelativePaths>
     <vendor>SequoiaDB</vendor>
     <installationAbortedActionList>
