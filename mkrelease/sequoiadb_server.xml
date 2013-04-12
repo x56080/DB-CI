@@ -131,6 +131,19 @@
         <deleteGroup>
             <groupname>sdbadmin</groupname>
         </deleteGroup>
+        <deleteWindowsService>
+            <displayName>SequoiaDB Cluster Manager</displayName>
+            <serviceName>sdbcm</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>sdbcm</service>
+                </windowsServiceTest>
+            </ruleList>
+        </deleteWindowsService>
+        <removeUnixService>
+            <name>sdbcm</name>
+        </removeUnixService>
     </installationAbortedActionList>
     <parameterList>
         <directoryParameter>
