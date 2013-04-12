@@ -71,7 +71,7 @@
 		<if>
 			<equals arg1="${is.standalone.mode}" arg2="true" />
 			<then>
-				<mkdir dir="${db.path}/database/" />
+				<mkdir dir="${db.path}/database/standalone" />
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
 				
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
