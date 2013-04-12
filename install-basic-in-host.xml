@@ -136,8 +136,8 @@
 						</exec-->
 
 				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
-				<exec dir="${db.path}/bin" executable="su -c sdbadmin" spawn="true">
-					<arg line="${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
+				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
+					<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
 					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 				</exec>
 
