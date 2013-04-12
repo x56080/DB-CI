@@ -71,14 +71,29 @@
         <runProgram>
             <program>echo</program>
             <programArguments>"NAME=sdbcm" &gt; /etc/default/sequoiadb</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
         </runProgram>
         <runProgram>
             <program>echo</program>
             <programArguments>"SDBADMIN_USER=${username}" &gt;&gt; /etc/default/sequoiadb</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
         </runProgram>
         <runProgram>
             <program>echo</program>
             <programArguments>"INSTALL_DIR=${installdir}" &gt;&gt; /etc/default/sequoiadb</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
         </runProgram>
     </readyToInstallActionList>
     <postInstallationActionList>
