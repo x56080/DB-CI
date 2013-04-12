@@ -164,8 +164,10 @@
             <groupname>sdbadmin</groupname>
         </deleteGroup>
     </postUninstallationActionList>
+    <debuggerPassword>hetiu26;</debuggerPassword>
     <defaultUnixGroup>sdbadmin</defaultUnixGroup>
     <defaultUnixOwner>${username}</defaultUnixOwner>
+    <enableDebugger>1</enableDebugger>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <requireInstallationByRootUser>1</requireInstallationByRootUser>
