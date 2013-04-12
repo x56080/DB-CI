@@ -193,6 +193,10 @@
         <removeUnixService>
             <name>sdbcm</name>
         </removeUnixService>
+        <deleteFile>
+            <abortOnError>0</abortOnError>
+            <path>${installdir}</path>
+        </deleteFile>
     </installationAbortedActionList>
     <parameterList>
         <directoryParameter>
