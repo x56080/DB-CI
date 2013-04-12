@@ -67,6 +67,7 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/log" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/www" />
 
 
 		<if>
@@ -106,6 +107,10 @@
 			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h" />
 		</copy>
 
+		<copy todir="${RELEASE_DIR}/sequoiadb/www">
+			<fileset dir="${CODE_DIR}/client/admin" />
+		</copy>
+			
 		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>

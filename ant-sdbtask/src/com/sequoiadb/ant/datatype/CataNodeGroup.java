@@ -90,9 +90,11 @@ public class CataNodeGroup extends NodeGroup {
 					nodeInfo.getBasePort());
 
 			if (node == null) {
-				group.createNode(nodeInfo.getHost(),
+				node = group.createNode(nodeInfo.getHost(),
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
 						nodeInfo.getConfigMap());
+				
+				node.start();
 			} else {
 				throw new BuildException("Node repeat: hostname="
 						+ nodeInfo.getHost() + "servicename:"

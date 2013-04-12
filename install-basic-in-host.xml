@@ -1,3 +1,8 @@
+<!--@param ${test.machine.deploy.path}: the pathe where deploy software and test script-->
+<!--@param ${deploy.tar.file.name}: The deploy tar file name -->
+<!--@param ${coord.service.port}: The coord port -->
+<!--@param ${is.standalone.mode}: The flag whether start with standalone mode-->
+
 <project name="install-all" default="install-all">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
@@ -15,7 +20,7 @@
 	<property name="install.package.path" value="${test.basedir}/deploy" />
 	<property name="install.path" value="/opt" />
 	<property name="db.path" value="${install.path}/sequoiadb" />
-
+	<property name="is.standalone.mode" value="false"/>
 
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
@@ -63,63 +68,82 @@
 			<arg value="status" />
 		</exec>
 
-		<!--mkdir dir="${db.path}/database/cata" />
-		<mkdir dir="${db.path}/database/cata/diag" />
-		<mkdir dir="${db.path}/database/cata/log" />
-		<mkdir dir="${db.path}/database/cata/bkup" /-->
+		<if>
+			<equals arg1="${is.standalone.mode}" arg2="true" />
+			<then>
+				<mkdir dir="${db.path}/database/" />
+				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
+				
+				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 
-		<!--mkdir dir="${db.path}/database/data" />
-		<mkdir dir="${db.path}/database/data/diag" />
-		<mkdir dir="${db.path}/database/data/log" />
-		<mkdir dir="${db.path}/database/data/bkup" /-->
+				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
+				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
+					<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
+					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+				</exec>
 
-		<mkdir dir="${db.path}/database/coord" />
-		<mkdir dir="${db.path}/database/coord/diag" />
-		<mkdir dir="${db.path}/database/coord/log" />
-		<mkdir dir="${db.path}/database/coord/bkup" />
 
-		<!--mkdir dir="${db.path}/conf/local/${cata.service.port}" /-->
-		<!--mkdir dir="${db.path}/conf/local/${data.service.port}" /-->
-		<mkdir dir="${db.path}/conf/local/${coord.service.port}" />
-		<!--mkdir dir="${db.path}/conf/log" /-->
+			</then>
+			<else>
+				<!--mkdir dir="${db.path}/database/cata" />
+						<mkdir dir="${db.path}/database/cata/diag" />
+						<mkdir dir="${db.path}/database/cata/log" />
+						<mkdir dir="${db.path}/database/cata/bkup" /-->
 
-		<!--copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/${cata.service.port}/sdb.cat" /-->
-		<!--copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/${cata.service.port}/sdb.conf" /-->
-		<!--copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/${data.service.port}/sdb.conf" /-->
-		<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
+				<!--mkdir dir="${db.path}/database/data" />
+						<mkdir dir="${db.path}/database/data/diag" />
+						<mkdir dir="${db.path}/database/data/log" />
+						<mkdir dir="${db.path}/database/data/bkup" /-->
 
-		<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.cat" match="localhost" replace="${host.name}" flags="g" /-->
-		<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
-		<!--replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
-		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="50000" replace="${coord.service.port}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
-		<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+				<mkdir dir="${db.path}/database/coord" />
+				<mkdir dir="${db.path}/database/coord/diag" />
+				<mkdir dir="${db.path}/database/coord/log" />
+				<mkdir dir="${db.path}/database/coord/bkup" />
 
-		<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
-		<chown owner="sdbadmin:sdbadmin" type="both">
-			<fileset dir="${db.path}/" includes="database/**/*" />
-		</chown>
+				<!--mkdir dir="${db.path}/conf/local/${cata.service.port}" /-->
+				<!--mkdir dir="${db.path}/conf/local/${data.service.port}" /-->
+				<mkdir dir="${db.path}/conf/local/${coord.service.port}" />
+				<!--mkdir dir="${db.path}/conf/log" /-->
 
-		<!--echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
-		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/${cata.service.port}" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec-->
+				<!--copy file="${db.path}/conf/samples/sdb.cat" tofile="${db.path}/conf/local/${cata.service.port}/sdb.cat" /-->
+				<!--copy file="${db.path}/conf/samples/sdb.conf.catalog" tofile="${db.path}/conf/local/${cata.service.port}/sdb.conf" /-->
+				<!--copy file="${db.path}/conf/samples/sdb.conf.data" tofile="${db.path}/conf/local/${data.service.port}/sdb.conf" /-->
+				<copy file="${db.path}/conf/samples/sdb.conf.coord" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 
-		<!--exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/${data.service.port}" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec-->
+				<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.cat" match="localhost" replace="${host.name}" flags="g" /-->
+				<!--replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+						<replaceregexp file="${db.path}/conf/local/${cata.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
+				<!--replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+						<replaceregexp file="${db.path}/conf/local/${data.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" /-->
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="50000" replace="${coord.service.port}" flags="g" />
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 
-		<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
-		<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
-			<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
-			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
-		</exec>
+				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
+				<chown owner="sdbadmin:sdbadmin" type="both">
+					<fileset dir="${db.path}/" includes="database/**/*" />
+				</chown>
 
-		<!--sleep seconds="60" /-->
+				<!--echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
+						<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
+							<arg line="-c ${db.path}/conf/local/${cata.service.port}" />
+							<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+						</exec-->
+
+				<!--exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
+							<arg line="-c ${db.path}/conf/local/${data.service.port}" />
+							<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+						</exec-->
+
+				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
+				<exec dir="${db.path}/bin" executable="su -c sdbadmin" spawn="true">
+					<arg line="${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
+					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
+				</exec>
+
+			</else>
+		</if>
+
 
 		<waitfor maxwait="30" maxwaitunit="second" checkevery="500">
 			<and>
