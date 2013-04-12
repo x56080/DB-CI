@@ -175,9 +175,6 @@
         </removeUnixService>
     </preUninstallationActionList>
     <postUninstallationActionList>
-        <deleteUser>
-            <username>${username}</username>
-        </deleteUser>
         <deleteFile>
             <path>/etc/default/sequoiadb</path>
             <ruleList>
@@ -215,10 +212,6 @@
         <removeUnixService>
             <name>sdbcm</name>
         </removeUnixService>
-        <deleteFile>
-            <abortOnError>0</abortOnError>
-            <path>${installdir}</path>
-        </deleteFile>
         <deleteFile>
             <abortOnError>0</abortOnError>
             <path>/etc/default/sequoiadb</path>
