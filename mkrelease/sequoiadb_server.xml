@@ -2,6 +2,7 @@
     <shortName>sequoiadb</shortName>
     <fullName>SequoiaDB Server</fullName>
     <version>1.0</version>
+    <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
             <name>SequoiaDB</name>
@@ -54,11 +55,6 @@
         </component>
     </componentList>
     <readyToInstallActionList>
-        <addGroup>
-            <customErrorMessage>Failed to create group: sdbadmin</customErrorMessage>
-            <groupname>sdbadmin</groupname>
-            <showMessageOnError>1</showMessageOnError>
-        </addGroup>
         <addUser>
             <abortOnError>1</abortOnError>
             <customErrorMessage>Failed to create user: ${username}</customErrorMessage>
@@ -72,6 +68,18 @@
                 </userTest>
             </ruleList>
         </addUser>
+        <runProgram>
+            <program>echo</program>
+            <programArguments>"NAME=sdbcm" &gt; /etc/default/sequoiadb</programArguments>
+        </runProgram>
+        <runProgram>
+            <program>echo</program>
+            <programArguments>"SDBADMIN_USER=${username}" &gt;&gt; /etc/default/sequoiadb</programArguments>
+        </runProgram>
+        <runProgram>
+            <program>echo</program>
+            <programArguments>"INSTALL_DIR=${installdir}" &gt;&gt; /etc/default/sequoiadb</programArguments>
+        </runProgram>
     </readyToInstallActionList>
     <postInstallationActionList>
         <createWindowsService>
@@ -88,16 +96,11 @@
             <customErrorMessage>Failed to create Linux Service: sdbcm</customErrorMessage>
             <description>SequoiaDB Cluster Manager</description>
             <name>sdbcm</name>
-            <program>${installdir}/bin/sdbcm</program>
+            <program>${installdir}/sequoiadb</program>
         </addUnixService>
         <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755">
             <customErrorMessage>Failed to change file permissions: ${installdir}/bin</customErrorMessage>
         </changePermissions>
-        <addGroupToUser>
-            <customErrorMessage>Failed to add user "${username}" to group "sdbadmin"</customErrorMessage>
-            <groupname>sdbadmin</groupname>
-            <username>${username}</username>
-        </addGroupToUser>
         <startWindowsService>
             <customErrorMessage>Failed to start Windows Service: sdbcm</customErrorMessage>
             <delay>15000</delay>
@@ -160,26 +163,30 @@
         <deleteUser>
             <username>${username}</username>
         </deleteUser>
-        <deleteGroup>
-            <groupname>sdbadmin</groupname>
-        </deleteGroup>
+        <deleteFile>
+            <path>/etc/default/sequoiadb</path>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+                <fileExists>
+                    <path>/etc/default/sequoiadb</path>
+                </fileExists>
+            </ruleList>
+        </deleteFile>
     </postUninstallationActionList>
-    <debuggerPassword>hetiu26;</debuggerPassword>
-    <defaultUnixGroup>sdbadmin</defaultUnixGroup>
+    <allowedLanguages>en zh_CN</allowedLanguages>
     <defaultUnixOwner>${username}</defaultUnixOwner>
-    <enableDebugger>1</enableDebugger>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <saveRelativePaths>1</saveRelativePaths>
+    <singleInstanceCheck>1</singleInstanceCheck>
     <vendor>SequoiaDB</vendor>
     <installationAbortedActionList>
         <deleteUser>
             <username>${username}</username>
         </deleteUser>
-        <deleteGroup>
-            <groupname>sdbadmin</groupname>
-        </deleteGroup>
         <deleteWindowsService>
             <displayName>SequoiaDB Cluster Manager</displayName>
             <serviceName>sdbcm</serviceName>
@@ -196,6 +203,18 @@
         <deleteFile>
             <abortOnError>0</abortOnError>
             <path>${installdir}</path>
+        </deleteFile>
+        <deleteFile>
+            <abortOnError>0</abortOnError>
+            <path>/etc/default/sequoiadb</path>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+                <fileExists>
+                    <path>/etc/default/sequoiadb</path>
+                </fileExists>
+            </ruleList>
         </deleteFile>
     </installationAbortedActionList>
     <parameterList>
@@ -234,7 +253,7 @@
                     <description>Password</description>
                     <explanation></explanation>
                     <value></value>
-                    <default></default>
+                    <default>sequoiadb;</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <descriptionRetype>Re-enter</descriptionRetype>
                     <width>20</width>
