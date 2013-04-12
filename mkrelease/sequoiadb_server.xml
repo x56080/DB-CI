@@ -70,10 +70,6 @@
                 </userTest>
             </ruleList>
         </addUser>
-        <addGroupToUser>
-            <groupname>sdbadmin</groupname>
-            <username>${username}</username>
-        </addGroupToUser>
     </readyToInstallActionList>
     <postInstallationActionList>
         <createWindowsService>
@@ -90,6 +86,11 @@
             <name>sdbcm</name>
             <program>${installdir}/bin/sdbcm</program>
         </addUnixService>
+        <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755"/>
+        <addGroupToUser>
+            <groupname>sdbadmin</groupname>
+            <username>${username}</username>
+        </addGroupToUser>
     </postInstallationActionList>
     <postUninstallerCreationActionList>
         <startWindowsService>
