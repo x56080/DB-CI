@@ -117,6 +117,14 @@
     <enableTimestamp>1</enableTimestamp>
     <saveRelativePaths>1</saveRelativePaths>
     <vendor>SequoiaDB</vendor>
+    <installationAbortedActionList>
+        <deleteUser>
+            <username>${username}</username>
+        </deleteUser>
+        <deleteGroup>
+            <groupname>sdbadmin</groupname>
+        </deleteGroup>
+    </installationAbortedActionList>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
