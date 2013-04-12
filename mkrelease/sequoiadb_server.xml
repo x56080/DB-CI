@@ -55,11 +55,13 @@
     </componentList>
     <readyToInstallActionList>
         <addGroup>
+            <customErrorMessage>Failed to create group: sdbadmin</customErrorMessage>
             <groupname>sdbadmin</groupname>
             <showMessageOnError>1</showMessageOnError>
         </addGroup>
         <addUser>
             <abortOnError>1</abortOnError>
+            <customErrorMessage>Failed to create user: ${username}</customErrorMessage>
             <password>${userpasswd}</password>
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
@@ -74,6 +76,7 @@
     <postInstallationActionList>
         <createWindowsService>
             <abortOnError>1</abortOnError>
+            <customErrorMessage>Failed to create Windows Service: sdbcm</customErrorMessage>
             <description>SequoiaDB Cluster Manager</description>
             <displayName>SequoiaDB Cluster Manager</displayName>
             <program>${installdir}\bin\sdbcm.exe</program>
@@ -82,24 +85,68 @@
             <startType>auto</startType>
         </createWindowsService>
         <addUnixService>
+            <customErrorMessage>Failed to create Linux Service: sdbcm</customErrorMessage>
             <description>SequoiaDB Cluster Manager</description>
             <name>sdbcm</name>
             <program>${installdir}/bin/sdbcm</program>
         </addUnixService>
-        <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755"/>
+        <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755">
+            <customErrorMessage>Failed to change file permissions: ${installdir}/bin</customErrorMessage>
+        </changePermissions>
         <addGroupToUser>
+            <customErrorMessage>Failed to add user "${username}" to group "sdbadmin"</customErrorMessage>
             <groupname>sdbadmin</groupname>
             <username>${username}</username>
         </addGroupToUser>
-    </postInstallationActionList>
-    <postUninstallerCreationActionList>
         <startWindowsService>
+            <customErrorMessage>Failed to start Windows Service: sdbcm</customErrorMessage>
             <delay>15000</delay>
             <displayName>SequoiaDB Cluster Manager</displayName>
             <serviceName>sdbcm</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>exists</condition>
+                    <service>sdbcm</service>
+                </windowsServiceTest>
+            </ruleList>
         </startWindowsService>
-    </postUninstallerCreationActionList>
+    </postInstallationActionList>
     <preUninstallationActionList>
+        <kill>
+            <customErrorMessage>Failed to stop sdbcm</customErrorMessage>
+            <name>sdbcm</name>
+            <path>${installdir}/bin</path>
+            <ruleList>
+                <processTest>
+                    <logic>is_running</logic>
+                    <name>sdbcm</name>
+                </processTest>
+            </ruleList>
+        </kill>
+        <kill>
+            <customErrorMessage>Failed to stop sequoiadb</customErrorMessage>
+            <name>sequoiadb</name>
+            <path>${install}/bin/</path>
+            <ruleList>
+                <processTest>
+                    <logic>is_running</logic>
+                    <name>sequoiadb</name>
+                </processTest>
+            </ruleList>
+        </kill>
+        <stopWindowsService>
+            <abortOnError>1</abortOnError>
+            <customErrorMessage>Failed to stop Windows Service: sdbcm</customErrorMessage>
+            <delay>15000</delay>
+            <displayName>SequoiaDB Cluster Manager</displayName>
+            <serviceName>sdbcm</serviceName>
+            <ruleList>
+                <windowsServiceTest>
+                    <condition>is_running</condition>
+                    <service>sdbcm</service>
+                </windowsServiceTest>
+            </ruleList>
+        </stopWindowsService>
         <deleteWindowsService>
             <abortOnError>1</abortOnError>
             <displayName>SequoiaDB Cluster Manager</displayName>
