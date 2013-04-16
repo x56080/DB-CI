@@ -1,4 +1,4 @@
-<!--@param ${test.machine.deploy.path}: the pathe where deploy software and test script-->
+<!--@param ${test.basedir}: the path where deploy software and test script-->
 <!--@param ${deploy.tar.file.name}: The deploy tar file name -->
 <!--@param ${coord.service.port}: The coord port -->
 <!--@param ${is.standalone.mode}: The flag whether start with standalone mode-->
@@ -15,10 +15,11 @@
 	<property name="host.ip" value="${ADDR4}" />
 	<!--property name="cata.service.port" value="60000" /-->
 	<!--property name="data.service.port" value="51000" /-->
-	<property name="coord.service.port" value="50000" />
+	<!--property name="coord.service.port" value="50000" /-->
 
 	<property name="install.package.path" value="${test.basedir}/deploy" />
-	<property name="install.path" value="/opt" />
+    <property file="${install.package.path}/ci.properties" />
+  
 	<property name="db.path" value="${install.path}/sequoiadb" />
 	<property name="is.standalone.mode" value="false"/>
 
@@ -32,7 +33,7 @@
 				<!-- the sdb be installed-->
 				<!-- stop cm-->
 				<exec executable="service" dir="" failonerror="true">
-					<arg value="sequoiadb" />
+					<arg value="sdbcm" />
 					<arg value="stop" />
 				</exec>
 
@@ -41,8 +42,8 @@
 				</exec>
 
 				<!-- unstall software-->
-				<exec executable="sh" dir="${db.path}" failonerror="true">
-					<arg line="-c ${db.path}/sdbuninst" />
+				<exec executable="${db.path}/uninstall" dir="${db.path}" failonerror="true">
+					<arg line="--mode unattended" />
 				</exec>
 
 				<echo message="Clean install env compeleted." />
@@ -55,16 +56,20 @@
 		<echo message="Begin to install..." />
 
 
-		<untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
+		<!--untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 
 		<chmod file="${install.package.path}/sequoiadb/sdbinst.sh" perm="u+x" />
 		<exec executable="sh" dir="${install.package.path}/sequoiadb" failonerror="true">
 			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
+		</exec-->
+		
+		<exec executalbe="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run">
+			<arg line="--mode unattended --prefix ${db.path} --username ${install.user} --userpasswd ${install.password}"/>
 		</exec>
 
 		<!-- Check the status of serivce-->
 		<exec executable="service" dir="" failonerror="true">
-			<arg value="sequoiadb" />
+			<arg value="sdbcm" />
 			<arg value="status" />
 		</exec>
 
@@ -166,14 +171,7 @@
 
 		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
 
-		<property file="${test.basedir}/deploy/ci.properties" />
-		<property name="install.package.name" value="${install.tar.file.name}" />
-
-
 		<antcall target="install" inheritAll="true">
-			<param name="install.package.path" value="${test.basedir}/deploy" />
-			<param name="install.package.name" value="${install.tar.file.name}" />
-			<param name="install.path" value="${install.path}" />
 		</antcall>
 
 	</target>

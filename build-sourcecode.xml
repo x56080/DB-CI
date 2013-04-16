@@ -32,7 +32,7 @@
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
-			<arg line="${compile.arg.line}"/>
+			<arg line="${compile.arg.line}" />
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
@@ -59,7 +59,8 @@
 		<echo message="Begin to make relase package ..." />
 		<property name="RELEASE_DIR" value="${WORKSPACE}/${release.dirname}" />
 		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
-
+		<property file="${CODE_DIR}/misc/ci/ci.properties"/>
+		
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
@@ -102,7 +103,7 @@
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
 		</copy>
-		
+
 		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/libsdbphp.so" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
@@ -132,8 +133,8 @@
 		</copy>
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
 
-		<copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
-		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" match="&#13;&#10;" replace="&#10;" flags="g" />
+		<!--copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
+		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" match="&#13;&#10;" replace="&#10;" flags="g"/ -->
 
 		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
 		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sequoiadb" match="&#13;&#10;" replace="&#10;" flags="g" />
@@ -143,7 +144,13 @@
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
 
-		<tar destfile="${deploy.path}/${install.packege.name}" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
+		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_server.xml" todir="${RELEASE_DIR}/" />
+		
+		<exec dir="${RELEASE_DIR}/" executable="builder">
+			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${deploy.path}"/>
+		</exec>
+
+		<tar destfile="${RELEASE_DIR}/${project.name}_${project.version}_${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
 
 		<echo message="Make relase package completed." />
 	</target>

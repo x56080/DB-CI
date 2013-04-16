@@ -1,11 +1,19 @@
 STAF.PATH=/usr/local/staf
 
+project.name=sequoiadb
+project.version=1.0
+os.and.platform=suse_x86_64
+
+install.path=/opt
+install.user=sdbadmin
+install.password=sdbadmin
+
 install.tar.file.name=sequoiadb_0.1_ubuntu_x64.tar.gz
 deploy.tar.file.name=deploy.tar.gz
 junitreport.tar.file.name=junit_report.tar.gz
 antreport.tar.file.name=ant_report.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
-install.path=/opt
+
 
 coord.service.port=50000
 jenkins.master.ip=ubun-test1

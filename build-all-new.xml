@@ -30,7 +30,6 @@
 		<echo message="Begin to compile source code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="mk-release">
 			<property name="WORKSPACE" value="${WORKSPACE}" />
-			<property name="install.packege.name" value="${install.tar.file.name}" />
 			<property name="deploy.path" value="${deploy.path}" />
 			<property name="release.dirname" value="${release.dirname}" />
 			<property name="compile.debug" value="${compile.debug}" />
