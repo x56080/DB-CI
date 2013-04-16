@@ -23,36 +23,8 @@
                             <origin>sequoiadb/*</origin>
                         </distributionDirectory>
                     </distributionFileList>
-                    <shortcutList>
-                        <shortcut>
-                            <comment>Uninstall</comment>
-                            <exec>${installdir}/${uninstallerName}</exec>
-                            <icon></icon>
-                            <name>Uninstall ${product_fullname}</name>
-                            <path>${installdir}</path>
-                            <platforms>all</platforms>
-                            <runAsAdmin>0</runAsAdmin>
-                            <runInTerminal>0</runInTerminal>
-                            <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
-                            <windowsExecArgs></windowsExecArgs>
-                            <windowsIcon></windowsIcon>
-                            <windowsPath>${installdir}</windowsPath>
-                        </shortcut>
-                    </shortcutList>
                 </folder>
             </folderList>
-            <startMenuShortcutList>
-                <startMenuShortcut>
-                    <comment>Uninstall ${product_fullname}</comment>
-                    <name>Uninstall ${product_fullname}</name>
-                    <runAsAdmin>0</runAsAdmin>
-                    <runInTerminal>0</runInTerminal>
-                    <windowsExec>${installdir}/${uninstallerName}.exe</windowsExec>
-                    <windowsExecArgs></windowsExecArgs>
-                    <windowsIcon></windowsIcon>
-                    <windowsPath>${installdir}/</windowsPath>
-                </startMenuShortcut>
-            </startMenuShortcutList>
         </component>
     </componentList>
     <readyToInstallActionList>
