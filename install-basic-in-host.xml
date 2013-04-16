@@ -18,10 +18,10 @@
 	<!--property name="coord.service.port" value="50000" /-->
 
 	<property name="install.package.path" value="${test.basedir}/deploy" />
-    <property file="${install.package.path}/ci.properties" />
-  
+	<property file="${install.package.path}/ci.properties" />
+
 	<property name="db.path" value="${install.path}/sequoiadb" />
-	<property name="is.standalone.mode" value="false"/>
+	<property name="is.standalone.mode" value="false" />
 
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
@@ -62,15 +62,10 @@
 		<exec executable="sh" dir="${install.package.path}/sequoiadb" failonerror="true">
 			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
 		</exec-->
-		
-		<exec executalbe="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run">
-			<arg line="--mode unattended --prefix ${db.path} --username ${install.user} --userpasswd ${install.password}"/>
-		</exec>
 
-		<!-- Check the status of serivce-->
-		<exec executable="service" dir="" failonerror="true">
-			<arg value="sdbcm" />
-			<arg value="status" />
+		<chomod file="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run" perm="u+x" />
+		<exec executable="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run">
+			<arg line="--mode unattended --prefix ${db.path} --username ${install.user} --userpasswd ${install.password}" />
 		</exec>
 
 		<if>
@@ -78,7 +73,7 @@
 			<then>
 				<mkdir dir="${db.path}/database/standalone" />
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
-				
+
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 
 				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
@@ -90,6 +85,18 @@
 
 			</then>
 			<else>
+
+				<exec executable="service" dir="" failonerror="true">
+					<arg value="sdbcm" />
+					<arg value="start" />
+				</exec>
+
+				<!-- Check the status of serivce-->
+				<exec executable="service" dir="" failonerror="true">
+					<arg value="sdbcm" />
+					<arg value="status" />
+				</exec>
+
 				<!--mkdir dir="${db.path}/database/cata" />
 						<mkdir dir="${db.path}/database/cata/diag" />
 						<mkdir dir="${db.path}/database/cata/log" />
