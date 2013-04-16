@@ -35,6 +35,10 @@
 			<arg line="${compile.arg.line}"/>
 		</exec>
 
+		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
+			<arg line="${compile.arg.line} --phpversion=5.3.3" />
+		</exec>
+
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
@@ -98,6 +102,8 @@
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
 		</copy>
+		
+		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/libsdbphp.so" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
 			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
@@ -110,7 +116,7 @@
 		<copy todir="${RELEASE_DIR}/sequoiadb/www">
 			<fileset dir="${CODE_DIR}/client/admin" />
 		</copy>
-			
+
 		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
