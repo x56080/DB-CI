@@ -2,6 +2,7 @@
     <shortName>sequoiadb</shortName>
     <fullName>SequoiaDB Server</fullName>
     <version>1.0</version>
+    <installerFilename>${product_shortname}-${product_version}-${platform}-installer.${platform_exec_suffix}</installerFilename>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -288,6 +289,17 @@
                 </passwordParameter>
             </parameterList>
         </parameterGroup>
+        <stringParameter>
+            <name>platform</name>
+            <description></description>
+            <explanation></explanation>
+            <value>${platform_name}</value>
+            <default>${platform_name}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <ask>0</ask>
+            <cliOptionShow>0</cliOptionShow>
+            <width>40</width>
+        </stringParameter>
     </parameterList>
 </project>
 
