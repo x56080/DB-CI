@@ -63,7 +63,7 @@
 			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
 		</exec-->
 
-		<chomod file="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run" perm="u+x" />
+		<chmod file="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run" perm="u+x" />
 		<exec executable="${install.package.path}/${project.name}_${project.version}_${os.and.platform}.run">
 			<arg line="--mode unattended --prefix ${db.path} --username ${install.user} --userpasswd ${install.password}" />
 		</exec>
