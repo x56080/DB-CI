@@ -163,12 +163,6 @@
             <customErrorMessage>Failed to delete user: ${username}</customErrorMessage>
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
-            <ruleList>
-                <userTest>
-                    <logic>exists</logic>
-                    <username>${username}</username>
-                </userTest>
-            </ruleList>
         </deleteUser>
     </postUninstallationActionList>
     <allowedLanguages>en zh_CN</allowedLanguages>
