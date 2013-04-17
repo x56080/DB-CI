@@ -42,6 +42,8 @@
 				<exec executable="${db.path}/uninstall" dir="${db.path}" failonerror="true">
 					<arg line="--mode unattended" />
 				</exec>
+				
+				<delete dir="${db.path}" />
 
 				<echo message="Clean install env compeleted." />
 			</then>
