@@ -75,8 +75,9 @@ public class CataNodeGroup extends NodeGroup {
 			}
 		}
 
+		ReplicaNode node = null;
 		for (Node nodeInfo : getNodeList()) {
-			ReplicaNode node = group.getNode(nodeInfo.getHost(),
+			node = group.getNode(nodeInfo.getHost(),
 					nodeInfo.getBasePort());
 
 			if (node == null) {
@@ -96,7 +97,7 @@ public class CataNodeGroup extends NodeGroup {
 		i = 0;
 		while (true) {
 			try {
-				group = sdb.getReplicaGroup(getName());
+				node = group.getMaster();
 				if (group != null) {
 					break;
 				}
@@ -115,5 +116,12 @@ public class CataNodeGroup extends NodeGroup {
 			} catch (InterruptedException e) {
 			}
 		}
+		
+		//Wait selected master complete.
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+		}
+		
 	}
 }
