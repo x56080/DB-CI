@@ -93,6 +93,7 @@ public class CataNodeGroup extends NodeGroup {
 		}
 
 		// Wait for cata select group.
+		i = 0;
 		while (true) {
 			try {
 				group = sdb.getReplicaGroup(getName());
