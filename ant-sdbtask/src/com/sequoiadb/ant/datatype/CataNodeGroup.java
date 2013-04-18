@@ -20,45 +20,38 @@ public class CataNodeGroup extends NodeGroup {
 
 	@Override
 	public void start(Sequoiadb sdb) throws BuildException {
-		
+
 		ReplicaGroup group = null;
-		try
-		{
+		try {
 			setName(CATALOG_GROUP_NAME);
 			group = sdb.getReplicaGroup(getName());
-		}
-		catch(BaseException e)
-		{
+		} catch (BaseException e) {
 			group = null;
 		}
-		
-		
-		if (group == null)
-		{
-			//group is not exist
+
+		if (group == null) {
+			// group is not exist
 			Node nodeInfo = getNodeList().get(0);
 			getNodeList().remove(0);
-				
-			try
-			{
-				//create group
-				sdb.createReplicaCataGroup(nodeInfo.getHost(), nodeInfo.getBasePort(), nodeInfo.getDbpath(), nodeInfo.getConfigMap());
-			}
-			catch(BaseException e)
-			{
-				//Do nothing
+
+			try {
+				// create group
+				sdb.createReplicaCataGroup(nodeInfo.getHost(),
+						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
+						nodeInfo.getConfigMap());
+			} catch (BaseException e) {
+				// Do nothing
 			}
 		}
 
-
 	}
-	
+
 	@Override
 	public void waitForStart(Sequoiadb sdb, long timeout) throws BuildException {
-		
+
 		ReplicaGroup group = null;
-		
-		//Wait for cata select group.
+
+		// Wait for cata select group.
 		int i = 0;
 		while (true) {
 			try {
@@ -67,24 +60,21 @@ public class CataNodeGroup extends NodeGroup {
 					break;
 				}
 			} catch (BaseException baseException) {
-				//Do nothing
-			} 
-			
+				// Do nothing
+			}
+
 			i++;
 			if (i > timeout) {
 				throw new BuildException("Group:" + this.getName()
 						+ " select master timeout.");
 			}
-			
-			
-			try{
+
+			try {
 				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
 		}
 
-		
 		for (Node nodeInfo : getNodeList()) {
 			ReplicaNode node = group.getNode(nodeInfo.getHost(),
 					nodeInfo.getBasePort());
@@ -93,12 +83,35 @@ public class CataNodeGroup extends NodeGroup {
 				node = group.createNode(nodeInfo.getHost(),
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
 						nodeInfo.getConfigMap());
-				
+
 				node.start();
 			} else {
 				throw new BuildException("Node repeat: hostname="
 						+ nodeInfo.getHost() + "servicename:"
 						+ nodeInfo.getBasePort());
+			}
+		}
+
+		// Wait for cata select group.
+		while (true) {
+			try {
+				group = sdb.getReplicaGroup(getName());
+				if (group != null) {
+					break;
+				}
+			} catch (BaseException baseException) {
+				// Do nothing
+			}
+
+			i++;
+			if (i > timeout) {
+				throw new BuildException("Group:" + this.getName()
+						+ " select master timeout.");
+			}
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
 			}
 		}
 	}
