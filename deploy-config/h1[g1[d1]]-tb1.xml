@@ -32,7 +32,7 @@
 		<sdbdeploy host="${test.machine.no2}" coordport="50000">
 			<catagroup name="cata1">
 				<node host="${test.machine.no2}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
-					<confitem name="loglevel" value="5" />
+					<confitem name="diaglevel" value="5" />
 				</node>
 			</catagroup>
 		</sdbdeploy>
@@ -40,7 +40,7 @@
 		<sdbdeploy host="${test.machine.no2}" coordport="50000">
 			<datagroup name="group1">
 				<node host="${test.machine.no2}" baseport="51000" dbpath="${install.path}/sequoiadb/database/data/51000">
-					<confitem name="loglevel" value="5" />
+					<confitem name="diaglevel" value="5" />
 				</node>
 			</datagroup>
 		</sdbdeploy>
