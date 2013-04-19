@@ -79,7 +79,8 @@
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
 
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
-
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
+				
 				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
 				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 					<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
@@ -134,6 +135,7 @@
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="50000" replace="${coord.service.port}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
 
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
 				<chown owner="sdbadmin:sdbadmin" type="both">
