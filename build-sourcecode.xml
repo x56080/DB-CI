@@ -59,8 +59,8 @@
 		<echo message="Begin to make relase package ..." />
 		<property name="RELEASE_DIR" value="${WORKSPACE}/${release.dirname}" />
 		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
-		<property file="${CODE_DIR}/misc/ci/ci.properties"/>
-		
+		<property file="${CODE_DIR}/misc/ci/ci.properties" />
+
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
@@ -96,7 +96,7 @@
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmart" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmtop" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbpdlog" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		
+
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
 		</copy>
@@ -140,15 +140,18 @@
 		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
 		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sequoiadb" match="&#13;&#10;" replace="&#10;" flags="g" />
 
+		<copy todir="${RELEASE_DIR}/sequoiadb/doc">
+			<fileset dir="${CODE_DIR}/doc/out" />
+		</copy>
 
 		<delete includeemptydirs="true">
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
 		</delete>
 
 		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_server.xml" todir="${RELEASE_DIR}/" />
-		
+
 		<exec dir="${RELEASE_DIR}/" executable="builder">
-			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${deploy.path}"/>
+			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${deploy.path}" />
 		</exec>
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
