@@ -27,7 +27,7 @@
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no1}" />
-			        <property name="coord.service.port" value="${coord.service.port}" />
+				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
@@ -47,6 +47,9 @@
 					<confitem name="diaglevel" value="5" />
 				</node>
 				<node host="${test.machine.no2}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
+					<confitem name="diaglevel" value="5" />
+				</node>
+				<node host="${test.machine.no3}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
 				</node>
 			</catagroup>
