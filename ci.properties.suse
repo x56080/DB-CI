@@ -1,7 +1,7 @@
 STAF.PATH=/usr/local/staf
 
 project.name=sequoiadb
-project.version=1.0
+project.version=1.0.1
 os.and.platform=suse_x86_64
 
 install.path=/opt
@@ -19,6 +19,6 @@ test.machine.deploy.path=/tmp/sequoiadb_test
 
 coord.service.port=50000
 jenkins.master.ip=suse-test1
-test.machine.no1=suse-test1
-test.machine.no2=suse-test1
-test.machine.no3=suse-test1
+test.machine.no1=suse-test2
+test.machine.no2=suse-test3
+test.machine.no3=suse-test4
