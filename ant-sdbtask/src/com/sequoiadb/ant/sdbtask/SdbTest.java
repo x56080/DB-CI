@@ -155,6 +155,9 @@ public class SdbTest  extends Task{
 			}
 			finally{
 				handle.unRegister();
+				handle = null;
+				
+				System.gc();
 			}
 		} 
 		catch (UnknownHostException e) {
