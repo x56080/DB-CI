@@ -3,6 +3,9 @@
  */
 package com.sequoiadb.ant.datatype;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 
 import com.sequoiadb.base.ReplicaGroup;
@@ -76,6 +79,9 @@ public class CataNodeGroup extends NodeGroup {
 		}
 
 		ReplicaNode node = null;
+		
+		List<ReplicaNode> replNodes = new LinkedList<ReplicaNode>();
+		
 		for (Node nodeInfo : getNodeList()) {
 			node = group.getNode(nodeInfo.getHost(), nodeInfo.getBasePort());
 
@@ -84,21 +90,34 @@ public class CataNodeGroup extends NodeGroup {
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
 						nodeInfo.getConfigMap());
 
-				node.start();
+				replNodes.add(node);
 			} else {
 				throw new BuildException("Node repeat: hostname="
 						+ nodeInfo.getHost() + "servicename:"
 						+ nodeInfo.getBasePort());
 			}
 		}
+		
+		for (ReplicaNode replNode : replNodes)
+		{
+			try
+			{
+				replNode.start();
+			}
+			catch(BaseException e)
+			{
+				e.printStackTrace();
+				throw new BuildException(e.getMessage());
+			}
+		}
 
 		// Wait start selected master.
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 		}
 
-		// Wait for cata select group.
+		// Wait for cata select master.
 		i = 0;
 		while (true) {
 			try {
