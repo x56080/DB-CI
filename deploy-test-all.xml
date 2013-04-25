@@ -16,6 +16,7 @@
 		<classpath>
 			<fileset dir="${work.path}/deploy/ant-sdbtasks/" includes="*.jar" />
 			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
+			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
 		</classpath>
 	</taskdef>
 
