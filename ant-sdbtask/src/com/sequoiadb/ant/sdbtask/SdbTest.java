@@ -181,7 +181,6 @@ public class SdbTest extends Task {
 				String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
 						+ e.getLocalizedMessage();
 				log(errorMsg);
-				throw new BuildException(errorMsg);
 			}
 			
 			handle = null;
