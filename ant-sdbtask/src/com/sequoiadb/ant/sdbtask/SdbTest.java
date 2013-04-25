@@ -73,6 +73,15 @@ public class SdbTest extends Task {
 
 			handle = new STAFHandle("ant-sdbtasks");
 
+			String antFileFullName = this.getProject().getProperty("ant.file");
+			File tempFile = new File(antFileFullName);
+			String antFileName = tempFile.getName();
+			antFileName = antFileName.substring(0, antFileName.indexOf("."));
+
+			String lineNum = Integer.toString(this.getLocation()
+					.getLineNumber());
+			this.remoteReportsPath += lineNum;
+
 			// Staf PROCESS START SHELL COMMAND ant -l
 			// ${test.machine.deploy.path}/install-basic-in-host.log -f
 			// ${test.machine.deploy.path}/install-basic-in-host.xml
@@ -80,16 +89,8 @@ public class SdbTest extends Task {
 			// -Ddeploy.filename=${deploy.tar.file.name} WORKDIR
 			// ${test.machine.deploy.path} WAIT 30m
 			String request = "START SHELL COMMAND ant -f " + scriptFileName
-					+ " -l " + scriptFileName + ".log";
+					+ " -l " + scriptFileName + lineNum +".log";
 
-			String antFileFullName = this.getProject().getProperty("ant.file");
-			File tempFile = new File(antFileFullName);
-			String antFileName = tempFile.getName();
-			antFileName = antFileName.substring(0, antFileName.indexOf("."));
-
-			String lineNum = Integer.toString(this.getLocation().getLineNumber());
-			this.remoteReportsPath += lineNum;
-			
 			request += " -Dtest.package.name=" + antFileName;
 			request += " -Dreports.path=" + this.remoteReportsPath;
 			request += " -Dparallel.num=" + lineNum;
@@ -110,7 +111,7 @@ public class SdbTest extends Task {
 			}
 
 			// Staf ${test.machine.no2} FS GET FILE scriptFileName + ".log" TEXT
-			request = "GET FILE " + scriptFileName + ".log TEXT";
+			request = "GET FILE " + scriptFileName + lineNum + ".log TEXT";
 			log("exec: staf " + hostName + " FS " + request);
 			result = handle.submit2(hostName, "FS", request);
 
@@ -182,7 +183,7 @@ public class SdbTest extends Task {
 						+ e.getLocalizedMessage();
 				log(errorMsg);
 			}
-			
+
 			handle = null;
 			System.gc();
 		}
