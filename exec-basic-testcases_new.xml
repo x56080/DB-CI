@@ -3,6 +3,7 @@
 <!--@param ${reports.path}: The path where test case direcotry.-->
 <!--@param ${test.package.name}: The name of test package name,.-->
 <!--@param ${parallel.num}:  The parallel number when parallel in same host.-->
+<!--@param ${excludes.dir.patterns}: A comma- or space-sparated list of patterns of directories that must be excluded.-->
 <project name="test-basic-testcases" default="test-basic-testcases">
 
 	<target name="clean-test-reports" depends="">
@@ -11,6 +12,8 @@
 		<echo message="Clean deploy result reports compeleted." />
 	</target>
 
+	<property name="excludes.dir.patterns" value=""/>
+	
 	<target name="test-basic-testcases" depends="clean-test-reports">
 		<echo message="Begin test basic testcases..." />
 
@@ -27,7 +30,7 @@
 
 		<foreach target="test-one-suite" param="test.suite.fullname">
 			<path>
-				<dirset dir="${testcase.path}/js" />
+				<dirset dir="${testcase.path}/js" excludes="${excludes.dir.patterns}" />
 			</path>
 			<param name="testcase.path" value="${testcase.path}" />
 			<param name="sdb.fullname" value="${install.path}/sequoiadb/bin/sdb" />
