@@ -19,165 +19,172 @@ import com.ibm.staf.STAFResult;
 
 /**
  * @author qiushanggao
- *
+ * 
  */
-public class SdbTest  extends Task{
+public class SdbTest extends Task {
 	private String maxWaitTime = "30m";
-	
+
 	private String hostName = "localhost";
-	
+
 	private String scriptFileName;
-	
+
 	private String remoteReportsPath;
-	
+
 	private String masterReportsPath;
-	
+
 	private List<Parameter> params = new ArrayList<Parameter>();
-	
-	public void setHost(String value)
-	{
+
+	public void setHost(String value) {
 		hostName = value;
 	}
-	
-	public void setTestscript(String value)
-	{
+
+	public void setTestscript(String value) {
 		scriptFileName = value;
 	}
-	
-	public void setTimeout(String value)
-	{
+
+	public void setTimeout(String value) {
 		maxWaitTime = value;
 	}
-	
-	
-	public void setRemotereports(String value)
-	{
+
+	public void setRemotereports(String value) {
 		remoteReportsPath = value;
 	}
-	
-	public void setMasterreports(String value)
-	{
+
+	public void setMasterreports(String value) {
 		masterReportsPath = value;
 	}
-	
-	public Parameter createParam()
-	{
+
+	public Parameter createParam() {
 		Parameter param = new Parameter();
 		params.add(param);
 		return param;
 	}
-	
-	private String STAFResultToString(STAFResult result)
-	{
-		
+
+	private String STAFResultToString(STAFResult result) {
+
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
-	
+
 	public void execute() {
-		try{
-			STAFHandle handle = new STAFHandle("ant-sdbtasks");
-			try{
-				
-				
-				//Staf PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} WORKDIR ${test.machine.deploy.path} WAIT 30m
-				String request = "START SHELL COMMAND ant -f " + scriptFileName + " -l " + scriptFileName + ".log";
-				
-				String antFileFullName = this.getProject().getProperty("ant.file");
-				File tempFile = new File(antFileFullName);
-				String antFileName = tempFile.getName();
-				antFileName = antFileName.substring(0, antFileName.indexOf("."));
-				
-				request += " -Dtest.package.name=" + antFileName;
-				request += " -Dreports.path=" + this.remoteReportsPath;
-				request += " -Dparallel.num=" + Integer.toString(this.getLocation().getLineNumber());
-				
-				for(Parameter param: params)
-				{
-					request += " -D" + param.getName();
-					request += "=" + param.getValue();
-				}
-				
-				request += " WAIT " + maxWaitTime;
-				
-				log("exec: staf " + hostName + " PROCESS " + request);
-				STAFResult result = handle.submit2(hostName, "PROCESS", request);
-				
-				log(STAFResultToString(result));
-				if (result.rc != STAFResult.Ok)
-				{
-					throw new BuildException(STAFResultToString(result));
-				}
-				
-				
-				//Staf ${test.machine.no2} FS GET FILE scriptFileName + ".log" TEXT  
-				request = "GET FILE " + scriptFileName + ".log TEXT";
-				log("exec: staf " + hostName + " FS " + request);
-				result = handle.submit2(hostName, "FS", request);
-				
-				log(result.result);
-				
-				//<echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" />
-				//<exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY DIRECTORY  ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
-				//	<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
-				//	<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
-				//	<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
-				//</exec>
-				request = "COPY DIRECTORY " + this.remoteReportsPath + " TODIRECTORY " + this.masterReportsPath + " TOMACHINE " + InetAddress.getLocalHost().getHostName();
-				
-				log("exec: staf " + hostName + " FS " + request);
-				result = handle.submit2(hostName, "FS", request);
-				
-				log(STAFResultToString(result));
-				if (result.rc != STAFResult.Ok)
-				{
-					throw new BuildException(STAFResultToString(result));
-				}
-				
-				
-				
-				//<echo message="exec ${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM" />
-				//<exec command="${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM" failifexecutionfails="true">
-				//	<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
-				//	<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
-				//	<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
-				//</exec>
-				request = "DELETE ENTRY " + this.remoteReportsPath + " RECURSE CONFIRM";
-				
-				log("exec: staf " + hostName + " FS " + request);
-				result = handle.submit2(hostName, "FS", request);
-				
-				log(STAFResultToString(result));
-				if (result.rc != STAFResult.Ok)
-				{
-					throw new BuildException(STAFResultToString(result));
-				}
+
+		STAFHandle handle = null;
+		try {
+
+			handle = new STAFHandle("ant-sdbtasks");
+
+			// Staf PROCESS START SHELL COMMAND ant -l
+			// ${test.machine.deploy.path}/install-basic-in-host.log -f
+			// ${test.machine.deploy.path}/install-basic-in-host.xml
+			// -Dtest.basedir=${test.machine.deploy.path}
+			// -Ddeploy.filename=${deploy.tar.file.name} WORKDIR
+			// ${test.machine.deploy.path} WAIT 30m
+			String request = "START SHELL COMMAND ant -f " + scriptFileName
+					+ " -l " + scriptFileName + ".log";
+
+			String antFileFullName = this.getProject().getProperty("ant.file");
+			File tempFile = new File(antFileFullName);
+			String antFileName = tempFile.getName();
+			antFileName = antFileName.substring(0, antFileName.indexOf("."));
+
+			request += " -Dtest.package.name=" + antFileName;
+			request += " -Dreports.path=" + this.remoteReportsPath;
+			request += " -Dparallel.num="
+					+ Integer.toString(this.getLocation().getLineNumber());
+
+			for (Parameter param : params) {
+				request += " -D" + param.getName();
+				request += "=" + param.getValue();
 			}
-			finally{
-				handle.unRegister();
-				handle = null;
-				
-				System.gc();
+
+			request += " WAIT " + maxWaitTime;
+
+			log("exec: staf " + hostName + " PROCESS " + request);
+			STAFResult result = handle.submit2(hostName, "PROCESS", request);
+
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
 			}
-		} 
-		catch (UnknownHostException e) {
+
+			// Staf ${test.machine.no2} FS GET FILE scriptFileName + ".log" TEXT
+			request = "GET FILE " + scriptFileName + ".log TEXT";
+			log("exec: staf " + hostName + " FS " + request);
+			result = handle.submit2(hostName, "FS", request);
+
+			log(result.result);
+
+			// <echo message="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY
+			// DIRECTORY
+			// ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports
+			// TODIRECTORY ${test.reports.path} TOMACHINE ${host.Name}" />
+			// <exec command="${STAF.PATH}\bin\staf ${test.machine.no2} FS COPY
+			// DIRECTORY
+			// ${test.machine.deploy.path}/deploy/hlt/js_testcases/reports
+			// TODIRECTORY ${test.reports.path} TOMACHINE
+			// ${host.Name}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			// <env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			// <env key="LD_LIBRARY_PATH"
+			// path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			// <env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			// </exec>
+			request = "COPY DIRECTORY " + this.remoteReportsPath
+					+ " TODIRECTORY " + this.masterReportsPath + " TOMACHINE "
+					+ InetAddress.getLocalHost().getHostName();
+
+			log("exec: staf " + hostName + " FS " + request);
+			result = handle.submit2(hostName, "FS", request);
+
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+
+			// <echo
+			// message="exec ${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM"
+			// />
+			// <exec
+			// command="${STAF.PATH}/bin/staf ${deploy.host.name} FS DELETE ENTRY ${test.machine.test.reports} RECURSE CONFIRM"
+			// failifexecutionfails="true">
+			// <env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			// <env key="LD_LIBRARY_PATH"
+			// path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			// <env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+			// </exec>
+			request = "DELETE ENTRY " + this.remoteReportsPath
+					+ " RECURSE CONFIRM";
+
+			log("exec: staf " + hostName + " FS " + request);
+			result = handle.submit2(hostName, "FS", request);
+
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			
+
 			throw new BuildException(e.getMessage());
-		}
-		catch (STAFException e)
-		{
-			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg=" + e.getLocalizedMessage();
+		} catch (STAFException e) {
+			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
+					+ e.getLocalizedMessage();
 			log(errorMsg);
 			e.printStackTrace();
-			
+
 			throw new BuildException(errorMsg);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+		} finally {
+			try {
+				handle.unRegister();
+			} catch (STAFException e) {
+				String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
+						+ e.getLocalizedMessage();
+				log(errorMsg);
+				throw new BuildException(errorMsg);
+			}
 			
-			throw new BuildException(e.toString());
+			handle = null;
+			System.gc();
 		}
+
 	}
 }
