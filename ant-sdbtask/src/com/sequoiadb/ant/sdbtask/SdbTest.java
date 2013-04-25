@@ -87,10 +87,12 @@ public class SdbTest extends Task {
 			String antFileName = tempFile.getName();
 			antFileName = antFileName.substring(0, antFileName.indexOf("."));
 
+			String lineNum = Integer.toString(this.getLocation().getLineNumber());
+			this.remoteReportsPath += lineNum;
+			
 			request += " -Dtest.package.name=" + antFileName;
 			request += " -Dreports.path=" + this.remoteReportsPath;
-			request += " -Dparallel.num="
-					+ Integer.toString(this.getLocation().getLineNumber());
+			request += " -Dparallel.num=" + lineNum;
 
 			for (Parameter param : params) {
 				request += " -D" + param.getName();
