@@ -177,7 +177,10 @@ public class SdbTest extends Task {
 			throw new BuildException(errorMsg);
 		} finally {
 			try {
-				handle.unRegister();
+				if (handle != null)
+				{
+					handle.unRegister();
+				}
 			} catch (STAFException e) {
 				String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
 						+ e.getLocalizedMessage();
