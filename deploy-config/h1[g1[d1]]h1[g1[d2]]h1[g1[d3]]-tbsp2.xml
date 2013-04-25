@@ -11,13 +11,7 @@
 
 <project name="deploy" default="test">
 	<property file="ci.properties" />
-	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
-		<classpath>
-			<fileset dir="${deploy.path}/ant-sdbtasks/" includes="*.jar" />
-			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
-		</classpath>
-	</taskdef>
-
+	
 	<target name="deploy" depends="">
 		<echo message="Begin install software and test files to ${test.machine1}" />
 		<hostinfo prefix="host" />

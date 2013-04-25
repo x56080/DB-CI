@@ -11,6 +11,14 @@
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
 		</classpath>
 	</taskdef>
+
+	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
+		<classpath>
+			<fileset dir="${deploy.path}/ant-sdbtasks/" includes="*.jar" />
+			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
+		</classpath>
+	</taskdef>
+
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
 	<property file="${ci.script.file.path}/ci.properties" />
 	<property name="is.test" value="true" />
@@ -88,7 +96,7 @@
 				</ant>
 			</then>
 		</if>
-		
+
 		<echo message="Deploy ${deploy.case.fullname} complete. " />
 
 	</target>
