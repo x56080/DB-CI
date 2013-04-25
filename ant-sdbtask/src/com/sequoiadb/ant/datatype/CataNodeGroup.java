@@ -80,7 +80,7 @@ public class CataNodeGroup extends NodeGroup {
 
 		ReplicaNode node = null;
 		
-		List<ReplicaNode> replNodes = new LinkedList<ReplicaNode>();
+		//List<ReplicaNode> replNodes = new LinkedList<ReplicaNode>();
 		
 		for (Node nodeInfo : getNodeList()) {
 			node = group.getNode(nodeInfo.getHost(), nodeInfo.getBasePort());
@@ -90,7 +90,8 @@ public class CataNodeGroup extends NodeGroup {
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
 						nodeInfo.getConfigMap());
 
-				replNodes.add(node);
+				node.start();
+				//replNodes.add(node);
 			} else {
 				throw new BuildException("Node repeat: hostname="
 						+ nodeInfo.getHost() + "servicename:"
@@ -98,18 +99,18 @@ public class CataNodeGroup extends NodeGroup {
 			}
 		}
 		
-		for (ReplicaNode replNode : replNodes)
-		{
-			try
-			{
-				replNode.start();
-			}
-			catch(BaseException e)
-			{
-				e.printStackTrace();
-				throw new BuildException(e.getMessage());
-			}
-		}
+		//for (ReplicaNode replNode : replNodes)
+		//{
+		//	try
+		//	{
+		//		replNode.start();
+		//	}
+		//	catch(BaseException e)
+		//	{
+		//		e.printStackTrace();
+		//		throw new BuildException(e.getMessage());
+		//	}
+		//}
 
 		// Wait start selected master.
 		try {
