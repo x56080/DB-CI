@@ -80,7 +80,20 @@ public class SdbTest extends Task {
 
 			String lineNum = Integer.toString(this.getLocation()
 					.getLineNumber());
-			this.remoteReportsPath += lineNum;
+			this.remoteReportsPath += hostName + "_" + lineNum;
+			
+			this.masterReportsPath += File.separator + hostName + "_" + lineNum + File.separator;
+			
+			File dir = new File(masterReportsPath);
+			if (dir.mkdirs())
+			{
+				log("Failed to create dir:" + masterReportsPath);
+				throw new BuildException("Failed to create dir:" + masterReportsPath);
+			}
+			else
+			{
+				log("Success to create dir:" + masterReportsPath);
+			}
 
 			// Staf PROCESS START SHELL COMMAND ant -l
 			// ${test.machine.deploy.path}/install-basic-in-host.log -f
