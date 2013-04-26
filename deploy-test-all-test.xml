@@ -52,16 +52,6 @@
 				<property name="deploy.host.name" value="${test.machine.no1}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
-				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-				<property name="deploy.host.name" value="${test.machine.no2}" />
-				<property name="coord.service.port" value="${coord.service.port}" />
-			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
-				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-				<property name="deploy.host.name" value="${test.machine.no3}" />
-				<property name="coord.service.port" value="${coord.service.port}" />
-			</ant>
 		</parallel>
 	</target>
 
@@ -77,8 +67,6 @@
 			<property name="test.reports.path" value="${work.path}/reports" />
 			<property name="STAF.PATH" value="${STAF.PATH}" />
 			<property name="test.machine.no1" value="${test.machine.no1}" />
-			<property name="test.machine.no2" value="${test.machine.no2}" />
-			<property name="test.machine.no3" value="${test.machine.no3}" />
 		</ant>
 
 		<if>
@@ -92,8 +80,6 @@
 					<property name="test.reports.path" value="${work.path}/reports" />
 					<property name="STAF.PATH" value="${STAF.PATH}" />
 					<property name="test.machine.no1" value="${test.machine.no1}" />
-					<property name="test.machine.no2" value="${test.machine.no2}" />
-					<property name="test.machine.no3" value="${test.machine.no3}" />
 				</ant>
 			</then>
 		</if>
