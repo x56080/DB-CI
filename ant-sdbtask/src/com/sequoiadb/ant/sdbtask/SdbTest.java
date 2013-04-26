@@ -85,7 +85,7 @@ public class SdbTest extends Task {
 			this.masterReportsPath += File.separator + hostName + "_" + lineNum + File.separator;
 			
 			File dir = new File(masterReportsPath);
-			if (dir.mkdirs())
+			if (!dir.mkdirs())
 			{
 				log("Failed to create dir:" + masterReportsPath);
 				throw new BuildException("Failed to create dir:" + masterReportsPath);
