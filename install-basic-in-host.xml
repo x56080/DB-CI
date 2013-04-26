@@ -91,10 +91,10 @@
 			</then>
 			<else>
 
-				<exec executable="service" dir="" failonerror="true">
+				<!--exec executable="service" dir="" failonerror="true">
 					<arg value="sdbcm" />
 					<arg value="start" />
-				</exec>
+				</exec-->
 
 				<!-- Check the status of serivce-->
 				<exec executable="service" dir="" failonerror="true">
