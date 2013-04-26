@@ -101,6 +101,16 @@
                 </windowsServiceTest>
             </ruleList>
         </startWindowsService>
+        <runProgram>
+            <abortOnError>0</abortOnError>
+            <program>service</program>
+            <programArguments>sdbcm start</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
         <kill>
