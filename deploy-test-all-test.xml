@@ -32,7 +32,7 @@
 	<target name="deploy-test-all" depends="clean">
 		<echo message="Begin deploy and test all ...deploy.config.path= ${deploy.config.path}" />
 
-		<property name="deploy.conffile.wildcard" value="*" />
+		<!--property name="deploy.conffile.wildcard" value="*" /-->
 
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
 			<path>
