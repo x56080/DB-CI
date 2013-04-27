@@ -1,7 +1,7 @@
 STAF.PATH=/usr/local/staf
 
 project.name=sequoiadb
-project.version=1.0
+project.version=1.1.0
 os.and.platform=suse_x86_64
 
 install.path=/opt
