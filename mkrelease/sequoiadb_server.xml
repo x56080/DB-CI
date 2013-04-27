@@ -111,6 +111,11 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+        <propertiesFileSet>
+            <file>${installdir}/conf/sdbcm.conf</file>
+            <key>defaultPort</key>
+            <value>${port}</value>
+        </propertiesFileSet>
     </postInstallationActionList>
     <preUninstallationActionList>
         <kill>
@@ -275,6 +280,16 @@
             <allowEmptyValue>0</allowEmptyValue>
             <ask>0</ask>
             <cliOptionShow>0</cliOptionShow>
+            <width>40</width>
+        </stringParameter>
+        <stringParameter>
+            <name>port</name>
+            <title>SDBCM Port</title>
+            <description>Port</description>
+            <explanation>SequoiaDB Cluster Manager port</explanation>
+            <value>50010</value>
+            <default>50010</default>
+            <allowEmptyValue>1</allowEmptyValue>
             <width>40</width>
         </stringParameter>
     </parameterList>
