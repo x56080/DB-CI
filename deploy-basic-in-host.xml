@@ -10,7 +10,7 @@
 	
 	<target name="clean-deploy-basic-in-host" depends="">
 		<property environment="env" />
-
+<echo message="${env.PATH}">
 		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
 		<echo message="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml clean-install -Dtest.basedir=${test.machine.deploy.path} WORKDIR ${test.machine.deploy.path} WAIT 30m" />
