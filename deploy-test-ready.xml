@@ -13,7 +13,7 @@
 		<delete file="${WORKSPACE}/sequoiadb" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
-		
+		<delete dir="${WORKSPACE}/deploy" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
 		<copy file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" tofile="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 		
@@ -38,6 +38,10 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
+		
+		
+		<untar src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}" compression="gzip" />
+		
 		
 		<echo message="ready is ok " />
 	</target>
