@@ -181,7 +181,9 @@
         </deleteUser>
     </postUninstallationActionList>
     <allowedLanguages>en zh_CN</allowedLanguages>
+    <debuggerPassword>sequoiadb</debuggerPassword>
     <defaultUnixOwner>${username}</defaultUnixOwner>
+    <enableDebugger>1</enableDebugger>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <requireInstallationByRootUser>1</requireInstallationByRootUser>
