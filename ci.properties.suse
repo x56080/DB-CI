@@ -13,9 +13,12 @@ antreport.tar.file.name=ant_report.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
 
 
-
+copy_tar=/test_tar
 
 coord.service.port=50000
+
+target.deploy_tar_gz.ip=bl465-4
+
 jenkins.master.ip=suse-test1
 test.machine.no1=suse-test2
 test.machine.no2=suse-test3
