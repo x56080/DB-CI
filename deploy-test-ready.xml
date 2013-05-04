@@ -5,8 +5,7 @@
 <!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
 
 <project name="copy_tar_deploy" default="copy_tar_deploy">
-	<property file="ci.properties" />
-	<property name="is.standalone.mode" value="false"/>
+	
 	
 	
 	<target name="clean" depends="">
@@ -22,6 +21,9 @@
 		<copy todir="${WORKSPACE}/sequoiadb/misc/ci">
 			<fileset dir="${WORKSPACE}/ci" includes="**/**" />
 		</copy>
+		
+		<property file="ci.properties" />
+	<property name="is.standalone.mode" value="false"/>
 		
 	</target>
 	
