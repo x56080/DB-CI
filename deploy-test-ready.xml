@@ -9,6 +9,10 @@
 	
 	
 	<target name="clean" depends="">
+		
+		<echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+		<echoproperties/>
+		<echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
 		<echo message="copy ci files to sequoiadb/misc/ci " />
 		<delete file="${WORKSPACE}/sequoiadb/*" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
