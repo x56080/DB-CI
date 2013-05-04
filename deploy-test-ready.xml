@@ -13,7 +13,7 @@
 		<delete file="${WORKSPACE}/sequoiadb" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
-		<delete dir="${WORKSPACE}/deploy" />
+		<delete dir="${WORKSPACE}/deploy/*" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
 		<copy file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" tofile="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 		
