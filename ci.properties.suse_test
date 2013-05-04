@@ -14,9 +14,10 @@ junitreport.tar.file.name=junit_report.tar.gz
 antreport.tar.file.name=ant_report.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
 
-
+copy_tar=/test_tar
 
 
 coord.service.port=50000
 jenkins.master.ip=bl465-4
+target.deploy_tar_gz.ip=bl465-4
 test.machine.no1=bl465-4
