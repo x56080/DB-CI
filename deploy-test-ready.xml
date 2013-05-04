@@ -11,7 +11,7 @@
 	
 	<target name="clean" depends="">
 		<echo message="copy ci files to sequoiadb/misc/ci " />
-		<delete file=""${WORKSPACE}/sequoiadb" />
+		<delete file="${WORKSPACE}/sequoiadb" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		<copy todir="${WORKSPACE}/sequoiadb/misc/ci">
 			<fileset dir="${WORKSPACE}/ci" includes="**/**" />
