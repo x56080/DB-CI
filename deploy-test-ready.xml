@@ -5,12 +5,13 @@
 <!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
 
 <project name="copy_tar_deploy" default="copy_tar_deploy">
-	
+	<property file="ci.properties" />
+	<property name="is.standalone.mode" value="false"/>
 	
 	
 	<target name="clean" depends="">
 		<echo message="copy ci files to sequoiadb/misc/ci " />
-		
+		<delete file=""${WORKSPACE}/sequoiadb" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		<copy todir="${WORKSPACE}/sequoiadb/misc/ci">
 			<fileset dir="${WORKSPACE}/ci" includes="**/**" />
@@ -19,6 +20,7 @@
 	</target>
 	
 	<target name="copy_tar_deploy" depends="clean">
+		<echo message="ready is ok " />
 	</target>
 
 
