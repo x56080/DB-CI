@@ -29,8 +29,6 @@
     </componentList>
     <readyToInstallActionList>
         <addUser>
-            <abortOnError>1</abortOnError>
-            <customErrorMessage>Failed to create user: ${username}</customErrorMessage>
             <password>${userpasswd}</password>
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
@@ -68,6 +66,15 @@
                 </platformTest>
             </ruleList>
         </runProgram>
+        <exit>
+            <exitCode>1</exitCode>
+            <ruleList>
+                <userTest>
+                    <logic>not_exists</logic>
+                    <username>${username}</username>
+                </userTest>
+            </ruleList>
+        </exit>
     </readyToInstallActionList>
     <postInstallationActionList>
         <createWindowsService>
