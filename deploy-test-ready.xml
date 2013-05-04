@@ -9,7 +9,7 @@
 	
 	
 	<target name="clean" depends="">
-		<echo message="copy ci files to sequoiadb/misc/ci ">
+		<echo message="copy ci files to sequoiadb/misc/ci " />
 		
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		<copy todir="${WORKSPACE}/sequoiadb/misc/ci">
