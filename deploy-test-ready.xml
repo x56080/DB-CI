@@ -18,7 +18,8 @@
 		
 	</target>
 	
-	
+	<target name="copy_tar_deploy" depends="clean">
+	</target>
 
 
 </project>
