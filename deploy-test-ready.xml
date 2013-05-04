@@ -13,6 +13,10 @@
 		<echo message="copy ci files to sequoiadb/misc/ci " />
 		<delete file="${WORKSPACE}/sequoiadb" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
+		
+		<copy file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" tofile="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
+		
+		
 		<copy todir="${WORKSPACE}/sequoiadb/misc/ci">
 			<fileset dir="${WORKSPACE}/ci" includes="**/**" />
 		</copy>
