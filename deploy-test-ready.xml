@@ -31,8 +31,8 @@
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
-    <echo message="${STAF.PATH}\bin\staf  ${target.deploy_tar_gz.ip} FS GET  FILE ${test_tar}/${deploy.tar.file.name}" />
-		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS GET  FILE ${test_tar}/${deploy.tar.file.name} BINARY" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+    <echo message="${STAF.PATH}\bin\staf  ${target.deploy_tar_gz.ip} FS GET  FILE ${copy_tar}/${deploy.tar.file.name}" />
+		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS GET  FILE ${copy_tar}/${deploy.tar.file.name} BINARY" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
