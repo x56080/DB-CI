@@ -59,6 +59,8 @@
 		
 		<untar src="${WORKSPACE}/${build_version}" dest="${WORKSPACE}" compression="gzip" />
 		
+		<copy file="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" tofile="${WORKSPACE}/${deploy.tar.file.name}" />
+		
 		
 		<echo message="ready is ok " />
 	</target>
