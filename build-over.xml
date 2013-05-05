@@ -40,11 +40,11 @@
 	  
 	  
 	  <echo message="updata the deploy version" />
-	  <replace file="${WORKSPACE}/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+	  <replace file="${WORKSPACE}/sequoiadb/misc/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
 			 <replacefilter token="build_version=${build_version}" />
 	  </replace>
 	  
-	  <exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+	  <exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
