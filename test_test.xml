@@ -6,7 +6,7 @@
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" />
-	<property file="${copy_tar}/build.version" />
+	<property file="${WORKSPACE}/ci/build.version" />
 
 	
 	<target name="clean" depends="">
@@ -18,14 +18,31 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<!--replace file="${copy_tar}/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
-			 <replacefilter token="build_version=${build_version}" />
-	  </replace-->
+		
+	  
+	  <property environment="env" />
 	  
 	  <echo message="delete the file ${copy_tar}/build.version" />
-	  <delete file="${copy_tar}/build.version" />
 	  
 	  
+	  
+		<exec command="${STAF.PATH}/bin/staf LOCAL FS DELETE ENTRY ${copy_tar}/build.version RECURSE CONFIRM" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+	  
+	  
+	  <echo message="updata the deploy version" />
+	  <replace file="${WORKSPACE}/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+			 <replacefilter token="build_version=${build_version}" />
+	  </replace>
+	  
+	  <exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
 		
 		
 		<echo message="build is over " />
