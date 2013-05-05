@@ -15,7 +15,11 @@
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
 		<delete dir="${WORKSPACE}/deploy/*" />
-		<delete file="${WORKSPACE}/*.tar.gz" />
+		
+    <delete includeemptydirs="true">
+			<fileset dir="${WORKSPACE}" includes="**.tar.gz" />
+		</delete>
+		
 		<copy file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" tofile="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 		
 		
