@@ -22,8 +22,8 @@
 			 <replacefilter token="build_version=${build_version}" />
 	  </replace-->
 	  
-	  <echo message="delete the file ${copy_tar}/build.vertion" />
-	  <delete file="${copy_tar}/build.vertion" />
+	  <echo message="delete the file ${copy_tar}/build.version" />
+	  <delete file="${copy_tar}/build.version" />
 	  
 	  
 		
