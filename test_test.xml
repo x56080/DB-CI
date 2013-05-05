@@ -17,7 +17,7 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<replaceregexp file="${copy_tar}/build.version" match="*" replace="${BUILD_NUMBER}.${deploy.tar.file.name}" byline="true" />
+		<replaceregexp file="${copy_tar}/build.version" match="**" replace="${BUILD_NUMBER}.${deploy.tar.file.name}" byline="true" />
 	
 		
 		<echo message="build is over " />
