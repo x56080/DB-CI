@@ -6,6 +6,7 @@
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
+	<property file="${copy_tar}/build.version" />
 	
 	
 	<target name="clean" depends="">
@@ -17,8 +18,9 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<replaceregexp file="${copy_tar}/build.version" match="**" replace="${BUILD_NUMBER}.${deploy.tar.file.name}" byline="true" />
-	
+		<replace file="${copy_tar}/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+			 <replacefilter token="${build_version}" />
+	  </replace>
 		
 		<echo message="build is over " />
 	</target>
