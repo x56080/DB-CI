@@ -10,15 +10,12 @@
 	
 	<target name="clean" depends="">
 		
-		<echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
-		<echoproperties/>
-		<echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
 		<echo message="copy ci files to sequoiadb/misc/ci " />
 		<delete file="${WORKSPACE}/sequoiadb/*" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
 		<delete dir="${WORKSPACE}/deploy/*" />
-		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
+		<delete file="${WORKSPACE}/*.tar.gz" />
 		<copy file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" tofile="${WORKSPACE}/sequoiadb/misc/ci/ci.properties" />
 		
 		
@@ -34,17 +31,27 @@
 		<property environment="env" />
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
+    
+    
+    
+    <exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${WORKSPACE} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+		
+		<property file="${WORKSPACE}/build.version" />
+    
 
-
-		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${deploy.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE LOCAL" />
-		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${deploy.tar.file.name} TODIRECTORY ${WORKSPACE} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${build_version} TODIRECTORY ${WORKSPACE} TOMACHINE LOCAL" />
+		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${build_version} TODIRECTORY ${WORKSPACE} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 		
 		
-		<untar src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}" compression="gzip" />
+		<untar src="${WORKSPACE}/${build_version}" dest="${WORKSPACE}" compression="gzip" />
 		
 		
 		<echo message="ready is ok " />
