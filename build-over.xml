@@ -50,6 +50,7 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 	
+	  <delete file="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
 		
 		<echo message="build is over " />
 	</target>
