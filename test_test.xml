@@ -18,9 +18,11 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<replace file="${copy_tar}/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+		<!--replace file="${copy_tar}/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
 			 <replacefilter token="build_version=${build_version}" />
-	  </replace>
+	  </replace-->
+	  
+	  <delete file="${copy_tar}/build.vertion" />
 	  
 	  
 		
