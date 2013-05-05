@@ -6,7 +6,7 @@
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
-	<property file="${copy_tar}/build.version" />
+	<property file="${copy_tar}/build.txt" />
 	
 	
 	<target name="clean" depends="">
