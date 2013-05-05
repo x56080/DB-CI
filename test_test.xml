@@ -6,7 +6,7 @@
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
-	<property file="${copy_tar}/build.txt" />
+	<property file="${WORKSPACE}/build.txt" />
 	
 	
 	<target name="clean" depends="">
@@ -18,7 +18,7 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<replace file="${copy_tar}/build.txt" value="${BUILD_NUMBER}.${deploy.tar.file.name}">
+		<replace file="${WORKSPACE}/build.txt" value="${BUILD_NUMBER}.${deploy.tar.file.name}">
 			 <replacefilter token="${build_version}" />
 	  </replace>
 		
