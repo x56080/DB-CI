@@ -1,0 +1,30 @@
+
+<!--@param ${deploy.host.name} :  The host name for deploy test scripts and install software-->
+<!--@param ${test.machine.deploy.path}:  The path where deploy install package and test scripts-->
+<!--@param ${coord.service.port}:  coord's service port-->
+<!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
+
+<project name="copy_tar_build" default="copy_tar_build">
+	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
+	
+	
+	<target name="clean" depends="">
+		
+		
+		
+		
+	</target>
+	
+	<target name="copy_tar_build" depends="clean">
+		
+		<replaceregexp file="${copy_tar}/build.version" match="*" replace="${BUILD_NUMBER}.${deploy.tar.file.name}" byline="true" />
+	
+		
+		<echo message="build is over " />
+	</target>
+
+
+</project>
+
+
+
