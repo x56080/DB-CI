@@ -3,6 +3,8 @@
 <!--@param ${test.machine.deploy.path}:  The path where deploy install package and test scripts-->
 <!--@param ${coord.service.port}:  coord's service port-->
 <!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
+<!--@param ${is.coord.master}: flag this node is coord master or no-->
+<!--@param ${catalog.addrs}: The string include catalog addr and port-->
 
 <project name="deploy-basic-in-host" default="deploy-basic-in-host">
 	<property file="ci.properties" />
@@ -61,8 +63,8 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dis.standalone.mode=${is.standalone.mode} WORKDIR ${test.machine.deploy.path} WAIT 30m" />
-		<exec command="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dis.standalone.mode=${is.standalone.mode} WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dis.standalone.mode=${is.standalone.mode} -Dis.coord.master=${is.coord.master} -Dcatalog.addrs=${catalog.addrs} WORKDIR ${test.machine.deploy.path} WAIT 30m" />
+		<exec command="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant -l ${test.machine.deploy.path}/install-basic-in-host.log -f ${test.machine.deploy.path}/install-basic-in-host.xml -Dtest.basedir=${test.machine.deploy.path} -Ddeploy.filename=${deploy.tar.file.name} -Dis.standalone.mode=${is.standalone.mode} -Dis.coord.master=${is.coord.master} -Dcatalog.addrs=${catalog.addrs} WORKDIR ${test.machine.deploy.path} WAIT 30m" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />

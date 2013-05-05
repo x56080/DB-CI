@@ -21,16 +21,22 @@
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no1}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
+				<property name="is.coord.master" value="true"/>
+				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no2}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
+				<property name="is.coord.master" value="false"/>
+				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
 			</ant>
 			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no3}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
+				<property name="is.coord.master" value="false"/>
+				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
 			</ant>
 		</parallel>
 

@@ -2,6 +2,8 @@
 <!--@param ${deploy.tar.file.name}: The deploy tar file name -->
 <!--@param ${coord.service.port}: The coord port -->
 <!--@param ${is.standalone.mode}: The flag whether start with standalone mode-->
+<!--@param ${is.coord.master}: flag this node is coord master or no-->
+<!--@param ${catalog.addrs}: The string include catalog addr and port-->
 
 <project name="install-all" default="install-all">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -80,7 +82,7 @@
 
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
-				
+
 				<echo message="start standalone process: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
 				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="true">
 					<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
@@ -136,7 +138,14 @@
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
-
+				
+				<if>
+					<equals arg1="${is.coord.master}" arg2="false" />
+					<then>
+						<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="# catalogaddr=" replace="catalogaddr=${catalog.addrs}" flags="g" />
+					</then>
+				</if>
+				
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
 				<chown owner="sdbadmin:sdbadmin" type="both">
 					<fileset dir="${db.path}/" includes="database/**/*" />
