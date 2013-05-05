@@ -19,7 +19,7 @@
 	<target name="copy_tar_build" depends="clean">
 		
 		
-	  <rename src="${WORKSPACE}/ci/chenfoo" dest="chenfoolOK">
+	  <rename src="${WORKSPACE}/ci/chenfoo" dest="chenfoolOK" />
 	  <property environment="env" />
 	  
 	  <echo message="delete the file ${copy_tar}/build.version" />
