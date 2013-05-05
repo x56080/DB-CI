@@ -6,6 +6,7 @@
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
+	<property file="${WORKSPACE}/ci/build.version" />
 	
 	
 	<target name="clean" depends="">
@@ -21,14 +22,34 @@
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
-
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		
+		<rename src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
+		
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 		
+		<echo message="delete the file ${copy_tar}/build.version" />
+		<exec command="${STAF.PATH}/bin/staf LOCAL FS DELETE ENTRY ${copy_tar}/build.version RECURSE CONFIRM" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+	  
+	  
+	  <echo message="updata the deploy version" />
+	  <replace file="${WORKSPACE}/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+			 <replacefilter token="build_version=${build_version}" />
+	  </replace>
+	  
+	  <exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
 	
 		
 		<echo message="build is over " />
