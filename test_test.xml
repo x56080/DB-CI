@@ -18,10 +18,8 @@
 	
 	<target name="copy_tar_build" depends="clean">
 		
-		<replace file="${copy_tar}/build.version">
-			 <!--replacefilter token="${build_version}" /-->
-			 token="${build_version}"
-			 value="${BUILD_NUMBER}.${deploy.tar.file.name}"
+		<replace file="${copy_tar}/build.version" value="${BUILD_NUMBER}.${deploy.tar.file.name}">
+			 <replacefilter token="${build_version}" />
 	  </replace>
 		
 		<echo message="build is over " />
