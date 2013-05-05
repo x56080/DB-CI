@@ -16,6 +16,8 @@
 		
 		<delete dir="${WORKSPACE}/deploy/*" />
 		
+		<delete dir="${WORKSPACE}/build.version" />
+		
     <delete includeemptydirs="true">
 			<fileset dir="${WORKSPACE}" includes="**.tar.gz" />
 		</delete>
