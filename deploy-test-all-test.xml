@@ -23,7 +23,7 @@
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
 	<property file="${ci.script.file.path}/ci.properties" />
 	<property name="is.test" value="true" />
-
+<echo message="${work.path}">
 	<target name="clean" depends="">
 		<delete dir="${work.path}/reports" />
 		<mkdir dir="${work.path}/reports" />
@@ -45,7 +45,7 @@
 
 	<target name="clean-deploy-evn-before-test" depends="">
 		<echo message="Begin to clean test env..." />
-
+    <echo message="${deploy.file.fullname}" />
 		<parallel>
 			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
