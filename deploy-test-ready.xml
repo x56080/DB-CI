@@ -6,7 +6,8 @@
 
 <project name="copy_tar_deploy" default="copy_tar_deploy">
 	<property file="${WORKSPACE}/ci/ci.properties.${os.publish.name}" />
-	
+	<property environment="env" />
+
 	
 	<target name="clean" depends="">
 		
@@ -17,9 +18,16 @@
 		</delete>
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
-		<delete>
-		   <fileset dir="${WORKSPACE}/deploy" includes="**/**" />
-		</delete>
+		
+		
+		
+		<echo message="delete the file ${WORKSPACE}/deploy" />
+		<exec command="${STAF.PATH}/bin/staf LOCAL FS DELETE ENTRY ${WORKSPACE}/deploy RECURSE CONFIRM" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+		
 		
 		<delete dir="${WORKSPACE}/build.version" />
 		
@@ -39,7 +47,6 @@
 	
 	<target name="copy_tar_deploy" depends="clean">
 		
-		<property environment="env" />
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
     
