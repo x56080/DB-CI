@@ -11,10 +11,13 @@
 	<target name="clean" depends="">
 		
 		<echo message="copy ci files to sequoiadb/misc/ci " />
-		<delete dir="${WORKSPACE}/sequoiadb/*" />
+		<delete includeemptydirs="true">
+			<fileset dir="${WORKSPACE}/sequoiadb" includes="**/**"/>
+			
+		</delete>
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
-		<delete dir="${WORKSPACE}/deploy/*" />
+		<delete dir="${WORKSPACE}/deploy" />
 		
 		<delete dir="${WORKSPACE}/build.version" />
 		
