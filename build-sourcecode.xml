@@ -116,7 +116,7 @@
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/www">
-			<fileset dir="${CODE_DIR}/client/admin/admin2.1" />
+			<fileset dir="${CODE_DIR}/client/admin/admintpl" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/samples">
