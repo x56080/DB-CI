@@ -14,7 +14,7 @@
 		<delete file="${WORKSPACE}/sequoiadb/*" />
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
-		<delete dir="${WORKSPACE}/deploy/*" />
+		<delete dir="${WORKSPACE}/deploy/**" />
 		
 		<delete dir="${WORKSPACE}/build.version" />
 		
