@@ -45,7 +45,7 @@
 
 	<target name="clean-deploy-evn-before-test" depends="">
 		<echo message="Begin to clean test env..." />
-    <echo message="${deploy.file.fullname}" />
+    <echo>${deploy.file.fullname}</echo>
 		<parallel>
 			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
