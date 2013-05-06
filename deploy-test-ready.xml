@@ -13,8 +13,7 @@
 		
 		<echo message="copy ci files to sequoiadb/misc/ci " />
 		<delete includeemptydirs="true">
-			<fileset dir="${WORKSPACE}/sequoiadb" includes="**/**"/>
-			
+			<fileset dir="${WORKSPACE}" includes="sequoiadb/**"/>
 		</delete>
 		<mkdir dir="${WORKSPACE}/sequoiadb/misc/ci" />
 		
@@ -28,9 +27,11 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 		
-		
+		<echo message="delete ${WORKSPACE}/build.version"/>
 		<delete dir="${WORKSPACE}/build.version" />
 		
+		
+		<echo message="delete the dir ${WORKSPACE}, includes=**.tar.gz "/>
     <delete includeemptydirs="true">
 			<fileset dir="${WORKSPACE}" includes="**.tar.gz" />
 		</delete>
