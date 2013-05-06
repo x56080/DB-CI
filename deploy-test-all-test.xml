@@ -23,7 +23,7 @@
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
 	<property file="${ci.script.file.path}/ci.properties" />
 	<property name="is.test" value="true" />
-<echo message="${work.path}">
+<echo message="${work.path}" />
 	<target name="clean" depends="">
 		<delete dir="${work.path}/reports" />
 		<mkdir dir="${work.path}/reports" />
