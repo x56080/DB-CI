@@ -7,16 +7,16 @@
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
-	
-	
+
+
 	<target name="clean" depends="">
-		
-		
-		
+
+
+
 	</target>
-	
+
 	<target name="copy_tar_build" depends="clean">
-		
+
 		<property environment="env" />
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
@@ -29,29 +29,30 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-		
+
 		<echo message="delete the file ${copy_tar}/build.version" />
 		<exec command="${STAF.PATH}/bin/staf LOCAL FS DELETE ENTRY ${copy_tar}/build.version RECURSE CONFIRM" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-	  
-	  
-	  <echo message="updata the deploy version" />
-	  <replace file="${WORKSPACE}/sequoiadb/misc/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
-			 <replacefilter token="build_version=${build_version}" />
-	  </replace>
-	  
-	  <exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+
+
+		<echo message="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
+
+		<!--replace file="${WORKSPACE}/sequoiadb/misc/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
+				<replacefilter token="build_version=${build_version}" />
+			</replace-->
+
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-	
-	  <delete file="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
-		
-		<echo message="build is over " />
+
+		<delete file="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
+
+		<echo message="build is compeleted. " />
 	</target>
 
 
