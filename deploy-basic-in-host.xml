@@ -9,6 +9,8 @@
 <project name="deploy-basic-in-host" default="deploy-basic-in-host">
 	<property file="ci.properties" />
 	<property name="is.standalone.mode" value="false"/>
+	<property name="catalog.addrs" value=""/>
+	<property name="is.coord.master" value="true" />
 	
 	<target name="clean-deploy-basic-in-host" depends="">
 		<property environment="env" />
