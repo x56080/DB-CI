@@ -42,6 +42,11 @@ public class CataNodeGroup extends NodeGroup {
 				sdb.createReplicaCataGroup(nodeInfo.getHost(),
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
 						nodeInfo.getConfigMap());
+				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+				}
 			} catch (BaseException e) {
 				// Do nothing
 			}
