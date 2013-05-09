@@ -44,7 +44,7 @@ public class CataNodeGroup extends NodeGroup {
 						nodeInfo.getConfigMap());
 				
 				try {
-					Thread.sleep(20000);
+					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 				}
 			} catch (BaseException e) {
