@@ -1,0 +1,76 @@
+<!--@param ${build.testcases}: The path where test had builded path .-->
+<!--@param ${WORKSPACE} : The path where jenkins user's path .-->
+
+<project name="build-driver-test" default="build-driver-java">
+
+		<taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="/usr/share/java/ant-contrib.jar" />
+        </classpath>
+    </taskdef>
+    
+    <property name="junit.jar.dir" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/java/lib/junit.jar" />
+		<property name="sequoiadb.jar.dir" value="${WORKSPACE}/sequoiadb/driver/java/sequoiadb.jar" />
+		<property name="deploy.path" value="${WORKSPACE}/deploy" />
+		
+		<target name="clean-driver-test">
+       <echo message="Begin to clean driver java evn.." />
+       <delete dir="${deploy.path}/hlt/drivers_testcases/" failonerror="false" />
+       <delete dir="${build.testcases}/build" failonerror="false" />
+       <mkdir dir="${build.testcases}/build" />
+       <mkdir dir="${deploy.path}/hlt/drivers_testcases/java" />
+       <echo message="Clean driver java evn completed." />
+    </target>
+
+		<target name="build-driver-test" depends="clean-driver-test">
+		
+		<!--now this file only build java_test ,but some day later will add the c or c++ test -->
+			
+			
+		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
+
+        <if>
+            <equals arg1="${os.name}" arg2="Linux" />
+           <then>
+           <property name="jdk.name.os" value="jdk_linux" />
+           </then>
+           <else>
+              <property name="jdk.name.os" value="jdk_win" />
+           </else>
+           </if>
+
+        <if>
+           <equals arg1="${os.arch}" arg2="amd64" />
+           <then>
+                <property name="jdk.name" value="${jdk.name.os}64" />
+           </then>
+           <else>
+                 <property name="jdk.name" value="${jdk.name.os}32" />
+           </else>
+        </if>
+        
+        <echo message="Begin to javac the driver java test" />
+           <javac srcdir="${build.testcases}" destdir="${build.testcases}/build" fork="yes" debug="true"  executable="/var/lib/jenkins/workspace/sequoiadb_suse_compile/sequoiadb/java/${jdk.name}/bin/javac">
+              <classpath>
+                 <pathelement location="${junit.jar.dir}"/>
+                 <pathelement location="${sequoiadb.jar.dir}"/>
+              </classpath>
+           </javac>
+           
+           
+        <jar file="${deploy.path}/hlt/drivers_testcases/java/java_test.jar">
+			     <manifest>
+				      <attribute name="Version" value="1.0" />
+				      <attribute name="Build-Timestamp" value="${tstamp}" />
+			     </manifest>
+			     <fileset dir="${build.testcases}/build" includes="**/*" />
+		    </jar>
+        <echo message="...over javac and jar the driver java test..." />
+           
+           
+
+    </target>
+
+
+
+</project>
