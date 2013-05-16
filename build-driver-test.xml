@@ -1,7 +1,7 @@
 <!--@param ${build.testcases}: The path where test had builded path .-->
 <!--@param ${WORKSPACE} : The path where jenkins user's path .-->
 
-<project name="build-driver-test" default="build-driver-java">
+<project name="build-driver-test" default="build-driver-test">
 
 		<taskdef resource="net/sf/antcontrib/antlib.xml">
         <classpath>

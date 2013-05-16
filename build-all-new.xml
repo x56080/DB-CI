@@ -43,6 +43,16 @@
 			<property name="deploy.path" value="${deploy.path}" />
 		</ant>
 		<echo message="Compile ant test completed." />
+		
+		
+		<echo message="Begin to build the driver test code..." />
+		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-driver-test.xml" target="build-driver-test">
+			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/java/" />
+			<property name="WORKSPACE" value="${WORKSPACE}" />
+		</ant>
+		<echo message="Compile  builded the driver test. " />
+		
+		
 	</target>
 
 	<target name="build-ant-tasks" depends="build-src-test">
