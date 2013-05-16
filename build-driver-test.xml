@@ -50,7 +50,7 @@
         </if>
         
         <echo message="Begin to javac the driver java test" />
-           <javac srcdir="${build.testcases}" destdir="${build.testcases}/build" fork="yes" debug="true"  executable="/var/lib/jenkins/workspace/sequoiadb_suse_compile/sequoiadb/java/${jdk.name}/bin/javac">
+           <javac srcdir="${build.testcases}" destdir="${build.testcases}/build" fork="yes" debug="true"  executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac">
               <classpath>
                  <pathelement location="${junit.jar.dir}"/>
                  <pathelement location="${sequoiadb.jar.dir}"/>
