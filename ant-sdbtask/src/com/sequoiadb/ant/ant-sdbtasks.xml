@@ -1,4 +1,7 @@
 <antlib>
-	<typedef name="sdbdeploy" classname="com.sequoiadb.ant.sdbtask.SdbDeploy" onerror="ignore"/>
-	<typedef name="sdbtest" classname="com.sequoiadb.ant.sdbtask.SdbTest" onerror="ignore"/>
+	<typedef name="sdbdeploy" classname="com.sequoiadb.ant.sdbtask.SdbDeploy" onerror="ignore" />
+	<typedef name="sdbtest" classname="com.sequoiadb.ant.sdbtask.SdbTest" onerror="ignore" />
+	<typedef name="sdbcreateconn" classname="com.sequoiadb.ant.sdbtask.SdbCreateConnection" onerror="ignore" />
+	<typedef name="sdbcloseconn" classname="com.sequoiadb.ant.sdbtask.SdbCloseConnection" onerror="ignore" />
+	<typedef name="sdbcreatecs" classname="com.sequoiadb.ant.sdbtask.SdbCreateCS" onerror="ignore" />
 </antlib>
