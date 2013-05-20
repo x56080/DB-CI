@@ -19,6 +19,9 @@
        <delete dir="${build.testcases}/build" failonerror="false" />
        <mkdir dir="${build.testcases}/build" />
        <mkdir dir="${deploy.path}/hlt/drivers_testcases/java" />
+       <mkdir dir="${deploy.path}/hlt/drivers_testcases/lib" />
+       <copy file="${WORKSPACE}/sequoiadb/driver/java/sequoiadb.jar" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/sequoiadb.jar" />
+       
        <echo message="Clean driver java evn completed." />
     </target>
 
@@ -50,7 +53,7 @@
         </if>
         
         <echo message="Begin to javac the driver java test" />
-           <javac srcdir="${build.testcases}" destdir="${deploy.path}/hlt/drivers_testcases/java" fork="yes" debug="true"  executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac">
+           <javac srcdir="${build.testcases}" destdir="${build.testcases}/build" fork="yes" debug="true"  executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac">
               <classpath>
                  <pathelement location="${junit.jar.dir}"/>
                  <pathelement location="${sequoiadb.jar.dir}"/>
@@ -58,14 +61,15 @@
            </javac>
            
            
-        <!--jar file="${deploy.path}/hlt/drivers_testcases/java/java_test.jar">
+        <jar file="${deploy.path}/hlt/drivers_testcases/lib/java_test.jar">
 			     <manifest>
 				      <attribute name="Version" value="1.0" />
 				      <attribute name="Build-Timestamp" value="${tstamp}" />
 			     </manifest>
 			     <fileset dir="${build.testcases}/build" includes="**/*" />
-		    </jar-->
+		    </jar>
         <echo message="...over javac and jar the driver java test..." />
+        
            
            
 
