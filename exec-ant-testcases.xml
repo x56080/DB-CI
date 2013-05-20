@@ -14,7 +14,7 @@
 
 	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
 		<classpath>
-			<fileset dir="${base.dir}/ant-sdbtasks/" includes="*.jar" />
+			<fileset dir="ant-sdbtasks/" includes="*.jar" />
 			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
 			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
 		</classpath>
