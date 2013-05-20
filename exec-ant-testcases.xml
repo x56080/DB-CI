@@ -42,7 +42,7 @@
 
 		<foreach target="test-one-suite" param="test.suite.fullname">
 			<path>
-				<fileset dir="${testcase.path}/ant" extends="${excludes.dir.patterns}" />
+				<dirset dir="${testcase.path}/ant" excludes="${excludes.dir.patterns}" />
 			</path>
 
 			<param name="testcase.path" value="${testcase.path}" />
@@ -83,7 +83,7 @@
 		<basename property="test.case.name" file="${test.case.fullname}" suffix=".xml" />
 		<propertyregex property="CS_PRIX" input="${host.NAME}" regexp="-" replace="" />
 
-		<echo message="Execute test case(${test.suite.name}.${test.case.name}) test.suite.fullname=${test.case.fullname}" />
+		<echo message="Execute test case(${test.suite.class.name}.${test.case.name}) test.suite.fullname=${test.case.fullname}" />
 
 		<tstamp>
 			<format property="current.time" pattern="MM-dd-hh.mm.ss" />
