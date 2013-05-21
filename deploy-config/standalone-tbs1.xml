@@ -1,26 +1,27 @@
-<!--@param ${STAF.PATH}: The path where is staf binary directory-->
+
 <!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
-<!--@param ${install.path}: The path where install sequoiadb -->
 <!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
-<!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no3}: The host name or host ip of test machine No.1 -->
+
 
 <project name="deploy" default="test">
-	<property file="ci.properties" />
+	<property file="ci.test.properties" />
 
 	<target name="deploy" depends="">
 		<echo message="Begin install software and test files to ${test.machine1}" />
 		<hostinfo prefix="host" />
 
-		<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
-			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+		<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
+			<property name="install.package.fullname" value="${install.package.fullname}" />
 			<property name="deploy.host.name" value="${test.machine.no2}" />
 			<property name="coord.service.port" value="${coord.service.port}" />
-			<property name="is.standalone.mode" value="true"/>
+			<property name="is.standalone.mode" value="true" />
+		</ant>
+
+		<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+			<property name="deploy.host.name" value="${test.machine.no2}" />
 		</ant>
 	</target>
 
@@ -29,7 +30,7 @@
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
 			<param name="install.path" value="${install.path}" />
 		</sdbtest>
-		
+
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-ant-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/ant_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/ant_testcases/" />
 			<param name="install.path" value="${install.path}" />

@@ -1,4 +1,7 @@
-<project name="build-srccode" default="main">
+<!--@param ${WORKSPACE} -- The path of workspace/-->
+<!--@param ${compile.debug} -- The flag whether debug version/-->
+
+<project name="build-srccode" default="mk-release">
 	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
 
 	<target name="compile-src" depends="">
@@ -57,9 +60,9 @@
 
 	<target name="mk-release" depends="compile-src">
 		<echo message="Begin to make relase package ..." />
-		<property name="RELEASE_DIR" value="${WORKSPACE}/${release.dirname}" />
+		<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
 		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
-		<property file="${CODE_DIR}/misc/ci/ci.properties" />
+		<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
 
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
@@ -151,17 +154,12 @@
 		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_server.xml" todir="${RELEASE_DIR}/" />
 
 		<exec dir="${RELEASE_DIR}/" executable="builder">
-			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${deploy.path}" />
+			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
 		</exec>
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
 
 		<echo message="Make relase package completed." />
-	</target>
-
-	<target name="main" depends="mk-release">
-
-
 	</target>
 
 </project>

@@ -1,30 +1,23 @@
 
-<!--@param ${deploy.host.name} :  The host name for deploy test scripts and install software-->
-<!--@param ${test.machine.deploy.path}:  The path where deploy install package and test scripts-->
-<!--@param ${coord.service.port}:  coord's service port-->
-<!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
+<!--@param ${release.path} :  The path where place softwore-->
 
 <project name="copy_tar_build" default="copy_tar_build">
-	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.properties.${os.publish.name}" />
-	<property file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
-
+	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.build.properties" />
 
 	<target name="clean" depends="">
-
-
-
 	</target>
 
 	<target name="copy_tar_build" depends="clean">
-
 		<property environment="env" />
+		<property name="software.package.name" value="sequoiadb-${project.version}-${os.and.platform}-installer.run"/>
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
-		<copy file="${WORKSPACE}/${deploy.tar.file.name}" tofile="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
+		<copy file="${release.path}/${software.package.name}" tofile="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
+		
 		<!--rename src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" /-->
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
@@ -38,11 +31,8 @@
 		</exec>
 
 
-		<echo message="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
-
-		<!--replace file="${WORKSPACE}/sequoiadb/misc/ci/build.version" value="build_version=${BUILD_NUMBER}.${deploy.tar.file.name}">
-				<replacefilter token="build_version=${build_version}" />
-			</replace-->
+		<echo message="BUILD.NUMBER=${BUILD_NUMBER}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
+		<echo message="BUILD.FILENAME=${software.package.name}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" append="true"/>
 
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
@@ -50,11 +40,8 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<delete file="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" />
-
-		<echo message="build is compeleted. " />
+		<delete file="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
 	</target>
-
 
 </project>
 

@@ -5,7 +5,7 @@
 <!--@param ${is.coord.master}: flag this node is coord master or no-->
 <!--@param ${catalog.addrs}: The string include catalog addr and port-->
 
-<project name="install-all" default="install-all">
+<project name="install-software" default="install-software">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
@@ -19,13 +19,13 @@
 	<!--property name="data.service.port" value="51000" /-->
 	<!--property name="coord.service.port" value="50000" /-->
 
-	<property name="install.package.path" value="${test.basedir}/deploy" />
+	<property name="install.package.path" value="${test.basedir}" />
 	<property name="is.standalone.mode" value="false" />
-
+	<property file="${install.package.path}/ci.test.properties" />
+	
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
-
-		<property file="${install.package.path}/ci.properties" />
+		
 		<property name="db.path" value="${install.path}/sequoiadb" />
 
 		<available file="${db.path}/bin/sdbstop" property="sdb.installed" />
@@ -56,12 +56,10 @@
 	</target>
 
 
-	<target name="install" depends="clean-install">
+	<target name="install-software" depends="clean-install">
 		<echo message="Begin to install..." />
 
-		<property file="${install.package.path}/ci.properties" />
 		<property name="db.path" value="${install.path}/sequoiadb" />
-
 		<!--untar src="${install.package.path}/${install.package.name}" dest="${install.package.path}" compression="gzip" />
 
 		<chmod file="${install.package.path}/sequoiadb/sdbinst.sh" perm="u+x" />
@@ -181,20 +179,5 @@
 
 		<echo message="Install compeleted." />
 	</target>
-
-	<target name="clean-install-all" depends="">
-		<echo message="Begin to clean test env..." />
-		<delete dir="${test.basedir}/deploy" />
-		<echo message="Clean deploy env compeleted." />
-	</target>
-
-	<target name="install-all" depends="clean-install-all">
-		<echo message="Begin test all..." />
-
-		<untar src="${test.basedir}/${deploy.filename}" dest="${test.basedir}" compression="gzip" />
-
-		<antcall target="install" inheritAll="true">
-		</antcall>
-
-	</target>
+	
 </project>

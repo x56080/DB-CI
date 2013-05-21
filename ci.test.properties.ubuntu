@@ -1,16 +1,12 @@
 STAF.PATH=/usr/local/staf
 
-project.name=sequoiadb
-project.version=1.1.0
-os.and.platform=ubuntu_x86_64
-
 install.path=/opt
 install.user=sdbadmin
 install.password=sdbadmin
 
 deploy.tar.file.name=deploy.tar.gz
-antreport.tar.file.name=ant_report.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
+test.machine.software.path=/tmp/sequoiadb
 
 copy_tar=/test_tar
 target.deploy_tar_gz.ip=bl465-4

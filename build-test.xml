@@ -1,20 +1,17 @@
 <!--@param ${os.publish.name}: os name for example suse/ubuntu/redhat-->
 <!--@param ${WORKSPACE}: the path where for this job-->
 
-<project name="build-all" default="build-all">
+<project name="build-test" default="build-test">
 	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci" />
-
-
-
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
-		<delete file="${ci.script.path}/ci.properties" />
-		<copy file="${ci.script.path}/ci.properties.${os.publish.name}" tofile="${ci.script.path}/ci.properties" />
-		<property file="${ci.script.path}/ci.properties" />
+		<delete file="${ci.script.path}/ci.test.properties" />
+		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
+		<property file="${ci.script.path}/ci.test.properties" />
 
 		<delete dir="${deploy.path}/" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
@@ -24,26 +21,8 @@
 		<echo message="clean environments completed." />
 	</target>
 
-	<target name="build-src-test" depends="clean">
+	<target name="compile-test" depends="clean">
 		<mkdir dir="${deploy.path}" />
-
-		<echo message="Begin to compile source code..." />
-		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-sourcecode.xml" target="mk-release">
-			<property name="WORKSPACE" value="${WORKSPACE}" />
-			<property name="deploy.path" value="${deploy.path}" />
-			<property name="release.dirname" value="${release.dirname}" />
-			<property name="compile.debug" value="${compile.debug}" />
-		</ant>
-		<echo message="Compile source code completed." />
-
-
-		<!--echo message="Begin to compile ant test code..." />
-		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-ant-testcase.xml" target="dist-ant-testcase">
-			<property name="build.testcases" value="${build.testcases}/ant_testcases" />
-			<property name="deploy.path" value="${deploy.path}" />
-		</ant>
-		<echo message="Compile ant test completed." /-->
-
 
 		<echo message="Begin to build the driver test code..." />
 		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-driver-test.xml" target="build-driver-test">
@@ -59,7 +38,7 @@
 		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml" inheritAll="false" />
 	</target>
 
-	<target name="build-all" depends="build-src-test, build-ant-tasks">
+	<target name="build-test" depends="compile-test, build-ant-tasks">
 
 		<mkdir dir="${deploy.path}/hlt/js_testcases/" />
 
@@ -72,8 +51,8 @@
 			<fileset dir="${build.testcases}/ant_testcases/" />
 		</copy>
 
-		<copy file="${ci.script.path}/ci.properties" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-basic-testcases_new.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-ant-testcases.xml" todir="${deploy.path}" />
 		
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />

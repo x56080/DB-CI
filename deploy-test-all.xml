@@ -21,7 +21,7 @@
 	</taskdef>
 
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
-	<property file="${ci.script.file.path}/ci.properties" />
+	<property file="${ci.script.file.path}/ci.test.properties" />
 	<property name="is.test" value="true" />
 
 	<target name="clean" depends="">
@@ -75,10 +75,6 @@
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
 			<property name="deploy.path" value="${work.path}/deploy" />
 			<property name="test.reports.path" value="${work.path}/reports" />
-			<property name="STAF.PATH" value="${STAF.PATH}" />
-			<property name="test.machine.no1" value="${test.machine.no1}" />
-			<property name="test.machine.no2" value="${test.machine.no2}" />
-			<property name="test.machine.no3" value="${test.machine.no3}" />
 		</ant>
 
 		<if>
@@ -90,10 +86,6 @@
 					<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
 					<property name="deploy.path" value="${work.path}/deploy" />
 					<property name="test.reports.path" value="${work.path}/reports" />
-					<property name="STAF.PATH" value="${STAF.PATH}" />
-					<property name="test.machine.no1" value="${test.machine.no1}" />
-					<property name="test.machine.no2" value="${test.machine.no2}" />
-					<property name="test.machine.no3" value="${test.machine.no3}" />
 				</ant>
 			</then>
 		</if>
