@@ -115,7 +115,7 @@
 
 		<record name="${testcase.path}/logs/TEST-${test.suite.class.name}/${test.case.name}.log" action="stop" />
 
-		<echo message="the result = ${ret.code} after exec ant testcase." />
+		<echo message="the result = ${ret.code} after exec ant testcase, and exception=${error.msg}." />
 		<if>
 			<not>
 				<equals arg1="retcode" arg2="0" />

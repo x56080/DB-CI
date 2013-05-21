@@ -18,7 +18,7 @@ public class SdbCreateCS extends Task {
 	private String csName = null;
 	
 	
-	public void setSdbUID(String value)
+	public void setSdbhandle(String value)
 	{
 		uuid = value;
 	}

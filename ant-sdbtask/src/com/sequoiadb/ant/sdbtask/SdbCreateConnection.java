@@ -19,7 +19,7 @@ public class SdbCreateConnection extends Task {
 
 	private String hostName = null;
 	private String port = null;
-	private String refPropertyName = null;
+	private String sdbHandle = null;
 
 	public void setHostname(String value) {
 		this.hostName = value;
@@ -29,8 +29,8 @@ public class SdbCreateConnection extends Task {
 		this.port = value;
 	}
 
-	public void setSdbrefproperty(String value) {
-		this.refPropertyName = value;
+	public void setSdbhandleproperty(String value) {
+		this.sdbHandle = value;
 	}
 
 	public void execute() {
@@ -42,7 +42,7 @@ public class SdbCreateConnection extends Task {
 			String strUUID = uuid.toString();
 
 			this.getProject().addReference(strUUID, sdb);
-			this.getProject().setProperty(this.refPropertyName, strUUID);
+			this.getProject().setProperty(this.sdbHandle, strUUID);
 		} catch (BaseException e) {
 			e.printStackTrace();
 			throw new BuildException(e.toString());
