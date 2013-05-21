@@ -9,8 +9,6 @@
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
-		<delete file="${ci.script.path}/ci.test.properties" />
-		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
 
 		<delete dir="${deploy.path}/" />
@@ -30,7 +28,6 @@
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 		</ant>
 		<echo message="Compile  builded the driver test. " />
-
 
 	</target>
 
