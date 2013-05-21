@@ -47,17 +47,17 @@
 		<echo message="Begin to clean test env..." />
 
 		<parallel>
-			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
+			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no1}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
+			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no2}" />
 				<property name="coord.service.port" value="${coord.service.port}" />
 			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." target="clean-deploy-basic-in-host" inheritAll="false">
+			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
 				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 				<property name="deploy.host.name" value="${test.machine.no3}" />
 				<property name="coord.service.port" value="${coord.service.port}" />

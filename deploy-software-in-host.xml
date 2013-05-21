@@ -11,7 +11,7 @@
 	<property name="catalog.addrs" value="" />
 	<property name="is.coord.master" value="true" />
 
-	<target name="clean-install-software" depends="">
+	<target name="uninstall-software" depends="">
 		<property environment="env" />
 		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
@@ -46,7 +46,7 @@
 		<echo message="Clean deploy env compeleted." />
 	</target>
 
-	<target name="install-software" depends="clean-install-software">
+	<target name="install-software" depends="uninstall-software">
 		<echo message="Begin to deploy softeware and test..." />
 
 		<property environment="env" />
