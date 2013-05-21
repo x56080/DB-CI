@@ -15,7 +15,7 @@
 	<target name="copy_tar_deploy" depends="clean">
 		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
-		
+
 		<mkdir dir="${release.path}" />
 
 		<echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
@@ -36,7 +36,15 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
+		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
+		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.DRIVER.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+
 		<move file="${release.path}/${BUILD.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.FILENAME}" />
+		<move file="${release.path}/${BUILD.DRIVER.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.DRIVER.FILENAME}" />
 
 	</target>
 
