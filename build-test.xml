@@ -23,7 +23,7 @@
 		<mkdir dir="${deploy.path}" />
 
 		<echo message="Begin to build the driver test code..." />
-		<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/build-driver-test.xml" target="build-driver-test">
+		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/java/" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 		</ant>
