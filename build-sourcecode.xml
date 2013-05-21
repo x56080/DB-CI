@@ -1,5 +1,5 @@
-<!--@param ${WORKSPACE} -- The path of workspace/-->
-<!--@param ${compile.debug} -- The flag whether debug version/-->
+<!-- @param ${WORKSPACE}: The path of workspace -->
+<!-- @param ${compile.debug}: The flag whether debug version -->
 
 <project name="build-srccode" default="mk-release">
 	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
