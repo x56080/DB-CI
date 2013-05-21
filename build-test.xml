@@ -4,7 +4,7 @@
 
 <project name="build-test" default="build-test">
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
-	<property name="release.dirname" value="release" />
+	<property name="release.path" value="${WORKSPACE}release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
 
 	<target name="clean" depends="">
@@ -14,7 +14,7 @@
 		<delete dir="${deploy.path}/" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
 
-		<delete dir="${WORKSPACE}/${release.dirname}" />
+		<delete dir="${release.path}" />
 		<delete dir="${build.testcases}/build" />
 		<echo message="clean environments completed." />
 	</target>
@@ -55,7 +55,7 @@
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<!--copy file="${ci.script.path}/ant-sdbtask/lib/JSTAF.jar" todir="${deploy.path}/ant-sdbtasks" /-->
-		<copy file="${WORKSPACE}/sequoiadb.jar" todir="${deploy.path}/ant-sdbtasks" />
+		<copy file="${release.path}/sequoiadb.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
 

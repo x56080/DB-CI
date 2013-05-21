@@ -10,7 +10,7 @@
     </taskdef>
     
     <property name="junit.jar.dir" value="/usr/share/java/junit.jar" />
-		<property name="sequoiadb.jar.dir" value="${WORKSPACE}/sequoiadb/driver/java/sequoiadb.jar" />
+		<property name="sequoiadb.jar.dir" value="${WORKSPACE}/release/sequoiadb.jar" />
 		<property name="deploy.path" value="${WORKSPACE}/deploy" />
 		
 		<target name="clean-driver-test">
@@ -20,7 +20,7 @@
        <mkdir dir="${build.testcases}/build" />
        <mkdir dir="${deploy.path}/hlt/drivers_testcases/java" />
        <mkdir dir="${deploy.path}/hlt/drivers_testcases/lib" />
-       <copy file="${WORKSPACE}/sequoiadb/driver/java/sequoiadb.jar" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/sequoiadb.jar" />
+       <copy file="${sequoiadb.jar.dir}" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/sequoiadb.jar" />
        
        <echo message="Clean driver java evn completed." />
     </target>
