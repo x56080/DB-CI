@@ -1,4 +1,5 @@
 
+<!--@param ${install.package.fullname}: The install package full file name --> 
 <!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
 <!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->

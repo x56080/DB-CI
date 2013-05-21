@@ -1,5 +1,6 @@
 
 <!--@param ${release.path} :  The path where place softwore-->
+<!--@param ${BUILD_NUMBER}:  The build number. this param pass by jenkins-->
 
 <project name="copy_tar_build" default="copy_tar_build">
 	<property file="${WORKSPACE}/sequoiadb/misc/ci/ci.build.properties" />
@@ -9,12 +10,12 @@
 
 	<target name="copy_tar_build" depends="clean">
 		<property environment="env" />
-		<property name="software.package.name" value="sequoiadb-${project.version}-${os.and.platform}-installer.run"/>
+		<property name="software.package.name" value="${project.name}-${project.version}-${os.and.platform}-installer.run" />
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
 		<copy file="${release.path}/${software.package.name}" tofile="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
-		
+
 		<!--rename src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" /-->
 		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
@@ -30,10 +31,11 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-
-		<echo message="BUILD.NUMBER=${BUILD_NUMBER}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" />
-		<echo message="BUILD.FILENAME=${software.package.name}" file="${WORKSPACE}/sequoiadb/misc/ci/build.version" append="true"/>
-
+		<propertyfile file="${WORKSPACE}/sequoiadb/misc/ci/build.version" comment="true">
+			<entry key="BUILD.NUMBER" value="${BUILD_NUMBER}" type="string"/>
+			<entry key="BUILD.FILENAME" value="${software.package.name}" type="string"/>
+		</propertyfile>
+		
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />

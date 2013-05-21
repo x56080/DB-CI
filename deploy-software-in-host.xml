@@ -1,4 +1,4 @@
-<!--@param ${install.package.fullname} : The install package fulll filename-->
+<!--@param ${install.package.fullname}: The path where place software package.-->
 <!--@param ${deploy.host.name} :  The host name for deploy test scripts and install software-->
 <!--@param ${coord.service.port}:  coord's service port-->
 <!--@param ${is.standalone.mode}:  the flag whether start with standalone mode-->
@@ -10,7 +10,7 @@
 	<property name="is.standalone.mode" value="false" />
 	<property name="catalog.addrs" value="" />
 	<property name="is.coord.master" value="true" />
-
+	
 	<target name="uninstall-software" depends="">
 		<property environment="env" />
 		<echo message="Begin to clean deploy env...with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
