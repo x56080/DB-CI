@@ -27,7 +27,7 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<property file="${WORKSPACE}/build.version" />
+		<property file="${release.path}/build.version" />
 
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
@@ -36,7 +36,7 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<move file="${WORKSPACE}/${BUILD.FILENAME}.${BUILD.NUMBER}" tofile="${WORKSPACE}/${BUILD.FILENAME}" />
+		<move file="${release.path}/${BUILD.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.FILENAME}" />
 
 	</target>
 
