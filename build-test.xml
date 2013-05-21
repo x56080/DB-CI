@@ -1,8 +1,8 @@
-<!--@param ${os.publish.name}: os name for example suse/ubuntu/redhat-->
 <!--@param ${WORKSPACE}: the path where for this job-->
+<!--@param ${os.publish.name}: os name for example suse/ubuntu/redhat-->
+<!--@param ${ci.script.path} : The path where place ci script files-->
 
 <project name="build-test" default="build-test">
-	<property name="ci.script.path" value="${WORKSPACE}/sequoiadb/misc/ci" />
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.dirname" value="release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
@@ -34,7 +34,7 @@
 
 	</target>
 
-	<target name="build-ant-tasks" depends="build-src-test">
+	<target name="build-ant-tasks" depends="compile-test">
 		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml" inheritAll="false" />
 	</target>
 
