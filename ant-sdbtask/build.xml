@@ -9,7 +9,7 @@
 	</taskdef>
 
 	<property name="root.dir" value="." />
-	<property name="java.driver.jar" value="../../../driver/java/sequoiadb.jar" />
+	<property name="java.driver.jar" value="../../../release/sequoiadb.jar" />
 
 	<property name="target.dir" value="${root.dir}/build" />
 	<property name="source.dir" value="${root.dir}/src" />
