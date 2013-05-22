@@ -50,6 +50,7 @@
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-basic-testcases.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-ant-testcases.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-driver-test.xml" todir="${deploy.path}" />
 		
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
