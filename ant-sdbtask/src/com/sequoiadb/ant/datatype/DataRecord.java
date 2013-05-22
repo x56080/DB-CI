@@ -15,7 +15,7 @@ public class DataRecord {
 	private String text = null;
 	
 	
-	public void addTest(String value)
+	public void addText(String value)
 	{
 		text = value;
 	}
