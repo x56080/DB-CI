@@ -16,29 +16,33 @@
 		<echo message="Begin install software and test files to ${test.machine1}" />
 		<hostinfo prefix="host" />
 
-		<parallel>
-			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
-				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-				<property name="deploy.host.name" value="${test.machine.no1}" />
-				<property name="coord.service.port" value="${coord.service.port}" />
-				<property name="is.coord.master" value="true"/>
-				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
-			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
-				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-				<property name="deploy.host.name" value="${test.machine.no2}" />
-				<property name="coord.service.port" value="${coord.service.port}" />
-				<property name="is.coord.master" value="false"/>
-				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
-			</ant>
-			<ant antfile="deploy-basic-in-host.xml" dir="." inheritAll="false">
-				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-				<property name="deploy.host.name" value="${test.machine.no3}" />
-				<property name="coord.service.port" value="${coord.service.port}" />
-				<property name="is.coord.master" value="false"/>
-				<property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003"/>
-			</ant>
+    <parallel>
+			<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
+			   <property name="install.package.fullname" value="${install.package.fullname}" />
+			   <property name="deploy.host.name" value="${test.machine.no1}" />
+			   <property name="coord.service.port" value="${coord.service.port}" />
+			   <property name="is.standalone.mode" value="false" />
+			   <property name="is.coord.master" value="true"/>
+			   <property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003" />
+		  </ant>
+		  <ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
+			   <property name="install.package.fullname" value="${install.package.fullname}" />
+			   <property name="deploy.host.name" value="${test.machine.no2}" />
+			   <property name="coord.service.port" value="${coord.service.port}" />
+			   <property name="is.standalone.mode" value="false" />
+			   <property name="is.coord.master" value="false"/>
+			   <property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003" />
+		  </ant>
+		  <ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
+			   <property name="install.package.fullname" value="${install.package.fullname}" />
+			   <property name="deploy.host.name" value="${test.machine.no3}" />
+			   <property name="coord.service.port" value="${coord.service.port}" />
+			   <property name="is.standalone.mode" value="false" />
+			   <property name="is.coord.master" value="false"/>
+			   <property name="catalog.addrs" value="${test.machine.no1}:30003,${test.machine.no2}:30003,${test.machine.no3}:30003" />
+		  </ant>
 		</parallel>
+		
 
 		<sdbdeploy host="${test.machine.no1}" coordport="50000">
 			<catagroup name="cata1">
@@ -70,6 +74,12 @@
 	</target>
 
 	<target name="test" depends="">
+		
+		<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+			<property name="deploy.host.name" value="${test.machine.no1}" />
+		</ant>
+		
 		<parallel>
 			<sdbtest host="${test.machine.no1}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases_new.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/js_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 				<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
