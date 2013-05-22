@@ -1,5 +1,5 @@
 <!--@param ${test.basedir}: the path where deploy software and test script-->
-<!--@param ${deploy.tar.file.name}: The deploy tar file name -->
+<!--@param ${install.package.filename}: The deploy tar file name -->
 <!--@param ${coord.service.port}: The coord port -->
 <!--@param ${is.standalone.mode}: The flag whether start with standalone mode-->
 <!--@param ${is.coord.master}: flag this node is coord master or no-->
@@ -67,8 +67,8 @@
 			<arg line="-c '${install.package.path}/sequoiadb/sdbinst.sh -u sdbadmin -d ${install.path}'" />
 		</exec-->
 
-		<chmod file="${install.package.path}/${project.name}-${project.version}-${os.and.platform}-installer.run" perm="u+x" />
-		<exec executable="${install.package.path}/${project.name}-${project.version}-${os.and.platform}-installer.run">
+		<chmod file="${install.package.path}/${install.package.filename}" perm="u+x" />
+		<exec executable="${install.package.path}/${install.package.filename}">
 			<arg line="--mode unattended --prefix ${db.path} --username ${install.user} --userpasswd ${install.password}" />
 		</exec>
 
