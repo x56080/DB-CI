@@ -4,7 +4,7 @@
 
 <project name="build-test" default="build-test">
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
-	<property name="release.path" value="${WORKSPACE}release" />
+	<property name="release.path" value="${WORKSPACE}/release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
 
 	<target name="clean" depends="">

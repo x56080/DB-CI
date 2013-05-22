@@ -36,7 +36,7 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
+		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.DRIVER.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.DRIVER.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
