@@ -35,7 +35,7 @@ public class SdbCount extends Task {
 	
 	public DataRecord createRecord()
 	{
-		if (record == null)
+		if (record != null)
 		{
 			throw new BuildException("Error: cannt set more than one record.");
 		}
