@@ -52,7 +52,7 @@
 			</else>
 		</if>
 
-		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java//sequoiadb.jar" />
+		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sequoiadb.jar" />
 		<echo message="compile source code completed." />
 	</target>
 
@@ -157,7 +157,7 @@
 			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
 		</exec>
 		
-		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${RELEASE_DIR}/" />
+		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb.jar" />
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
 
