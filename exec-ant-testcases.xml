@@ -118,7 +118,7 @@
 		<echo message="the result = ${ret.code} after exec ant testcase, and exception=${error.msg}." />
 		<if>
 			<not>
-				<equals arg1="retcode" arg2="0" />
+				<equals arg1="ret.code" arg2="0" />
 			</not>
 			<then>
 				<loadfile property="ant.test.message" srcFile="${testcase.path}/logs/TEST-${test.suite.class.name}/${test.case.name}.log" failonerror="false" />
