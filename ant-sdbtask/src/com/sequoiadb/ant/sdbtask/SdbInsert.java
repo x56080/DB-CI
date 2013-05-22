@@ -3,9 +3,14 @@
  */
 package com.sequoiadb.ant.sdbtask;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.bson.BSONObject;
 
+import com.sequoiadb.ant.datatype.DataRecord;
 import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.DBCollection;
 import com.sequoiadb.base.Sequoiadb;
@@ -21,8 +26,10 @@ public class SdbInsert extends Task {
 	private String uuid = null;
 	private String CSName = null;
 	private String CLName = null;
-	private String record = null;
 	private boolean failonerror = true;
+	private int   insertflag = 0;
+	
+	private List<DataRecord> lstRecords = new ArrayList<DataRecord>();
 	
 	public void setSdbhandle(String value)
 	{
@@ -36,14 +43,22 @@ public class SdbInsert extends Task {
 	{
 		CLName = value;
 	}
-	public void setRecord(String value)
+	
+	public DataRecord createRecord()
 	{
-		record = value;
+		DataRecord record = new DataRecord();
+		lstRecords.add(record);
+		return record;
 	}
 	
 	public void setFailonerror(String value)
 	{
 		failonerror = Boolean.parseBoolean(value);
+	}
+	
+	public void setInsertFlag(String value)
+	{
+		insertflag = Integer.parseInt(value);
 	}
 	
 	public void execute()
@@ -56,11 +71,29 @@ public class SdbInsert extends Task {
 		
 		try
 		{
+			if (lstRecords.size() == 0)
+			{
+				throw new BuildException("Error: must at least one record for insert.");
+			}
+			
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl= cs.getCollection(CLName);
 			
-			cl.insert(record);
+			if (lstRecords.size() == 1)
+			{
+				cl.insert(lstRecords.get(0).toBSONObj());
+			}
+			else
+			{
+				List<BSONObject> lstBSONObj = new ArrayList<BSONObject>();
+				for(DataRecord record : lstRecords)
+				{
+					lstBSONObj.add(record.toBSONObj());
+				}
+				
+				cl.bulkInsert(lstBSONObj, insertflag);
+			}
 		}
 		catch(BaseException e)
 		{

@@ -6,6 +6,7 @@ package com.sequoiadb.ant.sdbtask;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
+import com.sequoiadb.ant.datatype.DataRecord;
 import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.DBCollection;
 import com.sequoiadb.base.Sequoiadb;
@@ -19,8 +20,8 @@ public class SdbQuery extends Task {
 	
 	private String uuid = null;
 	private String CSName = null;
-	private String CLName = null;
-	private String query = null;
+	private String CLName = null;	
+	private DataRecord record = null;
 	
 	public void setSdbhandle(String value)
 	{
@@ -34,9 +35,16 @@ public class SdbQuery extends Task {
 	{
 		CLName = value;
 	}
-	public void setQuery(String value)
+		
+	public DataRecord createRecord()
 	{
-		query = value;
+		if (record == null)
+		{
+			throw new BuildException("Error: cannt set more than one record.");
+		}
+		
+		record = new DataRecord();
+		return record;
 	}
 	
 	
