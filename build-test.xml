@@ -14,7 +14,6 @@
 		<delete dir="${deploy.path}/" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
 
-		<delete dir="${release.path}" />
 		<delete dir="${build.testcases}/build" />
 		<echo message="clean environments completed." />
 	</target>
