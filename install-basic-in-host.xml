@@ -22,10 +22,10 @@
 	<property name="install.package.path" value="${test.basedir}" />
 	<property name="is.standalone.mode" value="false" />
 	<property file="${install.package.path}/ci.test.properties" />
-	
+
 	<target name="clean-install" depends="">
 		<echo message="Begin to clean install env..." />
-		
+
 		<property name="db.path" value="${install.path}/sequoiadb" />
 
 		<available file="${db.path}/bin/sdbstop" property="sdb.installed" />
@@ -136,14 +136,14 @@
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="localhost" replace="${host.ip}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="/opt/sequoiadb" replace="${db.path}" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
-				
+
 				<if>
 					<equals arg1="${is.coord.master}" arg2="false" />
 					<then>
 						<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="# catalogaddr=" replace="catalogaddr=${catalog.addrs}" flags="g" />
 					</then>
 				</if>
-				
+
 				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
 				<chown owner="sdbadmin:sdbadmin" type="both">
 					<fileset dir="${db.path}/" includes="database/**/*" />
@@ -179,5 +179,5 @@
 
 		<echo message="Install compeleted." />
 	</target>
-	
+
 </project>
