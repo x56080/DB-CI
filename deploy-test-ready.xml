@@ -18,7 +18,9 @@
 	
 	<target name="check" depends="">
 	
-	
+	  <copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
+		<property file="${ci.script.path}/ci.test.properties" />
+	  
 	  <echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 		<hostinfo prefix="local" />
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
