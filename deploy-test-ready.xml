@@ -3,9 +3,53 @@
 <!--@param ${os.publish.name} : the os name, for example: suse , ubuntu, etc-->
 <!--@param ${ci.script.path} : The path where place ci script files-->
 
-<project name="copy_tar_deploy" default="copy_tar_deploy">
-	<property environment="env" />
+<project name="copy_tar_deploy" default="check">
+
+  <property environment="env" />
 	<property name="release.path" value="${WORKSPACE}/release" />
+
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	
+	
+	<target name="check" depends="">
+	
+	
+	  <echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
+		<hostinfo prefix="local" />
+		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
+		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+	  
+	  <copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" />
+    <replace file="${release.path}/build.version.local" token="BUILD.NUMBER" value="BUILD.NUMBER.LOCAL" />
+	  <replace file="${release.path}/build.version.local" token="BUILD.FILENAME" value="BUILD.FILENAME.LOCAL" />
+	  <replace file="${release.path}/build.version.local" token="BUILD.DRIVER.FILENAME" value="BUILD.DRIVER.FILENAME.LOCAL" />
+	  
+	  <property file="${release.path}/build.version" />
+	  <property file="${release.path}/build.version.local" />
+	
+	  <if>
+			<equals arg1="${BUILD.NUMBER}" arg2="${BUILD.NUMBER.LOCAL}" />
+			<then>
+				
+			</then>
+			<else>
+				<antcall target="copy_tar_deploy" />	
+			</else>
+		</if>
+		
+	</target>
+
+	
+	
 
 	<target name="clean" depends="">
 		<echo message="delete ${release.path}" />
@@ -13,11 +57,7 @@
 	</target>
 
 	<target name="copy_tar_deploy" depends="clean">
-		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
-		<property file="${ci.script.path}/ci.test.properties" />
-
-		<mkdir dir="${release.path}" />
-
+		
 		<echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 		<hostinfo prefix="local" />
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
@@ -26,7 +66,18 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
+		
+		<property file="${release.path}/build.version" />
+		
+		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
+		<property file="${ci.script.path}/ci.test.properties" />
 
+		<mkdir dir="${release.path}" />
+
+		
+		
+		
+    
 		<property file="${release.path}/build.version" />
 
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
