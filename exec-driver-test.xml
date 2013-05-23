@@ -15,8 +15,8 @@
 
 
 <target name="clean-env" depends="">
-	 <delete dir="${java_test.dir}" failonerror="false" />
-	 <mkdir dir="${java_test.dir}" />
+	 <delete dir="${reports.path}" failonerror="false" />
+	 <mkdir dir="${reports.path}" />
 	 <!--unjar src="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/java_test.jar" dest="${java_test.dir}" /-->
 	 
 	 
