@@ -84,7 +84,8 @@
 
 	<target name="test-one-case" depends="">
 		<basename property="test.case.name" file="${test.case.fullname}" suffix=".xml" />
-		<propertyregex property="CS_PRIX" input="${host.NAME}" regexp="-" replace="" />
+		<propertyregex property="CS_PRIX_TMP" input="${host.NAME}${parallel.num}${test.case.name}" regexp="-" replace="" />
+		<propertyregex property="CS_PRIXP" input="${CS_PRIX_TMP}" regexp="_" replace="" />
 
 		<echo message="Execute test case(${test.suite.class.name}.${test.case.name}) test.suite.fullname=${test.case.fullname}" />
 
@@ -106,7 +107,7 @@
 					<property name="coord.service.port" value="${coord.service.port}" />
 					<property name="data.service.port" value="${data.service.port}" />
 					<property name="cata.service.port" value="${cata.service.port}" />
-					<property name="CS_PRIX" value="CS_PRIX" />
+					<property name="CS_PRIX" value="${CS_PRIX}" />
 				</antfetch>
 
 			</try>
