@@ -86,7 +86,7 @@
 
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;testcase classname=&quot;${test.suite.class.name}&quot; name=&quot;${test.case.name}&quot; time=&quot;${current.time}&quot;&gt;" />
 
-		<propertyregex property="CS_PRIX" input="${host.NAME}" regexp="-" replace="" />
+		<propertyregex property="CS_PRIX" input="${host.NAME}{test.case.name}" regexp="-" replace="" />
 		<property name="sdb.cmd.argument" value="-e &quot;var CSPREFIX='${CS_PRIX}${parallel.num}'&quot; -f ${test.case.fullname}.${parallel.num}" />
 		
 		<echo message="Exec:${sdb.fullname} ${sdb.cmd.argument}" />
