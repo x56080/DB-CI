@@ -10,7 +10,7 @@ import org.bson.util.JSON;
  * @author qiushanggao
  *
  */
-public class DataRecord {
+public class JsonElement {
 
 	private String text = null;
 	

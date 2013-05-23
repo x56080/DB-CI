@@ -9,8 +9,7 @@ import java.util.List;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.bson.BSONObject;
-
-import com.sequoiadb.ant.datatype.DataRecord;
+import com.sequoiadb.ant.datatype.JsonElement;
 import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.DBCollection;
 import com.sequoiadb.base.Sequoiadb;
@@ -29,7 +28,7 @@ public class SdbInsert extends Task {
 	private boolean failonerror = true;
 	private int   insertflag = 0;
 	
-	private List<DataRecord> lstRecords = new ArrayList<DataRecord>();
+	private List<JsonElement> lstRecords = new ArrayList<JsonElement>();
 	
 	public void setSdbhandle(String value)
 	{
@@ -44,9 +43,9 @@ public class SdbInsert extends Task {
 		CLName = value;
 	}
 	
-	public DataRecord createRecord()
+	public JsonElement createRecord()
 	{
-		DataRecord record = new DataRecord();
+		JsonElement record = new JsonElement();
 		lstRecords.add(record);
 		return record;
 	}
@@ -87,7 +86,7 @@ public class SdbInsert extends Task {
 			else
 			{
 				List<BSONObject> lstBSONObj = new ArrayList<BSONObject>();
-				for(DataRecord record : lstRecords)
+				for(JsonElement record : lstRecords)
 				{
 					lstBSONObj.add(record.toBSONObj());
 				}

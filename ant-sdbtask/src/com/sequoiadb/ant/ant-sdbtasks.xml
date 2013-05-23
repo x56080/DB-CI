@@ -9,4 +9,5 @@
 	<typedef name="sdbcount" classname="com.sequoiadb.ant.sdbtask.SdbCount" onerror="ignore" />
 	<typedef name="sdbinsert" classname="com.sequoiadb.ant.sdbtask.SdbInsert" onerror="ignore" />
 	<typedef name="sdbquery" classname="com.sequoiadb.ant.sdbtask.SdbQuery" onerror="ignore" />
+	<typedef name="sdbcreateindex" classname="com.sequoiadb.ant.sdbtask.SdbCreateIndex" onerror="ignore"/>
 </antlib>
