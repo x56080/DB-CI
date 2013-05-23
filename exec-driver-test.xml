@@ -1,18 +1,32 @@
-<!--@param WORKSPACE where is the jenkins's path -->
+
+
+
+
+
+<!--@param ${testcase.path}: The path where test case direcotry.-->
+<!--@param ${install.path}: The path where sequoiadb installed.-->
+<!--@param ${reports.path}: The path where test case direcotry.-->
+<!--@param ${test.package.name}: The name of test package name,.-->
+<!--@param ${parallel.num}:  The parallel number when parallel in same host.-->
+<!--@param ${excludes.dir.patterns}: A comma- or space-sparated list of patterns of directories that must be excluded.-->
+
+
+
+
+
 <project name="exec-driver-test" default="exec-driver-test">
 
 
-		<property name="java_test.dir" value="${WORKSPACE}/deploy/hlt/drivers_testcases/java" />
-    <property name="java_test.jar.dir" value="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/java_test.jar" />
-		<property name="sequoiadb.jar.dir" value="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/sequoiadb.jar" />
-		<property name="deploy.path" value="${WORKSPACE}/deploy" />
+		<property name="java_test.dir" value="${testcase.path}/build" />
+    <property name="java_test.jar.dir" value="${testcase.path}/lib/java_test.jar" />
+		<property name="sequoiadb.jar.dir" value="${testcase.path}/lib/sequoiadb.jar" />
     
 
 
 <target name="clean-env" depends="">
 	 <delete dir="${java_test.dir}" failonerror="false" />
 	 <mkdir dir="${java_test.dir}" />
-	 <unjar src="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/java_test.jar" dest="${java_test.dir}" />
+	 <!--unjar src="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/java_test.jar" dest="${java_test.dir}" /-->
 	 
 	 
 </target>
@@ -25,8 +39,8 @@
          
       </classpath>
       <formatter type="xml" />
-      <batchtest todir="${WORKSPACE}/test_log">
-     	  <fileset dir="${java_test.dir}">
+      <batchtest todir="${reports.path}">
+     	  <fileset dir="${testcase.path}">
      	  	   <include name="**/*.*" />
         </fileset>
       </batchtest>
