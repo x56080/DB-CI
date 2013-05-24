@@ -77,6 +77,8 @@ public class SdbCreateIndex extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
 			DBCollection cl = space.getCollection(clName);
+			
+			log("CreateIndex(" + indexName + "," + key.toString() + ")");
 			cl.createIndex(indexName, key.toBSONObj(), isUnique, enforced);
 		}
 		catch(BaseException e)

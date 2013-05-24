@@ -55,13 +55,13 @@
 		<hostinfo prefix="host" />
 
 		<property name="test.suite.class.name" value="com.sequoiadb.testcases-ant.${test.package.name}.${host.NAME}-${parallel.num}-${test.suite.name}" />
-		<property name="reportfile.fullname" value="${reports.path}/TEST-${test.suite.class.name}.xml"/>
-		
+		<property name="reportfile.fullname" value="${reports.path}/TEST-${test.suite.class.name}.xml" />
+
 		<tstamp>
 			<format property="current.time" pattern="MM-dd-hh.mm.ss" />
 		</tstamp>
 
-		
+
 		<echo file="${reportfile.fullname}" message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
 									            &lt;testsuite errors=&quot;0&quot; failures=&quot;0&quot; hostname=&quot;${host.NAME}&quot; name=&quot;${test.suite.class.name}&quot; tests=&quot;1&quot; time=&quot;0.55&quot; timestamp=&quot;${current.time}&quot;&gt;" />
 

@@ -29,4 +29,9 @@ public class JsonElement {
 		}
 		return obj;
 	}
+	
+	public String toString()
+	{
+		return text;
+	}
 }
