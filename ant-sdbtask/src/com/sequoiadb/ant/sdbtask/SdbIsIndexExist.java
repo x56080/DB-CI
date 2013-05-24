@@ -11,61 +11,68 @@ import com.sequoiadb.exception.BaseException;
 
 public class SdbIsIndexExist extends Task {
 	private String uuid = null;
-	
+
 	private String clName = null;
 	private String csName = null;
 	private String indexName = null;
-	
-	public void setSdbhandle(String value)
-	{
+
+	private boolean failonexist = false;
+
+	public void setSdbhandle(String value) {
 		uuid = value;
 	}
-	public void setClname(String value)
-	{
+
+	public void setClname(String value) {
 		clName = value;
 	}
-	public void setCsname(String value)
-	{
+
+	public void setCsname(String value) {
 		csName = value;
 	}
-	public void setIndexname(String value)
-	{
+
+	public void setIndexname(String value) {
 		indexName = value;
 	}
-	
-	public void execute()
-	{
+
+	public void setFailonexist(String value) {
+		failonexist = Boolean.getBoolean(value);
+	}
+
+	public void execute() {
 		Object obj = this.getProject().getReference(uuid);
-		if (! (obj instanceof Sequoiadb))
-		{
-			throw new BuildException("The SdbUUID" + uuid + " cannot get Sequoiadb Object.");			
+		if (!(obj instanceof Sequoiadb)) {
+			throw new BuildException("The SdbUUID" + uuid
+					+ " cannot get Sequoiadb Object.");
 		}
-		
-		try
-		{
+
+		try {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
 			DBCollection cl = space.getCollection(clName);
-			
+
 			DBCursor cursor = null;
-			if (indexName != null)
-			{
+			if (indexName != null) {
 				cursor = cl.getIndex(indexName);
-			}
-			else
-			{
+			} else {
 				cursor = cl.getIndexes();
 			}
-			
-			if  (cursor == null ||  !cursor.hasNext())
-			{
-				throw new BuildException("Index:" + indexName + " is not exist in " + csName + "." + clName);
+
+			if (cursor != null && cursor.hasNext()) {
+				if (failonexist)
+				{
+					throw new BuildException("Find index:"
+							+ indexName + "in " + csName + "." + clName);
+				}
+
+			} else {
+				if (!failonexist) {
+					throw new BuildException("Failed to find index:"
+							+ indexName + "in " + csName + "." + clName);
+				}
 			}
-			
+
 			cursor.close();
-		}
-		catch(BaseException e)
-		{
+		} catch (BaseException e) {
 			throw new BuildException(e.toString());
 		}
 	}

@@ -86,8 +86,17 @@
 
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;testcase classname=&quot;${test.suite.class.name}&quot; name=&quot;${test.case.name}&quot; time=&quot;${current.time}&quot;&gt;" />
 
-		<propertyregex property="CS_PRIX_TMP" input="${host.NAME}${parallel.num}${test.case.name}" regexp="-" replace="" />
-		<propertyregex property="CS_PRIX" input="${CS_PRIX_TMP}" regexp="_" replace="" />
+    <property name="CS_PRIX_TMP" value="${host.NAME}${parallel.num}${test.case.name}"/>
+    <script language="javascript">
+       var before = project.getProperty("CS_PRIX_TMP");
+       before = before.replaceAll("_", "");
+       before = before.replaceAll("-", "");
+       
+       project.setProperty("CS_PRIX", before);
+    </script>
+
+		<!--propertyregex property="CS_PRIX_TMP" input="${host.NAME}${parallel.num}${test.case.name}" regexp="-" replace="" />
+		<propertyregex property="CS_PRIX" input="${CS_PRIX_TMP}" regexp="_" replace="" /-->
 		
 		<property name="sdb.cmd.argument" value="-e &quot;var CSPREFIX='${CS_PRIX}'&quot; -f ${test.case.fullname}.${parallel.num}" />
 		
