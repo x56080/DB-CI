@@ -27,7 +27,7 @@
 		<delete file="${release.path}/build.version.local" failonerror="false" />
 
 		<if>
-			<equals arg1="build.version.exist" arg2="true" />
+			<isset property="build.version.exist" />
 			<then>
 				<echo message="build.version is exist , copy the build.version to new build.version.local " />
 				<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
@@ -45,7 +45,12 @@
    <!--
       <target name="" if="" depends="">
          
-         
+        <echo message="build.version is exist , copy the build.version to new build.version.local " />
+				<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
+				<replace file="${release.path}/build.version.local" token="BUILD.NUMBER" value="BUILD.NUMBER.LOCAL" />
+				<replace file="${release.path}/build.version.local" token="BUILD.FILENAME" value="BUILD.FILENAME.LOCAL" />
+				<replace file="${release.path}/build.version.local" token="BUILD.DRIVER.FILENAME" value="BUILD.DRIVER.FILENAME.LOCAL" />
+				<property file="${release.path}/build.version.local" />
       
       </target>
    --> 
