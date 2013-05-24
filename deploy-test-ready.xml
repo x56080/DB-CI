@@ -90,8 +90,7 @@
 
 		<property file="${release.path}/build.version" />
 
-		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
-		<property file="${ci.script.path}/ci.test.properties" />
+		
 
 		<mkdir dir="${release.path}" />
 
