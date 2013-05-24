@@ -48,7 +48,7 @@
 				
 			</then>
 			<else>
-				<antcall target="copy_tar_deploy" />	
+				<antcall target="copy_tar_deploy" inheritRefs="true"/>	
 			</else>
 		</if>
 		
