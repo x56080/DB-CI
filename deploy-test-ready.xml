@@ -60,7 +60,7 @@
 				<equals arg1="${BUILD.NUMBER}" arg2="${BUILD.NUMBER.LOCAL}" />
 			</not>
 			<then>
-				<antcall target="copy_tar_deploy" inheritRefs="true" />
+				<antcall target="copy_tar_deploy" inheritAll="true" />
 			</then>
 		</if>
 
