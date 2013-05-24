@@ -33,7 +33,7 @@ public class SdbDelIndex extends Task {
 	{
 		csName = value;
 	}
-	public void setIndexname(String value)
+	public void setName(String value)
 	{
 		indexName = value;
 	}
