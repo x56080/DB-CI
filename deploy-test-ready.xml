@@ -18,9 +18,9 @@
 	
 	<target name="check" depends="">
 	  
-	  <delect file="${release.path}/build.version.local" />
+	  <delete file="${release.path}/build.version.local" />
 	  <copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" />
-	  <delect file="${release.path}/build.version" />
+	  <delete file="${release.path}/build.version" />
 	  
 	  <copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
