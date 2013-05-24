@@ -40,7 +40,7 @@
 	  </if>
 	  
 	  <delete file="${release.path}/build.version" failonerror="false"/>
-	  <mkdir dir="${release.path}">
+
 	  <copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
 	  
