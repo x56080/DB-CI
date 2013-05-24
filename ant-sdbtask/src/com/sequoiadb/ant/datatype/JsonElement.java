@@ -32,6 +32,6 @@ public class JsonElement {
 	
 	public String toString()
 	{
-		return text;
+		return text.trim();
 	}
 }
