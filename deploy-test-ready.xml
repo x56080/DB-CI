@@ -5,8 +5,7 @@
 
 <project name="copy_tar_deploy" default="check">
 
-	<property environment="env" />
-	<hostinfo prefix="local" />
+	
 	<property name="release.path" value="${WORKSPACE}/release" />
 
 
@@ -18,7 +17,10 @@
 
 
 	<target name="check" depends="">
-
+    
+    <property environment="env" />
+	  <hostinfo prefix="local" />
+    
 		<available file="${release.path}/build.version" property="build.version.exist" />
 
 		<delete file="${release.path}/build.version.local" failonerror="false" />
