@@ -25,7 +25,7 @@
 		<delete file="${release.path}/build.version.local" failonerror="false" />
 
 		<if>
-			<equals arg1="build.version.exist" arg2="true" />
+			<equals arg1="build.version.exist" arg2=true />
 			<then>
 				<echo message="build.version is exist , copy the build.version to new build.version.local " />
 				<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
@@ -40,7 +40,12 @@
 			</else>
 		</if>
 
+    
+    
+    
+
 		<delete file="${release.path}/build.version" failonerror="false" />
+		
 		<mkdir dir="${release.path}" />
 		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
