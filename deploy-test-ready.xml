@@ -5,7 +5,8 @@
 
 <project name="copy_tar_deploy" default="check">
 
-  
+  <property environment="env" />
+		<hostinfo prefix="local" />
 	<property name="release.path" value="${WORKSPACE}/release" />
 
 
@@ -39,13 +40,12 @@
 	  </if>
 	  
 	  <delete file="${release.path}/build.version" failonerror="false"/>
-	  
+	  <mkdir dir="${release.path}">
 	  <copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
 	  
 	  <echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
-	  <property environment="env" />
-		<!--hostinfo prefix="local" /-->
+	  
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
@@ -77,9 +77,9 @@
 
 	<target name="copy_tar_deploy" depends="clean">
 		
-		<property environment="env" />
+
 		<echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
-		<hostinfo prefix="local" />
+	
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
