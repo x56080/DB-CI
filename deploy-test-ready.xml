@@ -25,6 +25,7 @@
 	  <if>
 	  	<equals arg1="build.version.exist" arg2="true" />
 	  	<then>
+	  		<echo message="build.version is exist , copy the build.version to new build.version.local " />
 	  		<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
 	  		<replace file="${release.path}/build.version.local" token="BUILD.NUMBER" value="BUILD.NUMBER.LOCAL" />
 	      <replace file="${release.path}/build.version.local" token="BUILD.FILENAME" value="BUILD.FILENAME.LOCAL" />
@@ -32,6 +33,7 @@
 	      <property file="${release.path}/build.version.local" />
 	  	</then>
 	  	<else>
+	  		<echo message="build.version is not exist " />
 	  		<property name="BUILD.NUMBER.LOCAL" value="-1" />
 	  	</else>
 	  </if>
@@ -43,7 +45,7 @@
 	  
 	  <echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 	  <property environment="env" />
-		<hostinfo prefix="local" />
+		<!--hostinfo prefix="local" /-->
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/build.version TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
