@@ -74,6 +74,7 @@
 	<target name="clean" depends="">
 		<echo message="delete ${release.path}" />
 		<delete dir="${release.path}" />
+		<mkdir dir="${release.path}" />
 	</target>
 
 	<target name="copy_tar_deploy" depends="clean">
@@ -94,7 +95,7 @@
 
 		
 
-		<mkdir dir="${release.path}" />
+		
 
 
 
