@@ -8,7 +8,7 @@
 <project name="exec-driver-test" default="exec-driver-test">
 
 
-		<property name="java_test.dir" value="${testcase.path}/build" />
+		<property name="java_test.dir" value="${testcase.path}/java/build" />
     <property name="java_test.jar.dir" value="${testcase.path}/lib/java_test.jar" />
 		<property name="sequoiadb.jar.dir" value="${testcase.path}/lib/sequoiadb.jar" />
 		
@@ -47,10 +47,10 @@
      	  	  -->
      	  	  <filename name="**/*.java" />
      	  	  <not>
-     	  	  	  <filename name="**/*TestConstants* />
+     	  	  	  <filename name="**/*TestConstants*" />
      	  	  </not>
      	  	  <not>
-     	  	  	  <filename name="**/*Replica* />
+     	  	  	  <filename name="**/*Replica*" />
      	  	  </not>
         </fileset>
       </batchtest>
