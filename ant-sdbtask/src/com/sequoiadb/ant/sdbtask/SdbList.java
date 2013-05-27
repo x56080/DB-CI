@@ -79,7 +79,7 @@ public class SdbList extends Task {
 			}
 			cursor = cl.query(queryobj, null, null, null, skipRows, returnRows);
 			
-			log("list collection:" + cl.getFullName() + " with query:" + query.toString() );
+			log("list collection:" + cl.getFullName() + " with query:" + query );
 			while(cursor != null && cursor.hasNext())
 			{
 				BSONObject record = cursor.getNext();
