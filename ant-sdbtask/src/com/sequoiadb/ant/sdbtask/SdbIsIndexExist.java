@@ -45,12 +45,13 @@ public class SdbIsIndexExist extends Task {
 					+ " cannot get Sequoiadb Object.");
 		}
 
+		DBCursor cursor = null;
 		try {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
 			DBCollection cl = space.getCollection(clName);
 
-			DBCursor cursor = null;
+			
 			if (indexName != null) {
 				cursor = cl.getIndex(indexName);
 			} else {
@@ -74,6 +75,11 @@ public class SdbIsIndexExist extends Task {
 			cursor.close();
 		} catch (BaseException e) {
 			throw new BuildException(e.toString());
+		} finally {
+			if (cursor != null)
+			{
+				cursor.close();
+			}
 		}
 	}
 

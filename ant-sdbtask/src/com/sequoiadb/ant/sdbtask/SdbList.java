@@ -82,8 +82,6 @@ public class SdbList extends Task {
 			}
 			
 			
-			
-
 		} catch (BaseException e) {
 			throw new BuildException(e);
 		} finally {

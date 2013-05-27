@@ -21,6 +21,9 @@ public class SdbCreateIndex extends Task {
 	private String clName = null;
 	private boolean isUnique = false;
 	private boolean enforced = false;
+
+	private boolean failonerror = true;
+	
 	
 	public void setSdbhandle(String value)
 	{
@@ -61,6 +64,11 @@ public class SdbCreateIndex extends Task {
 		this.enforced = Boolean.getBoolean(value);
 	}
 	
+	public void setFailonerror(String value)
+	{
+		failonerror = Boolean.parseBoolean(value);
+	}
+	
 	public void execute() {
 		Object obj = this.getProject().getReference(uuid);
 		
@@ -83,7 +91,14 @@ public class SdbCreateIndex extends Task {
 		}
 		catch(BaseException e)
 		{
-			throw new BuildException(e);
+			if (failonerror)
+			{
+				throw new BuildException(e);
+			}
+			else
+			{
+				log("Failed to create index . exception=" + e);
+			}
 		}
 		
 	}
