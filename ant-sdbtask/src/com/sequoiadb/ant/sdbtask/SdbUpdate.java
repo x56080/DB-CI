@@ -65,7 +65,8 @@ public class SdbUpdate extends Task {
 		}
 		catch(BaseException e)
 		{
-			throw new BuildException(e);
+			log(e.toString());
+			throw new BuildException(e.toString());
 		}
 	}
 
