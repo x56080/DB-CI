@@ -42,24 +42,10 @@
 			</else>
 		</if>
 
-   <!--
-      <target name="" if="" depends="">
-         
-        <echo message="build.version is exist , copy the build.version to new build.version.local " />
-				<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
-				<replace file="${release.path}/build.version.local" token="BUILD.NUMBER" value="BUILD.NUMBER.LOCAL" />
-				<replace file="${release.path}/build.version.local" token="BUILD.FILENAME" value="BUILD.FILENAME.LOCAL" />
-				<replace file="${release.path}/build.version.local" token="BUILD.DRIVER.FILENAME" value="BUILD.DRIVER.FILENAME.LOCAL" />
-				<property file="${release.path}/build.version.local" />
-      
-      </target>
-   --> 
-    
-    
-
 		<delete file="${release.path}/build.version" failonerror="false" />
 		
 		<mkdir dir="${release.path}" />
+		
 		<copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
 		<property file="${ci.script.path}/ci.test.properties" />
 
@@ -106,18 +92,10 @@
 
 		<property file="${release.path}/build.version" />
 
-		
-
-		
-
-
-
-
-
 		<property file="${release.path}/build.version" />
 
-		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
-		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.INSTALL.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
+		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.INSTALL.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
@@ -130,7 +108,7 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<move file="${release.path}/${BUILD.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.FILENAME}" />
+		<move file="${release.path}/${BUILD.INSTALL.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.INSTALL.FILENAME}" />
 		<move file="${release.path}/${BUILD.DRIVER.FILENAME}.${BUILD.NUMBER}" tofile="${release.path}/${BUILD.DRIVER.FILENAME}" />
 
 	</target>
