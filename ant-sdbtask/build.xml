@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--@param ${java.driver.dir} : The path where the java.driver.dir is -->
 <!--@param ${javac.base.dir} : The path where the javac.base.dir is -->
+<!--@param ${root.dir} : The path where the ${WORKSPACE}/sequoiadb/mici/ci/ant-sdbtask -->
+
 
 <project name="ant-sdbtasks" default="jar" basedir=".">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
