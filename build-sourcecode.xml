@@ -61,6 +61,16 @@
 		<echo message="Begin to make driver package.." />
 		<property name="DRIVER.DIR" value="${RELEASE_DIR}/driver" />
 
+		<if>
+			<equals arg1="${compile.debug}" arg2="true" />
+			<then>
+				<property name="build.result.dir" value="dd" />
+			</then>
+			<else>
+				<property name="build.result.dir" value="normal" />
+			</else>
+		</if>
+
 		<mkdir dir="${DRIVER.DIR}/java" />
 		<mkdir dir="${DRIVER.DIR}/java/jdk" />
 		<mkdir dir="${DRIVER.DIR}/C/include" />
@@ -106,7 +116,7 @@
 
 	<target name="mk-release" depends="mk-driver,compile-src">
 		<echo message="Begin to make relase package ..." />
-		
+
 
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
