@@ -42,6 +42,8 @@
       <batchtest todir="${reports.path}">
      	  <fileset dir="${java_test.dir}">
      	  	   <include name="**/*.*" />
+     	  	   <exclude name="**/TestConstant*.java" />
+     	  	   <exclude name="**/Replica*.java" />
         </fileset>
       </batchtest>
    </junit>
