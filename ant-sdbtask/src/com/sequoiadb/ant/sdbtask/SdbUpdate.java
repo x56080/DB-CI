@@ -37,7 +37,7 @@ public class SdbUpdate extends Task {
 		
 	public JsonElement createModifer()
 	{
-		if (modifier == null)
+		if (modifier != null)
 		{
 			throw new BuildException("Error: cannt set more than one record.");
 		}
