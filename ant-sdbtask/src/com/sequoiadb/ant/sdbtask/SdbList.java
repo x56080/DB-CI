@@ -72,7 +72,12 @@ public class SdbList extends Task {
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl = cs.getCollection(CLName);
 
-			cursor = cl.query(query.toBSONObj(), null, null, null, skipRows, returnRows);
+			BSONObject queryobj = null;
+			if (query != null)
+			{
+				queryobj = query.toBSONObj();
+			}
+			cursor = cl.query(queryobj, null, null, null, skipRows, returnRows);
 			
 			log("list collection:" + cl.getFullName() + " with query:" + query.toString() );
 			while(cursor != null && cursor.hasNext())
