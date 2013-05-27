@@ -44,16 +44,6 @@
      	  	   <include name="**/*.*" />
      	  	   <exclude name="**/TestConstant*.*" />
      	  	   <exclude name="**/Replica*.*" />
-
-     	  	  <!--filename name="**/*.java" />
-    	  	  <not>
-     	  	  	  <filename name="**/*TestConstants*" />
-     	  	  </not>
-     	  	  
-     	  	  <not>
-     	  	  	  <filename name="**/*Replica*" />
-     	  	  </not>
-     	  	  -->
         </fileset>
       </batchtest>
    </junit>
