@@ -23,8 +23,9 @@
 
 		<echo message="Begin to build the driver test code..." />
 		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
-			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/java/" />
+			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
+			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
 		<echo message="Compile  builded the driver test. " />
 

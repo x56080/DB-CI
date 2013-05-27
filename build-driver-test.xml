@@ -1,5 +1,6 @@
 <!--@param ${build.testcases}: The path where test had builded path .-->
 <!--@param ${WORKSPACE} : The path where jenkins user's path .-->
+<!--@param ${lib.dir} : The path where all lib's directory .-->
 
 <project name="build-driver-test" default="build-driver-test">
 
@@ -8,9 +9,13 @@
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
 		</classpath>
 	</taskdef>
-
+	
+	<property name="build.testcases.java" value="${build.testcases}/java/" />
+	<property name="build.testcases.CPP" value="${build.testcases}/CPP/" />
+	<property name="build.testcases.C" value="${build.testcases}/C/" />
+	
 	<property name="junit.jar.dir" value="/usr/share/java/junit.jar" />
-	<property name="sequoiadb.jar.dir" value="${WORKSPACE}/release/sequoiadb.jar" />
+	<property name="sequoiadb.jar.dir" value="${lib.dir}/java/sequoiadb.jar" />
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 
 	<target name="clean-driver-test">
@@ -20,6 +25,11 @@
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/lib" />
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/build" />
 		<copy file="${sequoiadb.jar.dir}" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/java/lib/sequoiadb.jar" />
+		
+		
+		<!--
+		   scons c and c++ code , but not test
+		-->
 
 		<echo message="Clean driver java evn completed." />
 	</target>
@@ -52,7 +62,7 @@
 		</if>
 
 		<echo message="Begin to javac the driver java test" />
-		<javac srcdir="${build.testcases}" destdir="${deploy.path}/hlt/drivers_testcases/java/build" fork="yes" debug="true" executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac">
+		<javac srcdir="${build.testcases.java}" destdir="${deploy.path}/hlt/drivers_testcases/java/build" fork="yes" debug="true" executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac">
 			<classpath>
 				<pathelement location="${junit.jar.dir}" />
 				<pathelement location="${sequoiadb.jar.dir}" />
@@ -70,7 +80,13 @@
 		<echo message="...over javac and jar the driver java test..." />
 
 
-
+<!--
+    <echo message="...Begin to scons the c and c++ test code ..." />
+       <exec executable="scons" dir="">
+			    <arg line="--help" />
+		   </exec>
+    <echo message="...over scons the c and c++ ..." />
+-->
 
 	</target>
 
