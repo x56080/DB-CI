@@ -42,8 +42,8 @@
       <batchtest todir="${reports.path}">
      	  <fileset dir="${java_test.dir}">
      	  	   <include name="**/*.*" />
-     	  	   <exclude name="**/TestConstant*.java" />
-     	  	   <exclude name="**/Replica*.java" />
+     	  	   <exclude name="**/TestConstant*.*" />
+     	  	   <exclude name="**/Replica*.*" />
 
      	  	  <!--filename name="**/*.java" />
     	  	  <not>
