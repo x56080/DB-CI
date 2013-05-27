@@ -104,7 +104,7 @@
 	</target>
 
 
-	<target name="mk-release" depends="compile-src">
+	<target name="mk-release" depends="mk-driver,compile-src">
 		<echo message="Begin to make relase package ..." />
 		
 

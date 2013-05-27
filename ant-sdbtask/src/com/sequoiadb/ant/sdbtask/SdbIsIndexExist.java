@@ -61,13 +61,13 @@ public class SdbIsIndexExist extends Task {
 				if (failonexist)
 				{
 					throw new BuildException("Find index:"
-							+ indexName + "in " + csName + "." + clName);
+							+ indexName + " in " + csName + "." + clName);
 				}
 
 			} else {
 				if (!failonexist) {
 					throw new BuildException("Failed to find index:"
-							+ indexName + "in " + csName + "." + clName);
+							+ indexName + " in " + csName + "." + clName);
 				}
 			}
 
