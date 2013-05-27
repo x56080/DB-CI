@@ -31,8 +31,8 @@
 
 		
 
-		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java/reports/" masterreports="${test.reports.path}" timeout="30m">
-			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java" />
+		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java/reports" masterreports="${test.reports.path}" timeout="30m">
+			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 			<param name="install.path" value="${install.path}" />
 		</sdbtest>
 
