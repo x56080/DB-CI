@@ -32,7 +32,7 @@
 				<echo message="build.version is exist , copy the build.version to new build.version.local " />
 				<copy file="${release.path}/build.version" tofile="${release.path}/build.version.local" failonerror="true" />
 				<replace file="${release.path}/build.version.local" token="BUILD.NUMBER" value="BUILD.NUMBER.LOCAL" />
-				<replace file="${release.path}/build.version.local" token="BUILD.FILENAME" value="BUILD.FILENAME.LOCAL" />
+				<replace file="${release.path}/build.version.local" token="BUILD.INSTALL.FILENAME" value="BUILD.INSTALL.FILENAME.LOCAL" />
 				<replace file="${release.path}/build.version.local" token="BUILD.DRIVER.FILENAME" value="BUILD.DRIVER.FILENAME.LOCAL" />
 				<property file="${release.path}/build.version.local" />
 			</then>
@@ -78,8 +78,9 @@
 	</target>
 
 	<target name="copy_tar_deploy" depends="clean">
-    <copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
-		<property file="${ci.script.path}/ci.test.properties" />
+   
+    <!--copy file="${ci.script.path}/ci.test.properties.${os.publish.name}" tofile="${ci.script.path}/ci.test.properties" />
+		<property file="${ci.script.path}/ci.test.properties" /-->
 
 		<echo message="Begin to copy the software package with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
@@ -90,9 +91,8 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<property file="${release.path}/build.version" />
+		
 
-		<property file="${release.path}/build.version" />
 
 		<echo message="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.INSTALL.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" />
 		<exec command="${STAF.PATH}\bin\staf ${target.deploy_tar_gz.ip} FS COPY FILE ${copy_tar}/${BUILD.INSTALL.FILENAME}.${BUILD.NUMBER} TODIRECTORY ${release.path} TOMACHINE ${local.ADDR4}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
