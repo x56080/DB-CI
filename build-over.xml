@@ -11,11 +11,12 @@
 	<target name="copy_tar_build" depends="clean">
 		<property environment="env" />
 		<property name="software.package.name" value="${project.name}-${project.version}-${os.and.platform}-installer.run" />
+		<property name="driver.package.name" value="${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" />
 
 		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
 
 		<copy file="${release.path}/${software.package.name}" tofile="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
-		<copy file="${release.path}/sequoiadb.jar" tofile="${release.path}/sequoiadb.jar.${BUILD_NUMBER}" />
+		<copy file="${release.path}/${driver.package.name}" tofile="${release.path}/${driver.package.name}.${BUILD_NUMBER}" />
 
 		<!--rename src="${WORKSPACE}/${deploy.tar.file.name}" dest="${WORKSPACE}/${BUILD_NUMBER}.${deploy.tar.file.name}" /-->
 		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
@@ -25,8 +26,8 @@
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
 
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${software.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/sequoiadb.jar.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${driver.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${release.path}/${driver.package.name}.${BUILD_NUMBER} TODIRECTORY ${copy_tar} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
@@ -41,8 +42,8 @@
 
 		<propertyfile file="${WORKSPACE}/sequoiadb/misc/ci/build.version" comment="true">
 			<entry key="BUILD.NUMBER" value="${BUILD_NUMBER}" type="string" />
-			<entry key="BUILD.FILENAME" value="${software.package.name}" type="string" />
-			<entry key="BUILD.DRIVER.FILENAME" value="sequoiadb.jar" type="string"/>
+			<entry key="BUILD.INSTALL.FILENAME" value="${software.package.name}" type="string" />
+			<entry key="BUILD.DRIVER.FILENAME" value="${driver.package.name}" type="string" />
 		</propertyfile>
 
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/sequoiadb/misc/ci/build.version TODIRECTORY ${copy_tar} TOMACHINE LOCAL" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">

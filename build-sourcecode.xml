@@ -2,16 +2,17 @@
 <!-- @param ${compile.debug}: The flag whether debug version -->
 
 <project name="build-srccode" default="mk-release">
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
 	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
+	<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
+	<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
 
 	<target name="compile-src" depends="">
-		<taskdef resource="net/sf/antcontrib/antlib.xml">
-			<classpath>
-				<pathelement location="/usr/share/java/ant-contrib.jar" />
-			</classpath>
-		</taskdef>
-
-
 		<echo message="Begin to compile source code..." />
 
 		<if>
@@ -56,13 +57,56 @@
 		<echo message="compile source code completed." />
 	</target>
 
+	<target name="mk-driver" depends="compile-src">
+		<echo message="Begin to make driver package.." />
+		<property name="DRIVER.DIR" value="${RELEASE_DIR}/driver" />
+
+		<mkdir dir="${DRIVER.DIR}/java" />
+		<mkdir dir="${DRIVER.DIR}/java/jdk" />
+		<mkdir dir="${DRIVER.DIR}/C/include" />
+		<mkdir dir="${DRIVER.DIR}/C/lib" />
+		<mkdir dir="${DRIVER.DIR}/CPP/include" />
+		<mkdir dir="${DRIVER.DIR}/CPP/lib" />
+		<mkdir dir="${DRIVER.DIR}/PHP" />
+		<mkdir dir="${DRIVER.DIR}/samples" />
+
+		<copy todir="${DRIVER.DIR}/C/lib">
+			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
+		</copy>
+
+		<copy todir="${DRIVER.DIR}/CPP/lib">
+			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
+		</copy>
+
+		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/PHP/libsdbphp.so" />
+
+		<copy todir="${DRIVER.DIR}/C/include">
+			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
+		</copy>
+
+		<copy todir="${DRIVER.DIR}/CPP/include">
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h" />
+		</copy>
+
+		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
+
+		<copy todir="${DRIVER.DIR}/java/jdk">
+			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
+		</copy>
+
+		<copy todir="${DRIVER.DIR}/samples">
+			<fileset dir="${CODE_DIR}/client/samples/" />
+		</copy>
+
+		<tar destfile="${RELEASE_DIR}/${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="driver/**" compression="gzip" />
+
+		<echo message="Make driver package completed." />
+	</target>
 
 
 	<target name="mk-release" depends="compile-src">
 		<echo message="Begin to make relase package ..." />
-		<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
-		<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
-		<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
+		
 
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
@@ -156,8 +200,6 @@
 		<exec dir="${RELEASE_DIR}/" executable="builder">
 			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
 		</exec>
-		
-		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb.jar" />
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
 
