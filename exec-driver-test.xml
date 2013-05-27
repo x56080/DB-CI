@@ -41,9 +41,17 @@
       <formatter type="xml" />
       <batchtest todir="${reports.path}">
      	  <fileset dir="${java_test.dir}">
-     	  	   <include name="**/*.*" />
+     	  	  <!-- <include name="**/*.*" />
      	  	   <exclude name="**/TestConstant*.java" />
      	  	   <exclude name="**/Replica*.java" />
+     	  	  -->
+     	  	  <filename name="**/*.java" />
+     	  	  <not>
+     	  	  	  <filename name="**/*TestConstants* />
+     	  	  </not>
+     	  	  <not>
+     	  	  	  <filename name="**/*Replica* />
+     	  	  </not>
         </fileset>
       </batchtest>
    </junit>
