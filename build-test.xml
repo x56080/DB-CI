@@ -32,7 +32,9 @@
 	</target>
 
 	<target name="build-ant-tasks" depends="compile-test">
-		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml" inheritAll="false" />
+		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
+			<property name="java.driver.dir" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
+		</ant>  
 	</target>
 
 	<target name="build-test" depends="compile-test, build-ant-tasks">
