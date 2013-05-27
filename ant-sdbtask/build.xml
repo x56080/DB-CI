@@ -1,5 +1,6 @@
-<!--@param ${java.driver.dir} : The path where the java.driver.dir is -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!--@param ${java.driver.dir} : The path where the java.driver.dir is -->
+
 
 <project name="ant-sdbtasks" default="jar" basedir=".">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
