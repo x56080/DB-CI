@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--@param ${java.driver.dir} : The path where the java.driver.dir is -->
+<!--@param ${java.driver.jar} : The path where the java.driver.jar is -->
 <!--@param ${javac.base.dir} : The path where the javac.base.dir is -->
 <!--@param ${root.dir} : The path where the ${WORKSPACE}/sequoiadb/mici/ci/ant-sdbtask -->
 
