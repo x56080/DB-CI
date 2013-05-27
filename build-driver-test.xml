@@ -80,7 +80,13 @@
 		<echo message="...over javac and jar the driver java test..." />
 
 
-
+<!--
+    <echo message="...Begin to scons the c and c++ test code ..." />
+       <exec executable="scons" dir="">
+			    <arg line="--help" />
+		   </exec>
+    <echo message="...over scons the c and c++ ..." />
+-->
 
 	</target>
 
