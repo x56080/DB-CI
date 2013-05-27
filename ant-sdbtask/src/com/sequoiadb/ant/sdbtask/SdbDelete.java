@@ -5,6 +5,7 @@ package com.sequoiadb.ant.sdbtask;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.bson.BSONObject;
 
 import com.sequoiadb.ant.datatype.JsonElement;
 import com.sequoiadb.base.CollectionSpace;
@@ -68,7 +69,13 @@ public class SdbDelete extends Task {
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl= cs.getCollection(CLName);
 			
-			cl.delete(matcher.toBSONObj());
+			if (matcher != null)
+			{
+				cl.delete(matcher.toBSONObj());
+			}else {
+				cl.delete((BSONObject)null);
+			}
+					
 		}
 		catch(BaseException e)
 		{
