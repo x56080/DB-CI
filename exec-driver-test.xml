@@ -46,15 +46,22 @@
      	  	   <exclude name="**/Replica*.java" />
      	  	  -->
      	  	  <filename name="**/*.java" />
+     	  	  <!--
      	  	  <not>
      	  	  	  <filename name="**/*TestConstants*" />
      	  	  </not>
+     	  	  
      	  	  <not>
      	  	  	  <filename name="**/*Replica*" />
      	  	  </not>
+     	  	  -->
         </fileset>
       </batchtest>
    </junit>
-
+   <echo message="driver java is over , report file is in ${reports.path}" />
+   <!--
+   <echo message=" Begin to executing the driver c and c++ test " />
+   <echo message=" c and c++ driver test is over " />
+   -->
 </target>
 </project>
