@@ -45,6 +45,7 @@ public class SdbIsIndexExist extends Task {
 					+ " cannot get Sequoiadb Object.");
 		}
 
+		log("faileonexist=" + failonexist);
 		DBCursor cursor = null;
 		try {
 			Sequoiadb sdb = (Sequoiadb) obj;
@@ -67,12 +68,15 @@ public class SdbIsIndexExist extends Task {
 
 			} else {
 				if (!failonexist) {
+					
+					log("Throw exception: faileonexist=" + failonexist);
+					
 					throw new BuildException("Failed to find index:"
 							+ indexName + " in " + csName + "." + clName);
 				}
+				
+				log("Can't find index, but not throw exception, because of faileonexist=" + failonexist);
 			}
-
-			cursor.close();
 		} catch (BaseException e) {
 			throw new BuildException(e.toString());
 		} finally {
