@@ -35,7 +35,7 @@ public class SdbIsIndexExist extends Task {
 	}
 
 	public void setFailonexist(String value) {
-		failonexist = Boolean.getBoolean(value);
+		failonexist = Boolean.parseBoolean(value);
 	}
 
 	public void execute() {
