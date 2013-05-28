@@ -7,7 +7,7 @@
 
 <project name="exec-driver-test" default="exec-driver-test">
 
-                    deploy/hlt/drivers_testcases/java/lib/sequoiadb.jar
+                   
 		<property name="java_test.dir" value="${testcase.path}/java/build" />
     <property name="java_test.jar.dir" value="${testcase.path}/java/lib/java_test.jar" />
 		<property name="sequoiadb.jar.dir" value="${testcase.path}/java/lib/sequoiadb.jar" />
