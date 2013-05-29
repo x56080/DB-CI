@@ -91,11 +91,11 @@
 		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/PHP/libsdbphp.so" />
 
 		<copy todir="${DRIVER.DIR}/C/include">
-			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
+			<fileset dir="${CODE_DIR}/client/C/include/" includes="**" />
 		</copy>
 
 		<copy todir="${DRIVER.DIR}/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h" />
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="**" />
 		</copy>
 
 		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
