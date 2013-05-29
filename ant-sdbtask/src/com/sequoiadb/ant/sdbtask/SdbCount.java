@@ -2,6 +2,7 @@ package com.sequoiadb.ant.sdbtask;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.bson.BSONObject;
 
 import com.sequoiadb.ant.datatype.JsonElement;
 import com.sequoiadb.base.CollectionSpace;
@@ -28,18 +29,15 @@ public class SdbCount extends Task {
 		CLName = value;
 	}
 
-		
-	public void setCountproperty(String value){
+	public void setCountproperty(String value) {
 		CountProp = value;
 	}
-	
-	public JsonElement createQuery()
-	{
-		if (record != null)
-		{
+
+	public JsonElement createQuery() {
+		if (record != null) {
 			throw new BuildException("Error: cannt set more than one record.");
 		}
-		
+
 		record = new JsonElement();
 		return record;
 	}
@@ -56,10 +54,15 @@ public class SdbCount extends Task {
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl = cs.getCollection(CLName);
 
-			long size = cl.getCount(record.toBSONObj());
-			
+			long size = 0;
+
+			if (record != null) {
+				size = cl.getCount(record.toBSONObj());
+			} else {
+				size = cl.getCount((BSONObject)null);
+			}
+
 			this.getProject().setProperty(CountProp, Long.toString(size));
-			
 
 		} catch (BaseException e) {
 			throw new BuildException(e);
