@@ -11,8 +11,8 @@
 	</taskdef>
 	
 	<property name="build.testcases.java" value="${build.testcases}/java/" />
-	<property name="build.testcases.CPP" value="${build.testcases}/CPP/" />
-	<property name="build.testcases.C" value="${build.testcases}/C/" />
+	<property name="build.testcases.CPP" value="${build.testcases}/CPP" />
+	<property name="build.testcases.C" value="${build.testcases}/C" />
 	
 	<property name="junit.jar.dir" value="/usr/share/java/junit.jar" />
 	<property name="junit4.jar.dir" value="/usr/share/java/junit4.jar" />
@@ -22,7 +22,10 @@
 	<target name="clean-driver-test">
 		<echo message="Begin to clean driver java evn.." />
 		<delete dir="${deploy.path}/hlt/drivers_testcases/" failonerror="false" />
-
+    <delete dir="${build.testcases.C}/build_test" />
+    <mkdir dir="${build.testcases.C}/build_test" />
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/C" />
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP" />
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/lib" />
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/build" />
 		<copy file="${sequoiadb.jar.dir}" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/java/lib/sequoiadb.jar" />
@@ -82,19 +85,19 @@
 		<echo message="...over javac and jar the driver java test..." />
 
 
-    <!--echo message="...Begin to scons the c and c++ test code ..." />
+    <echo message="...Begin to scons the c and c++ test code ..." />
     
     <echo message="exec scons ${build.testcases.C} --lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include " />
 		<exec executable="scons" dir="${build.testcases.C}" failonerror="true">
 			<arg line="--lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include" />
 		</exec>
 		
-		<echo message="exec scons ${build.testcases.CPP} --lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include " />
+		<!--echo message="exec scons ${build.testcases.CPP} --lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include " />
 		<exec executable="scons" dir="${build.testcases.CPP}" failonerror="true">
 			<arg line="--lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include" />
-		</exec>
+		</exec-->
 		
-    <echo message="...over scons the c and c++ ..." /-->
+    <echo message="...over scons the c and c++ ..." />
 
 
 	</target>
