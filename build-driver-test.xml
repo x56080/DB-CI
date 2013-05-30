@@ -20,14 +20,23 @@
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 
 	<target name="clean-driver-test">
+		
 		<echo message="Begin to clean driver java evn.." />
+		
 		<delete dir="${deploy.path}/hlt/drivers_testcases/" failonerror="false" />
+		
     <delete dir="${build.testcases.C}/build_test"  failonerror="false" />
+    
     <mkdir dir="${build.testcases.C}/build_test" />
-    <mkdir dir="${deploy.path}/hlt/drivers_testcases/C" />
-    <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP" />
+    
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/C/build" />
+    
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP/build" />
+    
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/lib" />
+		
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/build" />
+		
 		<copy file="${sequoiadb.jar.dir}" tofile="${WORKSPACE}/deploy/hlt/drivers_testcases/java/lib/sequoiadb.jar" />
 		
 		
@@ -92,8 +101,8 @@
 			<arg line="--lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include" />
 		</exec>
 		
-		<copy todir="${build.testcases.C}/build_test">
-			<fileset dir="${deploy.path}/hlt/drivers_testcases/C" includes="*" />
+		<copy todir="${deploy.path}/hlt/drivers_testcases/C/build">
+			<fileset dir="${build.testcases.C}/build_test" includes="*" />
 		</copy>
 		
 		
