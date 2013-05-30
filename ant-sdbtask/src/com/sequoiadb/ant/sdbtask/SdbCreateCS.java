@@ -16,7 +16,7 @@ import com.sequoiadb.exception.BaseException;
 public class SdbCreateCS extends Task {
 	private String uuid = null;
 	private String csName = null;
-	
+	private boolean failonerror = true;
 	
 	public void setSdbhandle(String value)
 	{
@@ -26,6 +26,11 @@ public class SdbCreateCS extends Task {
 	public void setCsname(String value)
 	{
 		csName = value;
+	}
+	
+	public void setFailonerror(String value)
+	{
+		failonerror = Boolean.parseBoolean(value);
 	}
 	
 	public void execute() {
@@ -42,7 +47,14 @@ public class SdbCreateCS extends Task {
 		}
 		catch(BaseException e)
 		{
-			throw new BuildException(e.toString());
+			if (failonerror)
+			{
+				throw new BuildException(e.toString());
+			}
+			else
+			{
+				log("Failed to create(" + csName + ") , but not throw exception. exception=" + e);
+			}
 		}
 	}
 

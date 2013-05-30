@@ -12,7 +12,7 @@ public class SdbCreateCL extends Task {
 	private String uuid = null;
 	private String csName = null;
 	private String clName = null;
-	
+	private boolean failonerror = false;
 	
 	public void setSdbhandle(String value)
 	{
@@ -27,6 +27,11 @@ public class SdbCreateCL extends Task {
 	public void setClname(String value)
 	{
 		clName = value;
+	}
+	
+	public void setFailonerror(String value)
+	{
+		failonerror = Boolean.parseBoolean(value);
 	}
 	
 	public void execute() {
@@ -44,7 +49,14 @@ public class SdbCreateCL extends Task {
 		}
 		catch(BaseException e)
 		{
-			throw new BuildException(e.toString());
+			if (failonerror)
+			{
+				throw new BuildException(e.toString());
+			}
+			else
+			{
+				log("Failed to createcl(" + clName + ") , but not throw exception. exception=" + e);
+			}
 		}
 	}
 
