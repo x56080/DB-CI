@@ -94,6 +94,8 @@
 			<fileset dir="${CODE_DIR}/client/C/include/" includes="**" />
 		</copy>
 
+    <copy file="${WORKSPACE}/sequoiadb/client/samples/C/common.c" todir="${DRIVER.DIR}/C/include" />
+
 		<copy todir="${DRIVER.DIR}/CPP/include">
 			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="**" />
 		</copy>
