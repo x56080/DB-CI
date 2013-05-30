@@ -53,6 +53,10 @@
 		</exec>
 
 		<delete file="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
+
+		
+		<delete file="${release.path}/${driver.package.name}.${BUILD_NUMBER}" />
+		
 	</target>
 
 </project>
