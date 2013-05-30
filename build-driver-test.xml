@@ -82,10 +82,18 @@
 		<echo message="...over javac and jar the driver java test..." />
 
 
-    <!--echo message="...Begin to scons the c and c++ test code ..." />
-       <exec executable="scons" dir="">
-			    <arg line="help" />
-		   </exec>
+    <echo message="...Begin to scons the c and c++ test code ..." />
+    
+    <echo message="exec scons ${build.testcases.C} --lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include " />
+		<exec executable="scons" dir="${build.testcases.C}" failonerror="true">
+			<arg line="--lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include" />
+		</exec>
+		
+		<!--echo message="exec scons ${build.testcases.CPP} --lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include " />
+		<exec executable="scons" dir="${build.testcases.CPP}" failonerror="true">
+			<arg line="--lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include" />
+		</exec>
+		
     <echo message="...over scons the c and c++ ..." /-->
 
 
