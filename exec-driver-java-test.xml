@@ -5,7 +5,7 @@
 
 
 
-<project name="exec-driver-test" default="exec-driver-test">
+<project name="exec-driver-java-test" default="exec-driver-java-test">
 
                    
 		<property name="java_test.dir" value="${testcase.path}/java/build" />
@@ -33,7 +33,7 @@
 	 
 	 
 </target>
-<target name="exec-driver-test" depends="clean-env">
+<target name="exec-driver-java-test" depends="clean-env">
    <junit printsummary="on" fork="true" showoutput="true">
       <classpath>
       	 <!--pathelement path="/usr/share/java/junit.jar" /-->
