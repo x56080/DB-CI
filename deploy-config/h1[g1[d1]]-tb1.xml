@@ -37,6 +37,7 @@
 			<datagroup name="group1">
 				<node host="${test.machine.no2}" baseport="51000" dbpath="${install.path}/sequoiadb/database/data/51000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="transactionon" value="yes" />
 				</node>
 			</datagroup>
 		</sdbdeploy>
