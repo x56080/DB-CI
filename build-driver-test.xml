@@ -87,7 +87,7 @@
 
     <echo message="...Begin to scons the c and c++ test code ..." />
     
-    <echo message="exec scons ${build.testcases.C} --lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include " />
+    <!--echo message="exec scons ${build.testcases.C} --lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include " />
 		<exec executable="scons" dir="${build.testcases.C}" failonerror="true">
 			<arg line="--lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include" />
 		</exec>
