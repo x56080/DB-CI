@@ -2,12 +2,16 @@ package com.sequoiadb.ant.sdbtask;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+
+import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.Sequoiadb;
 import com.sequoiadb.exception.BaseException;
 
-public class SdbDropCS extends Task{
+public class SdbDropCL extends Task {
+
 	private String uuid = null;
 	private String csName = null;
+	private String clName = null;
 	private boolean failonerror = true;
 	
 	public void setSdbhandle(String value)
@@ -18,6 +22,11 @@ public class SdbDropCS extends Task{
 	public void setCsname(String value)
 	{
 		csName = value;
+	}
+	
+	public void setClname(String value)
+	{
+		clName = value;
 	}
 	
 	public void setFailonerror(String value)
@@ -35,7 +44,8 @@ public class SdbDropCS extends Task{
 		try
 		{
 			Sequoiadb sdb = (Sequoiadb) obj;
-			sdb.dropCollectionSpace(csName);
+			CollectionSpace space = sdb.getCollectionSpace(csName);
+			space.dropCollection(clName);
 		}
 		catch(BaseException e)
 		{
@@ -45,7 +55,7 @@ public class SdbDropCS extends Task{
 			}
 			else
 			{
-				log("Failed to dropcs(" + csName + "). exception=" + e);
+				log("Failed to dropcs(" + csName + ") , but not throw exception. exception=" + e);
 			}
 		}
 	}
