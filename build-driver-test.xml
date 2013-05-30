@@ -22,7 +22,7 @@
 	<target name="clean-driver-test">
 		<echo message="Begin to clean driver java evn.." />
 		<delete dir="${deploy.path}/hlt/drivers_testcases/" failonerror="false" />
-    <delete dir="${build.testcases.C}/build_test" />
+    <delete dir="${build.testcases.C}/build_test"  failonerror="false" />
     <mkdir dir="${build.testcases.C}/build_test" />
     <mkdir dir="${deploy.path}/hlt/drivers_testcases/C" />
     <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP" />
@@ -86,8 +86,8 @@
 
 
     <echo message="...Begin to scons the c and c++ test code ..." />
-    
-    <echo message="exec scons ${build.testcases.C} --lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include " />
+
+    <echo message="exec scons ${build.testcases.C} lib_path=${lib.dir}/C/lib include_path=${lib.dir}/C/include " />
 		<exec executable="scons" dir="${build.testcases.C}" failonerror="true">
 			<arg line="--lib_path=${lib.dir}/C/lib --include_path=${lib.dir}/C/include" />
 		</exec>
