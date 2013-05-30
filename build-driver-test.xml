@@ -96,10 +96,7 @@
 			<fileset dir="${deploy.path}/hlt/drivers_testcases/C" includes="*" />
 		</copy>
 		
-		<!--echo message="exec scons ${build.testcases.CPP} lib_path=${WORKSPACE}/release/driver/C/lib include_path=${WORKSPACE}/release/driver/C/include " />
-		<exec executable="scons" dir="${build.testcases.CPP}" failonerror="true">
-			<arg line="--lib_path=${WORKSPACE}/release/driver/C/lib --include_path=${WORKSPACE}/release/driver/C/include" />
-		</exec-->
+		
 		
     <echo message="...over scons the c and c++ ..." />
 
