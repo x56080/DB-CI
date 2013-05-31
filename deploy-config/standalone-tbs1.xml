@@ -38,11 +38,11 @@
 		
 		
 		
-		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports/" masterreports="${test.reports.path}" timeout="30m">
+		<!--sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports/" masterreports="${test.reports.path}" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 			<param name="lib.dir" value="${install.path}" />
 			<param name="test_name" value="*"  />
-		</sdbtest>
+		</sdbtest-->
 
 		<!--sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/js_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
