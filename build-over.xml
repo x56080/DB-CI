@@ -59,12 +59,8 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
-		
-		
-		
 
 		<delete file="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
-
 		
 		<delete file="${release.path}/${driver.package.name}.${BUILD_NUMBER}" />
 		
