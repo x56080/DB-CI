@@ -5,8 +5,7 @@
 
 <project name="exec-driver-C-test" default="exec-driver-C-test">
 
-    <property name="test_name" value="*" />               
-		<property name="c_test.dir" value="${testcase.path}/C/build" />
+    <property name="test_name" value="*" /> 
 		
     <property name="append" value=" --gtest_filter=${test_name}  --gtest_output=xml:${reports.path} " />
     
