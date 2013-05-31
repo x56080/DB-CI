@@ -47,7 +47,7 @@
 	
 	 <echo message="exec ${case-full-name}  ${append} ...path is ${testcase.path}/C/build ..." />
    <echo message="env is LD_LIBRARY_PATH=${lib.dir}" />
-   <exec executable="./${case-full-name}" dir="${testcase.path}/C/build" >
+   <exec executable="${case-full-name}" dir="${testcase.path}/C/build" >
       <arg line=" ${append} " />
       <env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${testcase.path}/C/lib" />
    </exec>
