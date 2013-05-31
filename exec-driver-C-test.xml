@@ -24,15 +24,31 @@
    <echo message="exec chmod u+x * .... path is  ${testcase.path}/C/build " />
    <chmod dir="${testcase.path}/C/build" perm="u+x" includes="*" />
    
+   <foreach target="test-C-one-case" param="case-full-name">
+			<fileset dir="${testcase.path}/C/build">
+				 <include name="*" />
+			</fileset>
+	 </foreach>
    
-   <echo message="exec ./collectionspace  ${append} ...path is ${testcase.path}/C/build ..." />
-   <echo message="env is LD_LIBRARY_PATH=${lib.dir}" />
-   <exec executable="./collectionspace" dir="${testcase.path}/C/build" >
-      <arg line=" ${append} " />
-      <env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${testcase.path}/C/lib" />
-   </exec>
    
    <echo message="...test driver C is over , report file is in ${reports.path} ..." />
    
 </target>
+
+
+<target name="test-C-one-case" depends="">
+	
+	
+	 <echo message="exec ${case-full-name}  ${append} ...path is ${testcase.path}/C/build ..." />
+   <echo message="env is LD_LIBRARY_PATH=${lib.dir}" />
+   <exec executable="./${case-full-name}" dir="${testcase.path}/C/build" >
+      <arg line=" ${append} " />
+      <env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${testcase.path}/C/lib" />
+   </exec>
+   
+   
+</target>
+
+
+
 </project>
