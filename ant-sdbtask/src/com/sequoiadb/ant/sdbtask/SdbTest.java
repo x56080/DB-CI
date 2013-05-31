@@ -171,7 +171,7 @@ public class SdbTest extends Task {
 					+ " RECURSE CONFIRM";
 
 			log("exec: staf " + hostName + " FS " + request);
-			result = handle.submit2(hostName, "FS", request);
+			//result = handle.submit2(hostName, "FS", request);
 
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
