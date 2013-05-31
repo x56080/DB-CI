@@ -51,6 +51,17 @@
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 		</exec>
+		
+		
+		<echo message="${STAF.PATH}\bin\staf LOCAL PROCESS START  SHELL COMMAND find . -atime +7 -exec rm {} \; WORKDIR ${copy_tar} WAIT 30m" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL PROCESS START  SHELL COMMAND find . -atime +7 -exec rm {} \; WORKDIR ${copy_tar} WAIT 30m" dir="${STAF.PATH}" failonerror="false" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec>
+		
+		
+		
 
 		<delete file="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
 
