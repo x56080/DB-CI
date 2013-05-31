@@ -4,6 +4,13 @@
 <!--@param ${test_name}: will not test name. -->
 
 <project name="exec-driver-C-test" default="exec-driver-C-test">
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	
 
     <property name="test_name" value="*" /> 
 		
