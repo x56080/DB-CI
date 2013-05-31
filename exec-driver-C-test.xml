@@ -22,7 +22,7 @@
    <echo message="..... begin to test the C driver test ...." />
    
    <echo message="exec chmod u+x * .... path is  ${testcase.path}/C/build " />
-   <exec executable="chmod u+x * " dir="${testcase.path}/C/build" />
+   <chmod dir="${testcase.path}/C/build" perm="u+x" includes="*" />
    
    
    <echo message="exec ./collectionspace  ${append} ...path is ${testcase.path}/C/build ..." />
