@@ -21,6 +21,10 @@
    
    <echo message="..... begin to test the C driver test ...." />
    
+   <exec executable="chmod" dir="${testcase.path}/C/build" >
+   	  <arg line="u+x *" />
+   </exec>
+   
    <exec executable="./collectionspace" dir="${testcase.path}/C/build" >
       <arg line=" ${append} " />
       <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
