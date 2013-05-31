@@ -31,7 +31,7 @@
    <echo message="env is LD_LIBRARY_PATH=${lib.dir}" />
    <exec executable="./collectionspace" dir="${testcase.path}/C/build" >
       <arg line=" ${append} " />
-      <env key="LD_LIBRARY_PATH" path="${lib.dir}" />
+      <env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${lib.dir}" />
    </exec>
    
    <echo message="...test driver C is over , report file is in ${reports.path} ..." />
