@@ -40,7 +40,7 @@
 				</exec>
         
         
-        <chmod dir="${db.path}/bin" perm="u+x" include="*" />
+        <chmod dir="${db.path}/bin" perm="u+x" includes="*" />
 				<!-- stop db service-->
 				<exec executable="${db.path}/bin/sdbstop" dir="${db.path}/bin" failonerror="true">
 				</exec>
