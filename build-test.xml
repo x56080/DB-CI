@@ -6,6 +6,7 @@
 	<property name="deploy.path" value="${WORKSPACE}/deploy" />
 	<property name="release.path" value="${WORKSPACE}/release" />
 	<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/" />
+	<property name="DRIVER.DIR" value="${WORKSPACE}/release/driver" />
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
@@ -57,6 +58,7 @@
 		<copy file="${ci.script.path}/exec-ant-testcases.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-driver-java-test.xml" todir="${deploy.path}" />
 		<copy file="${ci.script.path}/exec-driver-C-test.xml" todir="${deploy.path}" />
+		<copy file="${WORKSPACE}/sequoiadb/client/samples/C/common.c" todir="${DRIVER.DIR}/C/include" />
 		
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
