@@ -15,7 +15,7 @@
 
     <property name="test_name" value="*" /> 
 		
-    <property name="append" value=" --gtest_filter=${test_name}  --gtest_output=xml:${reports.path} " />
+    <property name="append" value=" --gtest_filter=${test_name}  --gtest_output=xml:${reports.path}/ " />
     
 <target name="clean-env" depends="">
 	 <delete dir="${reports.path}" failonerror="false" />
