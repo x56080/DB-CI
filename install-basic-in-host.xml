@@ -38,7 +38,9 @@
 					<arg value="sdbcm" />
 					<arg value="stop" />
 				</exec>
-
+        
+        
+        <chmod dir="${db.path}/bin" perm="u+x" include="*" />
 				<!-- stop db service-->
 				<exec executable="${db.path}/bin/sdbstop" dir="${db.path}/bin" failonerror="true">
 				</exec>
