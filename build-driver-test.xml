@@ -30,8 +30,10 @@
     <mkdir dir="${build.testcases.C}/build_test" />
     
     <mkdir dir="${deploy.path}/hlt/drivers_testcases/C/build" />
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/C/lib" />
     
     <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP/build" />
+    <mkdir dir="${deploy.path}/hlt/drivers_testcases/CPP/lib" />
     
 		<mkdir dir="${deploy.path}/hlt/drivers_testcases/java/lib" />
 		
@@ -104,6 +106,8 @@
 		<copy todir="${deploy.path}/hlt/drivers_testcases/C/build">
 			<fileset dir="${build.testcases.C}/build_test" includes="*" />
 		</copy>
+		
+		<copy file="${lib.dir}/C/lib/libsdbc.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/C/lib" />
 		
 		
 		
