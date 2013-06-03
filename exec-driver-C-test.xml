@@ -64,6 +64,13 @@
   <replaceregexp match="&lt;/testsuites(.*)&gt;" replace="" flags="g" byline="true" encoding="utf-8">
      <fileset dir="${reports.path}/" includes="*" />
   </replaceregexp>
+  
+  <replaceregexp match="classname=(.*)&gt;" replace='classname="com.sequoiadb.test.driverC" /&gt;' flags="g" byline="true" encoding="utf-8">
+     <fileset dir="${reports.path}/" includes="*" />
+  </replaceregexp>
+
+  
+  
 
   <replace token="AllTests" value="com.sequoiadb.test.driverC">
     <fileset dir="${reports.path}/"  includes="*" />
