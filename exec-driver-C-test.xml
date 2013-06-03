@@ -3,7 +3,7 @@
 <!--@param ${lib.dir}: The path where libsdbc.so is. -->
 <!--@param ${test_name}: will not test name. -->
 
-<project name="exec-driver-C-test" default="exec-driver-C-test">
+<project name="exec-driver-C-test" default="exec-test-over">
 	
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
@@ -55,6 +55,20 @@
    
 </target>
 
+<target name="exec-test-over" depends="exec-driver-C-test">
 
+	<replaceregexp match="&lt;testsuite (.*)&gt;" replace="" flags="g" byline="true" encoding="utf-8">
+     <fileset dir="${reports.path}/" includes="*" />
+  </replaceregexp>
+
+  <replaceregexp match="&lt;/testsuites(.*)&gt;" replace="" flags="g" byline="true" encoding="utf-8">
+     <fileset dir="${reports.path}/" includes="*" />
+  </replaceregexp>
+
+  <replace token="AllTests" value="com.sequoiadb.test.driverC">
+    <fileset dir="${reports.path}/"  includes="*" />
+  </replace>
+
+</target>
 
 </project>
