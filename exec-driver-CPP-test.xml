@@ -63,6 +63,8 @@
        var deploy_name = project.getProperty("deploy.case.fullname") ;
        deploy_name = deploy_name.split("/") ;
        deploy_name = deploy_name[deploy.length-1] ;
+       deploy_name = deploy_name.split(".") ;
+       deploy_name = deploy_name[0] ;
        project.setProperty("deploy.name", deploy_name) ;
     </script>
 
