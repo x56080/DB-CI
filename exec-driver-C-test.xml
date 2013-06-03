@@ -68,6 +68,10 @@
   <replace token="AllTests" value="com.sequoiadb.test.driverC">
     <fileset dir="${reports.path}/"  includes="*" />
   </replace>
+  
+  <replace token="testsuites" value="testsuite">
+    <fileset dir="${reports.path}/"  includes="*" />
+  </replace>
 
 </target>
 
