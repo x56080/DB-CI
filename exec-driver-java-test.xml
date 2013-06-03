@@ -48,7 +48,7 @@
      	  	   <include name="**/*.*" />
      	  	   <exclude name="**/TestConstant*.*" />
      	  	   <exclude name="**/Replica*.*" />
-     	  	   <exculde name="**/*Cursor*.*" />
+     	  	   <!--exculde name="**/*Cursor*.*" /-->
         </fileset>
       </batchtest>
    </junit>
