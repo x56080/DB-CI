@@ -1,11 +1,8 @@
 <!--@param ${testcase.path}: The path where test case direcotry.-->
 <!--@param ${reports.path}: The path where test case direcotry.-->
+<!--@param ${deploy.case.fullname}: The run in which env -->
 
-
-
-
-
-<project name="exec-driver-java-test" default="exec-driver-java-test">
+<project name="exec-driver-java-test" default="exec-test-over">
 
                    
 		<property name="java_test.dir" value="${testcase.path}/java/build" />
@@ -53,9 +50,16 @@
       </batchtest>
    </junit>
    <echo message="driver java is over , report file is in ${reports.path}" />
-   <!--
-   <echo message=" Begin to executing the driver c and c++ test " />
-   <echo message=" c and c++ driver test is over " />
-   -->
+   
 </target>
+
+<target name="exec-test-over" depends="exec-driver-java-test">
+
+  <replace token='name="com.sequoiadb.test' value='name="com.sequoiadb.test-java-${deploy.case.fullname}'>
+    <fileset dir="${reports.path}/"  includes="*" />
+  </replace>
+
+</target>
+
+
 </project>

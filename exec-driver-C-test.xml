@@ -2,6 +2,7 @@
 <!--@param ${reports.path}: The path where test case direcotry.-->
 <!--@param ${lib.dir}: The path where libsdbc.so is. -->
 <!--@param ${test_name}: will not test name. -->
+<!--@param ${deploy.case.fullname}: The run in which env -->
 
 <project name="exec-driver-C-test" default="exec-test-over">
 	
@@ -65,14 +66,11 @@
      <fileset dir="${reports.path}/" includes="*" />
   </replaceregexp>
   
-  <replaceregexp match='classname="' replace='classname="com.sequoiadb.test.driverC.' flags="g" byline="true" encoding="utf-8">
+  <replaceregexp match='classname="' replace='classname="com.sequoiadb.test-driverC-${deploy.case.fullname}.' flags="g" byline="true" encoding="utf-8">
      <fileset dir="${reports.path}/" includes="*" />
   </replaceregexp>
 
-  
-  
-
-  <replace token="AllTests" value="com.sequoiadb.test.driverC">
+  <replace token="AllTests" value="com.sequoiadb.test-driverC-${deploy.case.fullname}">
     <fileset dir="${reports.path}/"  includes="*" />
   </replace>
   

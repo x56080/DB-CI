@@ -81,6 +81,7 @@
 					<property name="install.path" value="${install.path}" />
 					<property name="deploy.path" value="${work.path}/deploy" />
 					<property name="test.reports.path" value="${work.path}/reports" />
+					<property name="deploy.case.fullname" value="${deploy.case.fullname}" />
 				</ant>
 			</then>
 		</if>
