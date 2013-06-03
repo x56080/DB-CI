@@ -91,7 +91,6 @@
        var before = project.getProperty("CS_PRIX_TMP");
        before = before.replaceAll("_", "");
        before = before.replaceAll("-", "");
-       
        project.setProperty("CS_PRIX", before);
     </script>
 
