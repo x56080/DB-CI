@@ -18,6 +18,28 @@
 			   <pathelement location="/usr/share/java/ant-junit.jar" />
 		   </classpath>
     </taskdef>
+    
+    
+    
+    
+    
+   <macrodef name="checkReport">
+      <attribute name="name" default="" />
+      <attribute name="reportPath" default="${reports.path}" />
+      <element name="some-tasks" optional="yes" />
+      <sequential>
+         <echo message="@{message}" />
+      </sequential>
+   </macrodef>
+
+    
+    
+    
+    
+    
+    
+    
+    
 
 		
     
@@ -55,7 +77,16 @@
 
 <target name="exec-test-over" depends="exec-driver-java-test">
 
-  <replace token='name="com.sequoiadb.test' value='name="com.sequoiadb.test-java-${deploy.case.fullname}'>
+  <!--script language="javascript">
+       var deploy_name = project.getProperty("deploy.case.fullname") ;
+       deploy_name = deploy_name.split("/") ;
+       deploy_name = deploy_name[deploy.length-1] ;
+       deploy_name = deploy_name.split(".") ;
+       deploy_name = deploy_name[0] ;
+       project.setProperty("deploy.name", deploy_name) ;
+  </script-->
+  <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
+  <replace token='name="com.sequoiadb.test' value='name="com.sequoiadb.test-java-${deploy.name}'>
     <fileset dir="${reports.path}/"  includes="*" />
   </replace>
 

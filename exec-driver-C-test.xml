@@ -59,15 +59,15 @@
 <target name="exec-test-over" depends="exec-driver-C-test">
 	
 	
-	<script language="javascript">
+	<!--script language="javascript">
        var deploy_name = project.getProperty("deploy.case.fullname") ;
        deploy_name = deploy_name.split("/") ;
        deploy_name = deploy_name[deploy.length-1] ;
        deploy_name = deploy_name.split(".") ;
        deploy_name = deploy_name[0] ;
        project.setProperty("deploy.name", deploy_name) ;
-  </script>
-	
+  </script-->
+	<basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
 
 	<replaceregexp match="&lt;testsuite (.*)&gt;" replace="" flags="g" byline="true" encoding="utf-8">
      <fileset dir="${reports.path}/" includes="*" />
