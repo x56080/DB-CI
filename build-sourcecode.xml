@@ -154,6 +154,8 @@
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmart" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmtop" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbpdlog" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbexprt"  todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbimprt"  todir="${RELEASE_DIR}/sequoiadb/bin" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
