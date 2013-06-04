@@ -25,7 +25,6 @@
 	<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
 	<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
   
-  
 	<target name="compile-src" depends="ready">
 		<echo message="Begin to compile source code..." />
 
