@@ -3,6 +3,18 @@
 <!-- @param ${compile.debug}: The flag whether debug version -->
 
 <project name="build-srccode" default="mk-release">
+	
+	
+	
+	<target name="ready" depends="">
+  	<delete file="${CODE_DIR}/misc/ci/ci.build.properties" failonerror="false" />
+		<echo message="copy the ${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version} file to be named ${CODE_DIR}/misc/ci/ci.build.properties" />
+		<copy file="${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version}" tofile="${CODE_DIR}/misc/ci/ci.build.properties" />
+		<echo message="copy ${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version} to ${CODE_DIR}/misc/ci/ci.build.properties is OK" />
+		
+  </target>
+	
+	
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
@@ -12,8 +24,9 @@
 	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
 	<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
 	<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
-
-	<target name="compile-src" depends="">
+  
+  
+	<target name="compile-src" depends="ready">
 		<echo message="Begin to compile source code..." />
 
 		<if>
@@ -56,9 +69,6 @@
 
 		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sequoiadb.jar" />
 		
-		<echo message="copy the ${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version} file to be named ${CODE_DIR}/misc/ci/ci.build.properties" />
-		<copy file="${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version}" tofile="${CODE_DIR}/misc/ci/ci.build.properties" />
-		<echo message="copy ${CODE_DIR}/misc/ci/ci.build.properties.${CPU.version} to ${CODE_DIR}/misc/ci/ci.build.properties is OK" />
 		
 		<echo message="compile source code completed." />
 		
