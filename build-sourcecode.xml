@@ -57,7 +57,7 @@
 		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sequoiadb.jar" />
 		
 		<echo message="copy the ${CODE_DIR}/mici/ci/ci.build.properties.${CPU.version} file to be named ${CODE_DIR}/mici/ci/ci.build.properties" />
-		<copy file="${CODE_DIR}/mici/ci/ci.build.properties.${CPU.version}" dir="${CODE_DIR}/mici/ci/ci.build.properties" />
+		<copy file="${CODE_DIR}/mici/ci/ci.build.properties.${CPU.version}" todir="${CODE_DIR}/mici/ci/ci.build.properties" />
 		<echo message="copy ${CODE_DIR}/mici/ci/ci.build.properties.${CPU.version} to ${CODE_DIR}/mici/ci/ci.build.properties is OK" />
 		
 		<echo message="compile source code completed." />
