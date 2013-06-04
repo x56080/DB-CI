@@ -76,11 +76,11 @@
      <fileset dir="${reports.path}/" includes="*" />
   </replaceregexp>
   
-  <replaceregexp match='classname="' replace='classname="com.sequoiadb.test-driverCPP-${deploy.name}.' flags="g" byline="true" encoding="utf-8">
+  <replaceregexp match='classname="' replace='classname="com.sequoiadb.testcases-driverCPP.${deploy.name}.' flags="g" byline="true" encoding="utf-8">
      <fileset dir="${reports.path}/" includes="*" />
   </replaceregexp>
 
-  <replace token="AllTests" value="com.sequoiadb.test-driverCPP-${deploy.name}">
+  <replace token="AllTests" value="com.sequoiadb.testcases-driverCPP.${deploy.name}">
     <fileset dir="${reports.path}/"  includes="*" />
   </replace>
   

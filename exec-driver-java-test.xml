@@ -86,7 +86,7 @@
        project.setProperty("deploy.name", deploy_name) ;
   </script-->
   <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
-  <replace token='name="com.sequoiadb.test' value='name="com.sequoiadb.test-java-${deploy.name}'>
+  <replace token='name="com.sequoiadb.test' value='name="com.sequoiadb.testcases-java.${deploy.name}'>
     <fileset dir="${reports.path}/"  includes="*" />
   </replace>
 
