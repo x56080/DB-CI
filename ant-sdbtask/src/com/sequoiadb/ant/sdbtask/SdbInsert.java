@@ -98,12 +98,18 @@ public class SdbInsert extends Task {
 		{
 			if (failonerror)
 			{
+				e.printStackTrace();
 				throw new BuildException(e);
 			}
 			else
 			{
 				log("Failed to insert record. exception=" + e);
 			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new BuildException(e);
 		}
 		
 	}
