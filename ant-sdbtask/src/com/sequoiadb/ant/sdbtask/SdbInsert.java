@@ -88,6 +88,7 @@ public class SdbInsert extends Task {
 				else
 				{
 					log("The cl:" + CLName + " is not exist.");
+					return;
 				}
 			}
 			
