@@ -79,6 +79,18 @@ public class SdbInsert extends Task {
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl= cs.getCollection(CLName);
 			
+			if (cl == null)
+			{
+				if (failonerror)
+				{
+					throw new BuildException("Error: the cl is not exist.");
+				}
+				else
+				{
+					log("The cl:" + CLName + " is not exist.");
+				}
+			}
+			
 			if (lstRecords.size() == 1)
 			{
 				cl.insert(lstRecords.get(0).toBSONObj());
@@ -105,11 +117,6 @@ public class SdbInsert extends Task {
 			{
 				log("Failed to insert record. exception=" + e);
 			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new BuildException(e);
 		}
 		
 	}

@@ -3,6 +3,8 @@
  */
 package com.sequoiadb.ant.sdbtask;
 
+import java.net.InetAddress;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 

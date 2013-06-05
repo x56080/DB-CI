@@ -108,6 +108,7 @@
 					<property name="data.service.port" value="${data.service.port}" />
 					<property name="cata.service.port" value="${cata.service.port}" />
 					<property name="CS_PRIX" value="${CS_PRIX}" />
+					<property name="install.path" value="${install.path}" />
 				</antfetch>
 
 			</try>
