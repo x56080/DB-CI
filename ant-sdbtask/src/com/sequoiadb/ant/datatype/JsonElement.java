@@ -3,6 +3,7 @@
  */
 package com.sequoiadb.ant.datatype;
 
+import org.apache.tools.ant.BuildException;
 import org.bson.BSONObject;
 import org.bson.util.JSON;
 
@@ -26,6 +27,11 @@ public class JsonElement {
 		if (text != null)
 		{
 			obj = (BSONObject) JSON.parse(text);
+		}
+		
+		if (obj == null)
+		{
+			throw new BuildException("Warning: BSON Object == null,  the text = " + text);
 		}
 		return obj;
 	}
