@@ -97,7 +97,7 @@ public class SdbCreateIndex extends Task {
 			}
 			else
 			{
-				log("Failed to create index . exception=" + e);
+				log("Failed to create index , but not throw exception. exception=" + e);
 			}
 		}
 		

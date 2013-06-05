@@ -64,7 +64,7 @@ public class SdbDelIndex extends Task {
 			}
 			else
 			{
-				log("Failed to delete index(" + indexName + "). exception=" + e);
+				log("Failed to delete index(" + indexName + "), but not throw exception. exception=" + e);
 			}
 		}
 	}
