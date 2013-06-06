@@ -65,6 +65,7 @@ public class SdbCount extends Task {
 			this.getProject().setProperty(CountProp, Long.toString(size));
 
 		} catch (BaseException e) {
+			e.printStackTrace();
 			throw new BuildException(e);
 		}
 	}
