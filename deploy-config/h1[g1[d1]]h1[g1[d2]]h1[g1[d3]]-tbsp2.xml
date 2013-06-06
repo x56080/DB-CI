@@ -48,12 +48,15 @@
 			<catagroup name="cata1">
 				<node host="${test.machine.no1}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="transactionon" value="true" />
 				</node>
 				<node host="${test.machine.no2}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="transactionon" value="true" />
 				</node>
 				<node host="${test.machine.no3}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="transactionon" value="true" />
 				</node>
 			</catagroup>
 		</sdbdeploy>
