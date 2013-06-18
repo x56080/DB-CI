@@ -23,6 +23,7 @@ public class SdbUpdate extends Task {
 	private String CSName = null;
 	private String CLName = null;	
 	private JsonElement modifier = null;
+	private JsonElement record = null;
 	
 	public void setSdbhandle(String value)
 	{
@@ -48,6 +49,16 @@ public class SdbUpdate extends Task {
 		return modifier;
 	}
 	
+	public JsonElement createQuery() {
+		if (record != null) {
+			throw new BuildException("Error: cannt set more than one record.");
+		}
+
+		record = new JsonElement();
+		return record;
+	}
+
+	
 	
 	public void execute() {
 		Object obj = this.getProject().getReference(uuid);
@@ -62,7 +73,7 @@ public class SdbUpdate extends Task {
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl= cs.getCollection(CLName);
 			
-			cl.update(null, modifier.toBSONObj(), null);
+			cl.update(record.toBSONObj(), modifier.toBSONObj(), null);
 			
 		}
 		catch(BaseException e)
