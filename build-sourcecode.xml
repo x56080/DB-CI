@@ -43,7 +43,7 @@
 			</else>
 		</if>
 
-PYTHONPATH=$PYTHONPATH:"/usr/local/lib64/scons-2.3.0"
+
 		<echo message="exec scons ${compile.arg.line}  --all -j 4" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
 			<arg line="${compile.arg.line} --all -j 4" />
