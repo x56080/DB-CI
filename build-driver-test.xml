@@ -53,9 +53,6 @@
 
 	<target name="build-driver-test" depends="clean-driver-test">
 
-		<!--now this file only build java_test ,but some day later will add the c or c++ test -->
-
-
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 
 		<if>
@@ -87,7 +84,6 @@
 			</classpath>
 		</javac>
 
-
 		<jar file="${deploy.path}/hlt/drivers_testcases/java/lib/java_test.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
@@ -96,7 +92,6 @@
 			<fileset dir="${deploy.path}/hlt/drivers_testcases/java/build" includes="**/*" />
 		</jar>
 		<echo message="...over javac and jar the driver java test..." />
-
 
     <echo message="...Begin to scons the c and c++ test code ..." />
 
@@ -108,11 +103,7 @@
 		<copy todir="${deploy.path}/hlt/drivers_testcases/C/build">
 			<fileset dir="${build.testcases.C}/build_test" includes="*" />
 		</copy>
-		
-		
-		
-		
-		
+
 		<echo message="exec scons ${build.testcases.CPP} lib_path=${lib.dir}/CPP/lib include_path=${lib.dir}/CPP/include " />
 		<exec executable="scons" dir="${build.testcases.CPP}" failonerror="true">
 			<arg line="--lib_path=${lib.dir}/CPP/lib --include_path=${lib.dir}/CPP/include" />
@@ -121,15 +112,11 @@
 		<copy todir="${deploy.path}/hlt/drivers_testcases/CPP/build">
 			<fileset dir="${build.testcases.CPP}/build_test" includes="*" />
 		</copy>
-		
-		
+
 		<copy file="${lib.dir}/C/lib/libsdbc.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/C/lib" />
 		<copy file="${lib.dir}/CPP/lib/libsdbcpp.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/CPP/lib" />
-		
-		
-		
-    <echo message="...over scons the c and c++ ..." />
 
+    <echo message="...over scons the c and c++ ..." />
 
 	</target>
 
