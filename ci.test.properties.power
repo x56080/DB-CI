@@ -10,7 +10,7 @@ test.machine.software.path=/tmp/sequoiadb
 
 
 copy_tar=/test_tar
-target.deploy_tar_gz.ip=bl465-4
+target.deploy_tar_gz.ip=powersuse1
 
 coord.service.port=50000
 jenkins.master.ip=powersuse1
