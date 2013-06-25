@@ -24,7 +24,10 @@
 	<property name="CODE_DIR" value="${WORKSPACE}/sequoiadb" />
 	<property name="RELEASE_DIR" value="${WORKSPACE}/release" />
 	<property file="${CODE_DIR}/misc/ci/ci.build.properties" />
+	<!--PYTHONPATH is for power machine-->
 	<property name="PYTHONPATH" value="/usr/local/lib64/scons-2.3.0" />
+	<!--PATH_BUILDER is for power machine-->
+	<property name="PATH_BUILDER" value="/opt/installbuilder-8.5.2/bin" />
   
 	<target name="compile-src" depends="ready">
 		<echo message="Begin to compile source code..." />
@@ -232,6 +235,7 @@
 
 		<exec dir="${RELEASE_DIR}/" executable="builder">
 			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
+			<env key="PATH" path="${env.PATH}:${PATH_BUILDER}" />
 		</exec>
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
