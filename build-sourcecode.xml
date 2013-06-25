@@ -53,17 +53,15 @@
 		<echo message="exec scons ${compile.arg.line}  --all -j 4" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
 			<arg line="${compile.arg.line} --all -j 4" />
-			<env key="PYTHONPATH" path="${env.PYTHONPATH}:${PYTHONPATH}" />
+			<!--env key="PYTHONPATH" path="${env.PYTHONPATH}:${PYTHONPATH}" /-->
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
 			<arg line="${compile.arg.line}" />
-			<env key="PYTHONPATH" path="${env.PYTHONPATH}:${PYTHONPATH}" />
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
 			<arg line="${compile.arg.line} --phpversion=5.3.3" />
-			<env key="PYTHONPATH" path="${env.PYTHONPATH}:${PYTHONPATH}" />
 		</exec>
 
 		<if>
