@@ -27,7 +27,7 @@
 	<!--PYTHONPATH is for power machine-->
 	<property name="PYTHONPATH" value="/usr/local/lib64/scons-2.3.0" />
 	<!--PATH_BUILDER is for power machine-->
-	<property name="PATH_BUILDER" value="/opt/installbuilder-8.5.2/bin" />
+	<property name="PATH_BUILDER" value="/opt/installbuilder-8.5.2/bin/" />
   
 	<target name="compile-src" depends="ready">
 		<echo message="Begin to compile source code..." />
