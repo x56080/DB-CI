@@ -235,7 +235,6 @@
 
 		<exec dir="${RELEASE_DIR}/" executable="builder">
 			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
-			<env key="PATH" path="${env.PATH}:${PATH_BUILDER}" />
 		</exec>
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="sequoiadb/**" compression="gzip" />
