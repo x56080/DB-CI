@@ -23,6 +23,9 @@
 		
 		<echo message="Begin to clean driver java evn.." />
 		
+		<echoproperties/>
+		
+		
 		<delete dir="${deploy.path}/hlt/drivers_testcases/" failonerror="false" />
 		
     <delete dir="${build.testcases.C}/build_test"  failonerror="false" />
@@ -61,7 +64,15 @@
 				<property name="jdk.name.os" value="jdk_linux" />
 			</then>
 			<else>
-				<property name="jdk.name.os" value="jdk_win" />
+				<!--if>
+					<equals arg1="${os.name}" arg2="ppc" />
+					<then-->
+				    <property name="jdk.name.os" value="jdk_win" />
+				  <!--/then>
+				  <else>
+					  <property name="jdk.name.os" value="jdk_win" />
+				  </else-->		
+				
 			</else>
 		</if>
 
