@@ -237,7 +237,8 @@
 		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_server.xml" todir="${RELEASE_DIR}/" />
 	  
 	  <!--exec dir="${RELEASE_DIR}" executable="export PATH=$PATH:'${PATH_BUILDER}'" /-->
-		<exec dir="${RELEASE_DIR}" executable="/opt/installbuilder-8.5.2/bin/builder">
+		<!--exec dir="${RELEASE_DIR}" executable="/opt/installbuilder-8.5.2/bin/builder"-->
+		<exec dir="${RELEASE_DIR}" executable="builder">
 			<arg line="build sequoiadb_server.xml --setvars project.version=${project.version}  --setvars platform=${os.and.platform} --setvars project.outputDirectory=${RELEASE_DIR}" />
 		</exec>
 
