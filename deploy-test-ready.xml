@@ -17,6 +17,9 @@
 
 	<target name="check" depends="">
     
+    <echoproperties />
+    
+    
     <property environment="env" />
 	  <hostinfo prefix="local" />
     
