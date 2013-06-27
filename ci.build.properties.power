@@ -2,7 +2,7 @@ STAF.PATH=/usr/local/staf
 
 project.name=sequoiadb
 project.version=1.1.0
-os.and.platform=linux_power_64
+os.and.platform=ppcLinux64
 
 copy_tar=/test_tar
 target.deploy_tar_gz.ip=powersuse1
