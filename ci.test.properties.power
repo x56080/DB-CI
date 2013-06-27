@@ -13,7 +13,7 @@ copy_tar=/test_tar
 target.deploy_tar_gz.ip=powersuse1
 
 coord.service.port=50000
-jenkins.master.ip=powersuse1
+jenkins.master.ip=power_rhel_1
 test.machine.no1=power_suse_2
 test.machine.no2=power_rhel_1
 test.machine.no3=power_rhel_2
