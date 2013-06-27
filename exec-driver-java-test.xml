@@ -18,11 +18,7 @@
 			   <pathelement location="/usr/share/java/ant-junit.jar" />
 		   </classpath>
     </taskdef>
-    
-    
-    
-    
-    
+
    <macrodef name="checkReport">
       <attribute name="name" default="" />
       <attribute name="reportPath" default="${reports.path}" />
@@ -32,25 +28,11 @@
       </sequential>
    </macrodef>
 
-    
-    
-    
-    
-    
-    
-    
-    
-
-		
-    
-
-
 <target name="clean-env" depends="">
 	 <delete dir="${reports.path}" failonerror="false" />
 	 <mkdir dir="${reports.path}" />
 	 <!--unjar src="${WORKSPACE}/deploy/hlt/drivers_testcases/lib/java_test.jar" dest="${java_test.dir}" /-->
-	 
-	 
+
 </target>
 <target name="exec-driver-java-test" depends="clean-env">
    <junit printsummary="on" fork="true" showoutput="true">
@@ -67,7 +49,7 @@
      	  	   <include name="**/*.*" />
      	  	   <exclude name="**/TestConstant*.*" />
      	  	   <exclude name="**/Replica*.*" />
-     	  	   <exculde name="**/testdata/*" />
+     	  	   <exclude name="**/*testdata*/*" />
         </fileset>
       </batchtest>
    </junit>
@@ -91,6 +73,5 @@
   </replace>
 
 </target>
-
 
 </project>
