@@ -1,0 +1,100 @@
+<!--@param ${build.testcases}: The path where test had builded path .-->
+<!--@param ${WORKSPACE} : The path where jenkins user's path .-->
+<!--@param ${lib.dir} : The path where all lib's directory .-->
+
+<project name="build-samples-test" default="build-samples-test">
+
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="/usr/share/java/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+	
+	<property name="build.testcases.CPP" value="${build.testcases}/CPP" />
+	<property name="build.testcases.C" value="${build.testcases}/C" />
+
+	<property name="deploy.path" value="${WORKSPACE}/deploy" />
+
+	<target name="clean-samples-test">
+		
+		<echo message="Begin to clean client sample C evn.." />
+		
+		<delete dir="${deploy.path}/hlt/samples_testcases/" failonerror="false" />
+		
+    <delete dir="${build.testcases.C}/build"  failonerror="false" />
+    <delete dir="${build.testcases.CPP}/build"  failonerror="false" />
+
+    <mkdir dir="${deploy.path}/hlt/samples_testcases/C" />
+    <mkdir dir="${deploy.path}/hlt/samples_testcases/CPP" />
+		
+		<echo message="Clean driver client sample evn completed." />
+		
+	</target>
+
+	<target name="build-samples-test" depends="clean-samples-test">
+
+    <echo message="...Begin to build the c and c++ test code ..." />
+
+    <echo message="exec build ${build.testcases.C} " />
+		<foreach target="build_c" param="build_name">
+			
+		   <fileset dir="${build.testcases.C}">
+		   	  <include name="*.c" />
+		   	  <exclude name="commot.c" />
+		   	  <exclude name="*old*.c" />
+		   </fileset>
+		   
+		</foreach>
+		
+		<copy todir="${deploy.path}/hlt/samples_testcases/C">
+			<fileset dir="${build.testcases.C}/build" includes="*" />
+		</copy>
+
+		<echo message="exec build ${build.testcases.CPP} " />
+		
+		<foreach target="build_cpp" param="build_name">
+			
+		   <fileset dir="${build.testcases.CPP}">
+		   	  <include name="*.cpp" />
+		   	  <exclude name="commot.cpp" />
+		   	  <exclude name="*old*.cpp" />
+		   </fileset>
+		   
+		</foreach>
+		
+		<copy todir="${deploy.path}/hlt/samples_testcases/CPP">
+			<fileset dir="${build.testcases.CPP}/build" includes="*" />
+		</copy>
+    
+    <foreach target="build_c" param="build_name">
+			
+		   <fileset dir="${build.testcases.C}">
+		   	  <include name="*.c" />
+		   	  <exclude name="commot.c" />
+		   </fileset>
+		   
+		</foreach>
+
+    <echo message="...over build the c and c++ ..." />
+
+	</target>
+
+
+
+</project>
+
+<target name="build_cpp" depends="" >
+	<local name="build.real.name" />
+	<basename property="build.real.name" file="${build_name}" suffix=".cpp">
+	<exec dir="${build.testcases.CPP}" executable="./buildApp.sh">
+		 <arg value="${build.real.name}" />
+	</exec>
+</target>
+
+<target name="build_c" depends="" >
+	<local name="build.real.name" />
+	<basename property="build.real.name" file="${build_name}" suffix=".c">
+	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
+		 <arg value="${build.real.name}" />
+	</exec>
+</target>
