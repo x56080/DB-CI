@@ -48,7 +48,7 @@
 		   scons c and c++ code , but not test
 		-->
 
-		<echo message="Clean driver java evn completed." />
+		<echo message="Clean driver  evn completed." />
 	</target>
 
 	<target name="build-driver-test" depends="clean-driver-test">
