@@ -39,11 +39,13 @@
 		<echo message="... test java driver is over ..." />
 			
 		<echo message="... test the C driver ..." />
-         
+		
+    <property name="testCcases" value="*-sdbConnect_with_usr-sdbCreateCollection1_doubtful-sdbCreateUsr-sdbRemoveUsr-sdbResetSnapshot-sdbSplitCollection" />     
+    
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports" masterreports="${test.reports.path}" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 			<param name="lib.dir" value="${install.path}" />
-			<param name="test_name" value="*"  />
+			<param name="test_name" value="${testCcases}"  />
 			<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
 		</sdbtest>
 		
@@ -51,10 +53,13 @@
 		
 		<echo message="... test the CPP driver ..." />
 		
+		<property name="testCPPcases" value="*-create-drop-insert_with_iterator-rename-split-createCollection_with_Sharding_and_replSize-resetSnapshot-transactionBegin-transactionCommit-transactionRollback" />
+		
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-CPP-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
+
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 			<param name="lib.dir" value="${install.path}" />
-			<param name="test_name" value="*"  />
+			<param name="test_name" value="${testCPPcases}"  />
 			<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
 		</sdbtest>
 
