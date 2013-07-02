@@ -63,12 +63,12 @@
 		</copy>
 
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-basic-testcases.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-ant-testcases.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-driver-java-test.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-driver-C-test.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-driver-CPP-test.xml" todir="${deploy.path}" />
-		<copy file="${ci.script.path}/exec-files/exec-samples-testcases.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-basic-testcases.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-ant-testcases.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-driver-java-test.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-driver-C-test.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-driver-CPP-test.xml" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/exec-testcases/exec-samples-testcases.xml" todir="${deploy.path}" />
 		
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
