@@ -1,0 +1,49 @@
+<!--@param ${testcase.path}: The path where test case direcotry.-->
+<!--@param ${reports.path}: The path where test case direcotry.-->
+<!--@param ${test.package.name}: The name of test package name,.-->
+<project name="exec-samples-testcases" default="exec-samples-testcases">
+
+<property environment="env" />
+
+   <taskdef resource="net/sf/antcontrib/antlib.xml">
+     <classpath>
+        <pathelement location="/usr/share/java/ant-contrib.jar" />
+     </classpath>
+   </taskdef>
+
+   <target name="exec-samples-testcases" depends="">
+   	 <foreach target="test-suite-case" param="test-suite-case">
+   	    <path>
+   	       <dirset dir="${testcase.path}" />
+   	    </path>
+   	 </foreach>
+   </target>
+
+
+   <target name="test-suite-case" depends="">
+
+      <foreach target="test-one-case"  param="test-one-case">
+         <fileset dir="${test-suite-case}">
+           <include name="*" />
+           <exclude name="*.so" />
+           <exclude name="*.dat" />
+         </fileset>
+         <param name="test-suite-case" value="${test-suite-case}" />
+      </foreach>
+      
+   </target>
+
+
+   <target name="test-one-case" depends="">
+   	
+     <local name="test.real.name" />
+     <basename property="test.real.name" file="${test-one-case}" />
+     <exec executable="./${test.real.name}" dir="${test-suite-case}" timeout="120000" outputproperty="screen.output" errorproperty="error.output" resultproperty="ret.code">
+        <arg line="localhost 50000 &quot;&quot; &quot;&quot;" />
+        <env key="LD_LIBRARY_PATH" path="env.LD_LIBRARY_PATH:${test-suite-case}" />
+     </exec>
+
+     <echo>${screen.output}&#10;${error.output}&#10;${ret.code}&#10;&#10;&#10;&#10; </echo>
+
+   </target>
+</project>
