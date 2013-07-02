@@ -49,6 +49,7 @@
 		<copy todir="${deploy.path}/hlt/samples_testcases/C">
 			<fileset dir="${build.testcases.C}/build" includes="*" />
 		</copy>
+		<copy todir="${deploy.path}/hlt/samples_testcases/C" file="${build.testcases.C}/sampledb.dat" />
 
 		<echo message="exec build ${build.testcases.CPP} " />
 		
