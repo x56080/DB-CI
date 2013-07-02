@@ -192,11 +192,11 @@
 		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/libsdbphp.so" />
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
-			<fileset dir="${CODE_DIR}/client/C/include/" includes="*.h" />
+			<fileset dir="${CODE_DIR}/client/C/include/" includes="**/*.h" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="*.h" />
+			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="**/*.h" />
 		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/www">
