@@ -34,6 +34,9 @@
   
 	<target name="compile-src" depends="ready">
 		<echo message="Begin to compile source code..." />
+		
+		<echo message="delete ${CODE_DIR}/bin" />
+		<delete dir="${CODE_DIR}/bin"  failonerror="true" />
 
 		<if>
 			<equals arg1="${compile.debug}" arg2="true" />
@@ -167,19 +170,23 @@
 			</else>
 		</if>
 
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<!--copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/shell/engine/sdb" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/shell/engine/sdbbp" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdblist" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbcm" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbstart" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdblist" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbinspt" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmart" todir="${RELEASE_DIR}/sequoiadb/bin" />
-		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbcmtop" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbcmart" todir="${RELEASE_DIR}/sequoiadb/bin" />
+		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbcmtop" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/engine/sdbpdlog" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbimprt" todir="${RELEASE_DIR}/sequoiadb/bin" />
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbexprt" todir="${RELEASE_DIR}/sequoiadb/bin" />
+    <copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbload" todir="${RELEASE_DIR}/sequoiadb/bin" /-->
+    <copy todir="${RELEASE_DIR}/sequoiadb/bin" >
+       <fileset dir="${CODE_DIR}/bin" includes="**/*" />
+    </copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
