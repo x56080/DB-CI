@@ -13,7 +13,7 @@
 		<property name="software.package.name" value="${project.name}-${project.version}-${os.and.platform}-installer.run" />
 		<property name="driver.package.name" value="${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" />
 
-		<echo message="Begin to copy the deploy.tar.gz with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH},deploy.host.name=${deploy.host.name}" />
+		<echo message="Begin to copy the ${software.package.name} ${driver.package.name} with STAF.PATH=${STAF.PATH},env.PATH=${env.PATH} " />
 
 		<copy file="${release.path}/${software.package.name}" tofile="${release.path}/${software.package.name}.${BUILD_NUMBER}" />
 		<copy file="${release.path}/${driver.package.name}" tofile="${release.path}/${driver.package.name}.${BUILD_NUMBER}" />
