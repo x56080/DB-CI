@@ -20,10 +20,13 @@
 		<echo message="Begin to clean client sample C evn.." />
 		
 		<delete dir="${deploy.path}/hlt/samples_testcases/" failonerror="false" />
-		
-    <delete dir="${build.testcases.C}/build"  failonerror="false" />
-    <delete dir="${build.testcases.CPP}/build"  failonerror="false" />
-
+		<delete dir="${build.testcases}"  failonerror="false" />
+    <mkdir dir="${build.testcases}" />
+    
+    <copy todir="${build.testcases}">
+			<fileset dir="${WORKSPACE}/sequoiadb/client/samples/" includes="*" />
+		</copy>
+    
     <mkdir dir="${deploy.path}/hlt/samples_testcases/C" />
     <mkdir dir="${deploy.path}/hlt/samples_testcases/CPP" />
 		
