@@ -11,6 +11,16 @@
             <canBeEdited>1</canBeEdited>
             <selected>1</selected>
             <show>1</show>
+            <customLanguageFileList>
+                <language>
+                    <code>en</code>
+                    <file>${project.outputDirectory}/sequoiadb_en.txt</file>
+                </language>
+                <language>
+                    <code>zh_CN</code>
+                    <file>${project.outputDirectory}/sequoiadb_en.txt</file>
+                </language>
+            </customLanguageFileList>
             <folderList>
                 <folder>
                     <description>Program Files</description>
@@ -28,6 +38,9 @@
         </component>
     </componentList>
     <readyToInstallActionList>
+        <addGroup>
+            <groupname>${username}</groupname>
+        </addGroup>
         <addUser>
             <password>${userpasswd}</password>
             <showMessageOnError>1</showMessageOnError>
@@ -39,6 +52,10 @@
                 </userTest>
             </ruleList>
         </addUser>
+        <addGroupToUser>
+            <groupname>${username}</groupname>
+            <username>${username}</username>
+        </addGroupToUser>
         <runProgram>
             <program>echo</program>
             <programArguments>"NAME=sdbcm" &gt; /etc/default/sequoiadb</programArguments>
@@ -243,14 +260,14 @@
         </directoryParameter>
         <parameterGroup>
             <name>user_data</name>
-            <title>User data</title>
-            <explanation>Please insert the desired username and password</explanation>
+            <title>${msg(Install.Paramers.user.title)}</title>
+            <explanation>${msg(Install.Paramers.user.explanation)}</explanation>
             <value></value>
             <default></default>
             <parameterList>
                 <stringParameter>
                     <name>username</name>
-                    <description>User Name</description>
+                    <description>${msg(Install.Paramers.user.username.description)}</description>
                     <explanation></explanation>
                     <value>sdbadmin</value>
                     <default>sdbadmin</default>
@@ -259,19 +276,18 @@
                 </stringParameter>
                 <passwordParameter>
                     <name>userpasswd</name>
-                    <title>User Password</title>
-                    <description>Password</description>
+                    <description>${msg(Install.Paramers.user.password.description)}</description>
                     <explanation></explanation>
                     <value></value>
                     <default>sequoiadb;</default>
                     <allowEmptyValue>0</allowEmptyValue>
-                    <descriptionRetype>Re-enter</descriptionRetype>
+                    <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
                     <width>20</width>
 
 	<!-- throw an error if password is empty -->
 	<validationActionList>
                         <throwError>
-                            <text>You need to provide a non-empty password</text>
+                            <text>${msg(Install.Paramers.user.password.error)}</text>
                             <ruleList>
                                 <compareText logic="equals" text="${userpasswd}" value=""/>
                             </ruleList>
@@ -293,9 +309,9 @@
         </stringParameter>
         <stringParameter>
             <name>port</name>
-            <title>SDBCM Port</title>
-            <description>Port</description>
-            <explanation>SequoiaDB Cluster Manager port</explanation>
+            <title>${msg(Install.Paramers.port.title)}</title>
+            <description>${msg(Install.Paramers.port.Description)}</description>
+            <explanation>${msg(Install.Paramers.port.explanation)}</explanation>
             <value>50010</value>
             <default>50010</default>
             <allowEmptyValue>1</allowEmptyValue>
