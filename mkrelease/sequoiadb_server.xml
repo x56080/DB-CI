@@ -20,7 +20,7 @@
                 <language>
                     <code>zh_CN</code>
                     <encoding>utf-8</encoding>
-                    <file>${build_project_directory}/sequoiadb_zh.lng</file>
+                    <file>${build_project_directory}/sequoiadb_ch.lng</file>
                 </language>
             </customLanguageFileList>
             <folderList>
@@ -44,6 +44,7 @@
             <groupname>${username}</groupname>
         </addGroup>
         <addUser>
+            <homedir>${installdir}</homedir>
             <password>${userpasswd}</password>
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
@@ -259,6 +260,10 @@
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
         </deleteUser>
+        <deleteGroup>
+            <groupname>${username}</groupname>
+            <showMessageOnError>1</showMessageOnError>
+        </deleteGroup>
     </postUninstallationActionList>
     <allowedLanguages>en zh_CN</allowedLanguages>
     <debuggerPassword>sequoiadb</debuggerPassword>
