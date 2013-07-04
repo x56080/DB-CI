@@ -27,7 +27,7 @@
 			<fileset dir="${WORKSPACE}/sequoiadb/client/samples/" includes="**/*" />
 		</copy>
 		
-		<chmod param="a+x">
+		<chmod perm="a+x">
 			 <fileset dir="${build.testcases}" includes="**/*buildApp.sh*" />
 	  </chmod>
     
