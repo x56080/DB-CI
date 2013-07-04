@@ -24,11 +24,12 @@
 
       <local name="test-suite-casename" />
       <basename property="test-suite-casename" file="${test-suite-fullname}" />
+      <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
       
       <hostinfo prefix="host" />
       
       <local name="test.suite.class.name" />
-		  <property name="test.suite.class.name" value="com.sequoiadb.testcases-samples.${test-suite-casename}.${host.NAME}-${test.package.name}" />
+		  <property name="test.suite.class.name" value="com.sequoiadb.testcases-samples.${test-suite-casename}-${deploy}" />
 
 		  <tstamp>
 		   	<format property="current.time" pattern="MM-dd-hh.mm.ss" />
