@@ -74,20 +74,34 @@
 
 	</target>
 
-</project>
 
-<target name="build_cpp" depends="" >
+
+  <target name="build_cpp" depends="">
 	<local name="build.real.name" />
-	<basename property="build.real.name" file="${build_name}" suffix=".cpp">
+	<basename property="build.real.name" file="${build_name}" suffix=".cpp" />
 	<exec dir="${build.testcases.CPP}" executable="./buildApp.sh">
 		 <arg value="${build.real.name}" />
 	</exec>
-</target>
+  </target>
 
-<target name="build_c" depends="" >
-	<local name="build.real.name" />
-	<basename property="build.real.name" file="${build_name}" suffix=".c">
-	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
-		 <arg value="${build.real.name}" />
-	</exec>
-</target>
+  <target name="build_c" depends="" >
+  	<local name="build.real.name" />
+	  <basename property="build.real.name" file="${build_name}" suffix=".c" />
+  	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
+  		 <arg value="${build.real.name}" />
+  	</exec>
+  </target>
+
+
+</project>
+
+
+
+
+
+
+
+
+
+
+
