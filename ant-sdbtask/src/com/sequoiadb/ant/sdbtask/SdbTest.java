@@ -82,7 +82,7 @@ public class SdbTest extends Task {
 					.getLineNumber() );
 			this.remoteReportsPath += hostName + "_" + lineNum;
 			
-			this.masterReportsPath += File.separator + hostName + "_" + lineNum + File.separator;
+			this.masterReportsPath += File.separator + hostName + "_"+ antFileName + "_" + lineNum + File.separator;
 			
 			File dir = new File(masterReportsPath);
 			if (!dir.mkdirs())
