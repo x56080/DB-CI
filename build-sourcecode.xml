@@ -240,6 +240,8 @@
 		</delete>
 
 		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_server.xml" todir="${RELEASE_DIR}/" />
+		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_en.lng" todir="${RELEASE_DIR}/" />
+		<copy file="${CODE_DIR}/misc/ci/mkrelease/sequoiadb_zh.lng" todir="${RELEASE_DIR}/" />
 	  
 	  <!--exec dir="${RELEASE_DIR}" executable="export PATH=$PATH:'${PATH_BUILDER}'" /-->
 		<!--exec dir="${RELEASE_DIR}" executable="/opt/installbuilder-8.5.2/bin/builder"-->
