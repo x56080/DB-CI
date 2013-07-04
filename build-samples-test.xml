@@ -26,6 +26,10 @@
     <copy todir="${build.testcases}">
 			<fileset dir="${WORKSPACE}/sequoiadb/client/samples/" includes="**/*" />
 		</copy>
+		
+		<chmod param="a+x">
+			 <fileset dir="${build.testcases}" includes="**/*buildApp.sh*" />
+	  </chmod>
     
     <mkdir dir="${deploy.path}/hlt/samples_testcases/C" />
     <mkdir dir="${deploy.path}/hlt/samples_testcases/CPP" />
