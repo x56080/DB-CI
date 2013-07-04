@@ -50,6 +50,9 @@
      	  	   <exclude name="**/TestConstant*.*" />
      	  	   <exclude name="**/Replica*.*" />
      	  	   <exclude name="**/*testdata*/*" />
+     	  	   <exclude name="**/*Constan*.java" />
+     	  	   <exclude name="**/SdbNest.java" />
+     	  	   
         </fileset>
       </batchtest>
    </junit>
