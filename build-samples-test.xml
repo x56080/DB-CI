@@ -24,7 +24,7 @@
     <mkdir dir="${build.testcases}" />
     
     <copy todir="${build.testcases}">
-			<fileset dir="${WORKSPACE}/sequoiadb/client/samples/" includes="*" />
+			<fileset dir="${WORKSPACE}/sequoiadb/client/samples/" includes="**/*" />
 		</copy>
     
     <mkdir dir="${deploy.path}/hlt/samples_testcases/C" />
