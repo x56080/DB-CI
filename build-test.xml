@@ -28,7 +28,7 @@
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
-		<echo message="Compile  builded the driver test. " />
+		<echo message="Compile builded the driver test. " />
 		
 		
 		<echo message="Begin to build the client sample test code..." />
@@ -38,7 +38,7 @@
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
-		<echo message="Compile  builded the client sample test. " />
+		<echo message="Compile builded the client sample test. " />
 
 	</target>
 
