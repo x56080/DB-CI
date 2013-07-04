@@ -32,6 +32,7 @@
 		
 		
 		<echo message="Begin to build the client sample test code..." />
+		<echo message="${ci.script.path}/build-samples-test.xml" />
 		<ant antfile="${ci.script.path}/build-samples-test.xml" target="build-samples-test">
 			<property name="build.testcases" value="${WORKSPACE}/release/driver/samples" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
