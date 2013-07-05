@@ -39,7 +39,7 @@
             </folderList>
         </component>
     </componentList>
-    <readyToInstallActionList>
+    <postInstallationActionList>
         <addGroup>
             <groupname>${username}_group</groupname>
         </addGroup>
@@ -55,10 +55,6 @@
                 </userTest>
             </ruleList>
         </addUser>
-        <addGroupToUser>
-            <groupname>${username}_group</groupname>
-            <username>${username}</username>
-        </addGroupToUser>
         <exit>
             <exitCode>1</exitCode>
             <ruleList>
@@ -69,7 +65,7 @@
             </ruleList>
         </exit>
         <propertiesFileSet>
-            <file> /etc/default/sequoiadb</file>
+            <file>/etc/default/sequoiadb</file>
             <key>NAME</key>
             <value>sdbcm</value>
         </propertiesFileSet>
@@ -83,13 +79,6 @@
             <key>INSTALL_DIR</key>
             <value>${installdir}</value>
         </propertiesFileSet>
-    </readyToInstallActionList>
-    <postInstallationActionList>
-        <changeOwnerAndGroup>
-            <files>${installdir}</files>
-            <group>${username}_group</group>
-            <owner>${username}</owner>
-        </changeOwnerAndGroup>
         <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755">
             <customErrorMessage>${msg(Install.ErrorMsg.ChangeInsallerPathPermissions.error)}</customErrorMessage>
         </changePermissions>
@@ -200,13 +189,13 @@
             <username>${username}</username>
         </deleteUser>
         <deleteGroup>
-            <groupname>${username}</groupname>
+            <groupname>${username}_group</groupname>
             <showMessageOnError>1</showMessageOnError>
         </deleteGroup>
     </postUninstallationActionList>
     <allowedLanguages>en zh_CN</allowedLanguages>
     <debuggerPassword>sequoiadb</debuggerPassword>
-    <defaultUnixGroup>${username}</defaultUnixGroup>
+    <defaultUnixGroup>${username}_group</defaultUnixGroup>
     <defaultUnixOwner>${username}</defaultUnixOwner>
     <enableDebugger>1</enableDebugger>
     <enableRollback>1</enableRollback>
@@ -245,7 +234,7 @@
             <username>${username}</username>
         </deleteUser>
         <deleteGroup>
-            <groupname>${username}</groupname>
+            <groupname>${username}_group</groupname>
         </deleteGroup>
     </installationAbortedActionList>
     <parameterList>
