@@ -31,14 +31,14 @@
 		<echo message="Compile builded the driver test. " />
 		
 		
-		<echo message="Begin to build the client sample test code..." />
+		<!--echo message="Begin to build the client sample test code..." />
 		<echo message="${ci.script.path}/build-samples-test.xml" />
 		<ant antfile="${ci.script.path}/build-samples-test.xml" target="build-samples-test">
 			<property name="build.testcases" value="${WORKSPACE}/release/driver/samples" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
-		<echo message="Compile builded the client sample test. " />
+		<echo message="Compile builded the client sample test. " /-->
 
 	</target>
 

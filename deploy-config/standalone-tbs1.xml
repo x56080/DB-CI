@@ -70,7 +70,7 @@
 			<param name="install.path" value="${install.path}" />
 		</sdbtest-->
     
-    <echo message="... test the client sample test ..." />
+    <!--echo message="... test the client sample test ..." />
 		
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-samples-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/samples_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
 
@@ -79,7 +79,7 @@
 			
 		</sdbtest>
 		
-    <echo message="... client sample test is over ..." />
+    <echo message="... client sample test is over ..." /-->
     
     
 
