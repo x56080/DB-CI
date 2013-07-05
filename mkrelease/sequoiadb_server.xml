@@ -39,7 +39,7 @@
             </folderList>
         </component>
     </componentList>
-    <postInstallationActionList>
+    <preInstallationActionList>
         <addGroup>
             <groupname>${username}_group</groupname>
         </addGroup>
@@ -64,6 +64,8 @@
                 </userTest>
             </ruleList>
         </exit>
+    </preInstallationActionList>
+    <postInstallationActionList>
         <propertiesFileSet>
             <file>/etc/default/sequoiadb</file>
             <key>NAME</key>
