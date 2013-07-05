@@ -20,7 +20,7 @@
                 <language>
                     <code>zh_CN</code>
                     <encoding>utf-8</encoding>
-                    <file>${build_project_directory}/sequoiadb_ch.lng</file>
+                    <file>${build_project_directory}/sequoiadb_zh.lng</file>
                 </language>
             </customLanguageFileList>
             <folderList>
