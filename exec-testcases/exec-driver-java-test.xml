@@ -52,6 +52,8 @@
      	  	   <exclude name="**/*testdata*/*" />
      	  	   <exclude name="**/*Constan*.class" />
      	  	   <exclude name="**/SdbNest.class" />
+     	  	   <exclude name="**/MultiThread*" />
+     	  	   
      	  	   
         </fileset>
       </batchtest>
