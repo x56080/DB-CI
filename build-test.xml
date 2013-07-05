@@ -38,19 +38,21 @@
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
+		
 		<echo message="Compile builded the client sample test. " />
 
-	</target>
-
-	<target name="build-ant-tasks" depends="compile-test">
-		<ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
+    <echo message=" ..begin to build ant-sdbtask .." />
+    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
 			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
 			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
-		</ant>  
+		</ant>
+		<echo message=" .. over to build ant-sdbtask .." />
+
+
 	</target>
 
-	<target name="build-test" depends="compile-test, build-ant-tasks">
+	<target name="build-test" depends="compile-test">
 
 		<mkdir dir="${deploy.path}/hlt/js_testcases/" />
 
