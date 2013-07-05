@@ -78,11 +78,10 @@
 
 	</target>
 
-
-
   <target name="build_cpp" depends="">
 	  <local name="build.real.name" />
 	  <basename property="build.real.name" file="${build_name}" suffix=".cpp" />
+	  <echo message="building the ${build.real.name} in CPP" />
 	  <exec dir="${build.testcases.CPP}" executable="./buildApp.sh">
 		   <arg value="${build.real.name}" />
   	</exec>
@@ -91,6 +90,7 @@
   <target name="build_c" depends="" >
   	<local name="build.real.name" />
 	  <basename property="build.real.name" file="${build_name}" suffix=".c" />
+	  <echo message="building the ${build.real.name} in C" />
   	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
   		 <arg value="${build.real.name}" />
   	</exec>
