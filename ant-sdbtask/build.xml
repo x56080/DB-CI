@@ -16,7 +16,7 @@
 	<property name="java.driver.jar" value="../../../../release/sequoiadb.jar" />
 	<property name="javac.base.dir" value="../../.." />
 
-	<property name="target.dir" value="${root.dir}/build" />
+	<property name="target.dir" value="${root.dir}/build_ant_sdbtask" />
 	<property name="source.dir" value="${root.dir}/src" />
 	<property name="library.dir" value="${root.dir}/lib" />
 
