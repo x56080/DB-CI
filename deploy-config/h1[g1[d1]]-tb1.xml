@@ -13,7 +13,7 @@
 	<property file="ci.properties" />
 
 	<target name="deploy" depends="">
-		<echo message="Begin install software and test files to ${test.machine1}" />
+		<echo message="Begin install software and test files to ${test.machine.no2}" />
 		<hostinfo prefix="host" />
 
 		<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
