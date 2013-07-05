@@ -47,7 +47,7 @@
 			
 		   <fileset dir="${build.testcases.C}">
 		   	  <include name="*.c" />
-		   	  <exclude name="commot.c" />
+		   	  <exclude name="*common*" />
 		   	  <exclude name="*old*.c" />
 		   </fileset>
 		   
@@ -64,7 +64,7 @@
 			
 		   <fileset dir="${build.testcases.CPP}">
 		   	  <include name="*.cpp" />
-		   	  <exclude name="commot.cpp" />
+		   	  <exclude name="*common*" />
 		   	  <exclude name="*old*.cpp" />
 		   </fileset>
 		   
