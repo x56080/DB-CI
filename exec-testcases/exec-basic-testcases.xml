@@ -97,7 +97,7 @@
        project.setProperty("CS_PRIX", before);
     ]]></script-->
     
-		<property name="CS_PRIX" value="${host.NAME}${start_time}" />
+		<property name="CS_PRIX" value="${host.NAME}${start_time}${test.case.name}" />
 		<!--propertyregex property="CS_PRIX_TMP" input="${host.NAME}${parallel.num}${test.case.name}" regexp="-" replace="" />
 		<propertyregex property="CS_PRIX" input="${CS_PRIX_TMP}" regexp="_" replace="" /-->
 
