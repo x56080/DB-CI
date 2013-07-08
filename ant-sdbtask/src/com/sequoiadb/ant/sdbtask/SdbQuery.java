@@ -59,9 +59,7 @@ public class SdbQuery extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace cs = sdb.getCollectionSpace(CSName);
 			DBCollection cl= cs.getCollection(CLName);
-			
-			
-			
+
 		}
 		catch(BaseException e)
 		{

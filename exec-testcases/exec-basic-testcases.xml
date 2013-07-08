@@ -1,5 +1,6 @@
 <!--@param ${testcase.path}: The path where test case direcotry.-->
 <!--@param ${install.path}: The path where sequoiadb installed.-->
+<!--@param ${antTask.jar.path}: The antTask.jar's path.-->
 <!--@param ${reports.path}: The path where test case direcotry.-->
 <!--@param ${test.package.name}: The name of test package name,.-->
 <!--@param ${parallel.num}:  The parallel number when parallel in same host.-->
@@ -11,6 +12,15 @@
 		<delete dir="${testcase.path}/reports" />
 		<echo message="Clean deploy result reports compeleted." />
 	</target>
+	
+	 <property name="STAF.PATH" value="/usr/local/staf" />
+	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
+		<classpath>
+			<fileset dir="${antTask.jar.path}" includes="*.jar" />
+			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
+			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
+		</classpath>
+	</taskdef>
 
 	<property name="excludes.dir.patterns" value="" />
 
