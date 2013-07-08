@@ -28,28 +28,21 @@ public class createPrefix extends Task{
    
    public void execute(){
       
-      try{
       	
-      	 String request = "" ;
+      String request = "" ;
       	 
-      	 String lineNum = Integer.toString( (int)(Math.random()*1000) );
+      String lineNum = Integer.toString( (int)(Math.random()*1000) );
       	 
-      	 for ( Parameter param : params ){
+      for ( Parameter param : params ){
       	    
-      	    request += param.getValue() ; 	
+      	 request += param.getValue() ; 	
       	    
-      	 }
-      	 request += lineNum ; 
+      }
+      request += lineNum ; 
       	 
-      	 this.getProject().setProperty( "CS_PRIX" , request.replaceAll( "[-_]" , "") ) ; 
-      	 
-      	
-      }catch (UnknownHostException e) {
-			
-			   e.printStackTrace();
+      this.getProject().setProperty( "CS_PRIX" , request.replaceAll( "[-_]" , "") ) ; 
 
-			   throw new BuildException(e.getMessage());
-		}
+
    	
    }
 	
