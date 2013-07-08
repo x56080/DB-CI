@@ -3,6 +3,7 @@
     <fullName>SequoiaDB Server</fullName>
     <version>1.0</version>
     <installerFilename>${product_shortname}-${product_version}-${platform}-installer.${platform_exec_suffix}</installerFilename>
+    <licenseFile>${build_project_directory}/sequoiadb/license/license_en.txt</licenseFile>
     <allowLanguageSelection>1</allowLanguageSelection>
     <componentList>
         <component>
@@ -32,7 +33,7 @@
                     <distributionFileList>
                         <distributionDirectory>
                             <allowWildcards>1</allowWildcards>
-                            <origin>sequoiadb/*</origin>
+                            <origin>${build_project_directory}/sequoiadb/*</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -239,6 +240,17 @@
             <groupname>${username}_group</groupname>
         </deleteGroup>
     </installationAbortedActionList>
+    <licenseFileList>
+        <licenseFile>
+            <code>en</code>
+            <file>${build_project_directory}/sequoiadb/license/license_en.txt</file>
+        </licenseFile>
+        <licenseFile>
+            <code>zh_CN</code>
+            <encoding>utf-8</encoding>
+            <file>${build_project_directory}/sequoiadb/license/license_zh.txt</file>
+        </licenseFile>
+    </licenseFileList>
     <parameterList>
         <directoryParameter>
             <name>installdir</name>
