@@ -14,8 +14,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Parameter;
 
 pubilc class createPrefix extends Task {
-
-   private String randomNumber ; 
    
    private List<Parameter> params = new ArrayList<Parameter>();
    
@@ -28,7 +26,7 @@ pubilc class createPrefix extends Task {
 		 return param;
 	 }
    
-   public  void execute() {
+   public void execute() {
       
       try{
       	
