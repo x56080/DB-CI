@@ -234,6 +234,10 @@
 		<copy todir="${RELEASE_DIR}/sequoiadb/doc">
 			<fileset dir="${CODE_DIR}/doc/out" />
 		</copy>
+		
+		<copy todir="${RELEASE_DIR}/sequoiadb/license">
+			<fileset dir="${CODE_DIR}/license" />
+		</copy>
 
 		<delete includeemptydirs="true">
 			<fileset dir="${RELEASE_DIR}/sequoiadb" includes="**/.svn" />
