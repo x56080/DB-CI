@@ -92,12 +92,18 @@
     
     
     <property name="CS_PRIX_TMP" value="${host.NAME}${parallel.num}${test.case.name}"/>
-    <script language="javascript"><![CDATA[
+    <!--script language="javascript"><![CDATA[
        var before = project.getProperty("CS_PRIX_TMP");
        before = before.replaceAll("_", "");
        before = before.replaceAll("-", "");
        project.setProperty("CS_PRIX", before);
-    ]]></script>
+    ]]></script-->
+    
+    <sdbprefix>
+    	 <param name="${host.NAME}" value="${host.NAME}" />
+    	 <param name="${parallel.num}" value="${parallel.num}" />
+    	 <param name="${test.case.name}" value="${test.case.name}" />
+    </sdbprefix>
     
 		<!--property name="CS_PRIX" value="${host.NAME}${start_time}${test.case.name}" /-->
 		<!--property name="CS_PRIX" value="${start_time}" /-->
