@@ -13,11 +13,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Parameter;
 
-pubilc class createPrefix extends Task {
+public class createPrefix extends Task{
    
    private List<Parameter> params = new ArrayList<Parameter>();
    
-   public Parameter createParam() {
+   public Parameter createParam(){
 		 
 		 Parameter param = new Parameter();
 		 
@@ -26,7 +26,7 @@ pubilc class createPrefix extends Task {
 		 return param;
 	 }
    
-   public void execute() {
+   public void execute(){
       
       try{
       	
@@ -34,7 +34,7 @@ pubilc class createPrefix extends Task {
       	 
       	 String lineNum = Integer.toString( (int)(Math.random()*1000) );
       	 
-      	 for ( Parameter param : params ) {
+      	 for ( Parameter param : params ){
       	    
       	    request += param.getValue() ; 	
       	    
