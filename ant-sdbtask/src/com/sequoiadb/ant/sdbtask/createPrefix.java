@@ -41,7 +41,7 @@ public class createPrefix extends Task{
       	 }
       	 request += lineNum ; 
       	 
-      	 this.getProject().setProperty( "CS_PRIX" , request.replaceAll( "[\-\_]" , "") ) ; 
+      	 this.getProject().setProperty( "CS_PRIX" , request.replaceAll( "[-_]" , "") ) ; 
       	 
       	
       }catch (UnknownHostException e) {
