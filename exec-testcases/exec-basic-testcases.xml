@@ -89,16 +89,20 @@
     <tstamp>
     	<format property="start_time" pattern="mmss" offset="-5" unit="second" />
     </tstamp>
-    <!--property name="CS_PRIX_TMP" value="${host.NAME}${parallel.num}${test.case.name}"/>
+    
+    
+    <property name="CS_PRIX_TMP" value="${host.NAME}${parallel.num}${test.case.name}"/>
     <script language="javascript"><![CDATA[
        var before = project.getProperty("CS_PRIX_TMP");
        before = before.replaceAll("_", "");
        before = before.replaceAll("-", "");
        project.setProperty("CS_PRIX", before);
-    ]]></script-->
+    ]]></script>
     
 		<!--property name="CS_PRIX" value="${host.NAME}${start_time}${test.case.name}" /-->
-		<property name="CS_PRIX" value="${start_time}" />
+		<!--property name="CS_PRIX" value="${start_time}" /-->
+		
+		
 		<!--propertyregex property="CS_PRIX_TMP" input="${host.NAME}${parallel.num}${test.case.name}" regexp="-" replace="" />
 		<propertyregex property="CS_PRIX" input="${CS_PRIX_TMP}" regexp="_" replace="" /-->
 
