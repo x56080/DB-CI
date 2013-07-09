@@ -40,7 +40,7 @@
 			
 		<echo message="... test the C driver ..." />
 		
-    <property name="testCcases" value="*-sdbConnect_with_usr-sdbCreateCollection1_doubtful-sdbCreateUsr-sdbRemoveUsr-sdbResetSnapshot-sdbSplitCollection" />     
+    <property name="testCcases" value="*-*sdbConnect_with_usr*:*sdbCreateCollection1_doubtful*:*sdbCreateUsr*:*sdbListReplicaGroups*:*sdbRemoveUsr*:*sdbResetSnapshot*:*sdbSplitCollection*" />     
     
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports" masterreports="${test.reports.path}" timeout="30m">
 			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
@@ -52,7 +52,7 @@
 		
 		<echo message="... test the CPP driver ..." />
 		
-		<property name="testCPPcases" value="*-create-drop-insert_with_iterator-rename-split-createCollection_with_Sharding_and_replSize-resetSnapshot-transactionBegin-transactionCommit-transactionRollback" />
+		<property name="testCPPcases" value="*-*create*:*drop*:*insert_with_iterator*:*rename*:*split*:*createCollection_with_Sharding_and_replSize*:*resetSnapshot*:*transactionBegin*:*transactionCommit*:*transactionRollback*:*getList_SDB_LIST_GROUPS*" />
 		
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-CPP-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
 
