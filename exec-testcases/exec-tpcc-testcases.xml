@@ -60,7 +60,7 @@
             <exclude name="tpcc.js" />
          </fileset>
          <param name="CS_PRIX" value="${CS_PRIX}" />
-         <param name="test.suite.class.name" values="${test.suite.class.name}" />
+         <param name="test.suite.class.name" value="${test.suite.class.name}" />
       </foreach>  
      	<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" message="
 								&lt;system-out&gt;&#10;
