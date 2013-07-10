@@ -54,7 +54,7 @@
 			</else>
 		</if>
     
-    <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac />
+    <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
 
 		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
 			<classpath>
