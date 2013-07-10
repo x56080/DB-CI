@@ -109,6 +109,7 @@
        project.setProperty("CS_PRIX", before);
     ]]></script-->
     
+    <!--set the property name="CS_PRIX" value="~~"-->
     <sdbprefix>
     	 <param name="${host.NAME}" value="${host.NAME}" />
     	 <param name="${parallel.num}" value="${parallel.num}" />
