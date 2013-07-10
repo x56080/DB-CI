@@ -88,7 +88,7 @@
 		<echo message="... test ant-testcases is over ..." />
     
     
-    <parallel>
+    <parallel failonany="true" >
     	
 	    <echo message=" ...begin to test tpcc ..." />
 	    <sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-tpcc-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/tpcc_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
