@@ -136,7 +136,7 @@
 				<equals arg1="${ret.code}" arg2="0" />
 			</not>
 			<then>
-				<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;failure type=&quot;junit.framework.AssertionFailedError&quot;&gt;&#10;&lt;![CDATA[command= ${sdb.fullname} ${sdb.cmd.argument}; return code=${ret.code}; time=${current.time}; error message=${error.output} screen=${screen.output}]]&gt;&#10;
+				<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;failure type=&quot;junit.framework.AssertionFailedError&quot;&gt;&#10;&lt;![CDATA[command= ${sdb.fullname} ${sdb.cmd.argument}; return code=${ret.code}; time=${current.time}; error message=${error.output} &#10; screen=&#10; ${screen.output}]]&gt;&#10;
 					&lt;/failure&gt;&#10;" />
 			</then>
 		</if>
