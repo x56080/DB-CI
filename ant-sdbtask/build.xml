@@ -28,6 +28,7 @@
 		<mkdir dir="${target.dir}" />
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
+		
 		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
