@@ -1,4 +1,4 @@
-
+<!--@param ${test.environment} : the control the test Environment -->
 <!--@param ${deploy.file.fullname} : the deploy file path and name -->
 <!--@param ${work.path}: The path where the deploy directory -->
 <!--@param ${ci.script.file.path} : the ci-script file path -->
@@ -38,7 +38,7 @@
 
 		<foreach target="deploy-one-case-and-test" param="deploy.case.fullname">
 			<path>
-				<fileset dir="${deploy.config.path}" includes="${deploy.conffile.wildcard}.xml" />
+				<fileset dir="${deploy.config.path}" includes="${test.environment}-${deploy.conffile.wildcard}.xml" />
 			</path>
 
 			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />
