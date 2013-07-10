@@ -22,7 +22,7 @@
 		  </classpath>
 	 </taskdef>
 
-   
+   <hostinfo prefix="host" />
    
    <!--set the property name="CS_PRIX" value="~~"-->
    <sdbprefix>
@@ -42,6 +42,7 @@
    
    <target name="exec-tpcc-testcases" depends="clean">
    	  
+   	  
       <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
    	
    	  <property name="test.suite.class.name" value="com.sequoiadb.testcases-tpcc.${deploy.name}-${host.NAME}" />
@@ -50,7 +51,7 @@
 		   	<format property="current.time" pattern="MM-dd-hh.mm.ss" />
 	   	</tstamp>
 	   	
-	   	<hostinfo prefix="host" />
+	   	
       
       <chmod dir="${install.path}/sequoiadb/bin" perm="u+x" includes="*" />
       
