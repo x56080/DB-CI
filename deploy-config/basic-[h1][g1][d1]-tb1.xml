@@ -1,0 +1,71 @@
+<!--@param ${STAF.PATH}: The path where is staf binary directory-->
+<!--@param ${ant.sdb.tasks.path}:  The path where sdb's ant tasks jar files -->
+<!--@param ${install.path}: The path where install sequoiadb -->
+<!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
+<!--@param ${deploy.path}: The path where deploy direcotry before tar -->
+<!--@param ${test.reports.path}: The path where test reports directory. -->
+<!--@param ${test.machine.no1}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no2}: The host name or host ip of test machine No.1 -->
+<!--@param ${test.machine.no3}: The host name or host ip of test machine No.1 -->
+
+<project name="deploy" default="test">
+	<property file="ci.properties" />
+
+	<target name="deploy" depends="">
+		<echo message="Begin install software and test files to ${test.machine.no2}" />
+		<hostinfo prefix="host" />
+
+		<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
+			<property name="install.package.fullname" value="${install.package.fullname}" />
+			<property name="deploy.host.name" value="${test.machine.no2}" />
+			<property name="coord.service.port" value="${coord.service.port}" />
+			<property name="is.standalone.mode" value="false" />
+			<property name="is.coord.master" value="true" />
+			<property name="catalog.addrs" value="${test.machine.no2}:30003" />
+		</ant>
+
+		<sdbdeploy host="${test.machine.no2}" coordport="50000">
+			<catagroup name="cata1">
+				<node host="${test.machine.no2}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
+					<confitem name="diaglevel" value="5" />
+				</node>
+			</catagroup>
+		</sdbdeploy>
+
+		<sdbdeploy host="${test.machine.no2}" coordport="50000">
+			<datagroup name="group1">
+				<node host="${test.machine.no2}" baseport="51000" dbpath="${install.path}/sequoiadb/database/data/51000">
+					<confitem name="diaglevel" value="5" />
+					<confitem name="transactionon" value="true" />
+				</node>
+			</datagroup>
+		</sdbdeploy>
+
+	</target>
+
+	<target name="test" depends="">
+		<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+			<property name="deploy.host.name" value="${test.machine.no2}" />
+		</ant>
+		
+		<!--sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/divers-testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
+			<param name="install.path" value="${install.path}" />
+		</sdbtest-->
+		
+		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/js_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+			<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
+			<param name="install.path" value="${install.path}" />
+			<param name="antTask.jar.path" value="${test.machine.deploy.path}/deploy/ant-sdbtasks" />
+		</sdbtest>
+		
+		
+		
+	</target>
+
+	
+
+
+</project>
