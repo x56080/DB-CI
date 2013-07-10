@@ -27,6 +27,7 @@
 	<target name="compile" depends="clean">
 		<mkdir dir="${target.dir}" />
 
+		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
@@ -53,7 +54,7 @@
 				<property name="jdk.name" value="${jdk.name.os}32" />
 			</else>
 		</if>
-    
+		
     <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
 
 		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
