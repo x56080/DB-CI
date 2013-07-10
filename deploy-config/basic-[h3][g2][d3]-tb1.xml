@@ -76,8 +76,7 @@
 					<confitem name="transactionon" value="true" />
 				</node>
 			</datagroup>
-		</sdbdeploy>
-		<sdbdeploy host="${test.machine.no1}" coordport="50000">
+
 			<datagroup name="group2">
 				<node host="${test.machine.no3}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
 					<confitem name="diaglevel" value="5" />
