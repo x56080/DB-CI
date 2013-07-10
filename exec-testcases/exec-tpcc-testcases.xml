@@ -82,7 +82,7 @@
      
      <property name="append" value="-f ${test-full-name} -e &quot; CSPREFIX='${CS_PRIX}' &quot; " />
      <exec executable="sdb" dir="${install.path}/sequoiadb/bin" timeout="120000" outputproperty="screen.output" errorproperty="error.output" resultproperty="ret.code">
-        <arg line=${append}/>
+        <arg line="${append}" />
      </exec>
      
      <echo message="the result = ${ret.code} after exec ${test-suite-fullname}/${test.real.name} testcase." />
