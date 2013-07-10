@@ -79,15 +79,15 @@
 		</sdbdeploy>
 		<sdbdeploy host="${test.machine.no1}" coordport="50000">
 			<datagroup name="group2">
-				<node host="${test.machine.no3}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/51000">
+				<node host="${test.machine.no3}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
 					<confitem name="diaglevel" value="5" />
 					<confitem name="transactionon" value="true" />
 				</node>
-				<node host="${test.machine.no1}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/51000">
+				<node host="${test.machine.no1}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
 					<confitem name="diaglevel" value="5" />
 					<confitem name="transactionon" value="true" />
 				</node>
-				<node host="${test.machine.no2}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/51000">
+				<node host="${test.machine.no2}" baseport="52000" dbpath="${install.path}/sequoiadb/database/data/52000">
 					<confitem name="diaglevel" value="5" />
 					<confitem name="transactionon" value="true" />
 				</node>
