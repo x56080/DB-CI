@@ -77,10 +77,10 @@ public class SdbTest extends Task {
 			File tempFile = new File(antFileFullName);
 			String antFileName = tempFile.getName();
 			antFileName = antFileName.substring(0, antFileName.indexOf("."));
-      //(int)(Math.random()*1000)
+      
 			String lineNum = Integer.toString(this.getLocation()
 					.getLineNumber() );
-			this.remoteReportsPath += hostName + "_" + lineNum;
+			this.remoteReportsPath += hostName + "_" + Integer.toString( (int)(Math.random()*1000) ) + "_" + lineNum;
 			
 			this.masterReportsPath += File.separator + hostName + "_"+ antFileName + "_" + lineNum + File.separator;
 			
