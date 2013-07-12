@@ -4,6 +4,7 @@
 <!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
+<!--@param ${WORKSPACE}: where the working space is it-->
 
 <project name="deploy" default="test">
 	<property file="ci.test.properties" />
@@ -33,12 +34,10 @@
 			<property name="deploy.host.name" value="${test.machine.no2}" />
 		</ant>
 		
-		
 		<property name="test-type-list" value="basic,driver-java,driver-C,driver-CPP,sample,tpcc,ant" />
-		
 		<for list="${test-type-list}" param="test-type">
 			<sequential>
-				<ant antfile="test-tpye.xml" dir="." inheritAll="false">
+				<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/test-tpye.xml" dir="." inheritAll="false">
 					<property name="test.machine.deploy.path" value="${test.machine.deploy.path}" />
 					<property name="install.path" value="${install.path}" />
 					<property name="deploy.case.fullname" value="${deploy.case.fullname}" />
