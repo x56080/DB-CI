@@ -1,11 +1,17 @@
-<!--@param ${host.name} , which machine will do this job-->
-<!--@param ${group.name} , kill the node in which group -->
-<!--@param ${node.port} , the node's port , just like 51000-->
+<!--@param ${test.machine.deploy.path} , where test cases in the test machine-->
+<!--@param ${test.machine.deploy.path} , where deploy file in the test machine-->
+<!--@param ${install.path} , the sequoiadb install path -->
+<!--@param ${test.reports.path} , where the report put in-->
+<!--@param ${test.machine.no1} , test machine's port -->
+<!--@param ${test.machine.no2} , test machine's port -->
+<!--@param ${test.machine.no3} , test machine's port -->
+<!--@param ${test.machine.no4} , test machine's port -->
+<!--@param ${test-type} , what the test type-->
 <project name="test-type" default="test-type">
 
    <target name="test-type" depends="">
       <property environment="env" />
-      <switch>
+      <switch value="${test-type}">
          <case value="basic">
          	
 	          <echo message="begin to test js tests ..." />
