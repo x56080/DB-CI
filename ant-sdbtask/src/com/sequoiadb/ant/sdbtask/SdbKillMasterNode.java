@@ -54,7 +54,7 @@ public class SdbKillMasterNode extends Task {
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader( pro.getInputStream() ) ) ;
 			try {
-				String killpro = "kill -15 " + br.readLine();
+				String killpro = "kill -9 " + br.readLine();
 				Runtime.getRuntime().exec(new String[]{"sh","-c",killpro});
 			} catch (IOException e) {
 				e.printStackTrace();
