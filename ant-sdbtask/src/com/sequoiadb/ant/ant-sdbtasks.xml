@@ -20,5 +20,10 @@
 	<typedef name="sdbgetindexs" classname="com.sequoiadb.ant.sdbtask.SdbGetIndex" onerror="ignore" />
 	<typedef name="sdbupdate" classname="com.sequoiadb.ant.sdbtask.SdbUpdate" onerror="ignore" />
     <typedef name="sdblist" classname="com.sequoiadb.ant.sdbtask.SdbList" onerror="ignore" />
-  <typedef name="sdbprefix" classname="com.sequoiadb.ant.sdbtask.createPrefix" onerror="ignore" />
+    <typedef name="sdbbegintrans" classname="com.sequoiadb.ant.sdbtask.SdbTransBegin" onerror="ignore" />
+    <typedef name="sdbcommit" classname="com.sequoiadb.ant.sdbtask.SdbTransRollBack" onerror="ignore" />
+    <typedef name="sdbrollback" classname="com.sequoiadb.ant.sdbtask.SdbTransCommit" onerror="ignore" />
+    <typedef name="sdbkillmasternode" classname="com.sequoiadb.ant.sdbtask.SdbKillMasterNode" onerror="ignore" />
+    <typedef name="sdbprefix" classname="com.sequoiadb.ant.sdbtask.createPrefix" onerror="ignore" />
+  
 </antlib>
