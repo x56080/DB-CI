@@ -1,7 +1,7 @@
 <!--@param ${host.name} , which machine will do this job-->
 <!--@param ${group.name} , kill the node in which group -->
 <!--@param ${node.port} , the node's port , just like 51000-->
-<project name="test-type" default="test-tpye">
+<project name="test-type" default="test-type">
 
    <target name="test-type" depends="">
       <property environment="env" />
