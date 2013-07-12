@@ -45,7 +45,7 @@ public class SdbKillMasterNode extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			
 			int masterNodePort = sdb.getReplicaGroup(rgName).getMaster().getPort();
-			String shell = "ps -ef | grep sequoiadb\\(" + masterNodePort +" | awk '{print $2}')";
+			String shell = "ps -ef | grep sequoiadb\\(" + masterNodePort +" | awk '{print $2}'";
 			
 			try {
 				pro = Runtime.getRuntime().exec(new String[]{"sh" , "-c" , shell});
