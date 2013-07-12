@@ -46,7 +46,7 @@
 					<property name="test.machine.no2" value="${test.machine.no2}" />
 					<property name="test.machine.no3" value="${test.machine.no3}" />
 					<property name="test.machine.no4" value="${test.machine.no4}" />
-					<property name="test-type" value="@{test-type} />
+					<property name="test-type" value="@{test-type}" />
 				</ant>
 			</sequential>
 			
