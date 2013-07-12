@@ -1,6 +1,6 @@
 <!--@param ${test.environment} : the control the test Environment -->
 <!--@param ${deploy.file.fullname} : the deploy file path and name -->
-<!--@param ${work.path}: The path where the deploy directory -->
+<!--@param ${WORKSPACE}: The path where the deploy directory -->
 <!--@param ${ci.script.file.path} : the ci-script file path -->
 <!--@param ${deploy.conffile.wildcard}: deploy config file wildcard. just for debug -->
 <!--@param ${is.test}: the flag for whether execute test, if set false, then just deploy. just for debug -->
@@ -14,7 +14,7 @@
 
 	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
 		<classpath>
-			<fileset dir="${work.path}/deploy/ant-sdbtasks/" includes="*.jar" />
+			<fileset dir="${WORKSPACE}/deploy/ant-sdbtasks/" includes="*.jar" />
 			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
 			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
 		</classpath>
@@ -22,13 +22,13 @@
 
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
 	<property file="${ci.script.file.path}/ci.test.properties" />
-	<property name="release.path" value="${work.path}/release" />
+	<property name="release.path" value="${WORKSPACE}/release" />
 	<property file="${release.path}/build.version" />
 	<property name="is.test" value="true" />
 
 	<target name="clean" depends="">
-		<delete dir="${work.path}/reports" />
-		<mkdir dir="${work.path}/reports" />
+		<delete dir="${WORKSPACE}/reports" />
+		<mkdir dir="${WORKSPACE}/reports" />
 	</target>
 
 	<target name="deploy-test-all" depends="clean">
@@ -45,7 +45,7 @@
 		</foreach>
 	</target>
 
-	<target name="clean-deploy-evn-before-test" depends="">
+	<!--target name="clean-deploy-evn-before-test" depends="">
 		<echo message="Begin to clean test env..." />
 
 		<parallel>
@@ -59,9 +59,10 @@
 				<property name="deploy.host.name" value="${test.machine.no3}" />
 			</ant>
 		</parallel>
-	</target>
+	</target-->
 
-	<target name="deploy-one-case-and-test" depends="clean-deploy-evn-before-test">
+	<!--target name="deploy-one-case-and-test" depends="clean-deploy-evn-before-test"-->
+	<target name="deploy-one-case-and-test" depends=""> 
 
 		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}" />
 
@@ -70,7 +71,7 @@
 			<property name="install.path" value="${install.path}" />
 			<property name="install.package.fullname" value="${release.path}/${BUILD.INSTALL.FILENAME}" />
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
-			<property name="deploy.path" value="${work.path}/deploy" />
+			<property name="deploy.path" value="${WORKSPACE}/deploy" />
 		</ant>
 
 		<if>
@@ -79,9 +80,10 @@
 				<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="test" inheritAll="true">
 					<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
 					<property name="install.path" value="${install.path}" />
-					<property name="deploy.path" value="${work.path}/deploy" />
-					<property name="test.reports.path" value="${work.path}/reports" />
+					<property name="deploy.path" value="${WORKSPACE}/deploy" />
+					<property name="test.reports.path" value="${WORKSPACE}/reports" />
 					<property name="deploy.case.fullname" value="${deploy.case.fullname}" />
+					<property name="WORKSPACE" value="${WORKSPACE}" />
 				</ant>
 			</then>
 		</if>
