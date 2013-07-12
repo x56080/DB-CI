@@ -2,10 +2,14 @@
 <!--@param ${test.machine.deploy.path} , where deploy file in the test machine-->
 <!--@param ${install.path} , the sequoiadb install path -->
 <!--@param ${test.reports.path} , where the report put in-->
-<!--@param ${test.machine.no1} , test machine's port -->
-<!--@param ${test.machine.no2} , test machine's port -->
-<!--@param ${test.machine.no3} , test machine's port -->
-<!--@param ${test.machine.no4} , test machine's port -->
+<!--@param ${test.machine.no1.basic} , test machine's port -->
+<!--@param ${test.machine.no2.basic} , test machine's port -->
+<!--@param ${test.machine.no3.basic} , test machine's port -->
+<!--@param ${test.machine.no4.basic} , test machine's port -->
+<!--@param ${test.machine.no1.unnormal} , test machine's port -->
+<!--@param ${test.machine.no2.unnormal} , test machine's port -->
+<!--@param ${test.machine.no3.unnormal} , test machine's port -->
+<!--@param ${test.machine.no4.unnormal} , test machine's port -->
 <!--@param ${test-type} , what the test type-->
 <project name="test-type" default="test-type">
 
@@ -15,7 +19,7 @@
          <case value="basic">
          	
 	          <echo message="begin to test js tests ..." />
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/js_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-basic-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/js_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/js_testcases/" />
 							<param name="install.path" value="${install.path}" />
 							<param name="excludes.dir.patterns" value="vote" />
@@ -27,7 +31,7 @@
          <case value="ant">
          	
 				    <echo message="... test ant-testcases ..." />
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-ant-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/ant_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-ant-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/ant_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/ant_testcases/" />
 							<param name="install.path" value="${install.path}" />
 						</sdbtest>
@@ -37,7 +41,7 @@
          <case value="driver-java">
          
 				    <echo message="... test the java driver ..." />                                                                                   
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-java-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-driver-java-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 							<param name="install.path" value="${install.path}" />
 							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
@@ -49,7 +53,7 @@
          
 				    <echo message="... test the C driver ..." />
 				    <property name="testCcases" value="*-*sdbConnect_with_usr*:*sdbCreateCollection1_doubtful*:*sdbCreateUsr*:*sdbListReplicaGroups*:*sdbRemoveUsr*:*sdbResetSnapshot*:*sdbSplitCollection*" />     
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-driver-C-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/C/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 							<param name="test_name" value="${testCcases}"  />
 							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
@@ -61,7 +65,7 @@
          
 				    <echo message="... test the CPP driver ..." />		
 						<property name="testCPPcases" value="*-*create*:*drop*:*insert_with_iterator*:*rename*:*split*:*createCollection_with_Sharding_and_replSize*:*resetSnapshot*:*transactionBegin*:*transactionCommit*:*transactionRollback*:*getList_SDB_LIST_GROUPS*" />
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-CPP-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-driver-CPP-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/drivers_testcases" />
 							<param name="test_name" value="${testCPPcases}"  />
 							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
@@ -72,7 +76,7 @@
          <case value="sample">
 				         
 				    <echo message="... test the client sample test ..." />
-						<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-samples-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/samples_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
+						<sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-samples-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/samples_testcases/CPP/reports" masterreports="${test.reports.path}" timeout="30m">
 							<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/samples_testcases" />
 							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
 						</sdbtest>
@@ -81,7 +85,7 @@
          </case>
          <case value="tpcc">
             <echo message=" ...begin to test tpcc ..." />
-	          <sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-tpcc-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/tpcc_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+	          <sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-tpcc-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/tpcc_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
 				     	<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/sql_testcases/" />
 							<param name="install.path" value="${install.path}" />
 							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />

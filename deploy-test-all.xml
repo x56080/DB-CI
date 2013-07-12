@@ -50,13 +50,13 @@
 
 		<parallel>
 			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
-				<property name="deploy.host.name" value="${test.machine.no1}" />
+				<property name="deploy.host.name" value="${test.machine.no1.basic}" />
 			</ant>
 			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
-				<property name="deploy.host.name" value="${test.machine.no2}" />
+				<property name="deploy.host.name" value="${test.machine.no2.basic}" />
 			</ant>
 			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
-				<property name="deploy.host.name" value="${test.machine.no3}" />
+				<property name="deploy.host.name" value="${test.machine.no3.basic}" />
 			</ant>
 		</parallel>
 	</target>

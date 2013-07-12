@@ -13,6 +13,10 @@ target.deploy_tar_gz.ip=bl465-4
 
 coord.service.port=50000
 jenkins.master.ip=ubun-test1
-test.machine.no1=ubun-test2
-test.machine.no2=ubun-test3
-test.machine.no3=ubun-test4
+test.machine.no1.basic=ubun-test2
+test.machine.no2.basic=ubun-test3
+test.machine.no3.basic=ubun-test4
+
+test.machine.no1.unnormal=ubun-test2
+test.machine.no2.unnormal=ubun-test3
+test.machine.no3.unnormal=ubun-test4

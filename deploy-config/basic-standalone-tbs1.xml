@@ -20,7 +20,7 @@
 
 		<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
 			<property name="install.package.fullname" value="${install.package.fullname}" />
-			<property name="deploy.host.name" value="${test.machine.no2}" />
+			<property name="deploy.host.name" value="${test.machine.no2.basic}" />
 			<property name="coord.service.port" value="${coord.service.port}" />
 			<property name="is.standalone.mode" value="true" />
 		</ant>
@@ -31,7 +31,7 @@
 	<target name="test" depends="">
 		<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
 			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-			<property name="deploy.host.name" value="${test.machine.no2}" />
+			<property name="deploy.host.name" value="${test.machine.no2.basic}" />
 		</ant>
 		
 		<property name="test-type-list" value="basic,driver-java,driver-C,driver-CPP,sample,tpcc,ant" />
@@ -42,10 +42,10 @@
 					<property name="install.path" value="${install.path}" />
 					<property name="deploy.case.fullname" value="${deploy.case.fullname}" />
 					<property name="test.reports.path" value="${test.reports.path}" />
-					<property name="test.machine.no1" value="${test.machine.no1}" />
-					<property name="test.machine.no2" value="${test.machine.no2}" />
-					<property name="test.machine.no3" value="${test.machine.no3}" />
-					<property name="test.machine.no4" value="${test.machine.no4}" />
+					<property name="test.machine.no1.basic" value="${test.machine.no1.basic}" />
+					<property name="test.machine.no2.basic" value="${test.machine.no2.basic}" />
+					<property name="test.machine.no3.basic" value="${test.machine.no3.basic}" />
+					<property name="test.machine.no4.basic" value="${test.machine.no4.basic}" />
 					<property name="test-type" value="@{test-type}" />
 				</ant>
 			</sequential>
