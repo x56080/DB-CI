@@ -46,10 +46,20 @@
 	</target>
 
 	<target name="test" depends="">
-		<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
-			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
-			<property name="deploy.host.name" value="${test.machine.no2}" />
-		</ant>
+		<parallel>
+			<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+				<property name="deploy.host.name" value="${test.machine.no1.basic}" />
+			</ant>
+			<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+				<property name="deploy.host.name" value="${test.machine.no2.basic}" />
+			</ant>
+			<ant antfile="deploy-test-in-host.xml" dir="." inheritAll="false">
+				<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
+				<property name="deploy.host.name" value="${test.machine.no3.basic}" />
+			</ant>
+		</parallel>
 		
 		
 		<property name="test-type-list" value="basic" />
