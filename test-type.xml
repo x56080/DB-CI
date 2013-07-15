@@ -116,7 +116,7 @@
 							</sdbtest>
 					    <echo message="...test js tests are over ..." />	
 	    	
-	    		 </parallel-->
+	    		 </parallel>
          </case>
          <default>
          	
