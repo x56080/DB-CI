@@ -18,6 +18,6 @@ test.machine.no1.basic=suse-test2
 test.machine.no2.basic=suse-test3
 test.machine.no3.basic=suse-test4
 
-test.machine.no1.unnormal=suse-test2.data
-test.machine.no2.unnormal=suse-test3.data
-test.machine.no3.unnormal=suse-test4.data
+test.machine.no1.unusual=suse-test2.data
+test.machine.no2.unusual=suse-test3.data
+test.machine.no3.unusual=suse-test4.data

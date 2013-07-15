@@ -18,6 +18,6 @@ test.machine.no1.basic=power_suse_2
 test.machine.no2.basic=power_rhel_2
 test.machine.no3.basic=power_rhel_1
 
-test.machine.no1.unnormal=power_suse_2
-test.machine.no2.unnormal=power_rhel_2
-test.machine.no3.unnormal=power_rhel_1
+test.machine.no1.unusual=power_suse_2
+test.machine.no2.unusual=power_rhel_2
+test.machine.no3.unusual=power_rhel_1
