@@ -6,14 +6,15 @@
 <!--@param ${test.machine.no2.basic} , test machine's port -->
 <!--@param ${test.machine.no3.basic} , test machine's port -->
 <!--@param ${test.machine.no4.basic} , test machine's port -->
-<!--@param ${test.machine.no1.unnormal} , test machine's port -->
-<!--@param ${test.machine.no2.unnormal} , test machine's port -->
-<!--@param ${test.machine.no3.unnormal} , test machine's port -->
-<!--@param ${test.machine.no4.unnormal} , test machine's port -->
+<!--@param ${test.machine.no1.unsual} , test machine's port -->
+<!--@param ${test.machine.no2.unsual} , test machine's port -->
+<!--@param ${test.machine.no3.unsual} , test machine's port -->
+<!--@param ${test.machine.no4.unsual} , test machine's port -->
 <!--@param ${test-type} , what the test type-->
 <project name="test-type" default="test-type">
 
    <target name="test-type" depends="">
+   	  <property file="ci.properties" />
       <property environment="env" />
       <switch value="${test-type}">
          <case value="basic">
@@ -92,6 +93,17 @@
 							<param name="antTask.jar.path" value="${test.machine.deploy.path}/deploy/ant-sdbtasks" />
 						</sdbtest>
 				    <echo message=" ... tpcc test over ..." />
+				    
+         </case>
+         <case value="unusual">
+            <echo message=" ...begin to test unusual cases ..." />
+	          <sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-unusual-testcases.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/unusual_testcases/reports" masterreports="${test.reports.path}" timeout="30m">
+				     	<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/unusual_testcases/" />
+							<param name="install.path" value="${install.path}" />
+							<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
+							<param name="antTask.jar.path" value="${test.machine.deploy.path}/deploy/ant-sdbtasks" />
+						</sdbtest>
+				    <echo message=" ... unusual testcases are over ..." />
 				    
          </case>
          
