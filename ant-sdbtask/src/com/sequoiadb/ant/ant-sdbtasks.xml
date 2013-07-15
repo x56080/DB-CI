@@ -25,5 +25,7 @@
     <typedef name="sdbrollback" classname="com.sequoiadb.ant.sdbtask.SdbTransCommit" onerror="ignore" />
     <typedef name="sdbkillmasternode" classname="com.sequoiadb.ant.sdbtask.SdbKillMasterNode" onerror="ignore" />
     <typedef name="sdbprefix" classname="com.sequoiadb.ant.sdbtask.createPrefix" onerror="ignore" />
+    <typedef name="sdbgetnodeinfo" classname="com.sequoiadb.ant.sdbtask.SdbGetNodeInfo" onerror="ignore" />
+    <typedef name="sdbkillnode" classname="com.sequoiadb.ant.sdbtask.SdbKillNode" onerror="ignore" />
   
 </antlib>
