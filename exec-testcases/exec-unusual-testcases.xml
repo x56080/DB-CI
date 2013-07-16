@@ -40,13 +40,14 @@
 		
 		<local name="test-suite-basicname" />
     <basename property="test-suite-basicname" file="${test-suite-fullname}"/>
+    <echo message=" the test-suite-basicname is ${test-suite-basicname}" />
 		<basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
 		
 		<hostinfo prefix="host" />
       
     <local name="test.suite.class.name" />
 		<property name="test.suite.class.name" value="com.sequoiadb.testcases-unusual.${host.NAME}-${parallel.num}-${test-suite-basicname}" />
-		
+		<echo message="the test.suite.class.name is ${test.suite.class.name}" />
 		<tstamp>
 		 	<format property="current.time" pattern="MM-dd-hh.mm.ss" />
 	  </tstamp>
@@ -54,7 +55,7 @@
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&#10;
 							            &lt;testsuite errors=&quot;0&quot; failures=&quot;0&quot; hostname=&quot;${host.NAME}&quot; name=&quot;${test.suite.class.name}&quot; tests=&quot;1&quot; time=&quot;0.55&quot; timestamp=&quot;${current.time}&quot;&gt;&#10;" />
 
-    <echo message="${test-suite-fullname}" />
+    <echo message="test-suite-fullname is ${test-suite-fullname}" />
 		<foreach target="exec-one-case" param="test-onecase-fullname">
        <fileset dir="${test-suite-fullname}" includes="*.xml" />
        <param name="test.suite.class.name" value="${test.suite.class.name}" />
@@ -71,7 +72,7 @@
 	
 	<target name="exec-one-case" depends="">
 		<local name="test.case.name" />
-		<basename property="test.case.name" file="test-onecase-fullname" suffix=".xml" />
+		<basename property="test.case.name" file="${test-onecase-fullname}" suffix=".xml" />
 		<hostinfo prefix="host" />
 		<sdbprefix prefixName="CS_PRIX">
     	 <param name="${host.NAME}" value="${host.NAME}" />
