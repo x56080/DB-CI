@@ -4,6 +4,7 @@
 <!--@param ${test.package.name}: The name of test package name,.-->
 <!--@param ${parallel.num}:  The parallel number when parallel in same host.-->
 <!--@param ${excludes.dir.patterns}: A comma- or space-sparated list of patterns of directories that must be excluded.-->
+<!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 
 <project name="test-exception-testcases" default="test-exception-testcases">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -53,8 +54,8 @@
 		<basename property="test.suite.name" file="${test.suite.fullname}" />
 		<echo message="Execute test suite(${test.suite.name}) test.suite.fullname=${test.suite.fullname}" />
 		<hostinfo prefix="host" />
-
-		<property name="test.suite.class.name" value="com.sequoiadb.testcases-ant.${test.package.name}.${host.NAME}-${parallel.num}-${test.suite.name}" />
+    <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
+		<property name="test.suite.class.name" value="com.sequoiadb.testcases-ant.${deploy.name}.${host.NAME}-${parallel.num}-${test.suite.name}" />
 		<property name="reportfile.fullname" value="${reports.path}/TEST-${test.suite.class.name}.xml" />
 
 		<tstamp>

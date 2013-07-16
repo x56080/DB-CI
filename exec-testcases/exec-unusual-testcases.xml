@@ -97,6 +97,7 @@
 
 				<antfetch antfile="${test-onecase-fullname}" target="test" inheritAll="false" return="ret.code,error.msg">
 					<property name="host.name" value="${host.name}" />
+					<property name="testcase.path" value="${testcase.path}" />
 					<property name="coord.service.port" value="${coord.service.port}" />
 					<property name="data.service.port" value="${data.service.port}" />
 					<property name="cata.service.port" value="${cata.service.port}" />
