@@ -73,6 +73,11 @@
 		<mkdir dir="${deploy.path}/hlt" />
 		<copy todir="${deploy.path}/hlt">
 			<fileset dir="${build.testcases}" includes="**/*" />
+				<include name="**/*" />
+				<exclude name="driver*" />
+				<exclude name="sample*" />
+				<exclude name="*.xlsx" />
+			</fileset>
 		</copy>
 
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
