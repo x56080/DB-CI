@@ -27,5 +27,7 @@
     <typedef name="sdbprefix" classname="com.sequoiadb.ant.sdbtask.createPrefix" onerror="ignore" />
     <typedef name="sdbgetnodeinfo" classname="com.sequoiadb.ant.sdbtask.SdbGetNodeInfo" onerror="ignore" />
     <typedef name="sdbkillnode" classname="com.sequoiadb.ant.sdbtask.SdbKillNode" onerror="ignore" />
+    <typedef name="sdbstartcm" classname="com.sequoiadb.ant.sdbtask.SdbStopCM" onerror="ignore" />
+    <typedef name="sdbstopcm" classname="com.sequoiadb.ant.sdbtask.SdbStartCM" onerror="ignore" />
   
 </antlib>
