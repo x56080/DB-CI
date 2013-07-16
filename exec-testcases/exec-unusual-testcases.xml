@@ -29,7 +29,7 @@
 	<target name="exec-unusual-test" depends="clean" >
 		<foreach target="exec-suite-test" param="test-suite-fullname">
 			<path>
-				<dirset dir="${testcase.path}/testcases" />
+				<dirset dir="${testcase.path}/testcases/" />
 			</path>
 		</foreach>
 		
@@ -54,7 +54,7 @@
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" message="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;&#10;
 							            &lt;testsuite errors=&quot;0&quot; failures=&quot;0&quot; hostname=&quot;${host.NAME}&quot; name=&quot;${test.suite.class.name}&quot; tests=&quot;1&quot; time=&quot;0.55&quot; timestamp=&quot;${current.time}&quot;&gt;&#10;" />
 
-      
+    <echo message="${test-suite-fullname}" />
 		<foreach target="exec-one-case" param="test-onecase-fullname">
        <fileset dir="${test-suite-fullname}">
           <include name="**/*" />
