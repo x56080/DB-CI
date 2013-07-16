@@ -37,7 +37,7 @@ public class SdbGetNodeInfo extends Task{
 		
 		String propertyHostName = null ;
 		String propertyNodePort = null ;
-		ReplicaGroup group = sdb.getReplicaGroup( this.hostName ) ; 
+		ReplicaGroup group = sdb.getReplicaGroup( this.groupName ) ; 
 		
 		if( "master" == this.getNodeType )
 		{
