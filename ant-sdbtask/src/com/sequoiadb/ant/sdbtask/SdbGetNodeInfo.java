@@ -30,22 +30,10 @@ public class SdbGetNodeInfo extends Task{
 	{
 		this.getNodeType = value ; 
 	}
-	public String getHostName()
-	{
-		return this.hostName ;
-	}
-	public String getGroupName()
-	{
-		return this.groupName ;
-	}
-	public String getGetNodeType()
-	{
-		return this.getNodeType ; 
-	}
 	
 	public void execute()
 	{
-		Sequoiadb sdb = new Sequoiadb( this.getHostName() ,50000 , "" ,"") ;
+		Sequoiadb sdb = new Sequoiadb( this.hostName  ,50000 , "" ,"") ;
 		
 		String propertyHostName = null ;
 		String propertyNodePort = null ;
