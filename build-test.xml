@@ -72,7 +72,7 @@
 		
 		<mkdir dir="${deploy.path}/hlt" />
 		<copy todir="${deploy.path}/hlt">
-			<fileset dir="${build.testcases}" includes="**/*" />
+			<fileset dir="${build.testcases}">
 				<include name="**/*" />
 				<exclude name="driver*" />
 				<exclude name="sample*" />
