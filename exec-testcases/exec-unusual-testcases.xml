@@ -27,12 +27,10 @@
 	</target>
 	
 	<target name="exec-unusual-test" depends="clean" >
-		
 		<foreach target="exec-suite-test" param="test-suite-fullname">
 			<path>
-				<dirset dir="${testcase.path}" />
+				<dirset dir="${testcase.path}/testcases" />
 			</path>
-			
 		</foreach>
 		
 	
@@ -76,7 +74,7 @@
 	<target name="exec-one-case" depends="">
 		<local name="test.case.name" />
 		<basename property="test.case.name" file="test-onecase-fullname" suffix=".xml" />
-		
+		<hostinfo prefix="host" />
 		<sdbprefix prefixName="CS_PRIX">
     	 <param name="${host.NAME}" value="${host.NAME}" />
     	 <param name="${parallel.num}" value="${parallel.num}" />
@@ -93,14 +91,14 @@
 		<record name="${testcase.path}/logs/TEST-${test.suite.class.name}/${test.case.name}.log" loglevel="verbose" action="start" />
 		<trycatch property="e">
 			<try>
-				<echo message="ant -f ${test.case.fullname} -Dhost.name=${host.name} -Dcoord.service.port=${coord.service.port} -Ddata.service.port=${data.service.port} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} test"></echo>
+				<echo message="ant -f ${test-onecase-fullname} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} -Dtestcase.path=${testcase.path} test"></echo>
 
 				<antfetch antfile="${test-onecase-fullname}" target="test" inheritAll="false" return="ret.code,error.msg">
-					<property name="host.name" value="${host.name}" />
+					<!--property name="host.name" value="${host.name}" /-->
 					<property name="testcase.path" value="${testcase.path}" />
-					<property name="coord.service.port" value="${coord.service.port}" />
+					<!--property name="coord.service.port" value="${coord.service.port}" />
 					<property name="data.service.port" value="${data.service.port}" />
-					<property name="cata.service.port" value="${cata.service.port}" />
+					<property name="cata.service.port" value="${cata.service.port}" /-->
 					<property name="CS_PRIX" value="${CS_PRIX}" />
 					<property name="install.path" value="${install.path}" />
 				</antfetch>
