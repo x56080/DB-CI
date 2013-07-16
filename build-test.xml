@@ -55,7 +55,7 @@
 
 	<target name="build-test" depends="compile-test">
 
-		<mkdir dir="${deploy.path}/hlt/js_testcases/" />
+		<!--mkdir dir="${deploy.path}/hlt/js_testcases/" />
 		<copy todir="${deploy.path}/hlt/js_testcases/">
 			<fileset dir="${build.testcases}/js_testcases/" />
 		</copy>
@@ -68,6 +68,11 @@
 		<mkdir dir="${deploy.path}/hlt/ant_testcases/" />
 		<copy todir="${deploy.path}/hlt/ant_testcases/">
 			<fileset dir="${build.testcases}/ant_testcases/" />
+		</copy-->
+		
+		<mkdir dir="${deploy.path}/hlt" />
+		<copy todir="${deploy.path}/hlt">
+			<fileset dir="${build.testcases}" includes="**/*" />
 		</copy>
 
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
