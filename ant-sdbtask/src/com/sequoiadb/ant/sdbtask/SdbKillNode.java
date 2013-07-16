@@ -14,7 +14,7 @@ public class SdbKillNode extends Task{
 	{
 		this.hostName = value ; 
 	}
-	public void setNodeName ( String value )
+	public void setNodePort ( String value )
 	{
 		this.nodePort = value ; 
 	}
