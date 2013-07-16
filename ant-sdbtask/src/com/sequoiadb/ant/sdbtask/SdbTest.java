@@ -30,9 +30,15 @@ public class SdbTest extends Task {
 	private String remoteReportsPath;
 
 	private String masterReportsPath;
+	
+	private String antFileName = Integer.toString( (int)(Math.random()*1000) ) ; 
 
 	private List<Parameter> params = new ArrayList<Parameter>();
 
+	public void setAntFileName( String value )
+	{
+		this.antFileName = value ; 
+	}
 	public void setHost(String value) {
 		hostName = value;
 	}
@@ -72,16 +78,16 @@ public class SdbTest extends Task {
 
 			handle = new STAFHandle("ant-sdbtasks");
 
-			String antFileFullName = this.getProject().getProperty("ant.file");
-			File tempFile = new File(antFileFullName);
-			String antFileName = tempFile.getName();
-			antFileName = antFileName.substring(0, antFileName.indexOf("."));
+			//String antFileFullName = this.getProject().getProperty("ant.file");
+			//File tempFile = new File(antFileFullName);
+			//String antFileName = tempFile.getName();
+			//antFileName = antFileName.substring(0, antFileName.indexOf("."));
       
 			String lineNum = Integer.toString(this.getLocation()
 					.getLineNumber() );
 			this.remoteReportsPath += hostName + "_" + Integer.toString( (int)(Math.random()*1000) ) + "_" + lineNum;
 			
-			this.masterReportsPath += File.separator + hostName + "_"+ antFileName + "_" + lineNum + File.separator;
+			this.masterReportsPath += File.separator + hostName + "_"+ this.antFileName + "_" + lineNum + File.separator;
 			
 			File dir = new File(masterReportsPath);
 			if (!dir.mkdirs())

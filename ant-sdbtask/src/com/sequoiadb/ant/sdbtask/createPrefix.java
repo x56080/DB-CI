@@ -3,17 +3,16 @@
 */
 package com.sequoiadb.ant.sdbtask;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Parameter;
 
 public class createPrefix extends Task{
+	
+   private String prefixName = null ; 
    
    private List<Parameter> params = new ArrayList<Parameter>();
    
@@ -25,6 +24,10 @@ public class createPrefix extends Task{
 		 
 		 return param;
 	 }
+   public void setPrefixName( String value )
+   {
+	   this.prefixName = value ; 
+   }
    
    public void execute(){
       
@@ -40,7 +43,7 @@ public class createPrefix extends Task{
       }
       request += lineNum ; 
       	 
-      this.getProject().setProperty( "CS_PRIX" , request.replaceAll( "[-_]" , "") ) ; 
+      this.getProject().setProperty( this.prefixName  , request.replaceAll( "[-_]" , "") ) ; 
 
 
    	
