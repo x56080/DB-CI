@@ -44,6 +44,7 @@
 			</ant>
 		</parallel>
 		
+		<basename property="antFileName" file="${ant.file}" suffix=".xml" />
 		<property name="test-type-list" value="driver-java,driver-C,driver-CPP,sample,basic-tpcc,ant" />
 		<for list="${test-type-list}" param="test-type">
 			<sequential>
@@ -57,6 +58,7 @@
 					<property name="test.machine.no3.basic" value="${test.machine.no3.basic}" />
 					<property name="test.machine.no4.basic" value="${test.machine.no4.basic}" />
 					<property name="test-type" value="@{test-type}" />
+					<property name="antFileName" value="${antFileName}" />
 				</ant>
 			</sequential>
 			
