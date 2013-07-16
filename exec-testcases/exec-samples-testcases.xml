@@ -27,6 +27,7 @@
       <basename property="test-suite-casename" file="${test-suite-fullname}" />
       <basename property="deploy.name" file="${deploy.case.fullname}" suffix=".xml" />
       
+      
       <hostinfo prefix="host" />
       
       <local name="test.suite.class.name" />

@@ -110,7 +110,7 @@
     ]]></script-->
     
     <!--set the property name="CS_PRIX" value="~~"-->
-    <sdbprefix>
+    <sdbprefix prefixName="CS_PRIX">
     	 <param name="${host.NAME}" value="${host.NAME}" />
     	 <param name="${parallel.num}" value="${parallel.num}" />
     	 <param name="${test.case.name}" value="${test.case.name}" />
