@@ -11,7 +11,7 @@ public class SdbGetCL extends Task {
 	private String uuid = null;
 	private String csName = null;
 	private String clName = null;
-	private boolean failonerror = false;
+	//private boolean failonerror = false;
 	
 	public void setSdbhandle(String value)
 	{
@@ -28,10 +28,12 @@ public class SdbGetCL extends Task {
 		clName = value;
 	}
 	
+	/*
 	public void setFailonerror(String value)
 	{
 		failonerror = Boolean.parseBoolean(value);
 	}
+	*/
 	
 	public void execute() {
 		Object obj = this.getProject().getReference(uuid);

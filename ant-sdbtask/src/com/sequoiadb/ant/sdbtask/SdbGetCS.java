@@ -3,7 +3,7 @@ package com.sequoiadb.ant.sdbtask;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
-import com.sequoiadb.base.CollectionSpace;
+//import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.Sequoiadb;
 import com.sequoiadb.exception.BaseException;
 

@@ -22,10 +22,11 @@
 
 	<target name="clean" depends="">
 		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
 	</target>
 
 	<target name="compile" depends="clean">
-		<mkdir dir="${target.dir}" />
+		
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 		
