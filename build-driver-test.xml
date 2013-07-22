@@ -130,7 +130,7 @@
     
     
     <!--power pc will be coredown if you build in build.xml file-->
-    <property name="will_build_sdbtasks" value="false" />
+    <!--property name="will_build_sdbtasks" value="false" />
     <if>
     	<equials arg1="${will_build_sdbtasks}" arg2="true" />
     	<then>
@@ -142,7 +142,7 @@
 	
 	<target name="build-tasks" depends="" >
 	
-	</target>
+	</target-->
 
 
 
