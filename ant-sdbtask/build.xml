@@ -2,7 +2,7 @@
 <!--@param ${java.driver.jar} : The path where the java.driver.jar is -->
 <!--@param ${javac.base.dir} : The path where the javac.base.dir is -->
 <!--@param ${root.dir} : The path where the ${WORKSPACE}/sequoiadb/mici/ci/ant-sdbtask -->
-
+<!--@param ${jdk.name} : The javac file path-->
 
 <project name="ant-sdbtasks" default="jar" basedir=".">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -55,7 +55,7 @@
 			</else>
 		</if-->
 		
-		<switch value="${os.name}">
+		<!--switch value="${os.name}">
     	<case value="Linux">
     		<if>
     			<equals arg1="${os.arch}" arg2="ppc64" />
@@ -78,7 +78,7 @@
     	<case value="Windows">
     	
     	</case>
-    </switch>
+    </switch-->
 		
 		
     <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />

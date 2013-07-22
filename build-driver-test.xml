@@ -1,7 +1,7 @@
 <!--@param ${build.testcases}: The path where test had builded path .-->
 <!--@param ${WORKSPACE} : The path where jenkins user's path .-->
 <!--@param ${lib.dir} : The path where all lib's directory .-->
-
+<!--@param ${jdk.name} : The javac file path-->
 <project name="build-driver-test" default="build-driver-test">
 
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -55,7 +55,7 @@
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 
-		<if>
+		<!--if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="jdk_linux" />
@@ -80,7 +80,7 @@
 			<else>
 				<property name="jdk.name" value="${jdk.name.os}32" />
 			</else>
-		</if>
+		</if-->
 
 		<echo message="Begin to javac the driver java test" />
 		<javac srcdir="${build.testcases.java}" destdir="${deploy.path}/hlt/drivers_testcases/java/build" fork="yes" debug="true" executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac" includeAntRuntime="false" includeJavaRuntime="false" >
@@ -127,7 +127,21 @@
 		<copy file="${lib.dir}/CPP/lib/libsdbcpp.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/CPP/lib" />
 
     <echo message="...over scons the c and c++ ..." />
+    
+    
+    <!--power pc will be coredown if you build in build.xml file-->
+    <property name="will_build_sdbtasks" value="false" />
+    <if>
+    	<equials arg1="${will_build_sdbtasks}" arg2="true" />
+    	<then>
+    		<antcall target="build-tasks" inheritAll="true" />
+    	</then>
+    </if>
 
+	</target>
+	
+	<target name="build-tasks" depends="" >
+	
 	</target>
 
 
