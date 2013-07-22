@@ -102,7 +102,7 @@
 		</javac>
 		
 		<copy todir="${target.dir}">
-			<fileset dir="${source.dir}" includes="**/*.properties,**/*.xml" />
+			<fileset dir="${source.dir}" includes="**/*" />
 		</copy>
 	</target>
 
