@@ -9,7 +9,12 @@ import com.ibm.staf.STAFResult;
 public class SdbKillNode extends Task{
 	private String hostName ; 
 	private String nodePort ; 
+	private String killType ; 
 	
+	public void setKillType( String value )
+	{
+		this.killType = value ;
+	}
 	public void setHostName ( String value )
 	{
 		this.hostName = value ; 
@@ -28,9 +33,18 @@ public class SdbKillNode extends Task{
 	{
 		STAFHandle handle = null;
 		try{
+			
+			String kill_type = "-15" ; 
+			if( this.killType == "-9")
+			{
+				kill_type = "-9" ;
+			}
+			else if ( this.killType == "-15" ){
+				kill_type  =  "-15" ; 
+			}
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			String strKill = " kill -9 `ps -ef | grep sequoiadb\\(" + this.nodePort + " | grep -v grep | awk '{print $2}'` " ;  
+			String strKill = " kill " + kill_type + " `ps -ef | grep sequoiadb\\(" + this.nodePort + " | grep -v grep | awk '{print $2}'` " ;  
 			String request = "START SHELL COMMAND " + strKill + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
