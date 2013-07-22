@@ -8,7 +8,7 @@
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
-			<pathelement location="C:\Tools\ant-contrib-1.0b3-bin\ant-contrib\ant-contrib-1.0b5.jar" />
+			<!--pathelement location="C:\Tools\ant-contrib-1.0b3-bin\ant-contrib\ant-contrib-1.0b5.jar" /-->
 		</classpath>
 	</taskdef>
 
