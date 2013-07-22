@@ -91,6 +91,9 @@
 			</classpath>
 		</javac>
 
+		<tstamp>
+			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
+		</tstamp>
 		<jar file="${deploy.path}/hlt/drivers_testcases/java/lib/java_test.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
