@@ -79,6 +79,21 @@
     	
     	</case>
     </switch-->
+    
+    
+     <!--property name="will_build_sdbtasks" value="false" />
+    <if>
+    	<equials arg1="${will_build_sdbtasks}" arg2="true" />
+    	<then>
+    		<antcall target="build-tasks" inheritAll="true" />
+    	</then>
+    </if>
+
+	</target>
+	
+	<target name="build-tasks" depends="" >
+	
+	</target-->
 		
 		
     <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
