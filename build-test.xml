@@ -90,18 +90,7 @@
 		<echo message="Compile builded the client sample test. " />
 	</target>
 	
-	<target name="build-sdbtasks" depends="compile-test" >
-    <echo message=" ..begin to build ant-sdbtask .." />
-    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
-			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
-			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
-			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
-			<property name="WORKSPACE" value="${WORKSPACE}" />
-		</ant>
-		<echo message=" .. over to build ant-sdbtask .." />
 
-
-	</target>
 
 	<target name="build-test" depends="compile-test">
 
