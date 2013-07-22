@@ -29,7 +29,7 @@
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 		
-		<if>
+		<!--if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="jdk_linux" />
@@ -61,7 +61,8 @@
 		
     <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
 
-		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac"-->
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes">
 			<classpath>
 				<fileset dir="${library.dir}" includes="*.jar"/>
 				<pathelement location="${java.driver.jar}"/>
