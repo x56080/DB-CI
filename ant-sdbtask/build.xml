@@ -28,7 +28,7 @@
 	<target name="compile" depends="clean">
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
-		<!--if>
+		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="jdk_linux" />
@@ -53,7 +53,7 @@
 			<else>
 				<property name="jdk.name" value="${jdk.name.os}32" />
 			</else>
-		</if-->
+		</if>
 		
 		<!--switch value="${os.name}">
     	<case value="Linux">
@@ -112,15 +112,15 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<!--tstamp>
+		<tstamp>
 			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
-		</tstamp-->
+		</tstamp>
 
 		<jar file="${root.dir}/ant-sdbtasks.jar">
-			<!--manifest>
+			<manifest>
 				<attribute name="Version" value="1.0" />
 				<attribute name="Build-Timestamp" value="${tstamp}" />
-			</manifest-->
+			</manifest>
 			<fileset dir="${target.dir}" includes="**/*" />
 		</jar>
 	</target>

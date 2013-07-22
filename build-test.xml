@@ -28,11 +28,22 @@
 
 		<echo message="clean environments completed." />
 	</target>
-
-	<target name="compile-test" depends="clean">
+	
+	<target name="build-sdbtasks" depends="clean" >
+    <echo message=" ..begin to build ant-sdbtask .." />
+    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
+			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
+			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
+			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
+			<property name="WORKSPACE" value="${WORKSPACE}" />
+		</ant>
+		<echo message=" .. over to build ant-sdbtask .." />
+	</target>
+	
+	<target name="compile-test" depends="build-sdbtasks">
 
 		
-		<if>
+		<!--if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="jdk_linux" />
@@ -57,14 +68,13 @@
 			<else>
 				<property name="jdk.name" value="${jdk.name.os}32" />
 			</else>
-		</if>
+		</if-->
 
 		<echo message="Begin to build the driver test code..." />
 		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
-			<property name="jdk.name" value="${jdk.name}" />
 		</ant>
 		<echo message="Compile builded the driver test. " />
 		
@@ -78,18 +88,15 @@
 		</ant>
 		
 		<echo message="Compile builded the client sample test. " />
-		
-		
-		
-		
-		
+	</target>
+	
+	<target name="build-sdbtasks" depends="compile-test" >
     <echo message=" ..begin to build ant-sdbtask .." />
     <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
 			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
 			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
-			<property name="jdk.name" value="${jdk.name}" />
 		</ant>
 		<echo message=" .. over to build ant-sdbtask .." />
 

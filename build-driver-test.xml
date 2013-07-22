@@ -55,7 +55,7 @@
 
 		<echo message="os.name=${os.name}, os.arch=${os.arch}" />
 
-		<!--if>
+		<if>
 			<equals arg1="${os.name}" arg2="Linux" />
 			<then>
 				<property name="jdk.name.os" value="jdk_linux" />
@@ -80,7 +80,7 @@
 			<else>
 				<property name="jdk.name" value="${jdk.name.os}32" />
 			</else>
-		</if-->
+		</if>
 
 		<echo message="Begin to javac the driver java test" />
 		<javac srcdir="${build.testcases.java}" destdir="${deploy.path}/hlt/drivers_testcases/java/build" fork="yes" debug="true" executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac" includeAntRuntime="false" includeJavaRuntime="false" >
@@ -140,7 +140,7 @@
 
 	</target>
 	
-	<target name="build-tasks" depends="" -->
+	<target name="build-tasks" depends=""-->
 	
 	</target>
 
