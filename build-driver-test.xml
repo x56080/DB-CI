@@ -144,7 +144,7 @@
 	
 	</target>
 	
-	<target name="" depends="" >
+	<target name="build-tasks" depends="build-driver-test" >
 		
 		<property name="root.dir" value="." />
 		<!--property name="java.driver.jar" value="${WORKSPACE}/release/sequoiadb.jar" />

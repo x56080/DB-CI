@@ -62,7 +62,7 @@
 		</if-->
 
 		<echo message="Begin to build the driver test code..." />
-		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
+		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-tasks">
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
@@ -134,7 +134,6 @@
 		
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
-		<!--copy file="${ci.script.path}/ant-sdbtask/lib/JSTAF.jar" todir="${deploy.path}/ant-sdbtasks" /-->
 		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
