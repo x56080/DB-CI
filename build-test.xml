@@ -35,7 +35,7 @@
 
 	</target>
 	
-	<target name="build-driver" depends="build-sdbtasks">
+	<target name="build-driver" depends="build-sample">
 		<echo message="Begin to build the driver test code..." />
 		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
