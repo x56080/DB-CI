@@ -66,6 +66,9 @@
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
+			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
+			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
+			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
 		</ant>
 		<echo message="Compile builded the driver test. " />
 		
