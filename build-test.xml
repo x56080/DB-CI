@@ -13,6 +13,7 @@
 		<echo message="Begin to clean environments" />
 		<property file="${ci.script.path}/ci.test.properties" />
 
+
 		<delete dir="${deploy.path}/" />
 		<mkdir dir="${deploy.path}" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />

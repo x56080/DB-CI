@@ -13,7 +13,6 @@
 	<property name="build.testcases.java" value="${build.testcases}/java/" />
 	<property name="build.testcases.CPP" value="${build.testcases}/CPP" />
 	<property name="build.testcases.C" value="${build.testcases}/C" />
-	
 	<property name="junit.jar.dir" value="/usr/share/java/junit.jar" />
 	<property name="junit4.jar.dir" value="/usr/share/java/junit4.jar" />
 	<property name="sequoiadb.jar.dir" value="${lib.dir}/java/sdbdriver.jar" />
