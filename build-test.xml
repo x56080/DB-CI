@@ -77,8 +77,8 @@
 			<fileset dir="${build.testcases}">
 				<include name="**/*" />
 				<exclude name="driver*" />
-				<exclude name="sample*" />
 				<exclude name="*.xlsx" />
+				<exclude name="*metadata" />
 			</fileset>
 		</copy>
 
