@@ -62,13 +62,22 @@
 	<target name="build-test" depends="build-driver">
 		
 		<!--mkdir dir="${deploy.path}/hlt" /-->
-		<copy todir="${deploy.path}/hlt">
-			<fileset dir="${build.testcases}">
-				<include name="**/*" />
-				<exclude name="driver*" />
-				<exclude name="*.xlsx" />
-				<exclude name="*metadata" />
-			</fileset>
+		<mkdir dir="${deploy.path}/hlt/ant_testcases" />
+		<mkdir dir="${deploy.path}/hlt/js_testcases" />
+		<mkdir dir="${deploy.path}/hlt/sql_testcases" />
+		<mkdir dir="${deploy.path}/hlt/unusual_testcases" />
+		
+		<copy todir="${deploy.path}/hlt/ant_testcases">
+			<fileset dir="${build.testcases}/ant_testcases" includes="**/*" />
+		</copy>
+		<copy todir="${deploy.path}/hlt/js_testcases">
+			<fileset dir="${build.testcases}/ant_testcases" includes="**/*" />
+		</copy>
+		<copy todir="${deploy.path}/hlt/sql_testcases">
+			<fileset dir="${build.testcases}/ant_testcases" includes="**/*" />
+		</copy>
+		<copy todir="${deploy.path}/hlt/unusual_testcases">
+			<fileset dir="${build.testcases}/ant_testcases" includes="**/*" />
 		</copy>
 
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
