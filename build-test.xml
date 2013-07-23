@@ -29,18 +29,9 @@
 		<echo message="clean environments completed." />
 	</target>
 	
-	<target name="build-sdbtasks" depends="clean" >
-    <echo message=" ..begin to build ant-sdbtask .." />
-    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
-			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
-			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
-			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
-			<property name="WORKSPACE" value="${WORKSPACE}" />
-		</ant>
-		<echo message=" .. over to build ant-sdbtask .." />
-	</target>
 	
-	<target name="compile-test" depends="build-sdbtasks">
+	
+	<target name="compile-test" depends="clean">
 
 		
 		<!--if>
@@ -90,9 +81,18 @@
 		<echo message="Compile builded the client sample test. " />
 	</target>
 	
+	<target name="build-sdbtasks" depends="compile-test" >
+    <echo message=" ..begin to build ant-sdbtask .." />
+    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
+			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
+			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
+			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
+			<property name="WORKSPACE" value="${WORKSPACE}" />
+		</ant>
+		<echo message=" .. over to build ant-sdbtask .." />
+	</target>
 
-
-	<target name="build-test" depends="compile-test">
+	<target name="build-test" depends="build-sdbtasks">
 
 		<!--mkdir dir="${deploy.path}/hlt/js_testcases/" />
 		<copy todir="${deploy.path}/hlt/js_testcases/">
@@ -136,7 +136,7 @@
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<!--copy file="${ci.script.path}/ant-sdbtask/lib/JSTAF.jar" todir="${deploy.path}/ant-sdbtasks" /-->
 		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" />
-		<!--tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" /-->
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
 
 </project>
