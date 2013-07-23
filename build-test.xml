@@ -37,7 +37,7 @@
 		
 		
 		
-		<mkdir dir="${deploy.path}/hlt" />
+		<!--mkdir dir="${deploy.path}/hlt" />
 		<copy todir="${deploy.path}/hlt">
 			<fileset dir="${build.testcases}">
 				<include name="**/*" />
@@ -50,7 +50,7 @@
 		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
 		<copy todir="${deploy.path}">
 			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
-		</copy>
+		</copy-->
 		
 		
 		
