@@ -85,7 +85,6 @@
 		<echo message="Begin to javac the driver java test" />
 		<javac srcdir="${build.testcases.java}" destdir="${deploy.path}/hlt/drivers_testcases/java/build" fork="yes" debug="true" executable="${WORKSPACE}/sequoiadb/java/${jdk.name}/bin/javac" includeAntRuntime="false" includeJavaRuntime="false" >
 			<classpath>
-				<!--pathelement location="${junit.jar.dir}" /-->
 				<pathelement location="${junit4.jar.dir}" />
 				<pathelement location="${sequoiadb.jar.dir}" />
 			</classpath>
@@ -127,63 +126,9 @@
 		<copy file="${lib.dir}/CPP/lib/libsdbcpp.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/CPP/lib" />
 
     <echo message="...over scons the c and c++ ..." />
-    
-    
-    <!--power pc will be coredown if you build in build.xml file-->
-    <!--property name="will_build_sdbtasks" value="false" />
-    <if>
-    	<equials arg1="${will_build_sdbtasks}" arg2="true" />
-    	<then>
-    		<antcall target="build-tasks" inheritAll="true" />
-    	</then>
-    </if>
-
-	</target>
-	
-	<target name="build-tasks" depends=""-->
 	
 	</target>
 	
-	<target name="build-tasks" depends="build-driver-test" >
-		
-		<property name="root.dir" value="." />
-		<!--property name="java.driver.jar" value="${WORKSPACE}/release/sequoiadb.jar" />
-		<property name="javac.base.dir" value="../../.." /-->
-	
-		<property name="target.dir" value="${root.dir}/build_ant_sdbtask" />
-		<property name="source.dir" value="${root.dir}/src" />
-		<property name="library.dir" value="${root.dir}/lib" />
-		
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
-
-		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
-		<!--javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes"-->
-			<classpath>
-				<fileset dir="${library.dir}" includes="*.jar"/>
-				<pathelement location="${java.driver.jar}"/>
-			</classpath>
-		</javac>
-		
-		<copy todir="${target.dir}">
-			<fileset dir="${source.dir}" includes="**/*" />
-		</copy>
-		
-		<tstamp>
-			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
-		</tstamp>
-
-		<jar file="${root.dir}/ant-sdbtasks.jar">
-			<manifest>
-				<attribute name="Version" value="1.0" />
-				<attribute name="Build-Timestamp" value="${tstamp}" />
-			</manifest>
-			<fileset dir="${target.dir}" includes="**/*" />
-		</jar>
-		
-	</target>
 
 
 
