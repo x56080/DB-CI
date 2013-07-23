@@ -89,13 +89,13 @@
 			</classpath>
 		</javac>
 
-		<tstamp>
+		<!--tstamp>
 			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
-		</tstamp>
+		</tstamp-->
 		<jar file="${deploy.path}/hlt/drivers_testcases/java/lib/java_test.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
-				<attribute name="Build-Timestamp" value="${tstamp}" />
+				<!--attribute name="Build-Timestamp" value="${tstamp}" /-->
 			</manifest>
 			<fileset dir="${deploy.path}/hlt/drivers_testcases/java/build" includes="**/*" />
 		</jar>
