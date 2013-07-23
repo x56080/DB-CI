@@ -51,9 +51,8 @@
 		<copy todir="${deploy.path}">
 			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
 		</copy>
-		<!--mkdir dir="${deploy.path}/ant-sdbtasks" />
-		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
-		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" /-->
+		
+		
 		
 		
 		
@@ -79,6 +78,9 @@
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 		</ant>
 		<echo message=" .. over to build ant-sdbtask .." />
+		<mkdir dir="${deploy.path}/ant-sdbtasks" />
+		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
+		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" />
 	</target>
 
 	<target name="build-test" depends="build-sample">
