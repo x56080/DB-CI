@@ -61,7 +61,7 @@
 
 	<target name="build-test" depends="build-driver">
 		
-		<mkdir dir="${deploy.path}/hlt" />
+		<!--mkdir dir="${deploy.path}/hlt" /-->
 		<copy todir="${deploy.path}/hlt">
 			<fileset dir="${build.testcases}">
 				<include name="**/*" />
