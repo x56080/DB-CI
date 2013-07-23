@@ -37,7 +37,7 @@
 		
 		
 		
-		<mkdir dir="${deploy.path}/hlt" />
+		<!--mkdir dir="${deploy.path}/hlt" />
 		<copy todir="${deploy.path}/hlt">
 			<fileset dir="${build.testcases}">
 				<include name="**/*" />
@@ -53,8 +53,8 @@
 		</copy>
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
-		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" />
-		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
+		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" /-->
+		
 		
 		
 		
