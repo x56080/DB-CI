@@ -99,7 +99,7 @@
 		</if>
 
 		<mkdir dir="${DRIVER.DIR}/java" />
-		<mkdir dir="${DRIVER.DIR}/java/jdk" />
+		<!--mkdir dir="${DRIVER.DIR}/java/jdk" /-->
 		<mkdir dir="${DRIVER.DIR}/C/include" />
 		<mkdir dir="${DRIVER.DIR}/C/lib" />
 		<mkdir dir="${DRIVER.DIR}/CPP/include" />
@@ -128,9 +128,9 @@
 
 		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
 
-		<copy todir="${DRIVER.DIR}/java/jdk">
+		<!--copy todir="${DRIVER.DIR}/java/jdk">
 			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
-		</copy>
+		</copy-->
 
 		<!--copy todir="${DRIVER.DIR}/samples">
 			<fileset dir="${CODE_DIR}/client/samples/" />
