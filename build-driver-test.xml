@@ -143,6 +143,47 @@
 	<target name="build-tasks" depends=""-->
 	
 	</target>
+	
+	<target name="" depends="" >
+		
+		<property name="root.dir" value="." />
+		<!--property name="java.driver.jar" value="${WORKSPACE}/release/sequoiadb.jar" />
+		<property name="javac.base.dir" value="../../.." /-->
+	
+		<property name="target.dir" value="${root.dir}/build_ant_sdbtask" />
+		<property name="source.dir" value="${root.dir}/src" />
+		<property name="library.dir" value="${root.dir}/lib" />
+		
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
+		
+		<echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
+
+		<javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
+		<!--javac srcdir="${source.dir}" destdir="${target.dir}" debug="true" classpath="" fork="yes"-->
+			<classpath>
+				<fileset dir="${library.dir}" includes="*.jar"/>
+				<pathelement location="${java.driver.jar}"/>
+			</classpath>
+		</javac>
+		
+		<copy todir="${target.dir}">
+			<fileset dir="${source.dir}" includes="**/*" />
+		</copy>
+		
+		<tstamp>
+			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
+		</tstamp>
+
+		<jar file="${root.dir}/ant-sdbtasks.jar">
+			<manifest>
+				<attribute name="Version" value="1.0" />
+				<attribute name="Build-Timestamp" value="${tstamp}" />
+			</manifest>
+			<fileset dir="${target.dir}" includes="**/*" />
+		</jar>
+		
+	</target>
 
 
 
