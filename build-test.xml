@@ -21,10 +21,8 @@
 
 		<echo message="clean environments completed." />
 	</target>
-	
-	
-	
-	<target name="compile-test" depends="clean">
+
+	<target name="build-sample" depends="build-driver">
 		<echo message="Begin to build the client sample test code..." />
 		<echo message="${ci.script.path}/build-samples-test.xml" />
 		<ant antfile="${ci.script.path}/build-samples-test.xml">
@@ -34,7 +32,9 @@
 		</ant>
 		
 		<echo message="Compile builded the client sample test. " />
-		
+	</target>
+	
+	<target name="build-driver" depends="build-sdbtasks">
 		<echo message="Begin to build the driver test code..." />
 		<ant antfile="${ci.script.path}/build-driver-test.xml" target="build-driver-test">
 			<property name="build.testcases" value="${WORKSPACE}/sequoiadb/testcases/hlt/drivers_testcases/" />
@@ -42,12 +42,9 @@
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
 		</ant>
 		<echo message="Compile builded the driver test. " />
-		
-		
-		
 	</target>
 	
-	<target name="build-sdbtasks" depends="compile-test" >
+	<target name="build-sdbtasks" depends="clean" >
     <echo message=" ..begin to build ant-sdbtask .." />
     <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
@@ -58,7 +55,7 @@
 		<echo message=" .. over to build ant-sdbtask .." />
 	</target>
 
-	<target name="build-test" depends="build-sdbtasks">
+	<target name="build-test" depends="build-sample">
 		
 		<mkdir dir="${deploy.path}/hlt" />
 		<copy todir="${deploy.path}/hlt">
