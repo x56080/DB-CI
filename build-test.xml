@@ -37,20 +37,7 @@
 		
 		
 		
-		<!--mkdir dir="${deploy.path}/hlt" />
-		<copy todir="${deploy.path}/hlt">
-			<fileset dir="${build.testcases}">
-				<include name="**/*" />
-				<exclude name="driver*" />
-				<exclude name="sample*" />
-				<exclude name="*.xlsx" />
-			</fileset>
-		</copy>
-
-		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
-		<copy todir="${deploy.path}">
-			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
-		</copy-->
+		
 		
 		
 		
@@ -85,7 +72,21 @@
 
 	<target name="build-test" depends="build-sample">
 		
-		
+		<mkdir dir="${deploy.path}/hlt" />
+		<copy todir="${deploy.path}/hlt">
+			<fileset dir="${build.testcases}">
+				<include name="**/*" />
+				<exclude name="driver*" />
+				<exclude name="sample*" />
+				<exclude name="*.xlsx" />
+			</fileset>
+		</copy>
+
+		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
+		<copy todir="${deploy.path}">
+			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
+		</copy>
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 		
 	</target>
 

@@ -29,7 +29,6 @@
 	<target name="clean" depends="">
 		<delete dir="${WORKSPACE}/reports" />
 		<mkdir dir="${WORKSPACE}/reports" />
-		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**" compression="gzip" />
 	</target>
 
 	<target name="deploy-test-all" depends="clean">
