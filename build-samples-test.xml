@@ -60,7 +60,7 @@
 
 		<echo message="exec build ${build.testcases.CPP} " />
 		
-		<foreach target="build_cpp" param="build_name">
+		<!--foreach target="build_cpp" param="build_name">
 			
 		   <fileset dir="${build.testcases.CPP}">
 		   	  <include name="*.cpp" />
@@ -74,7 +74,7 @@
 			<fileset dir="${build.testcases.CPP}/build" includes="*" />
 		</copy>
 
-    <echo message="...over build the c and c++ ..." />
+    <echo message="...over build the c and c++ ..." /-->
 
 	</target>
 
