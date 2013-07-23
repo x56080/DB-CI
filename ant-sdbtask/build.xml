@@ -65,14 +65,14 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<tstamp>
+		<!--tstamp>
 			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
-		</tstamp>
+		</tstamp-->
 
 		<jar file="${root.dir}/ant-sdbtasks.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
-				<attribute name="Build-Timestamp" value="${tstamp}" />
+				<!--attribute name="Build-Timestamp" value="${tstamp}" /-->
 			</manifest>
 			<fileset dir="${target.dir}" includes="**/*" />
 		</jar>
