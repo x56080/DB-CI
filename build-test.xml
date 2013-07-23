@@ -84,7 +84,7 @@
 		<copy todir="${deploy.path}">
 			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
 		</copy>
-		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}/deploy" includes="**/*" compression="gzip" />
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**/*" compression="gzip" />
 		
 	</target>
 
