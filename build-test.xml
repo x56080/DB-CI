@@ -22,7 +22,7 @@
 		<echo message="clean environments completed." />
 	</target>
 
-	<target name="build-sample" depends="clean">
+	<!--target name="build-sample" depends="clean">
 		<echo message="Begin to build the client sample test code..." />
 		<echo message="${ci.script.path}/build-samples-test.xml" />
 		<ant antfile="${ci.script.path}/build-samples-test.xml">
@@ -32,7 +32,7 @@
 		</ant>
 		
 		<echo message="Compile builded the client sample test. " />
-	</target>
+	</target-->
 	
 	<target name="build-driver" depends="build-sdbtasks">
 		<echo message="Begin to build the driver test code..." />
@@ -44,7 +44,7 @@
 		<echo message="Compile builded the driver test. " />
 	</target>
 	
-	<target name="build-sdbtasks" depends="build-sample" >
+	<target name="build-sdbtasks" depends="clean" >
     <echo message=" ..begin to build ant-sdbtask .." />
     <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
