@@ -43,7 +43,7 @@
     <echo message="...Begin to build the c and c++ test code ..." />
 
     <echo message="exec build ${build.testcases.C} " />
-		<foreach target="build_c" param="build.name.C">
+		<!--foreach target="build_c" param="build.name.C">
 			
 		   <fileset dir="${build.testcases.C}">
 		   	  <include name="*.c" />
@@ -53,7 +53,7 @@
 		   
 		</foreach>
 		
-		<!--copy todir="${deploy.path}/hlt/samples_testcases/C">
+		<copy todir="${deploy.path}/hlt/samples_testcases/C">
 			<fileset dir="${build.testcases.C}/build" includes="*" />
 		</copy>
 		<copy todir="${deploy.path}/hlt/samples_testcases/C" file="${build.testcases.C}/sampledb.dat" />
