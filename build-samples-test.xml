@@ -80,7 +80,8 @@
 	
 	<target name="build_c" depends="" >
   	<!--local name="build.real.name" /-->
-	  <basename property="build.real.name.c" file="${build.name.C}" suffix=".c" />
+	  <!--basename property="build.real.name.c" file="${build.name.C}" suffix=".c" /-->
+	  <echo message="${build_c}" />
 	  <!--echo message="building the ${build.real.name.c} in C" /-->
   	<!--exec dir="${build.testcases.C}" executable="./buildApp.sh">
   		 <arg value="${build.real.name.c}" />
