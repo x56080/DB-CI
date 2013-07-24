@@ -43,7 +43,7 @@
     <echo message="...Begin to build the c and c++ test code ..." />
 
     <echo message="exec build ${build.testcases.C} " />
-		<foreach target="build_c" param="build_name">
+		<foreach target="build_c" param="build.name.C">
 			
 		   <fileset dir="${build.testcases.C}">
 		   	  <include name="*.c" />
@@ -60,7 +60,7 @@
 
 		<echo message="exec build ${build.testcases.CPP} " />
 		
-		<foreach target="build_cpp" param="build_name">
+		<foreach target="build_cpp" param="build.name.CPP">
 			
 		   <fileset dir="${build.testcases.CPP}">
 		   	  <include name="*.cpp" />
@@ -77,24 +77,26 @@
     <echo message="...over build the c and c++ ..." /-->
 
 	</target>
-
+	
+	<target name="build_c" depends="" >
+  	<!--local name="build.real.name" /-->
+	  <basename property="build.real.name.c" file="${build.name.C}" suffix=".c" />
+	  <echo message="building the ${build.real.name.c} in C" />
+  	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
+  		 <arg value="${build.real.name.c}" />
+  	</exec>
+  </target>
+  
   <target name="build_cpp" depends="">
 	  <!--local name="build.real.name" /-->
-	  <basename property="build.real.name.cpp" file="${build_name}" suffix=".cpp" />
+	  <basename property="build.real.name.cpp" file="${build.name.CPP}" suffix=".cpp" />
 	  <echo message="building the ${build.real.name.cpp} in CPP" />
 	  <exec dir="${build.testcases.CPP}" executable="./buildApp.sh">
 		   <arg value="${build.real.name.cpp}" />
   	</exec>
   </target>
 
-  <target name="build_c" depends="" >
-  	<!--local name="build.real.name" /-->
-	  <basename property="build.real.name.c" file="${build_name}" suffix=".c" />
-	  <echo message="building the ${build.real.name.c} in C" />
-  	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
-  		 <arg value="${build.real.name.c}" />
-  	</exec>
-  </target>
+  
 </project>
 
 
