@@ -121,8 +121,8 @@
 			<fileset dir="${build.testcases.CPP}/build_test" includes="*" />
 		</copy>
 
-		<copy file="${lib.dir}/C/lib/libsdbc.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/C/lib" />
-		<copy file="${lib.dir}/CPP/lib/libsdbcpp.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/CPP/lib" />
+		<copy file="${lib.dir}/lib/libsdbc.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/C/lib" />
+		<copy file="${lib.dir}/lib/libsdbcpp.so" todir="${WORKSPACE}/deploy/hlt/drivers_testcases/CPP/lib" />
 
     <echo message="...over scons the c and c++ ..." />
 	

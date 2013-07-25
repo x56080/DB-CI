@@ -100,32 +100,23 @@
 
 		<mkdir dir="${DRIVER.DIR}/java" />
 		<!--mkdir dir="${DRIVER.DIR}/java/jdk" /-->
-		<mkdir dir="${DRIVER.DIR}/C/include" />
-		<mkdir dir="${DRIVER.DIR}/C/lib" />
-		<mkdir dir="${DRIVER.DIR}/CPP/include" />
-		<mkdir dir="${DRIVER.DIR}/CPP/lib" />
-		<mkdir dir="${DRIVER.DIR}/PHP" />
+		<mkdir dir="${DRIVER.DIR}/include" />
+		<mkdir dir="${DRIVER.DIR}/lib" />
+		<mkdir dir="${DRIVER.DIR}/include" />
+		<mkdir dir="${DRIVER.DIR}/lib" />
 		<!--mkdir dir="${DRIVER.DIR}/samples" /-->
 
-		<copy todir="${DRIVER.DIR}/C/lib">
-			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
+		<copy todir="${DRIVER.DIR}/lib">
+			<fileset dir="${CODE_DIR}/client/lib/" includes="*" />
 		</copy>
 
-		<copy todir="${DRIVER.DIR}/CPP/lib">
-			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
+		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/lib/libsdbphp.so" />
+
+		<copy todir="${DRIVER.DIR}/include">
+			<fileset dir="${CODE_DIR}/client/include/" includes="**/*" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/PHP/libsdbphp.so" />
-
-		<copy todir="${DRIVER.DIR}/C/include">
-			<fileset dir="${CODE_DIR}/client/C/include/" includes="**" />
-		</copy>
-
-    
-		<copy todir="${DRIVER.DIR}/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="**" />
-		</copy>
-
+   
 		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
 
 		<!--copy todir="${DRIVER.DIR}/java/jdk">
@@ -155,8 +146,6 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/log" />
-		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/CPP/include" />
-		<mkdir dir="${RELEASE_DIR}/sequoiadb/include/C/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/www" />
 
 
@@ -189,22 +178,15 @@
     </copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
-			<fileset dir="${CODE_DIR}/client/C/lib/" includes="*.so" />
-		</copy>
-
-		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
-			<fileset dir="${CODE_DIR}/client/CPP/lib/" includes="*.so" />
+			<fileset dir="${CODE_DIR}/client/lib/" includes="*" />
 		</copy>
 
 		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/libsdbphp.so" />
 
-		<copy todir="${RELEASE_DIR}/sequoiadb/include/C/include">
-			<fileset dir="${CODE_DIR}/client/C/include/" includes="**/*.h" />
+		<copy todir="${RELEASE_DIR}/sequoiadb/include/">
+			<fileset dir="${CODE_DIR}/client/include/" includes="**/*" />
 		</copy>
 
-		<copy todir="${RELEASE_DIR}/sequoiadb/include/CPP/include">
-			<fileset dir="${CODE_DIR}/client/CPP/include/" includes="**/*.h" />
-		</copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/www">
 			<fileset dir="${CODE_DIR}/client/admin/admintpl" />
