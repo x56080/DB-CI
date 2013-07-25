@@ -43,7 +43,7 @@
     <echo message="...Begin to build the c and c++ test code ..." />
 
     <echo message="exec build ${build.testcases.C} " />
-		<foreach target="build_c" param="build.name.C">
+		<!--foreach target="build_c" param="build.name.C">
 			
 		   <fileset dir="${build.testcases.C}">
 		   	  <include name="*.c" />
@@ -74,7 +74,7 @@
 			<fileset dir="${build.testcases.CPP}/build" includes="*" />
 		</copy>
 
-    <echo message="...over build the c and c++ ..." />
+    <echo message="...over build the c and c++ ..." /-->
 
 	</target>
 	
