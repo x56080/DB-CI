@@ -26,8 +26,12 @@
 	<property file="${release.path}/build.version" />
 	<property name="is.test" value="true" />
 
+	<target name="tar" depends="" >
+		<echo message="tar the test file in deploy-test-all.xml" />
+		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**/*" compression="gzip" />
+	</target>
 	
-	<target name="clean" depends="">
+	<target name="clean" depends="tar">
 		<delete dir="${WORKSPACE}/reports" />
 		<mkdir dir="${WORKSPACE}/reports" />
 	</target>

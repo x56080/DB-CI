@@ -1,7 +1,7 @@
 <!--@param ${WORKSPACE}: the path where for this job-->
 <!--@param ${os.publish.name}: os name for example suse/ubuntu/redhat-->
 <!--@param ${ci.script.path} : The path where place ci script files-->
-<!--@param ${antTask.jar.path} : The path where the ant task jar is it -->
+<!--@param ${antTask.jar.path} : The path where the ant task jar is it-->
 
 <project name="build-test" default="build-test">
 	
@@ -16,13 +16,9 @@
 		</classpath>
 	</taskdef>
 	
-	
-
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
 		<property file="${ci.script.path}/ci.test.properties" />
-
-
 		<delete dir="${deploy.path}/" />
 		<mkdir dir="${deploy.path}" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
@@ -33,16 +29,25 @@
 	</target>
 
 	<target name="build-sample" depends="build-sdbtasks">
-		<!--must build after the target : build-sdbtasks , because build-->
-		<echo message="Begin to build the client sample test code..." />
-		<echo message="${ci.script.path}/build-samples-test.xml" />
-		<ant antfile="${ci.script.path}/build-samples-test.xml">
-			<property name="build.testcases" value="${WORKSPACE}/release/driver/samples" />
-			<property name="WORKSPACE" value="${WORKSPACE}" />
-			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
-			<property name="antTask.jar.path" value="${antTask.jar.path}" />
-		</ant>
-		<echo message="Compile builded the client sample test. " />
+		<if>
+			<not>
+			<equals arg1="ppc64" arg2="${os.arch}" />
+			</not>
+			<then>
+				<echo message="Begin to build the client sample test code..." />
+				<echo message="${ci.script.path}/build-samples-test.xml" />
+				<ant antfile="${ci.script.path}/build-samples-test.xml">
+					<property name="build.testcases" value="${WORKSPACE}/release/driver/samples" />
+					<property name="WORKSPACE" value="${WORKSPACE}" />
+					<property name="lib.dir" value="${WORKSPACE}/release/driver" />
+					<property name="antTask.jar.path" value="${antTask.jar.path}" />
+				</ant>
+				<echo message="Compile builded the client sample test. " />
+			</then>
+			<else>
+				<echo message="this machin is power PC , will not build the sample tests" />
+			</else>
+		</if>
 	</target>
 	
 	<target name="build-driver" depends="build-sample">
@@ -94,7 +99,7 @@
 		<copy todir="${deploy.path}">
 			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
 		</copy>
-		<tar destfile="${WORKSPACE}/${deploy.tar.file.name}" basedir="${WORKSPACE}" includes="deploy/**/*" compression="gzip" />
+		
 		
 	</target>
 
