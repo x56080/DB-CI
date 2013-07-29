@@ -18,7 +18,10 @@ public class SdbtaskBaseName extends Task {
 	{
 		this.property = value ; 
 	}
-	
+	public void setSuffix( String value )
+	{
+		this.suffix = value ; 
+	}
 	public void execute()
 	{
 		File filePath = new File( this.file ) ; 
