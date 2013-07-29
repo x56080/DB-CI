@@ -16,14 +16,7 @@
 		</classpath>
 	</taskdef>
 	
-	<property name="STAF.PATH" value="/usr/local/staf" />
-	<taskdef resource="com/sequoiadb/ant/ant-sdbtasks.xml">
-		<classpath>
-			<fileset dir="${antTask.jar.path}" includes="*.jar" />
-			<pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
-			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
-		</classpath>
-	</taskdef>
+	
 
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
@@ -40,12 +33,14 @@
 	</target>
 
 	<target name="build-sample" depends="build-sdbtasks">
+		<!--must build after the target : build-sdbtasks , because build-->
 		<echo message="Begin to build the client sample test code..." />
 		<echo message="${ci.script.path}/build-samples-test.xml" />
 		<ant antfile="${ci.script.path}/build-samples-test.xml">
 			<property name="build.testcases" value="${WORKSPACE}/release/driver/samples" />
 			<property name="WORKSPACE" value="${WORKSPACE}" />
 			<property name="lib.dir" value="${WORKSPACE}/release/driver" />
+			<property name="antTask.jar.path" value="${antTask.jar.path}" />
 		</ant>
 		<echo message="Compile builded the client sample test. " />
 	</target>
