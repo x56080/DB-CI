@@ -1,22 +1,27 @@
 package com.sequoiadb.ant.sdbtask;
 
+import java.util.List;
 import com.sequoiadb.base.*;
 import org.apache.tools.ant.Task;
+import com.sequoiadb.ant.tools.*;
+
+import org.apache.tools.ant.types.Parameter;
+
 
 public class SdbGetNodeInfo extends Task{
 	private String hostName ; 
-	private String propertyHostName ;
-	private String propertyNodePort ; 
+	//private String propertyHostName ;
+	//private String propertyNodePort ; 
 	private String groupName ; 
 	private String getNodeType ; 
+	private String getNum = "1" ; 
+	private setPropertyInfo setProInfo = null ; 
+	private hostNames htNames = null ; 
+	
 
-	public void setPropertyHostName( String value )
+	public void setGetNum( String value )
 	{
-		this.propertyHostName = value ; 
-	}
-	public void setPropertyNodePort( String value )
-	{
-		this.propertyNodePort = value ; 
+		this.getNum = value ; 
 	}
 	public void setHostName( String value )
 	{
@@ -31,26 +36,68 @@ public class SdbGetNodeInfo extends Task{
 		this.getNodeType = value ; 
 	}
 	
+	public void createHostNames()
+	{
+		this.htNames = new hostNames() ; 
+	}
+	
+	public void createSetProperty()
+	{
+		this.setProInfo = new setPropertyInfo() ; 
+	}
+	
+	public int setProperty( ReplicaGroup group )
+	{
+		String propertyHostName = group.getMaster().getHostName().toString() ;
+		String propertyNodePort = Integer.toString( group.getMaster().getPort() ) ;
+		List<sdbProperty> listPro = this.setProInfo.getListPro() ; 
+		if( "master" == this.getNodeType || ( "slave" == this.getNodeType && this.getNum == "1" ) )
+		{
+			if( "master" != this.getNodeType )
+			{
+				propertyHostName = group.getSlave().getHostName().toString() ;
+				propertyNodePort = Integer.toString( group.getSlave().getPort() ) ; 
+			}
+			for( sdbProperty sdbpro : listPro )
+			{
+				this.getProject().setProperty( sdbpro.getProName() , propertyNodePort ) ;
+				this.getProject().setProperty( sdbpro.getProPort()  , propertyNodePort ) ;
+			}
+			
+			return 0 ; 
+		}
+		if( "master" != this.getNodeType && this.getNum != "1" && this.htNames != null )
+		{
+			
+			List<Parameter> listHtName = this.htNames.getListParameter() ; 
+			for( Parameter p : listHtName )
+			{
+				if ( propertyHostName == p.getValue() )
+				{
+					listHtName.remove( p ) ; 
+					break ; 
+				}
+			}
+			int i = 0 ; 
+			for( sdbProperty sdbpro : listPro )
+			{
+				this.getProject().setProperty( sdbpro.getProName() , listHtName.get(i++).getValue() ) ;
+				this.getProject().setProperty( sdbpro.getProPort()  , propertyNodePort ) ;
+
+			}
+		}
+		return 0 ; 
+		
+	}
+	
 	public void execute()
 	{
 		Sequoiadb sdb = new Sequoiadb( this.hostName  ,50000 , "" ,"") ;
+
+		ReplicaGroup group = sdb.getReplicaGroup( this.groupName ) ;
 		
-		String propertyHostName = null ;
-		String propertyNodePort = null ;
-		ReplicaGroup group = sdb.getReplicaGroup( this.groupName ) ; 
-		
-		if( "master" == this.getNodeType )
-		{
-			propertyHostName = group.getMaster().getHostName().toString() ;
-			propertyNodePort = Integer.toString( group.getMaster().getPort() ) ; 
-		}else{
-			propertyHostName = group.getSlave().getHostName().toString() ;
-			propertyNodePort = Integer.toString( group.getSlave().getPort() ) ; 
-		}
-		//this.getProject().addReference(strUUID, sdb);
-		this.getProject().setProperty( this.propertyHostName  , propertyHostName ) ;
-		
-		this.getProject().setProperty( this.propertyNodePort  , propertyNodePort ) ;
+		this.setProperty( group ) ; 
+
 	}
 
 	
