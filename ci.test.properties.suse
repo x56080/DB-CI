@@ -13,11 +13,11 @@ copy_tar=/test_tar
 target.deploy_tar_gz.ip=bl465-4
 
 coord.service.port=50000
-jenkins.master.ip=suse-test1
-test.machine.no1.basic=suse-test2
-test.machine.no2.basic=suse-test3
-test.machine.no3.basic=suse-test4
+jenkins.master.ip=suse-test1.control
+test.machine.no1.basic=suse-test2.control
+test.machine.no2.basic=suse-test3.control
+test.machine.no3.basic=suse-test4.control
 
-test.machine.no1.unusual=suse-test2.data
-test.machine.no2.unusual=suse-test3.data
-test.machine.no3.unusual=suse-test4.data
+test.machine.no1.unusual=suse-test2
+test.machine.no2.unusual=suse-test3
+test.machine.no3.unusual=suse-test4
