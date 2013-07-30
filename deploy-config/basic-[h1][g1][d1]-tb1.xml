@@ -62,7 +62,7 @@
 		</parallel>
 		
 		
-		<property name="test-type-list" value="basic-tpcc,driver-java,driver-C,driver-CPP" />
+		<property name="test-type-list" value="sample" />
 		<basename property="antFileName" file="${ant.file}" suffix=".xml" />
 		<for list="${test-type-list}" param="test-type">
 			<sequential>
