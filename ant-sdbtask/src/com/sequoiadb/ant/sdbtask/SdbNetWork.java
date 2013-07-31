@@ -1,0 +1,87 @@
+package com.sequoiadb.ant.sdbtask;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+
+import com.ibm.staf.STAFException;
+import com.ibm.staf.STAFHandle;
+import com.ibm.staf.STAFResult;
+
+public class SdbNetWork extends Task {
+	
+	private String NIC = null ;
+	private String upOrDown = null ;
+	private String hostName = null ;
+	
+	public void setNIC( String value )
+	{
+		this.NIC = value ; 
+	}
+	public void setUpOrDown( String value )
+	{
+		this.upOrDown = value ; 
+	}
+	public void setHostName( String value )
+	{
+		final String hostName1 = "suse-test1";
+		final String hostName2 = "suse-test2";
+		final String hostName3 = "suse-test3";
+		final String hostName4 = "suse-test4";
+		String varHostName = value ;
+		if( value == hostName1) varHostName = "suse-test1.control" ; 
+		if( value == hostName2) varHostName = "suse-test2.control" ; 
+		if( value == hostName3) varHostName = "suse-test3.control" ; 
+		if( value == hostName4) varHostName = "suse-test4.control" ; 
+		
+		this.hostName = varHostName ; 
+	}
+	
+	private String STAFResultToString(STAFResult result) {
+
+		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
+		return msg;
+	}
+	
+	public void execute ()
+	{
+		STAFHandle handle = null;
+		try{
+			
+			
+			handle = new STAFHandle("ant-sdbtasks");
+			//String strKill = " kill -9 \\(" + this.nodePort ;
+			String doWork = " ifconfig "+ this.NIC + "  " + this.upOrDown + "  "  ;  
+			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
+			
+			log("exec: staf " + this.hostName + " PROCESS " + request);
+			STAFResult result = handle.submit2( this.hostName ,  "PROCESS", request);
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+		}catch (STAFException e) {
+			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
+					+ e.getLocalizedMessage();
+			log(errorMsg);
+			e.printStackTrace();
+	
+			throw new BuildException(errorMsg);
+		}
+		finally{
+			try {
+				if (handle != null)
+				{
+					handle.unRegister();
+				}
+			} catch (STAFException e) {
+				String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
+						+ e.getLocalizedMessage();
+				log(errorMsg);
+			}
+
+			handle = null;
+			System.gc();
+		}
+	}
+
+}
