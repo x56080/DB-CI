@@ -95,7 +95,7 @@
 
 	  <echo message="${build.name.C}" />
 	  <echo message="building the ${build.real.name.c} in C" />
-  	<exec dir="${build.testcases.C}" executable="./buildApp.sh">
+  	<exec dir="${build.testcases.C}" executable="./buildApp.sh" failonerror="true" >
   		 <arg value="${build.real.name.c}" />
   	</exec>
   	<echo message="Holle World" />
