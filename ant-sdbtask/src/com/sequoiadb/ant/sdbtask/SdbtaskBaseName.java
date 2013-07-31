@@ -14,6 +14,7 @@ public class SdbtaskBaseName extends Task {
 	{
 		this.file = value ; 
 	}
+	
 	public void setProperty( String value )
 	{
 		this.property = value ; 

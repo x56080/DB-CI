@@ -3,20 +3,13 @@
 <!--@param ${install.path} , the sequoiadb install path -->
 <!--@param ${antFileName} , the ant file name is -->
 <!--@param ${test.reports.path} , where the report put in-->
-<!--@param ${test.machine.no1.basic} , test machine's port -->
-<!--@param ${test.machine.no2.basic} , test machine's port -->
-<!--@param ${test.machine.no3.basic} , test machine's port -->
-<!--@param ${test.machine.no4.basic} , test machine's port -->
-<!--@param ${test.machine.no1.unsual} , test machine's port -->
-<!--@param ${test.machine.no2.unsual} , test machine's port -->
-<!--@param ${test.machine.no3.unsual} , test machine's port -->
-<!--@param ${test.machine.no4.unsual} , test machine's port -->
 <!--@param ${test-type} , what the test type-->
 <project name="test-type" default="test-type">
 
    <target name="test-type" depends="">
-   	  <property file="ci.properties" />
+   	  <!--property file="ci.properties" /-->
       <property environment="env" />
+      <property file="${basedir}/ci.test.properties" />
       <switch value="${test-type}">
          <case value="basic">
          	
