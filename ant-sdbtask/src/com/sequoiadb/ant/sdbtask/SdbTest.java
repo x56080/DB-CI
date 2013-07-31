@@ -156,10 +156,10 @@ public class SdbTest extends Task {
 			final String hostName4 = "suse-test4";
 			String value = InetAddress.getLocalHost().getHostName() ; 
 			String varHostName = value ;
-			if( value == hostName1) varHostName = "suse-test1.control" ; 
-			if( value == hostName2) varHostName = "suse-test2.control" ; 
-			if( value == hostName3) varHostName = "suse-test3.control" ; 
-			if( value == hostName4) varHostName = "suse-test4.control" ; 
+			if( value.equals( hostName1 ) ) varHostName = "suse-test1.control" ; 
+			if( value.equals( hostName2 ) ) varHostName = "suse-test2.control" ; 
+			if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
+			if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ; 
 			request = "COPY DIRECTORY " + this.remoteReportsPath
 					+ " TODIRECTORY " + this.masterReportsPath + " TOMACHINE "
 					+ varHostName ;
