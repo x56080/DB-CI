@@ -17,35 +17,35 @@ import com.sequoiadb.exception.BaseException;
  */
 public class SdbCreateConnection extends Task {
 
-	private String hostName = null;
-	private String port = null;
-	private String sdbHandle = null;
+   private String hostName = null;
+   private String port = null;
+   private String sdbHandle = null;
 
-	public void setHostname(String value) {
-		this.hostName = value;
-	}
+   public void setHostname(String value) {
+      this.hostName = value;
+   }
 
-	public void setPort(String value) {
-		this.port = value;
-	}
+   public void setPort(String value) {
+      this.port = value;
+   }
 
-	public void setSdbhandleproperty(String value) {
-		this.sdbHandle = value;
-	}
+   public void setSdbhandleproperty(String value) {
+      this.sdbHandle = value;
+   }
 
-	public void execute() {
-		try {
-			Sequoiadb sdb = new Sequoiadb(this.hostName,
-					Integer.parseInt(this.port), "", "");
+   public void execute() {
+      try {
+         Sequoiadb sdb = new Sequoiadb(this.hostName,
+               Integer.parseInt(this.port), "", "");
 
-			UUID uuid = UUID.randomUUID();
-			String strUUID = uuid.toString();
+         UUID uuid = UUID.randomUUID();
+         String strUUID = uuid.toString();
 
-			this.getProject().addReference(strUUID, sdb);
-			this.getProject().setProperty(this.sdbHandle, strUUID);
-		} catch (BaseException e) {
-			e.printStackTrace();
-			throw new BuildException(e.toString());
-		}
-	}
+         this.getProject().addReference(strUUID, sdb);
+         this.getProject().setProperty(this.sdbHandle, strUUID);
+      } catch (BaseException e) {
+         e.printStackTrace();
+         throw new BuildException(e.toString());
+      }
+   }
 }
