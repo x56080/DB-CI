@@ -4,13 +4,14 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 //import com.sequoiadb.base.CollectionSpace;
+import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.Sequoiadb;
 import com.sequoiadb.exception.BaseException;
 
 public class SdbGetCS extends Task {
 	private String uuid = null;
 	private String csName = null;
-	private boolean failonerror = true;
+	//private boolean failonerror = false;
 	
 	public void setSdbhandle(String value)
 	{
@@ -22,10 +23,12 @@ public class SdbGetCS extends Task {
 		csName = value;
 	}
 	
+	/*
 	public void setFailonerror(String value)
 	{
 		failonerror = Boolean.parseBoolean(value);
 	}
+	*/
 	
 	public void execute() {
 		Object obj = this.getProject().getReference(uuid);
@@ -39,22 +42,16 @@ public class SdbGetCS extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			boolean csExist = sdb.isCollectionSpaceExist(csName);
 			if(csExist){
-				sdb.getCollectionSpace(csName) ;
+				sdb.getCollectionSpace(csName);
 			}else{
 				throw new BuildException("The cs:" + csName
 						+ " is not exist.");
 			}
-		}catch(BaseException e)
+		}
+		catch(BaseException e)
 		{
-			if (failonerror)
-			{
 				throw new BuildException(e.toString());
 			}
-			else
-			{
-				log("Failed to get(" + csName + ") , but not throw exception. exception=" + e);
-			}
 		}
-	}
 
 }
