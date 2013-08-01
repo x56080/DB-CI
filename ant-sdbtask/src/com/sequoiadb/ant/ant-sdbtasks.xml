@@ -31,5 +31,7 @@
     <typedef name="sdbstartcm" classname="com.sequoiadb.ant.sdbtask.SdbStartCM" onerror="ignore" />
     <typedef name="sdbstopcm" classname="com.sequoiadb.ant.sdbtask.SdbStopCM" onerror="ignore" />
     <typedef name="sdbBaseName" classname="com.sequoiadb.ant.sdbtask.SdbtaskBaseName" onerror="ignore" />
+    <typedef name="sdbNetWork" classname="com.sequoiadb.ant.sdbtask.SdbNetWork" onerror="ignore" />
+    <typedef name="sdbRestartHost" classname="com.sequoiadb.ant.sdbtask.SdbRestartHost" onerror="ignore" />
   
 </antlib>
