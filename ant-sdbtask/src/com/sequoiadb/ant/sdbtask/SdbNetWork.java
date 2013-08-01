@@ -28,10 +28,10 @@ public class SdbNetWork extends Task {
 		final String hostName3 = "suse-test3";
 		final String hostName4 = "suse-test4";
 		String varHostName = value ;
-		if( value == hostName1) varHostName = "suse-test1.control" ; 
-		if( value == hostName2) varHostName = "suse-test2.control" ; 
-		if( value == hostName3) varHostName = "suse-test3.control" ; 
-		if( value == hostName4) varHostName = "suse-test4.control" ; 
+		if( value.equals( hostName1 ) ) varHostName = "suse-test1.control" ; 
+		if( value.equals( hostName2 ) ) varHostName = "suse-test2.control" ; 
+		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
+		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ; 
 		
 		this.hostName = varHostName ; 
 	}
