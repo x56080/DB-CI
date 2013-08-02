@@ -54,7 +54,7 @@
     <echo message="...Begin to build the c and c++ test code ..." />
 
     <echo message="exec build ${build.testcases.C} " />
-		<foreach target="build_c" param="build.name.C">
+		<foreach target="build_c_sampls" param="build.name.C">
 			
 		   <fileset dir="${build.testcases.C}">
 		   	  <include name="*.c" />
@@ -71,7 +71,7 @@
 
 		<echo message="exec build ${build.testcases.CPP} " />
 		
-		<foreach target="build_cpp" param="build.name.CPP">
+		<foreach target="build_cpp_sampls" param="build.name.CPP">
 			
 		   <fileset dir="${build.testcases.CPP}">
 		   	  <include name="*.cpp" />
@@ -89,7 +89,7 @@
 
 	</target>
 	
-	<target name="build_c" depends="" >
+	<target name="build_c_sampls" depends="" >
   	<!--local name="build.real.name" /-->
 	  <sdbBaseName property="build.real.name.c" file="${build.name.C}" suffix=".c" />
 
@@ -101,11 +101,11 @@
   	<echo message="Holle World" />
   </target>
   
-  <target name="build_cpp" depends="">
+  <target name="build_cpp_sampls" depends="">
 	  <!--local name="build.real.name" /-->
 	  <sdbBaseName property="build.real.name.cpp" file="${build.name.CPP}" suffix=".cpp" />
 	  <echo message="building the ${build.real.name.cpp} in CPP" />
-	  <exec dir="${build.testcases.CPP}" executable="./buildApp.sh">
+	  <exec dir="${build.testcases.CPP}" executable="./buildApp.sh" failonerror="true">
 		   <arg value="${build.real.name.cpp}" />
   	</exec>
   </target>
