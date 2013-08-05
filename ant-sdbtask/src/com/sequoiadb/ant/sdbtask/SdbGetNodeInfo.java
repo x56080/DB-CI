@@ -36,7 +36,7 @@ public class SdbGetNodeInfo extends Task{
 		this.getNodeType = value ; 
 	}
 	
-	public void createHostNames()
+	public void createHostName()
 	{
 		this.htNames = new hostNames() ; 
 	}

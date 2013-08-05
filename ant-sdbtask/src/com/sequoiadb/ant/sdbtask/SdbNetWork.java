@@ -47,10 +47,25 @@ public class SdbNetWork extends Task {
 		STAFHandle handle = null;
 		try{
 			
-			
+			String doWork = null ;
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			String doWork = " ifconfig "+ this.NIC + "  " + this.upOrDown + "  "  ;  
+			doWork = "nicName=`ifconfig | grep eth | awk '{print $1}'` ; \n" +
+					" portName=`ifconfig | grep addr:192.168 | awk '{print $2}'` ; \n" +
+					" i=0 ; \n" +
+					"for list in $portName  \n" +
+					"do \n" + 
+					"echo $list | grep 192.168.30 ; \n" + 
+					"if [ $? -eq 0 ] ; then \n" + 
+					" getNic=${nicName:i*5:i+4} \n" + 
+					"fi \n" + 
+					"let i++; \n" + 
+					"done ; \n" + 
+					"if [ ! -n $getNic ] ; then \n" +
+					" echo fail to getNic Name ; \n" +
+					"exit 1 ; \n" + 
+					"fi \n" ; 
+			doWork += " ifconfig $getNic  " + this.upOrDown + "  ;"  ;  
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);

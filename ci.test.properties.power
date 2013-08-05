@@ -3,7 +3,7 @@ STAF.PATH=/usr/local/staf
 install.path=/opt
 install.user=sdbadmin
 install.password=sdbadmin
-
+os.publish.name=power
 deploy.tar.file.name=deploy.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
 test.machine.software.path=/tmp/sequoiadb
