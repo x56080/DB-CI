@@ -4,8 +4,8 @@
 <!--@param ${ci.script.file.path} : the ci-script file path -->
 <!--@param ${deploy.conffile.wildcard}: deploy config file wildcard. just for debug -->
 <!--@param ${is.test}: the flag for whether execute test, if set false, then just deploy. just for debug -->
-
-<project name="deploy-test-all" default="deploy-test-all">
+<!--@param ${BUILD_NUMBER} : what number is it build -->
+<project name="deploy-test-all" default="copy-test-log">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
 		<classpath>
 			<pathelement location="/usr/share/java/ant-contrib.jar" />
@@ -19,7 +19,7 @@
 			<pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
 		</classpath>
 	</taskdef>
-
+	<hostinfo prefix="host" />
 	<property name="deploy.config.path" value="${ci.script.file.path}/deploy-config" />
 	<property file="${ci.script.file.path}/ci.test.properties" />
 	<property name="release.path" value="${WORKSPACE}/release" />
@@ -34,6 +34,8 @@
 	<target name="clean" depends="tar">
 		<delete dir="${WORKSPACE}/reports" />
 		<mkdir dir="${WORKSPACE}/reports" />
+		<delete dir="${WORKSPACE}/${host.NAME}-copy-log" />
+		<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log" />
 	</target>
 
 	<target name="deploy-test-all" depends="clean">
@@ -82,6 +84,8 @@
 		<if>
 			<equals arg1="${is.test}" arg2="true" />
 			<then>
+				
+				<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${deploy.case.fullname}" />
 				<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="test" inheritAll="true">
 					<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
 					<property name="install.path" value="${install.path}" />
@@ -95,6 +99,9 @@
 
 		<echo message="Deploy ${deploy.case.fullname} complete. " />
 
+	</target>
+	<target name="copy-test-log" depends="deploy-test-all" >
+		<!--tar destfile="${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER}" basedir="${WORKSPACE}" includes="${host.NAME}-copy-log/**/*" compression="gzip" /-->
 	</target>
 
 </project>

@@ -9,14 +9,11 @@ import com.ibm.staf.STAFResult;
 
 public class SdbNetWork extends Task {
 	
-	private String NIC = null ;
+	
 	private String upOrDown = null ;
 	private String hostName = null ;
 	
-	public void setNic( String value )
-	{
-		this.NIC = value ; 
-	}
+	
 	public void setUpOrDown( String value )
 	{
 		this.upOrDown = value ; 

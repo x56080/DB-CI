@@ -5,10 +5,7 @@
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
 <!--@param ${WORKSPACE}: where the working space is it-->
-<!--@param ${test.machine.no1.basic}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no2.basic}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no3.basic}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no4.basic}: The host name or host ip of test machine No.1 -->
+<!--@param ${properties.dir} : where the ci.test.properties file is it -->
 
 <project name="deploy" default="test">
 	<!--property file="ci.properties" /-->
@@ -16,7 +13,8 @@
 	<target name="deploy" depends="">
 		<echo message="Begin install software and test files to ${test.machine1}" />
 		<hostinfo prefix="host" />
-
+		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
+		<property file="${properties.dir}" />
     <parallel>
 			<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
 			   <property name="install.package.fullname" value="${install.package.fullname}" />

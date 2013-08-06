@@ -5,9 +5,9 @@
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
 <!--@param ${WORKSPACE}: where the working space is it-->
+<!--@param ${properties.dir} : where the ci.test.properties file is it -->
 
 <project name="deploy" default="test">
-	<property file="ci.test.properties" />
   
   <taskdef resource="net/sf/antcontrib/antlib.xml">
      <classpath>
@@ -17,7 +17,8 @@
   
 	<target name="deploy" depends="">
 		<hostinfo prefix="host" />
-
+		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
+		<property file="${properties.dir}" />
 		<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
 			<property name="install.package.fullname" value="${install.package.fullname}" />
 			<property name="deploy.host.name" value="${test.machine.no2.basic}" />

@@ -6,8 +6,6 @@ import org.apache.tools.ant.Task;
 import com.sequoiadb.ant.tools.*;
 
 import org.apache.tools.ant.types.Parameter;
-
-
 public class SdbGetNodeInfo extends Task{
 	private String hostName ; 
 	//private String propertyHostName ;
@@ -36,14 +34,16 @@ public class SdbGetNodeInfo extends Task{
 		this.getNodeType = value ; 
 	}
 	
-	public void createHostName()
+	public hostNames createHostName()
 	{
-		this.htNames = new hostNames() ; 
+		this.htNames = new hostNames() ;
+		return this.htNames ; 
 	}
 	
-	public void createSetProperty()
-	{
-		this.setProInfo = new setPropertyInfo() ; 
+	public setPropertyInfo createSetProperty()
+	{ 
+		this.setProInfo =  new setPropertyInfo() ;
+		return this.setProInfo ; 
 	}
 	
 	public int setProperty( ReplicaGroup group )
@@ -51,28 +51,28 @@ public class SdbGetNodeInfo extends Task{
 		String propertyHostName = group.getMaster().getHostName().toString() ;
 		String propertyNodePort = Integer.toString( group.getMaster().getPort() ) ;
 		List<sdbProperty> listPro = this.setProInfo.getListPro() ; 
-		if( "master" == this.getNodeType || ( "slave" == this.getNodeType && this.getNum == "1" ) )
+		if( this.getNodeType.equals("master") || ( "slave" == this.getNodeType && this.getNum.equals("1") ) )
 		{
 			if( "master" != this.getNodeType )
 			{
 				propertyHostName = group.getSlave().getHostName().toString() ;
-				propertyNodePort = Integer.toString( group.getSlave().getPort() ) ; 
+				//propertyNodePort = Integer.toString( group.getSlave().getPort() ) ; 
 			}
 			for( sdbProperty sdbpro : listPro )
 			{
-				this.getProject().setProperty( sdbpro.getProName() , propertyNodePort ) ;
-				this.getProject().setProperty( sdbpro.getProPort()  , propertyNodePort ) ;
+				this.getProject().setProperty( sdbpro.getProName() , propertyHostName ) ;
+				this.getProject().setProperty( sdbpro.getProPort() , propertyNodePort ) ;
 			}
 			
 			return 0 ; 
 		}
-		if( "master" != this.getNodeType && this.getNum != "1" && this.htNames != null )
+		if( ! this.getNodeType.equals("master") && ! this.getNum.equals("1") && this.htNames != null )
 		{
 			
 			List<Parameter> listHtName = this.htNames.getListParameter() ; 
 			for( Parameter p : listHtName )
 			{
-				if ( propertyHostName == p.getValue() )
+				if ( propertyHostName.equals( p.getValue() ) )
 				{
 					listHtName.remove( p ) ; 
 					break ; 
@@ -82,7 +82,7 @@ public class SdbGetNodeInfo extends Task{
 			for( sdbProperty sdbpro : listPro )
 			{
 				this.getProject().setProperty( sdbpro.getProName() , listHtName.get(i++).getValue() ) ;
-				this.getProject().setProperty( sdbpro.getProPort()  , propertyNodePort ) ;
+				this.getProject().setProperty( sdbpro.getProPort() , propertyNodePort ) ;
 
 			}
 		}

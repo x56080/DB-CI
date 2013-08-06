@@ -5,13 +5,11 @@
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
 <!--@param ${WORKSPACE}: where the working space is it-->
-<!--@param ${test.machine.no1.data}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no2.data}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no2.data}: The host name or host ip of test machine No.1 -->
-<!--@param ${test.machine.no3.data}: The host name or host ip of test machine No.1 -->
+<!--@param ${properties.dir} : where the ci.test.properties file is it -->
 
 <project name="deploy" default="test">
-	<property file="ci.properties" />
+		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
+		<property file="${properties.dir}" />
 
 	<target name="deploy" depends="">
 		<echo message="Begin install software and test files to ${test.machine.no2.data}" />

@@ -3,7 +3,7 @@ STAF.PATH=/usr/local/staf
 install.path=/opt
 install.user=sdbadmin
 install.password=sdbadmin
-os.publish.name=power
+
 deploy.tar.file.name=deploy.tar.gz
 test.machine.deploy.path=/tmp/sequoiadb_test
 test.machine.software.path=/tmp/sequoiadb
@@ -11,6 +11,7 @@ test.machine.software.path=/tmp/sequoiadb
 
 copy_tar=/test_tar
 target.deploy_tar_gz.ip=powersuse1
+copy_log_path=/test_log
 
 coord.service.port=50000
 jenkins.master.ip=power_rhel_1

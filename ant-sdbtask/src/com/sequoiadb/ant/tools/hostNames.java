@@ -12,9 +12,11 @@ public class hostNames {
       private List<Parameter> listParam = new ArrayList<Parameter>();
 
 	
-	public void createParam()
+	public Parameter createParam()
 	{
-		listParam.add( new Parameter() ) ; 
+		Parameter param = new Parameter() ; 
+		listParam.add( param ) ; 
+		return param ; 
 	}
 	public List<Parameter> getListParameter()
 	{
