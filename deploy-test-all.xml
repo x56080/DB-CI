@@ -85,7 +85,7 @@
 			<equals arg1="${is.test}" arg2="true" />
 			<then>
 				
-				<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${deploy.case.fullname}" />
+				<!--mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${deploy.case.fullname}" /-->
 				<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="test" inheritAll="true">
 					<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
 					<property name="install.path" value="${install.path}" />
@@ -101,7 +101,15 @@
 
 	</target>
 	<target name="copy-test-log" depends="deploy-test-all" >
-		<!--tar destfile="${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER}" basedir="${WORKSPACE}" includes="${host.NAME}-copy-log/**/*" compression="gzip" /-->
+		<!--tar destfile="${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER}" basedir="${WORKSPACE}" includes="${host.NAME}-copy-log/**/*" compression="gzip" />
+		<property environment="env" />
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
+			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
+			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
+		</exec-->
+		
 	</target>
 
 </project>
