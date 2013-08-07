@@ -12,7 +12,7 @@ test.machine.software.path=/tmp/sequoiadb
 
 copy_tar=/test_tar
 target.deploy_tar_gz.ip=bl465-4
-copy_log_path=/test_log
+copy.log.path=/test_log
 
 coord.service.port=50000
 jenkins.master.ip=suse-test1.control

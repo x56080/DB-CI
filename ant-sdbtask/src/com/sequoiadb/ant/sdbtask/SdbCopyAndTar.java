@@ -13,8 +13,12 @@ public class SdbCopyAndTar extends Task{
 	private String hostName ; 
 	private String tarPath ; 
 	private String savePath ; 
+	private String number = "" ; 
 
-	
+	public void setBuildNum( String value )
+	{
+		this.number = value ; 
+	}
 	public void setLocalHostName( String value )
 	{
 		final String hostName1 = "suse-test1";
@@ -50,12 +54,15 @@ public class SdbCopyAndTar extends Task{
 	{
 		STAFHandle handle = null;
 		try{
-			
+			if( ! this.number.equals("") )
+			{
+				this.number = "." + this.number ; 
+			}
 			String doWork = null ;
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
 			doWork = "tar   -zcv   " + this.tarPath + "/*    " 
-			+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz ; " ;
+			+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number + " ; " ;
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
@@ -66,7 +73,7 @@ public class SdbCopyAndTar extends Task{
 			}
 			
 			request = "COPY DIRECTORY " 
-					+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz    "
+					+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.localHostName ;
 
@@ -78,7 +85,7 @@ public class SdbCopyAndTar extends Task{
 				throw new BuildException(STAFResultToString(result));
 			}
 			
-			request = "DELETE ENTRY " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz "
+			request = "DELETE ENTRY " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
 					+ " RECURSE CONFIRM";
 			log("exec: staf " + this.hostName + " FS " + request);
 			result = handle.submit2(this.hostName, "FS", request);
