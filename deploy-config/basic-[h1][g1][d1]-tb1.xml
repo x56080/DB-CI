@@ -80,8 +80,8 @@
 			
 		</for>
 		
-		<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
-		<SdbCopyAndTar hostName="${test.machine.no2.basic}" localHostName="${host.NAME}" testLogPath="${install.path}/sequoiadb/database" putLogPath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<!--mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<SdbCopyAndTar hostName="${test.machine.no2.basic}" localHostName="${host.NAME}" testLogPath="${install.path}/sequoiadb/database" putLogPath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" /-->
 		
 		
 	</target>
