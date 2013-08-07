@@ -44,7 +44,8 @@ public class SdbKillNode extends Task{
 			}
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			String strKill = " kill " + kill_type + " `ps -ef | grep sequoiadb\\(" + this.nodePort + " | grep -v grep | awk '{print $2}'` " ;  
+			String strKill = " kill " + kill_type + " `ps -ef | grep sequoiadb\\(" 
+			+ this.nodePort + " | grep -v grep | awk '{print $2}'` " ;  
 			String request = "START SHELL COMMAND " + strKill + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);

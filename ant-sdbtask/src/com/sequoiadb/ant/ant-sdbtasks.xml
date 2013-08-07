@@ -33,5 +33,6 @@
     <typedef name="sdbBaseName" classname="com.sequoiadb.ant.sdbtask.SdbtaskBaseName" onerror="ignore" />
     <typedef name="sdbNetWork" classname="com.sequoiadb.ant.sdbtask.SdbNetWork" onerror="ignore" />
     <typedef name="sdbRestartHost" classname="com.sequoiadb.ant.sdbtask.SdbRestartHost" onerror="ignore" />
+    <typedef name="sdbCopyAndTar" classname="com.sequoiadb.ant.sdbtask.SdbCopyAndTar" onerror="ignore" />
   
 </antlib>
