@@ -7,18 +7,15 @@ import com.ibm.staf.STAFException;
 import com.ibm.staf.STAFHandle;
 import com.ibm.staf.STAFResult;
 
-public class SdbNetWork extends Task {
+public class SdbCopyAndTar extends Task{
 	
+	private String localHostName ; 
+	private String hostName ; 
+	private String tarPath ; 
+	private String savePath ; 
+
 	
-	private String upOrDown = null ;
-	private String hostName = null ;
-	
-	
-	public void setUpOrDown( String value )
-	{
-		this.upOrDown = value ; 
-	}
-	public void setHostName( String value )
+	public void setLocalHostName( String value )
 	{
 		final String hostName1 = "suse-test1";
 		final String hostName2 = "suse-test2";
@@ -28,9 +25,20 @@ public class SdbNetWork extends Task {
 		if( value.equals( hostName1 ) ) varHostName = "suse-test1.control" ; 
 		if( value.equals( hostName2 ) ) varHostName = "suse-test2.control" ; 
 		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
-		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ; 
-		
-		this.hostName = varHostName ; 
+		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
+		this.localHostName = varHostName ;
+	}
+	public void setHostName( String value )
+	{
+		this.hostName = value ;
+	}
+	public void setTarPath( String value )
+	{
+		this.tarPath = value ; 
+	}
+	public void setSavePath( String value )
+	{
+		this.savePath = value ; 
 	}
 	
 	private String STAFResultToString(STAFResult result) {
@@ -38,7 +46,6 @@ public class SdbNetWork extends Task {
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
-	
 	public void execute ()
 	{
 		STAFHandle handle = null;
@@ -46,36 +53,9 @@ public class SdbNetWork extends Task {
 			
 			String doWork = null ;
 			handle = new STAFHandle("ant-sdbtasks");
-			
-			//file_string is a shell program , and it will be wrode in killNIC.sh file
-			String file_string = "nicName=`ifconfig | grep eth | awk '{print $1}'` ; \\n" +
-					" portName=`ifconfig | grep addr:192.168 | awk '{print $2}'` ; \\n" +
-					" i=0 ; \\n" +
-					"for list in $portName  \\n" +
-					"do \\n" + 
-					"echo $list | grep 192.168.30 ; \\n" + 
-					"if [ $? -eq 0 ] ; then \\n" + 
-					" getNic=${nicName:i*5:i+4} \\n" + 
-					"fi \\n" + 
-					"let i++; \\n" + 
-					"done ; \\n" + 
-					"if [ ! -n $getNic ] ; then \\n" +
-					" echo fail to getNic Name ; \\n" +
-					" exit 1 ; \\n" + 
-					"fi \\n" ; 
-			file_string += " ifconfig $getNic  " + this.upOrDown + "  ; \\n" 
-					+ "if [ $? -ne 0 ] ; then \\n"
-					+ " echo fail to ifconfig $getNic " + this.upOrDown + " ; \\n"
-					+ " exit 1 ; \\n" 
-					+ "fi \\n" ;
-			
-			doWork = "base_dir=`pwd` ; "  
-					+ "touch $base_dir/killNIC.sh ; " 
-					+ "echo -e " + file_string + ">>$base_dir/killNIC.sh ; " 
-					+ "chmod a+x $base_dir/killNIC.sh ; "
-					+ "$base_dir/killNIC.sh ; " 
-					+ "rm $base_dir/killNIC.sh ; " ; 
-			
+			//String strKill = " kill -9 \\(" + this.nodePort ;
+			doWork = "tar   -zcv   " + this.tarPath + "/*    " 
+			+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz ; " ;
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
@@ -84,6 +64,30 @@ public class SdbNetWork extends Task {
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
+			
+			request = "COPY DIRECTORY " 
+					+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz    "
+					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
+					+ this.localHostName ;
+
+			log("exec: staf " + this.hostName + " FS " + request);
+			result = handle.submit2(this.hostName, "FS", request);
+
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+			
+			request = "DELETE ENTRY " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz "
+					+ " RECURSE CONFIRM";
+			log("exec: staf " + this.hostName + " FS " + request);
+			result = handle.submit2(this.hostName, "FS", request);
+
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+			
 		}catch (STAFException e) {
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
 					+ e.getLocalizedMessage();

@@ -33,9 +33,11 @@ public class SdbStartCM extends Task {
 		STAFHandle handle = null;
 		try{
 			handle = new STAFHandle("ant-sdbtasks");
-			//String strKill = " kill -9 \\(" + this.nodePort ;
-			String stopcm = this.installPath + "/sequoiadb/bin/sdbcmart" ; 
-			String request = "START SHELL COMMAND " + stopcm + " WAIT 30m " ; 
+			String doWork = null ;
+			String setSdbCMconf = "sed -i 's/AutoStart=false/AutoStart=true/g'" + this.installPath + "/sequoiadb/conf/sdbcm.conf ; " ; 
+			String stopcm = this.installPath + "/sequoiadb/bin/sdbcmart ; " ;
+			doWork = setSdbCMconf + stopcm ; 
+			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
 			STAFResult result = handle.submit2( this.hostName ,  "PROCESS", request);

@@ -51,9 +51,9 @@ public class SdbGetNodeInfo extends Task{
 		String propertyHostName = group.getMaster().getHostName().toString() ;
 		String propertyNodePort = Integer.toString( group.getMaster().getPort() ) ;
 		List<sdbProperty> listPro = this.setProInfo.getListPro() ; 
-		if( this.getNodeType.equals("master") || ( "slave" == this.getNodeType && this.getNum.equals("1") ) )
+		if( this.getNodeType.equals("master") || ( this.getNodeType.equals("slave") && this.getNum.equals("1") ) )
 		{
-			if( "master" != this.getNodeType )
+			if( ! this.getNodeType.equals("master") )
 			{
 				propertyHostName = group.getSlave().getHostName().toString() ;
 				//propertyNodePort = Integer.toString( group.getSlave().getPort() ) ; 
