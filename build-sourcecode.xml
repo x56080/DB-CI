@@ -174,7 +174,10 @@
 		<copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbexprt" todir="${RELEASE_DIR}/sequoiadb/bin" />
     <copy file="${CODE_DIR}/build/linux2/${build.result.dir}/tool/engine/sdbload" todir="${RELEASE_DIR}/sequoiadb/bin" /-->
     <copy todir="${RELEASE_DIR}/sequoiadb/bin" >
-       <fileset dir="${CODE_DIR}/bin" includes="**/*" />
+       <fileset dir="${CODE_DIR}/bin">
+       	<include name="**/*" />
+       	<exclude name="lib*" />
+       </fileset>
     </copy>
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">

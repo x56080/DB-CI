@@ -103,7 +103,7 @@
 	<target name="copy-test-log" depends="deploy-test-all" >
 		<!--tar destfile="${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER}" basedir="${WORKSPACE}" includes="${host.NAME}-copy-log/**/*" compression="gzip" />
 		<SdbCopyAndTar hostName="${target.deploy_tar_gz.ip}" localHostName="${host.NAME}" tarPath="${WORKSPACE}/${host.NAME}-copy-log" savePath="${copy.log.path}" buildNum="${BUILD_NUMBER}"/-->
-		<property environment="env" />
+		<!--property environment="env" />
 		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" />
 		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}.copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
