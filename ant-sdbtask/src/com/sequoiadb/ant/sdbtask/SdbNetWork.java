@@ -13,9 +13,9 @@ public class SdbNetWork extends Task {
 	private String upOrDown = null ;
 	private String hostName = null ;
 	
-	
 	public void setUpOrDown( String value )
 	{
+		value = value.toLowerCase() ; 
 		this.upOrDown = value ; 
 	}
 	public void setHostName( String value )
@@ -45,38 +45,47 @@ public class SdbNetWork extends Task {
 		try{
 			
 			String doWork = null ;
+			String file_string = null ;
 			handle = new STAFHandle("ant-sdbtasks");
 			
-			//file_string is a shell program , and it will be wrode in killNIC.sh file
-			String file_string = "nicName=\\`ifconfig | grep eth | awk '{print \\$1}'\\` ; \\n " +
-					" portName=\\`ifconfig | grep addr:192.168 | awk '{print \\$2}'\\` ; \\n " +
-					" i=0 ; \\n " +
-					"for list in \\$portName  \\n " +
-					"do \\n " + 
-					"echo \\$list | grep 192.168.30 ; \\n " + 
-					"if [ \\$? -eq 0 ] ; then \\n " + 
-					" getNic=\\${nicName:i*5:i+4} \\n " + 
-					"fi \\n " + 
-					"let i++; \\n " + 
-					"done ; \\n " + 
-					"if [ !   -n \\$getNic ] ; then \\n " +
-					" echo fail to getNic Name ; \\n " +
-					" exit 1 ; \\n " + 
-					"fi \\n " ; 
-			file_string += " ifconfig \\$getNic  " + this.upOrDown + "  ; \\n " 
-					+ "if [ \\$?  -ne  0 ] ; then \\n "
-					+ " echo fail to ifconfig \\$getNic " + this.upOrDown + " ; \\n "
-					+ " exit 1 ; \\n " 
-					+ "fi \\n " ;
-			
-			doWork = "base_dir=`pwd` ; "  
-					+ "touch $base_dir/killNIC.sh ; " 
-					+ "echo -e \"" + file_string + "\">>$base_dir/killNIC.sh ; " 
-					+ "chmod a+x $base_dir/killNIC.sh ; "
-					+ "$base_dir/killNIC.sh ; " ;
-					//+ "rm $base_dir/killNIC.sh ; " ; 
-			
-			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
+			if( this.upOrDown.equals( "down" ) ){
+				//file_string is a shell program , and it will be wrode in killNIC.sh file
+				file_string = "nicName=\\`ifconfig | grep eth | awk '{print \\$1}'\\` ; \\n " +
+						" portName=\\`ifconfig | grep addr:192.168 | awk '{print \\$2}'\\` ; \\n " +
+						" i=0 ; \\n " +
+						"for list in \\$portName  \\n " +
+						"do \\n " + 
+						"echo \\$list | grep 192.168.30 ; \\n " + 
+						"if [ \\$? -eq 0 ] ; then \\n " + 
+						" getNic=\\${nicName:i*5:i+4} \\n " + 
+						"fi \\n " + 
+						"let i++; \\n " + 
+						"done ; \\n " + 
+						"if [ !   -n \\$getNic ] ; then \\n " +
+						" echo fail to getNic Name ; \\n " +
+						" exit 1 ; \\n " + 
+						"fi \\n " ; 
+				file_string += " ifconfig \\$getNic  " + this.upOrDown + "  ; \\n " 
+						+ "if [ \\$?  -ne  0 ] ; then \\n "
+						+ " echo fail to ifconfig \\$getNic " + this.upOrDown + " ; \\n "
+						+ " exit 1 ; \\n " 
+						+ "fi \\n " ;
+				
+				doWork = "base_dir=`pwd` ; "  
+						+ "echo \"\">$base_dir/killNIC.sh ; " 
+						+ "echo -e \"" + file_string + "\">>$base_dir/killNIC.sh ; " 
+						+ "chmod a+x $base_dir/killNIC.sh ; "
+						+ "$base_dir/killNIC.sh ; " ;
+						//+ "rm $base_dir/killNIC.sh ; " ; 
+			}
+			else if ( this.upOrDown.equals( "up" ) ){
+				file_string = "" ; 
+				
+			}
+			else {
+				throw new BuildException( "upOrDown must be up or down" ) ; 
+			}
+			String request = "START SHELL COMMAND " + doWork + "  WORKDIR  /opt  WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
 			STAFResult result = handle.submit2( this.hostName ,  "PROCESS", request);

@@ -31,6 +31,7 @@ public class SdbGetNodeInfo extends Task{
 	}
 	public void setGetNodeType( String value )
 	{
+		value = value.toLowerCase() ; 
 		this.getNodeType = value ; 
 	}
 	
