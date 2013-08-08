@@ -48,7 +48,7 @@ public class SdbNetWork extends Task {
 			handle = new STAFHandle("ant-sdbtasks");
 			
 			//file_string is a shell program , and it will be wrode in killNIC.sh file
-			String file_string = "nicName=\\`ifconfig | grep eth | awk '{print $1}'\\` ; \\n " +
+			String file_string = "nicName=\\`ifconfig | grep eth | awk '{print \\$1}'\\` ; \\n " +
 					" portName=\\`ifconfig | grep addr:192.168 | awk '{print \\$2}'\\` ; \\n " +
 					" i=0 ; \\n " +
 					"for list in \\$portName  \\n " +
