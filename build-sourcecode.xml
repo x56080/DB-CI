@@ -63,8 +63,16 @@
 			<arg line="${compile.arg.line}" />
 		</exec>
 
+		<exec executable="chmod " dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
+			<arg line=" -a+x ${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh " />
+		</exec>
+		
+		<exec executable="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
+			<arg line="  5.4.15 " />
+		</exec>
+
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
-			<arg line="${compile.arg.line} --phpversion=5.3.3" />
+			<arg line="${compile.arg.line} --phpversion=5.4.15" />
 		</exec>
 
 		<if>
