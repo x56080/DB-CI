@@ -64,7 +64,7 @@
 		</exec>
 
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
-			<arg line="${compile.arg.line} --phpversion=5.4.15" />
+			<arg line="${compile.arg.line} --phpversion=5.3.3" />
 		</exec>
 
 		<if>
