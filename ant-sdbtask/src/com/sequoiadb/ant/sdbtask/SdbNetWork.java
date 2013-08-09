@@ -121,17 +121,17 @@ public class SdbNetWork extends Task {
 					+ " /opt/sequoiadb/killNIC.sh ; " ;
 					//+ "rm $base_dir/killNIC.sh ; " ; 
 			
-			request = "COPY FILE " + fileName + "TODIRECTORY /opt/sequoiadb TOMACHINE " + this.hostName ; 
-			log( "exec : staf " + localHostName + request ) ; 
+			request = "  COPY FILE   " + fileName + "    TODIRECTORY /opt/sequoiadb   TOMACHINE     " + this.hostName ; 
+			log( "exec : staf   " + localHostName + request ) ; 
 			result = handle.submit2( localHostName ,  "FS", request);
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
 			
-			request = "START SHELL COMMAND " + doWork + "  WORKDIR  /opt/sequoiadb  WAIT 30m " ; 
+			request = "  START SHELL COMMAND   " + doWork + "   WORKDIR  /opt/sequoiadb   WAIT 30m " ; 
 			
-			log("exec: staf " + this.hostName + " PROCESS " + request);
+			log("exec: staf   " + this.hostName + "  PROCESS  " + request);
 			result = handle.submit2( this.hostName ,  "PROCESS", request);
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
