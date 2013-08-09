@@ -63,9 +63,7 @@
 			<arg line="${compile.arg.line}" />
 		</exec>
 
-		<exec executable="chmod " dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
-			<arg line=" -a+x ${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh " />
-		</exec>
+		<chmod file="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" perm="a+x" />
 		
 		<exec executable="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
 			<arg line="  5.4.15 " />
