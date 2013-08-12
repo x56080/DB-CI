@@ -153,6 +153,7 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/log" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/www" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/tools/server/php" />
 
 
 		<if>
@@ -215,7 +216,19 @@
 			<fileset dir="${CODE_DIR}/conf/samples/" />
 		</copy>
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
-
+		
+		<if>
+			<equals arg1="Linux" arg2="${os.name}">
+			<then>
+				<property name="PHP.VERSION" value="php_linux" />
+			</then>
+			<else>
+				<property name="PHP.VERSION" value="php_win" />
+			</else>
+		</if>
+		<copy todir="${RELEASE}/sequoiadb/tools/server/php">
+			<fileset dir="${CODE_DIR}/tools/server/${PHP.VERSION}" includes="**/*" />
+		</copy>
 		<!--copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
 		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" match="&#13;&#10;" replace="&#10;" flags="g"/ -->
 
