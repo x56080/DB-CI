@@ -6,6 +6,7 @@ import org.bson.BSONObject;
 import org.bson.types.BasicBSONList;
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.Sequoiadb;
+import com.sequoiadb.exception.BaseException;
 
 public class SdbHaveMaster extends Task {
 	private String hostName = "localhost" ;
@@ -48,6 +49,7 @@ public class SdbHaveMaster extends Task {
 		{
 			BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
 			String nodeID = oneBson.get( "NodeID" ).toString() ;
+			try{
 			if( sdb.getSnapshot(7,"{GroupID:"
 					+ groupID + ",NodeID:"
 					+ nodeID + "}"
@@ -62,6 +64,9 @@ public class SdbHaveMaster extends Task {
 							.getNext().get("IsPrimary").toString() ;
 				if( isMaster.equals( "true" ) )
 					return true ;
+			}
+			}catch( BaseException e ){
+				
 			}
 		}
 	//	
