@@ -218,7 +218,7 @@
 		<copy file="${CODE_DIR}/conf/sdbcm.conf" todir="${RELEASE_DIR}/sequoiadb/conf" />
 		
 		<if>
-			<equals arg1="Linux" arg2="${os.name}">
+			<equals arg1="Linux" arg2="${os.name}" />
 			<then>
 				<property name="PHP.VERSION" value="php_linux" />
 			</then>
