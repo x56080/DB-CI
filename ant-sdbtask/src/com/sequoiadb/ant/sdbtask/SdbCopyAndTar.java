@@ -61,8 +61,8 @@ public class SdbCopyAndTar extends Task{
 			String doWork = null ;
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			doWork = "tar   -zcv   " + this.tarPath + "/*    " 
-			+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number + " ; " ;
+			doWork = "tar   -zcv   " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
+			+ "    " + this.tarPath + "/*    " ;
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
