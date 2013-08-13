@@ -118,8 +118,8 @@ public class SdbNetWork extends Task {
 			STAFResult result = null ; 
 			
 			doWork = " chmod a+x /opt/sequoiadb/killNIC.sh ; "
-					+ " /opt/sequoiadb/killNIC.sh ; " ;
-					//+ "rm $base_dir/killNIC.sh ; " ; 
+					+ " /opt/sequoiadb/killNIC.sh ; " 
+					+ " rm $base_dir/killNIC.sh ; " ; 
 			
 			request = "  COPY FILE   " + fileName + "    TODIRECTORY /opt/sequoiadb   TOMACHINE     " + this.hostName ; 
 			log( "exec : staf   " + localHostName + request ) ; 
@@ -138,17 +138,19 @@ public class SdbNetWork extends Task {
 				throw new BuildException(STAFResultToString(result));
 			}
 			
-			/*
-			 * this code will be used after all thing is right ; 
-			 * delete remote machine's file
+			
 			request = "DELETE ENTRY " + fileName + " RECURSE CONFIRM" ; 
 			log("exec : staf " + this.hostName + request ) ; 
-			result = handle.submit2( this.hostName ,  "FS", request);
+			result = handle.submit2( this.hostName ,  "FS", request );
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
-			*/
+			
+			if( ! file.delete() ){
+				throw new Exception( "delete killNIC.sh file fail" ) ; 
+			}
+			
 			
 		}catch (STAFException e) {
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="

@@ -90,7 +90,7 @@
 		<record name="${testcase.path}/logs/TEST-${test.suite.class.name}/${test.case.name}.log" loglevel="verbose" action="start" />
 		<trycatch property="e">
 			<try>
-				<echo message="ant -f ${test-onecase-fullname} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} -Dtestcase.path=${testcase.path} test"></echo>
+				<echo message="ant -f ${test-onecase-fullname} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} -Dtestcase.path=${testcase.path} test" />
 
 				<antfetch antfile="${test-onecase-fullname}" target="test" inheritAll="false" return="ret.code,error.msg">
 					<!--property name="host.name" value="${host.name}" /-->

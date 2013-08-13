@@ -1,5 +1,10 @@
 package com.sequoiadb.ant.sdbtask;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
@@ -21,6 +26,10 @@ public class SdbCopyAndTar extends Task{
 	}
 	public void setLocalHostName( String value )
 	{
+		this.localHostName = changeHostName( value ) ;
+	}
+	private String changeHostName( String value )
+	{
 		final String hostName1 = "suse-test1";
 		final String hostName2 = "suse-test2";
 		final String hostName3 = "suse-test3";
@@ -30,11 +39,11 @@ public class SdbCopyAndTar extends Task{
 		if( value.equals( hostName2 ) ) varHostName = "suse-test2.control" ; 
 		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
 		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
-		this.localHostName = varHostName ;
+		return varHostName ;
 	}
 	public void setHostName( String value )
 	{
-		this.hostName = value ;
+		this.hostName = changeHostName( value ) ;
 	}
 	public void setTarPath( String value )
 	{
@@ -50,6 +59,26 @@ public class SdbCopyAndTar extends Task{
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
+	private void write_file( File file ) throws IOException, Exception
+	{
+		String file_string = null ;
+		
+		file_string = "mkdir -p " + this.tarPath + "/../" + this.hostName + ".diaglogfile ; \n" 
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				+ ""
+				
+				;
+		BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
+		output.write( file_string ) ;
+		output.close() ;
+	}
 	public void execute ()
 	{
 		STAFHandle handle = null;
@@ -59,9 +88,24 @@ public class SdbCopyAndTar extends Task{
 				this.number = "." + this.number ; 
 			}
 			String doWork = null ;
+			
+			String now_dir = System.getProperty("user.dir") ; 
+			String fileName = now_dir + "/shWork.sh" ;
+			File file = new File( fileName ) ;
+			if( ! file.exists() ){
+				if( ! file.createNewFile() )
+					throw new Exception( "create shWork.sh file fail" ) ; 
+			}
+			this.write_file( file );
+			
+			
+			
+			
+			
+			
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			doWork = "tar   -zcv   " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
+			doWork = "tar   -zcvf   " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
 			+ "    " + this.tarPath + "/*    " ;
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
@@ -95,6 +139,10 @@ public class SdbCopyAndTar extends Task{
 				throw new BuildException(STAFResultToString(result));
 			}
 			
+			if( ! file.delete() ){
+				throw new Exception( "delete shWork.sh file fail" ) ; 
+			}
+			
 		}catch (STAFException e) {
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
 					+ e.getLocalizedMessage();
@@ -102,6 +150,9 @@ public class SdbCopyAndTar extends Task{
 			e.printStackTrace();
 	
 			throw new BuildException(errorMsg);
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		finally{
 			try {

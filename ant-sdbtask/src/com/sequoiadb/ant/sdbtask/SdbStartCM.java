@@ -16,10 +16,22 @@ public class SdbStartCM extends Task {
 	{
 		this.installPath = value ;
 	}
-	
+	private String changeHostName( String value )
+	{
+		final String hostName1 = "suse-test1";
+		final String hostName2 = "suse-test2";
+		final String hostName3 = "suse-test3";
+		final String hostName4 = "suse-test4";
+		String varHostName = value ;
+		if( value.equals( hostName1 ) ) varHostName = "suse-test1.control" ; 
+		if( value.equals( hostName2 ) ) varHostName = "suse-test2.control" ; 
+		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
+		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
+		return varHostName ;
+	}
 	public void setHostName ( String value )
 	{
-		this.hostName = value ; 
+		this.hostName = changeHostName( value ) ; 
 	}
 
 	private String STAFResultToString(STAFResult result) {
@@ -34,8 +46,8 @@ public class SdbStartCM extends Task {
 		try{
 			handle = new STAFHandle("ant-sdbtasks");
 			String doWork = null ;
-			String setSdbCMconf = "sed -i 's/AutoStart=false/AutoStart=true/g'" + this.installPath + "/sequoiadb/conf/sdbcm.conf ; " ; 
-			String stopcm = this.installPath + "/sequoiadb/bin/sdbcmart ; " ;
+			String setSdbCMconf = "sed -i 's/AutoStart=false/AutoStart=true/g'" + this.installPath + "/sequoiadb/conf/sdbcm.conf ; \n" ; 
+			String stopcm = this.installPath + "/sequoiadb/bin/sdbcmart ; \n" ;
 			doWork = setSdbCMconf + stopcm ; 
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
