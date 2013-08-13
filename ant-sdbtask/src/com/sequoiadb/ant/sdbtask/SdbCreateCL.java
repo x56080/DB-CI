@@ -5,6 +5,9 @@ import org.apache.tools.ant.Task;
 
 import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.Sequoiadb;
+import org.bson.*;
+import org.bson.util.JSON;
+
 import com.sequoiadb.exception.BaseException;
 
 
@@ -46,6 +49,8 @@ public class SdbCreateCL extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
 			space.createCollection(clName);
+			BSONObject bson = (BSONObject) JSON.parse("{ReplSize:3}") ;  
+			space.createCollection( clName , bson ) ; 
 		}
 		catch(BaseException e)
 		{
