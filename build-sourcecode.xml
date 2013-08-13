@@ -225,8 +225,8 @@
 				<property name="PHP.VERSION" value="php_win" />
 			</else>
 		</if>
-		<copy todir="${RELEASE}/sequoiadb/tools/server/php">
-			<fileset dir="${CODE_DIR}/tools/server/${PHP.VERSION}/"/>
+		<copy todir="${RELEASE_DIR}/sequoiadb/tools/server/php">
+			<fileset dir="${CODE_DIR}/tools/server/${PHP.VERSION}/" />
 		</copy>
 		<!--copy file="${CODE_DIR}/script/sdbinst.sh" todir="${RELEASE_DIR}/sequoiadb/" />
 		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sdbinst.sh" match="&#13;&#10;" replace="&#10;" flags="g"/ -->
