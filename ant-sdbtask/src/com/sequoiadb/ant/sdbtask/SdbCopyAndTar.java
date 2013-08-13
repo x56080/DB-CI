@@ -63,7 +63,8 @@ public class SdbCopyAndTar extends Task{
 	{
 		String file_string = null ;
 		
-		file_string = "mkdir -p " + this.tarPath + "/../" + this.hostName + ".diaglogfile ; \n" 
+		file_string = "#!/bin/bash \n"
+				+ "mkdir -p " + this.tarPath + "/../" + this.hostName + ".diaglogfile ; \n" 
 				+ ""
 				+ ""
 				+ ""
