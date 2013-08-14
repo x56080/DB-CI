@@ -6,7 +6,6 @@ import org.apache.tools.ant.Task;
 import com.sequoiadb.base.CollectionSpace;
 import com.sequoiadb.base.Sequoiadb;
 import org.bson.*;
-import org.bson.util.JSON;
 
 import com.sequoiadb.exception.BaseException;
 
@@ -64,13 +63,6 @@ public class SdbCreateCL extends Task {
 				log("Failed to createcl(" + clName + ") , but not throw exception. exception=" + e);
 			}
 		}
-	}
-	
-	
-	public static void main( String args[] ){
-		SdbCreateCL taskCL = new SdbCreateCL() ; 
-		taskCL.setClname("bar");
-		taskCL.setCsname("foo");
 	}
 
 }
