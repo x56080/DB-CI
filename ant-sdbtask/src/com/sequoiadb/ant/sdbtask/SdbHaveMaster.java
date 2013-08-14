@@ -29,7 +29,7 @@ public class SdbHaveMaster extends Task {
 	}
 	public void setGroupName( String value )
 	{
-		this.groupName = value ; 
+		this.groupName = value ;
 	}
 	public void setWaitTime( String value )
 	{
@@ -38,37 +38,42 @@ public class SdbHaveMaster extends Task {
 	
 	private boolean checkMaster()
 	{
-		Sequoiadb sdb = new Sequoiadb( this.hostName , Integer.parseInt( this.port ) , "" ,"") ; 
-		ReplicaGroup RG = sdb.getReplicaGroup( this.groupName ) ;
-		//GroupID  ;
-		String groupID = RG.getDetail().get( "GroupID" ).toString() ;
-		int nodeNum = RG.getNodeNum(null) ; 
-		System.out.println( RG.getNodeNum(null) ) ;
-		BasicBSONList bson_list = (BasicBSONList)RG.getDetail().get("Group") ;
-		for(int i = 0 ; i < nodeNum ; i++ )
-		{
-			BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
-			String nodeID = oneBson.get( "NodeID" ).toString() ;
-			try{
-			if( sdb.getSnapshot(7,"{GroupID:"
-					+ groupID + ",NodeID:"
-					+ nodeID + "}"
-					, "{\"IsPrimary\":null}"
-					, null).hasNext() )
+		try{
+			Sequoiadb sdb = new Sequoiadb( this.hostName , Integer.parseInt( this.port ) , "" ,"") ;
+			ReplicaGroup RG = null ;
+			if( ! this.groupName.equals("1") )
+				RG = sdb.getReplicaGroup( this.groupName ) ;
+			else
+				RG = sdb.getReplicaGroup(1) ;
+			//GroupID  ;
+			String groupID = RG.getDetail().get( "GroupID" ).toString() ;
+			int nodeNum = RG.getNodeNum(null) ; 
+			System.out.println( RG.getNodeNum(null) ) ;
+			BasicBSONList bson_list = (BasicBSONList)RG.getDetail().get("Group") ;
+			
+			for(int i = 0 ; i < nodeNum ; i++ )
 			{
-				String isMaster = sdb.getSnapshot(7,"{GroupID:"
-							+ groupID + ",NodeID:"
-							+ nodeID + "}"
-							, "{\"IsPrimary\":null}"
-							, null)
-							.getNext().get("IsPrimary").toString() ;
-				if( isMaster.equals( "true" ) )
-					return true ;
-			}
-			}catch( BaseException e ){
+				BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
+				String nodeID = oneBson.get( "NodeID" ).toString() ;
+				if( sdb.getSnapshot(7,"{GroupID:"
+						+ groupID + ",NodeID:"
+						+ nodeID + "}"
+						, "{\"IsPrimary\":null}"
+						, null).hasNext() )
+				{
+					String isMaster = sdb.getSnapshot(7,"{GroupID:"
+								+ groupID + ",NodeID:"
+								+ nodeID + "}"
+								, "{\"IsPrimary\":null}"
+								, null)
+								.getNext().get("IsPrimary").toString() ;
+					if( isMaster.equals( "true" ) )
+						return true ;
+				}
 				
 			}
-		}
+		}catch( BaseException e){}
+		
 	//	
 		return false; 
 	}

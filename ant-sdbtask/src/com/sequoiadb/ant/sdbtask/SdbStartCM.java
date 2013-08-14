@@ -45,8 +45,8 @@ public class SdbStartCM extends Task {
 		STAFHandle handle = null;
 		try{
 			handle = new STAFHandle("ant-sdbtasks");
-			String doWork = null ;
-			String setSdbCMconf = "sed -i 's/AutoStart=false/AutoStart=true/g'" + this.installPath + "/sequoiadb/conf/sdbcm.conf ; \n" ; 
+			String doWork = null ; 
+			String setSdbCMconf = " sed -i 's:AutoStart=false:AutoStart=true:g'  " + this.installPath + "/sequoiadb/conf/sdbcm.conf ; \n" ; 
 			String stopcm = this.installPath + "/sequoiadb/bin/sdbcmart ; \n" ;
 			doWork = setSdbCMconf + stopcm ; 
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
