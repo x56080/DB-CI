@@ -4,14 +4,14 @@
 <!--@param ${deploy.file.fullname}: The file full path where deploy file name for test -->
 <!--@param ${deploy.path}: The path where deploy direcotry before tar -->
 <!--@param ${test.reports.path}: The path where test reports directory. -->
-<!--@param ${WORKSPACE}: where the working space is it-->
+<!--@param ${WORKSPACE}: where the working space is it-->
 <!--@param ${properties.dir} : where the ci.test.properties file is it -->
 
 <project name="deploy" default="test">
 	<!--property file="ci.properties" /-->
 	
 	<target name="deploy" depends="">
-		<echo message="Begin install software and test files to ${test.machine1}" />
+		<echo message="Begin install software and test files to ${test.machine1.no1.basic}" />
 		<hostinfo prefix="host" />
 		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
 		<property file="${properties.dir}" />
