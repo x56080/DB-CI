@@ -48,8 +48,8 @@ public class SdbCreateCL extends Task {
 		{
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
-			space.createCollection(clName);
-			BSONObject bson = (BSONObject) JSON.parse("{ReplSize:3}") ;  
+			BSONObject bson = new BasicBSONObject();
+			bson.put("ReplSize", 3);
 			space.createCollection( clName , bson ) ; 
 		}
 		catch(BaseException e)
