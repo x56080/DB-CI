@@ -66,7 +66,6 @@
 			</ant>
 			<ant antfile="deploy-software-in-host.xml" dir="." target="uninstall-software" inheritAll="false">
 				<property name="deploy.host.name" value="${test.machine.no3.basic}" />
-				<property name="install.package.fullname" value="${release.path}/${BUILD.INSTALL.FILENAME}" />
 			</ant>
 		</parallel>
 	</target>
