@@ -51,6 +51,7 @@ public class SdbCreateCL extends Task {
 			BSONObject bson = new BasicBSONObject();
 			bson.put("ReplSize", 3);
 			space.createCollection( clName , bson ) ; 
+			
 		}
 		catch(BaseException e)
 		{
@@ -63,6 +64,13 @@ public class SdbCreateCL extends Task {
 				log("Failed to createcl(" + clName + ") , but not throw exception. exception=" + e);
 			}
 		}
+	}
+	
+	
+	public static void main( String args[] ){
+		SdbCreateCL taskCL = new SdbCreateCL() ; 
+		taskCL.setClname("bar");
+		taskCL.setCsname("foo");
 	}
 
 }
