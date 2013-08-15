@@ -48,7 +48,7 @@ public class SdbHaveMaster extends Task {
 			//GroupID  ;
 			String groupID = RG.getDetail().get( "GroupID" ).toString() ;
 			int nodeNum = RG.getNodeNum(null) ; 
-			System.out.println( RG.getNodeNum(null) ) ;
+			//System.out.println( RG.getNodeNum(null) ) ;
 			BasicBSONList bson_list = (BasicBSONList)RG.getDetail().get("Group") ;
 			
 			for(int i = 0 ; i < nodeNum ; i++ )

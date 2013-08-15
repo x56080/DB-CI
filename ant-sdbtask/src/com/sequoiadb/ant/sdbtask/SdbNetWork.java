@@ -119,7 +119,7 @@ public class SdbNetWork extends Task {
 			
 			doWork = " chmod a+x /opt/sequoiadb/killNIC.sh ; "
 					+ " /opt/sequoiadb/killNIC.sh ; " 
-					+ " rm $base_dir/killNIC.sh ; " ; 
+					+ " rm  /opt/sequoiadb/killNIC.sh ; " ; 
 			
 			request = "  COPY FILE   " + fileName + "    TODIRECTORY /opt/sequoiadb   TOMACHINE     " + this.hostName ; 
 			log( "exec : staf   " + localHostName + request ) ; 

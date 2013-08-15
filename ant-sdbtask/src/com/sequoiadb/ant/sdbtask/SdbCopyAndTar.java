@@ -3,7 +3,6 @@ package com.sequoiadb.ant.sdbtask;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -16,14 +15,10 @@ public class SdbCopyAndTar extends Task{
 	
 	private String localHostName ; 
 	private String hostName ; 
-	private String tarPath ; 
+	private String diaglogPath ; 
 	private String savePath ; 
-	private String number = "" ; 
 
-	public void setBuildNum( String value )
-	{
-		this.number = value ; 
-	}
+	
 	public void setLocalHostName( String value )
 	{
 		this.localHostName = changeHostName( value ) ;
@@ -45,9 +40,9 @@ public class SdbCopyAndTar extends Task{
 	{
 		this.hostName = changeHostName( value ) ;
 	}
-	public void setTarPath( String value )
+	public void setdiaglogPath( String value )
 	{
-		this.tarPath = value ; 
+		this.diaglogPath = value ; 
 	}
 	public void setSavePath( String value )
 	{
@@ -59,35 +54,55 @@ public class SdbCopyAndTar extends Task{
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
-	private void write_file( File file ) throws IOException, Exception
+	private String write_file()
 	{
 		String file_string = null ;
 		
 		file_string = "#!/bin/bash \n"
-				+ "mkdir -p " + this.tarPath + "/../" + this.hostName + ".diaglogfile ; \n" 
-				+ ""
-				+ ""
-				+ ""
-				+ ""
-				+ ""
+				+ "checkDiaglog() \n" 
+				+ "{ \n"
+				+ "if test -d $1/diaglog \n"
+				+ " then \n"
+				+ "   echo $1/diaglog is exit ; \n"
+				+ "   DIAL_NAME=$1 ; \n"
+				+ "   DIAL_NAME=${DIAL_NAME##*/} ; \n"
+				+ "   mkdir -p $2\"/\"$DIAL_NAME ; \n"
+				+ "   cp -r \"$1/diaglog/\"  \"$2/$DIAL_NAME\" ; \n"
+				+ "else \n"
+				+ "   for fileName in $(ls $1) \n"
+				+ "   do \n"  
+				+ "      if test -d $1\"/\"$fileName \n"
+				+ "      then \n"
+				+ "         checkDiaglog $1\"/\"$fileName $2 ; \n"
+				+ "      fi \n"
+				+ "   done \n"
+				+ "fi \n"
+				+ "} \n"
+				+ "\n"
+				+ "if test -d $1 \n"
+				+ "then \n"
+				+ "   BASE_DIR=$(readlink -f $0) ; \n"
+				+ "   BASE_DIR=$(dirname $BASE_DIR); \n"
+				+ "   rm -rf $BASE_DIR\"/\"" + this.hostName + "-diaglog ;"
+				+ "   mkdir -p $BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
+				+ "   DIAL_DIR=$BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
+				+ "   checkDiaglog $1 $DIAL_DIR ; \n"
+				+ "fi \n"
+				+ "\n"
+				+ "tar -zcvf $BASE_DIR/" + this.hostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.hostName+ "-diaglog\" ; \n" 
 				+ ""
 				+ ""
 				+ ""
 				+ ""
 				
 				;
-		BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
-		output.write( file_string ) ;
-		output.close() ;
+		return file_string ;
 	}
 	public void execute ()
 	{
 		STAFHandle handle = null;
 		try{
-			if( ! this.number.equals("") )
-			{
-				this.number = "." + this.number ; 
-			}
+			
 			String doWork = null ;
 			
 			String now_dir = System.getProperty("user.dir") ; 
@@ -97,8 +112,17 @@ public class SdbCopyAndTar extends Task{
 				if( ! file.createNewFile() )
 					throw new Exception( "create shWork.sh file fail" ) ; 
 			}
-			this.write_file( file );
 			
+
+			BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
+			output.write( this.write_file() ) ;
+			output.close() ;
+			
+			
+			
+			doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
+					+ "  " + this.diaglogPath + "/shWork.sh ; " ; 
+					//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
 			
 			
 			
@@ -106,8 +130,9 @@ public class SdbCopyAndTar extends Task{
 			
 			handle = new STAFHandle("ant-sdbtasks");
 			//String strKill = " kill -9 \\(" + this.nodePort ;
-			doWork = "tar   -zcvf   " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
-			+ "    " + this.tarPath + "/*    " ;
+			log(" shWork.sh file : \n" + this.write_file() ) ;
+			//doWork += "tar   -zcvf   " + this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
+			//+ "    " + this.diaglogPath + "/" +this.diaglogPath+ "-diaglog/*  ;  " ;
 			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
@@ -118,7 +143,7 @@ public class SdbCopyAndTar extends Task{
 			}
 			
 			request = "COPY DIRECTORY " 
-					+ this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
+					+ this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.localHostName ;
 
@@ -129,8 +154,8 @@ public class SdbCopyAndTar extends Task{
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
-			
-			request = "DELETE ENTRY " + this.tarPath + "/../" + this.hostName + "-test-log.tar.gz" + this.number 
+			/*
+			request = "DELETE ENTRY " + this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
 					+ " RECURSE CONFIRM";
 			log("exec: staf " + this.hostName + " FS " + request);
 			result = handle.submit2(this.hostName, "FS", request);
@@ -143,7 +168,7 @@ public class SdbCopyAndTar extends Task{
 			if( ! file.delete() ){
 				throw new Exception( "delete shWork.sh file fail" ) ; 
 			}
-			
+			*/
 		}catch (STAFException e) {
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
 					+ e.getLocalizedMessage();
