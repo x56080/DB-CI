@@ -46,12 +46,15 @@
 			<catagroup name="cata1">
 				<node host="${test.machine.no1.data}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="sharingbreak" value="10000" />
 				</node>
 				<node host="${test.machine.no2.data}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="sharingbreak" value="10000" />
 				</node>
 				<node host="${test.machine.no3.data}" baseport="30000" dbpath="${install.path}/sequoiadb/database/cata/30000">
 					<confitem name="diaglevel" value="5" />
+					<confitem name="sharingbreak" value="10000" />
 				</node>
 			</catagroup>
 		</sdbdeploy>
