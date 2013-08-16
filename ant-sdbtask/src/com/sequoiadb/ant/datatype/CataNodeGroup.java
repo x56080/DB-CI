@@ -5,7 +5,11 @@ package com.sequoiadb.ant.datatype;
 
 
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.tools.ant.BuildException;
+import org.bson.BSONObject;
 
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.ReplicaNode;
@@ -37,10 +41,14 @@ public class CataNodeGroup extends NodeGroup {
 			getNodeList().remove(0);
 
 			try {
+				//BSONObject bson = new BasicBSONObject() ;
+				//bson.put("SharingBreak", 10000) ;
+				//Map< String , String > map = new LinkedHashMap< String , String >() ;
+				//map.put("SharingBreak", "10000") ;
 				// create group
 				sdb.createReplicaCataGroup(nodeInfo.getHost(),
 						nodeInfo.getBasePort(), nodeInfo.getDbpath(),
-						nodeInfo.getConfigMap());
+						nodeInfo.getConfigMap() );
 				/*chen write , here seem have propore
 				ReplicaGroup cataRG = sdb.getReplicaGroup( CATALOG_GROUP_NAME ) ;
 				ReplicaNode cataNode = cataRG.createNode( nodeInfo.getHost() , 
