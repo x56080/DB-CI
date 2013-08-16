@@ -85,6 +85,10 @@
         <changePermissions files="${installdir}/bin/{*,*/*}" permissions="0755">
             <customErrorMessage>${msg(Install.ErrorMsg.ChangeInsallerPathPermissions.error)}</customErrorMessage>
         </changePermissions>
+        <changePermissions>
+            <files>${installdir}/tools/server/php/bin/*</files>
+            <permissions>0755</permissions>
+        </changePermissions>
         <propertiesFileSet>
             <file>${installdir}/conf/sdbcm.conf</file>
             <key>defaultPort</key>
