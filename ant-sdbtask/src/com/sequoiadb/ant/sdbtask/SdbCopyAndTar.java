@@ -167,7 +167,7 @@ public class SdbCopyAndTar extends Task{
 				throw new BuildException(STAFResultToString(result));
 			}
 			
-			request = "COPY DIRECTORY " 
+			request = "COPY FILE  " 
 					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.localHostName ;
