@@ -18,6 +18,7 @@ public class SdbCopyAndTar extends Task{
 	private String diaglogPath =null ; 
 	private String savePath ; 
 	private String tarPath = null ;
+	private String buildNum = "" ;
 
 	
 	public void setLocalHostName( String value )
@@ -36,6 +37,10 @@ public class SdbCopyAndTar extends Task{
 		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
 		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
 		return varHostName ;
+	}
+	public void setBuildNum( String value )
+	{
+		this.buildNum = "." + value ;
 	}
 	public void setHostName( String value )
 	{
@@ -154,7 +159,8 @@ public class SdbCopyAndTar extends Task{
 				
 			}
 			else{
-				doWork = " tar -zcvf  " + this.hostName + "-diaglog.tar.gz  " + this.tarPath + "/* ; " ;
+				doWork = " tar -zcvf  " + this.hostName + "-diaglog.tar.gz" + this.buildNum 
+						+ "  " + this.tarPath + "/* ; " ;
 				copyPath = this.tarPath ;
 			}
 			
@@ -168,7 +174,7 @@ public class SdbCopyAndTar extends Task{
 			}
 			
 			request = "COPY FILE  " 
-					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" 
+					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" + this.buildNum 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.localHostName ;
 
