@@ -62,7 +62,7 @@ public class SdbCopyAndTar extends Task{
 				+ "checkDiaglog() \n" 
 				+ "{ \n"
 				+ "if test -d $1/diaglog \n"
-				+ " then \n"
+				+ "then \n"
 				+ "   echo $1/diaglog is exit ; \n"
 				+ "   DIAL_NAME=$1 ; \n"
 				+ "   DIAL_NAME=${DIAL_NAME##*/} ; \n"
@@ -83,7 +83,7 @@ public class SdbCopyAndTar extends Task{
 				+ "then \n"
 				+ "   BASE_DIR=$(readlink -f $0) ; \n"
 				+ "   BASE_DIR=$(dirname $BASE_DIR); \n"
-				+ "   rm -rf $BASE_DIR\"/\"" + this.hostName + "-diaglog ;"
+				+ "   rm -rf $BASE_DIR\"/\"" + this.hostName + "-diaglog ; \n"
 				+ "   mkdir -p $BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
 				+ "   DIAL_DIR=$BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
 				+ "   checkDiaglog $1 $DIAL_DIR ; \n"
@@ -121,7 +121,8 @@ public class SdbCopyAndTar extends Task{
 			
 			
 			doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
-					+ "  " + this.diaglogPath + "/shWork.sh ; " ; 
+					+ "  " 
+					+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
 					//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
 			
 			
@@ -129,14 +130,24 @@ public class SdbCopyAndTar extends Task{
 			
 			
 			handle = new STAFHandle("ant-sdbtasks");
-			//String strKill = " kill -9 \\(" + this.nodePort ;
+			String request = null ;
+			STAFResult result = null ;
+			
+			request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
+					+ "   TOMACHINE     " + this.hostName ; 
+			log( "exec : staf   " + localHostName + request ) ; 
+			result = handle.submit2( localHostName ,  "FS", request);
+			log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+			
+			
 			log(" shWork.sh file : \n" + this.write_file() ) ;
-			//doWork += "tar   -zcvf   " + this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
-			//+ "    " + this.diaglogPath + "/" +this.diaglogPath+ "-diaglog/*  ;  " ;
-			String request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
+			request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
-			STAFResult result = handle.submit2( this.hostName ,  "PROCESS", request);
+			result = handle.submit2( this.hostName ,  "PROCESS", request);
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
