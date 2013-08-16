@@ -15,8 +15,9 @@ public class SdbCopyAndTar extends Task{
 	
 	private String localHostName ; 
 	private String hostName ; 
-	private String diaglogPath ; 
+	private String diaglogPath =null ; 
 	private String savePath ; 
+	private String tarPath = null ;
 
 	
 	public void setLocalHostName( String value )
@@ -104,46 +105,59 @@ public class SdbCopyAndTar extends Task{
 		try{
 			
 			String doWork = null ;
-			
-			String now_dir = System.getProperty("user.dir") ; 
-			String fileName = now_dir + "/shWork.sh" ;
-			File file = new File( fileName ) ;
-			if( ! file.exists() ){
-				if( ! file.createNewFile() )
-					throw new Exception( "create shWork.sh file fail" ) ; 
-			}
-			
-
-			BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
-			output.write( this.write_file() ) ;
-			output.close() ;
-			
-			
-			
-			doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
-					+ "  " 
-					+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
-					//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
-			
-			
-			
-			
-			
-			handle = new STAFHandle("ant-sdbtasks");
 			String request = null ;
 			STAFResult result = null ;
+			String copyPath = null ;
 			
-			request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
-					+ "   TOMACHINE     " + this.hostName ; 
-			log( "exec : staf   " + localHostName + request ) ; 
-			result = handle.submit2( localHostName ,  "FS", request);
-			log(STAFResultToString(result));
-			if (result.rc != STAFResult.Ok) {
-				throw new BuildException(STAFResultToString(result));
+			
+			if( this.tarPath == null && this.diaglogPath != null )
+			{
+				String now_dir = System.getProperty("user.dir") ; 
+				String fileName = now_dir + "/shWork.sh" ;
+				File file = new File( fileName ) ;
+				if( ! file.exists() ){
+					if( ! file.createNewFile() )
+						throw new Exception( "create shWork.sh file fail" ) ; 
+				}
+				
+	
+				BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
+				output.write( this.write_file() ) ;
+				output.close() ;
+				
+				
+				
+				doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
+						+ "  " 
+						+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
+						//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
+				
+				
+				
+				
+				
+				handle = new STAFHandle("ant-sdbtasks");
+				
+				request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
+						+ "   TOMACHINE     " + this.hostName ; 
+				log( "exec : staf   " + localHostName + "   " + request ) ; 
+				result = handle.submit2( localHostName ,  "FS", request);
+				log(STAFResultToString(result));
+				if (result.rc != STAFResult.Ok) {
+					throw new BuildException(STAFResultToString(result));
+				}
+				
+				
+				log(" shWork.sh file : \n" + this.write_file() ) ;
+				
+				copyPath = this.diaglogPath ;
+				
+			}
+			else{
+				doWork = " tar -zcvf  " + this.hostName + "-diaglog.tar.gz  " + this.tarPath + "/* ; " ;
+				copyPath = this.tarPath ;
 			}
 			
-			
-			log(" shWork.sh file : \n" + this.write_file() ) ;
 			request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
@@ -154,7 +168,7 @@ public class SdbCopyAndTar extends Task{
 			}
 			
 			request = "COPY DIRECTORY " 
-					+ this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
+					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.localHostName ;
 
@@ -166,7 +180,7 @@ public class SdbCopyAndTar extends Task{
 				throw new BuildException(STAFResultToString(result));
 			}
 			/*
-			request = "DELETE ENTRY " + this.diaglogPath + "/" + this.hostName + "-diaglog.tar.gz" 
+			request = "DELETE ENTRY " + copyPath + "/" + this.hostName + "-diaglog.tar.gz" 
 					+ " RECURSE CONFIRM";
 			log("exec: staf " + this.hostName + " FS " + request);
 			result = handle.submit2(this.hostName, "FS", request);
