@@ -95,8 +95,8 @@
 
 	  <echo message="${build.name.C}" />
 	  <echo message="building the ${build.real.name.c} in C" />
-  	<exec dir="${build.testcases.C}" spawn="true" executable="./buildApp.sh" failonerror="true" >
-  		 <arg value="${build.real.name.c}" />
+  	<exec dir="${build.testcases.C}" spawn="true" executable="sh" failonerror="true" >
+  		 <arg value="-c '${build.testcases.C}/buildApp.sh ${build.real.name.c}'" />
   	</exec>
   	<echo message="Holle World" />
   </target>
@@ -105,8 +105,8 @@
 	  <!--local name="build.real.name" /-->
 	  <sdbBaseName property="build.real.name.cpp" file="${build.name.CPP}" suffix=".cpp" />
 	  <echo message="building the ${build.real.name.cpp} in CPP" />
-	  <exec dir="${build.testcases.CPP}" spawn="true" executable="./buildApp.sh" failonerror="true">
-		   <arg value="${build.real.name.cpp}" />
+	  <exec dir="${build.testcases.CPP}" spawn="true" executable="sh" failonerror="true">
+		   <arg value="-c '${build.testcases.CPP}/buildApp.sh ${build.real.name.cpp}'" />
   	</exec>
   </target>
 
