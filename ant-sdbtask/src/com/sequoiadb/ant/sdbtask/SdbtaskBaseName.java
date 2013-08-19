@@ -5,6 +5,9 @@ import java.io.File;
 
 import org.apache.tools.ant.Task;
 
+/**
+ * @author chenzichuan
+ */
 public class SdbtaskBaseName extends Task {
 	private String file ; 
 	private String property ; 

@@ -7,7 +7,9 @@ import org.apache.tools.ant.Task;
 import com.ibm.staf.STAFException;
 import com.ibm.staf.STAFHandle;
 
-
+/**
+ * @author chenzichuan
+ */
 public class SdbStartCM extends Task {
 	private String hostName ; 
 	private String installPath = "/opt" ; 

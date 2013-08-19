@@ -6,6 +6,10 @@ import org.apache.tools.ant.Task;
 import com.ibm.staf.STAFException;
 import com.ibm.staf.STAFHandle;
 import com.ibm.staf.STAFResult;
+
+/**
+ * @author chenzichuan
+ */
 public class SdbKillNode extends Task{
 	private String hostName ; 
 	private String nodePort ; 

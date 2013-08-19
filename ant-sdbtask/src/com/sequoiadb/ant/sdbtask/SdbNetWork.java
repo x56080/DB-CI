@@ -12,6 +12,9 @@ import com.ibm.staf.STAFException;
 import com.ibm.staf.STAFHandle;
 import com.ibm.staf.STAFResult;
 
+/**
+ * @author chenzichuan
+ */
 public class SdbNetWork extends Task {
 	
 	

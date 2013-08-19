@@ -6,6 +6,9 @@ import org.apache.tools.ant.Task;
 import com.sequoiadb.ant.tools.*;
 
 import org.apache.tools.ant.types.Parameter;
+/**
+ * @author chenzichuan
+ */
 public class SdbGetNodeInfo extends Task{
 	private String hostName ; 
 	//private String propertyHostName ;

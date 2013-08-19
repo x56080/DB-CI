@@ -7,7 +7,9 @@ import org.bson.types.BasicBSONList;
 import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.Sequoiadb;
 import com.sequoiadb.exception.BaseException;
-
+/**
+ * @author chenzichuan
+ */
 public class SdbHaveMaster extends Task {
 	private String hostName = "localhost" ;
 	private String port = "50000" ; 

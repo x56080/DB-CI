@@ -6,10 +6,13 @@ package com.sequoiadb.ant.sdbtask;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Parameter;
 
+/**
+ * @author chenzichuan
+ *
+ */
 public class createPrefix extends Task{
 	
    private String prefixName = null ; 
