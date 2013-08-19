@@ -41,6 +41,10 @@ public class SdbCopyAndTar extends Task{
 		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
 		return varHostName ;
 	}
+	public void setTarPath( String value )
+	{
+		this.tarPath = value ;
+	}
 	public void setBuildNum( String value )
 	{
 		this.buildNum = "." + value ;
