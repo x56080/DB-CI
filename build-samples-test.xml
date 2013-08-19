@@ -96,7 +96,7 @@
 	  <echo message="${build.name.C}" />
 	  <echo message="building the ${build.real.name.c} in C" />
   	<exec dir="${build.testcases.C}" executable="sh" failonerror="true">
-  		 <arg value="-c '${build.testcases.C}/buildApp.sh ${build.real.name.c}'" />
+  		 <arg line="-c '${build.testcases.C}/buildApp.sh ${build.real.name.c}'" />
   	</exec>
   	<echo message="Holle World" />
   </target>
@@ -106,7 +106,7 @@
 	  <sdbBaseName property="build.real.name.cpp" file="${build.name.CPP}" suffix=".cpp" />
 	  <echo message="building the ${build.real.name.cpp} in CPP" />
 	  <exec dir="${build.testcases.CPP}" executable="sh" failonerror="true">
-		   <arg value="-c '${build.testcases.CPP}/buildApp.sh ${build.real.name.cpp}'" />
+		   <arg line="-c '${build.testcases.CPP}/buildApp.sh ${build.real.name.cpp}'" />
   	</exec>
   </target>
 
