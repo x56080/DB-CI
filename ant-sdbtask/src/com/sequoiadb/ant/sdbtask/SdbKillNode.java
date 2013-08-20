@@ -39,11 +39,11 @@ public class SdbKillNode extends Task{
 		try{
 			
 			String kill_type = "-15" ; 
-			if( this.killType == "-9")
+			if( this.killType.equals("-9") )
 			{
 				kill_type = "-9" ;
 			}
-			else if ( this.killType == "-15" ){
+			else if ( this.killType.equals("-15") ){
 				kill_type  =  "-15" ; 
 			}
 			handle = new STAFHandle("ant-sdbtasks");
