@@ -167,7 +167,7 @@ public class SdbCopyAndTar extends Task{
 			}
 			else{
 				doWork = " tar -zcvf  " + this.hostName + "-diaglog.tar.gz" + this.buildNum 
-						+ "  " + this.tarPath + "/* ; " ;
+						+ "  " + this.tarPath + "/ ; " ;
 				copyPath = this.tarPath ;
 			}
 			
