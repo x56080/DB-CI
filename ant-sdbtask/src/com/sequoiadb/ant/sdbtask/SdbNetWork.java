@@ -141,9 +141,9 @@ public class SdbNetWork extends Task {
 				throw new BuildException(STAFResultToString(result));
 			}
 			
-			
+			/*
 			request = "DELETE ENTRY " + fileName + " RECURSE CONFIRM" ; 
-			log("exec : staf " + this.hostName + request ) ; 
+			log("exec : staf " + this.hostName + "  " + request ) ; 
 			result = handle.submit2( this.hostName ,  "FS", request );
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
@@ -153,7 +153,7 @@ public class SdbNetWork extends Task {
 			if( ! file.delete() ){
 				throw new Exception( "delete killNIC.sh file fail" ) ; 
 			}
-			
+			*/
 			
 		}catch (STAFException e) {
 			String errorMsg = "STAFException, RC=" + e.rc + "\nmsg="
