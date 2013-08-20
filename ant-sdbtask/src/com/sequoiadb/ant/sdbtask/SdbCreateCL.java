@@ -15,7 +15,12 @@ public class SdbCreateCL extends Task {
 	private String csName = null;
 	private String clName = null;
 	private boolean failonerror = false;
+	private String replSize = null ;
 	
+	public void setReplSize( String value )
+	{
+		this.replSize = value ;
+	}
 	public void setSdbhandle(String value)
 	{
 		uuid = value;
@@ -48,9 +53,13 @@ public class SdbCreateCL extends Task {
 			Sequoiadb sdb = (Sequoiadb) obj;
 			CollectionSpace space = sdb.getCollectionSpace(csName);
 			BSONObject bson = new BasicBSONObject();
-			bson.put("ReplSize", 3);
+			//bson = null ;
+			if( this.replSize != null )
+				bson.put("ReplSize", Integer.parseInt( this.replSize ) );
+			else
+				bson = null ;
+
 			space.createCollection( clName , bson ) ; 
-			
 		}
 		catch(BaseException e)
 		{
