@@ -67,7 +67,7 @@ public class SdbCopyAndTar extends Task{
 		String msg = "RC=" + result.rc + "\nmsg=" + result.result;
 		return msg;
 	}
-	private String write_file()
+	private String write_file1()
 	{
 		String file_string = null ;
 		
@@ -134,7 +134,7 @@ public class SdbCopyAndTar extends Task{
 				
 	
 				BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
-				output.write( this.write_file() ) ;
+				output.write( this.write_file1() ) ;
 				output.close() ;
 				
 				
@@ -143,10 +143,6 @@ public class SdbCopyAndTar extends Task{
 						+ "  " 
 						+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
 						//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
-				
-				
-				
-				
 				
 				handle = new STAFHandle("ant-sdbtasks");
 				
@@ -160,25 +156,32 @@ public class SdbCopyAndTar extends Task{
 				}
 				
 				
-				log(" shWork.sh file : \n" + this.write_file() ) ;
+				log(" shWork.sh file : \n" + this.write_file1() ) ;
 				
 				copyPath = this.diaglogPath ;
 				
+				request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
+				
+				log("exec: staf " + this.hostName + " PROCESS " + request);
+				result = handle.submit2( this.hostName ,  "PROCESS", request);
+				log(STAFResultToString(result));
+				if (result.rc != STAFResult.Ok) {
+					throw new BuildException(STAFResultToString(result));
+				}
+				
 			}
 			else{
-				doWork = " tar -zcvf  " + now_dir + "/" + this.hostName + "-diaglog.tar.gz" + this.buildNum 
-						+ "  " + this.tarPath + "/ ; " ;
+				
+				Runtime run = Runtime.getRuntime() ;
+				Process pro = run.exec(new String[]{"sh" , "-c" , 
+						"tar -zcvf  " + now_dir + "/" + this.hostName + "-diaglog.tar.gz"
+						+ this.buildNum 
+						+ "  " + this.tarPath + "/ "}) ;
+				
 				copyPath = this.tarPath ;
 			}
 			
-			request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 			
-			log("exec: staf " + this.hostName + " PROCESS " + request);
-			result = handle.submit2( this.hostName ,  "PROCESS", request);
-			log(STAFResultToString(result));
-			if (result.rc != STAFResult.Ok) {
-				throw new BuildException(STAFResultToString(result));
-			}
 			
 			request = "COPY FILE  " 
 					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" + this.buildNum 
