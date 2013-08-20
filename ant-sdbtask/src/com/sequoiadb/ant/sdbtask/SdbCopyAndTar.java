@@ -120,11 +120,11 @@ public class SdbCopyAndTar extends Task{
 			String request = null ;
 			STAFResult result = null ;
 			String copyPath = null ;
-			
+			String now_dir = System.getProperty("user.dir") ;
 			
 			if( this.tarPath == null && this.diaglogPath != null )
 			{
-				String now_dir = System.getProperty("user.dir") ; 
+				 
 				String fileName = now_dir + "/shWork.sh" ;
 				File file = new File( fileName ) ;
 				if( ! file.exists() ){
@@ -166,7 +166,7 @@ public class SdbCopyAndTar extends Task{
 				
 			}
 			else{
-				doWork = " tar -zcvf  " + this.hostName + "-diaglog.tar.gz" + this.buildNum 
+				doWork = " tar -zcvf  " + now_dir + "/" + this.hostName + "-diaglog.tar.gz" + this.buildNum 
 						+ "  " + this.tarPath + "/ ; " ;
 				copyPath = this.tarPath ;
 			}
