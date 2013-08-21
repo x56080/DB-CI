@@ -16,17 +16,17 @@ import com.ibm.staf.STAFResult;
  */
 public class SdbCopyAndTar extends Task{
 	
-	private String localHostName ; 
-	private String hostName ; 
+	private String saveHostName ; 
+	private String filehostName ; 
 	private String diaglogPath =null ; 
 	private String savePath ; 
 	private String tarPath = null ;
 	private String buildNum = "" ;
 
 	
-	public void setLocalHostName( String value )
+	public void setSaveHostName( String value )
 	{
-		this.localHostName = changeHostName( value ) ;
+		this.saveHostName = changeHostName( value ) ;
 	}
 	private String changeHostName( String value )
 	{
@@ -49,9 +49,9 @@ public class SdbCopyAndTar extends Task{
 	{
 		this.buildNum = "." + value ;
 	}
-	public void setHostName( String value )
+	public void setFileHostName( String value )
 	{
-		this.hostName = changeHostName( value ) ;
+		this.filehostName = changeHostName( value ) ;
 	}
 	public void setdiaglogPath( String value )
 	{
@@ -96,13 +96,13 @@ public class SdbCopyAndTar extends Task{
 				+ "then \n"
 				+ "   BASE_DIR=$(readlink -f $0) ; \n"
 				+ "   BASE_DIR=$(dirname $BASE_DIR); \n"
-				+ "   rm -rf $BASE_DIR\"/\"" + this.hostName + "-diaglog ; \n"
-				+ "   mkdir -p $BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
-				+ "   DIAL_DIR=$BASE_DIR\"/" + this.hostName + "-diaglog\" ; \n"
+				+ "   rm -rf $BASE_DIR\"/\"" + this.filehostName + "-diaglog ; \n"
+				+ "   mkdir -p $BASE_DIR\"/" + this.filehostName + "-diaglog\" ; \n"
+				+ "   DIAL_DIR=$BASE_DIR\"/" + this.filehostName + "-diaglog\" ; \n"
 				+ "   checkDiaglog $1 $DIAL_DIR ; \n"
 				+ "fi \n"
 				+ "\n"
-				+ "tar -zcvf $BASE_DIR/" + this.hostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.hostName+ "-diaglog\" ; \n" 
+				+ "tar -zcvf $BASE_DIR/" + this.filehostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.filehostName+ "-diaglog\" ; \n" 
 				+ ""
 				+ ""
 				+ ""
@@ -147,9 +147,9 @@ public class SdbCopyAndTar extends Task{
 				handle = new STAFHandle("ant-sdbtasks");
 				
 				request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
-						+ "   TOMACHINE     " + this.hostName ; 
-				log( "exec : staf   " + localHostName + "   " + request ) ; 
-				result = handle.submit2( localHostName ,  "FS", request);
+						+ "   TOMACHINE     " + this.filehostName ; 
+				log( "exec : staf   " + saveHostName + "   " + request ) ; 
+				result = handle.submit2( saveHostName ,  "FS", request);
 				log(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok) {
 					throw new BuildException(STAFResultToString(result));
@@ -162,8 +162,8 @@ public class SdbCopyAndTar extends Task{
 				
 				request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
 				
-				log("exec: staf " + this.hostName + " PROCESS " + request);
-				result = handle.submit2( this.hostName ,  "PROCESS", request);
+				log("exec: staf " + this.filehostName + " PROCESS " + request);
+				result = handle.submit2( this.filehostName ,  "PROCESS", request);
 				log(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok) {
 					throw new BuildException(STAFResultToString(result));
@@ -174,7 +174,7 @@ public class SdbCopyAndTar extends Task{
 				
 				Runtime run = Runtime.getRuntime() ;
 				Process pro = run.exec(new String[]{"sh" , "-c" , 
-						"tar -zcvf  " + now_dir + "/" + this.hostName + "-diaglog.tar.gz"
+						"tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
 						+ this.buildNum 
 						+ "  " + this.tarPath + "/ "}) ;
 				
@@ -184,12 +184,12 @@ public class SdbCopyAndTar extends Task{
 			
 			
 			request = "COPY FILE  " 
-					+ copyPath + "/" + this.hostName + "-diaglog.tar.gz" + this.buildNum 
+					+ copyPath + "/" + this.filehostName + "-diaglog.tar.gz" + this.buildNum 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
-					+ this.localHostName ;
+					+ this.saveHostName ;
 
-			log("exec: staf " + this.hostName + " FS " + request);
-			result = handle.submit2(this.hostName, "FS", request);
+			log("exec: staf " + this.filehostName + " FS " + request);
+			result = handle.submit2(this.filehostName, "FS", request);
 
 			log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {

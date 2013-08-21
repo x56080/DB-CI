@@ -103,7 +103,7 @@
 
 	</target>
 	<target name="copy-test-log" depends="deploy-test-all" >
-		<sdbCopyAndTar hostName="${target.deploy_tar_gz.ip}" localHostName="${host.NAME}" tarPath="${WORKSPACE}/${host.NAME}-copy-log" savePath="${copy.log.path}" buildNum="${BUILD_NUMBER}"/>
+		<sdbCopyAndTar saveHostName="${target.deploy_tar_gz.ip}" fileHostName="${host.NAME}" tarPath="${WORKSPACE}/${host.NAME}-copy-log" savePath="${copy.log.path}" buildNum="${BUILD_NUMBER}"/>
 		<!--move -->
 		 
 		<!--property environment="env" />
