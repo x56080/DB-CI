@@ -173,6 +173,9 @@ public class SdbCopyAndTar extends Task{
 			else{
 				
 				Runtime run = Runtime.getRuntime() ;
+				log( "tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
+						+ this.buildNum 
+						+ "  " + this.tarPath + "/ " ) ; 
 				Process pro = run.exec(new String[]{"sh" , "-c" , 
 						"tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
 						+ this.buildNum 
