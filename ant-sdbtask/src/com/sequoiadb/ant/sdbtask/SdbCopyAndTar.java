@@ -152,7 +152,7 @@ public class SdbCopyAndTar extends Task{
 						+ "   TOMACHINE     " + this.filehostName ; 
 				log( "exec : staf   " + saveHostName + "   " + request ) ; 
 				result = handle.submit2( saveHostName ,  "FS", request);
-				log(STAFResultToString(result));
+				//log(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok) {
 					throw new BuildException(STAFResultToString(result));
 				}
@@ -166,7 +166,7 @@ public class SdbCopyAndTar extends Task{
 				
 				log("exec: staf " + this.filehostName + " PROCESS " + request);
 				result = handle.submit2( this.filehostName ,  "PROCESS", request);
-				log(STAFResultToString(result));
+				//log(STAFResultToString(result));
 				if (result.rc != STAFResult.Ok) {
 					throw new BuildException(STAFResultToString(result));
 				}
@@ -203,7 +203,7 @@ public class SdbCopyAndTar extends Task{
 			log("exec: staf " + this.filehostName + " FS " + request);
 			result = handle.submit2(this.filehostName, "FS", request);
 
-			log(STAFResultToString(result));
+			//log(STAFResultToString(result));
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
