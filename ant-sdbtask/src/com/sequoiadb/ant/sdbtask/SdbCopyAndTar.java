@@ -1,8 +1,10 @@
 package com.sequoiadb.ant.sdbtask;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -173,13 +175,20 @@ public class SdbCopyAndTar extends Task{
 			else{
 				
 				Runtime run = Runtime.getRuntime() ;
+				System.out.println("This is tarPath choose"); 
 				log( "tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
 						+ this.buildNum 
 						+ "  " + this.tarPath + "/ " ) ; 
-				Process pro = run.exec(new String[]{"sh" , "-c" , 
-						"tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
-						+ this.buildNum 
-						+ "  " + this.tarPath + "/ "}) ;
+				String str[] = {"/bin/sh"
+						, "-c"
+						, "sh tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
+								+ this.buildNum 
+								+ "  " + this.tarPath + "/* "
+				};
+				run.exec(str);
+				//Process pro = run.exec( str ) ;
+				//BufferedReader br = new BufferedReader(new InputStreamReader( pro.getInputStream() ) ) ;
+				//String killpid = br.readLine() ;
 				
 				copyPath = this.tarPath ;
 			}
