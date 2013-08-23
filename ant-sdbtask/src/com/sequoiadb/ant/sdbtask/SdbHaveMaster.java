@@ -38,15 +38,10 @@ public class SdbHaveMaster extends Task {
 		this.waitTime = value ; 
 	}
 	
-	private boolean checkMaster()
+	private boolean checkMaster( ReplicaGroup RG , Sequoiadb sdb )
 	{
-		try{
-			Sequoiadb sdb = new Sequoiadb( this.hostName , Integer.parseInt( this.port ) , "" ,"") ;
-			ReplicaGroup RG = null ;
-			if( ! this.groupName.equals("1") )
-				RG = sdb.getReplicaGroup( this.groupName ) ;
-			else
-				RG = sdb.getReplicaGroup(1) ;
+		
+			
 			//GroupID  ;
 			String groupID = RG.getDetail().get( "GroupID" ).toString() ;
 			int nodeNum = RG.getNodeNum(null) ; 
@@ -55,26 +50,28 @@ public class SdbHaveMaster extends Task {
 			
 			for(int i = 0 ; i < nodeNum ; i++ )
 			{
-				BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
-				String nodeID = oneBson.get( "NodeID" ).toString() ;
-				if( sdb.getSnapshot(7,"{GroupID:"
-						+ groupID + ",NodeID:"
-						+ nodeID + "}"
-						, "{\"IsPrimary\":null}"
-						, null).hasNext() )
-				{
-					String isMaster = sdb.getSnapshot(7,"{GroupID:"
-								+ groupID + ",NodeID:"
-								+ nodeID + "}"
-								, "{\"IsPrimary\":null}"
-								, null)
-								.getNext().get("IsPrimary").toString() ;
-					if( isMaster.equals( "true" ) )
-						return true ;
-				}
+				try{
+					BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
+					String nodeID = oneBson.get( "NodeID" ).toString() ;
+					if( sdb.getSnapshot(7,"{GroupID:"
+							+ groupID + ",NodeID:"
+							+ nodeID + "}"
+							, "{\"IsPrimary\":null}"
+							, null).hasNext() )
+					{
+						String isMaster = sdb.getSnapshot(7,"{GroupID:"
+									+ groupID + ",NodeID:"
+									+ nodeID + "}"
+									, "{\"IsPrimary\":null}"
+									, null)
+									.getNext().get("IsPrimary").toString() ;
+						if( isMaster.equals( "true" ) )
+							return true ;
+					}
+				}catch( BaseException e){}
 				
 			}
-		}catch( BaseException e){}
+		
 		
 	//	
 		return false; 
@@ -82,11 +79,18 @@ public class SdbHaveMaster extends Task {
 	
 	public void execute ()
 	{
+		Sequoiadb sdb = new Sequoiadb( this.hostName , Integer.parseInt( this.port ) , "" ,"") ;
+		ReplicaGroup RG = null ;
+		if( ! this.groupName.equals("1") )
+			RG = sdb.getReplicaGroup( this.groupName ) ;
+		else
+			RG = sdb.getReplicaGroup(1) ;
+		
 		int times = Integer.parseInt( this.waitTime ) ;
 		int i = 0 ;
 		for(; i < times ; ++i )
 		{
-			if( false == checkMaster() )
+			if( false == checkMaster( RG , sdb ) )
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
