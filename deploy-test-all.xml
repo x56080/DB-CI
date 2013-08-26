@@ -110,10 +110,10 @@
 		<!--move -->
 		
 		<echo message="tar basedir=${WORKSPACE}/${host.NAME}-copy-log   destfile=${WORKSPACE}/${host.NAME}-copy-log.${BUILD_NUMBER}" />
-		<tar basedir="${WORKSPACE}/${host.NAME}-copy-log" destfile="${WORKSPACE}/${host.NAME}-copy-log.${BUILD_NUMBER}" includes="**/*" />
+		<tar basedir="${WORKSPACE}" destfile="${WORKSPACE}/${host.NAME}-copy-log/${host.NAME}-copy-log.${BUILD_NUMBER}.tar.gz" compression="gzip" includes="${host.NAME}-copy-log/**" />
 		<property environment="env" />
-		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}-copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" />
-		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}-copy-log.${BUILD_NUMBER} TODIRECTORY ${copy_log_path} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
+		<echo message="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}-copy-log/${host.NAME}-copy-log.${BUILD_NUMBER}.tar.gz TODIRECTORY ${copy.log.path} TOMACHINE ${target.deploy_tar_gz.ip}" />
+		<exec command="${STAF.PATH}\bin\staf LOCAL FS COPY FILE ${WORKSPACE}/${host.NAME}-copy-log/${host.NAME}-copy-log.${BUILD_NUMBER}.tar.gz TODIRECTORY ${copy.log.path} TOMACHINE ${target.deploy_tar_gz.ip}" dir="${STAF.PATH}" failonerror="true" failifexecutionfails="true">
 			<env key="PATH" path="${env.PATH}:${STAF.PATH}/bin" />
 			<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			<env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
