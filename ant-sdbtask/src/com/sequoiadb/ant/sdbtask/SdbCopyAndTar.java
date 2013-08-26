@@ -121,62 +121,58 @@ public class SdbCopyAndTar extends Task{
 			String doWork = null ;
 			String request = null ;
 			STAFResult result = null ;
-			String copyPath = null ;
+
 			String now_dir = System.getProperty("user.dir") ;
 			
-			if( this.tarPath == null && this.diaglogPath != null )
-			{
-				 
-				String fileName = now_dir + "/shWork.sh" ;
-				File file = new File( fileName ) ;
-				if( ! file.exists() ){
-					if( ! file.createNewFile() )
-						throw new Exception( "create shWork.sh file fail" ) ; 
-				}
-				
-	
-				BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
-				output.write( this.write_file1() ) ;
-				output.close() ;
-				
-				
-				
-				doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
-						+ "  " 
-						+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
-						//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
-				
-				handle = new STAFHandle("ant-sdbtasks");
-				
-				request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
-						+ "   TOMACHINE     " + this.filehostName ; 
-				log( "exec : staf   " + saveHostName + "   " + request ) ; 
-				result = handle.submit2( saveHostName ,  "FS", request);
-				//log(STAFResultToString(result));
-				if (result.rc != STAFResult.Ok) {
-					throw new BuildException(STAFResultToString(result));
-				}
-				
-				
-				log(" shWork.sh file : \n" + this.write_file1() ) ;
-				
-				copyPath = this.diaglogPath ;
-				
-				request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
-				
-				log("exec: staf " + this.filehostName + " PROCESS " + request);
-				result = handle.submit2( this.filehostName ,  "PROCESS", request);
-				//log(STAFResultToString(result));
-				if (result.rc != STAFResult.Ok) {
-					throw new BuildException(STAFResultToString(result));
-				}
-				
+			 
+			String fileName = now_dir + "/shWork.sh" ;
+			File file = new File( fileName ) ;
+			if( ! file.exists() ){
+				if( ! file.createNewFile() )
+					throw new Exception( "create shWork.sh file fail" ) ; 
 			}
-			else{
-				
+			
+
+			BufferedWriter output = new  BufferedWriter( new FileWriter( file ) ) ; 
+			output.write( this.write_file1() ) ;
+			output.close() ;
+			
+			
+			
+			doWork = " chmod a+x  " + this.diaglogPath + "/shWork.sh ; "
+					+ "  " 
+					+ this.diaglogPath + "/shWork.sh   " + this.diaglogPath + " ; " ; 
+					//+ " rm  " + this.diaglogPath + "/shWork.sh ; " ; 
+			
+			handle = new STAFHandle("ant-sdbtasks");
+			
+			request = "  COPY FILE   " + fileName + "    TODIRECTORY  " + this.diaglogPath 
+					+ "   TOMACHINE     " + this.filehostName ; 
+			log( "exec : staf   " + saveHostName + "   " + request ) ; 
+			result = handle.submit2( saveHostName ,  "FS", request);
+			//log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+			
+			
+			log(" shWork.sh file : \n" + this.write_file1() ) ;
+			
+			//copyPath = this.diaglogPath ;
+			
+			request = "START SHELL COMMAND " + doWork + " WAIT 30m " ; 
+			
+			log("exec: staf " + this.filehostName + " PROCESS " + request);
+			result = handle.submit2( this.filehostName ,  "PROCESS", request);
+			//log(STAFResultToString(result));
+			if (result.rc != STAFResult.Ok) {
+				throw new BuildException(STAFResultToString(result));
+			}
+			
+				/*
 				Runtime run = Runtime.getRuntime() ;
 				System.out.println("This is tarPath choose"); 
-				log( "tar -zcvf  " + this.tarPath + "/" + this.filehostName + "-diaglog.tar.gz"
+				log( "tar -zcvf  " + this.filehostName + "-diaglog.tar.gz"
 						+ this.buildNum 
 						+ "  " + this.tarPath + "/ " ) ; 
 				String str[] = {"/bin/sh"
@@ -191,12 +187,11 @@ public class SdbCopyAndTar extends Task{
 				//String killpid = br.readLine() ;
 				
 				copyPath = this.tarPath ;
-			}
-			
+				*/			
 			
 			
 			request = "COPY FILE  " 
-					+ copyPath + "/" + this.filehostName + "-diaglog.tar.gz" + this.buildNum 
+					+ this.diaglogPath + "/" + this.filehostName + "-diaglog.tar.gz" + this.buildNum 
 					+ " TODIRECTORY " + this.savePath + " TOMACHINE "
 					+ this.saveHostName ;
 
