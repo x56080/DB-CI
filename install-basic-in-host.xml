@@ -85,7 +85,7 @@
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="transactionon=false" replace="transactionon=true" flags="g" />
 
-				<echo message="start standalone process: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
+				<echo message="start standalone process: su - sdbadmin -c '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 				<exec dir="${db.path}/bin" executable="su - sdbadmin -c " spawn="false" failonerror="true" failifexecutionfails="true" >
 					<arg line="'${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
