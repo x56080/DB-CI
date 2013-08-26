@@ -176,12 +176,12 @@ public class SdbCopyAndTar extends Task{
 				
 				Runtime run = Runtime.getRuntime() ;
 				System.out.println("This is tarPath choose"); 
-				log( "tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
+				log( "tar -zcvf  " + this.tarPath + "/" + this.filehostName + "-diaglog.tar.gz"
 						+ this.buildNum 
 						+ "  " + this.tarPath + "/ " ) ; 
 				String str[] = {"/bin/sh"
 						, "-c"
-						, "sh tar -zcvf  " + now_dir + "/" + this.filehostName + "-diaglog.tar.gz"
+						, "sh tar -zcvf  " + this.tarPath + "/" + this.filehostName + "-diaglog.tar.gz"
 								+ this.buildNum 
 								+ "  " + this.tarPath + "/* "
 				};
