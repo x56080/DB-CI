@@ -83,6 +83,7 @@
 
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
+				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="transactionon=false" replace="transactionon=true" flags="g" />
 
 				<echo message="start standalone process: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
 				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="false" failonerror="true" failifexecutionfails="true" >
