@@ -78,13 +78,17 @@
 		<if>
 			<equals arg1="${is.standalone.mode}" arg2="true" />
 			<then>
-				<mkdir dir="${db.path}/database/standalone" />
-				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
+				<!--mkdir dir="${db.path}/database/standalone" /-->
+				
 
 				<copy file="${db.path}/conf/samples/sdb.conf.standalone" tofile="${db.path}/conf/local/${coord.service.port}/sdb.conf" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="diaglevel=.*" replace="diaglevel=5" flags="g" />
 				<replaceregexp file="${db.path}/conf/local/${coord.service.port}/sdb.conf" match="transactionon=false" replace="transactionon=true" flags="g" />
-
+				
+				<chown owner="sdbadmin:sdbadmin_group" type="both">
+					<fileset dir="${db.path}/" includes="**/*" />
+				</chown>
+				
 				<echo message="start standalone process: su - sdbadmin -c '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 				<exec dir="${db.path}/bin" executable="su - sdbadmin -c " spawn="false" failonerror="true" failifexecutionfails="true" >
 					<arg line="'${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
@@ -146,9 +150,9 @@
 					</then>
 				</if>
 
-				<chown owner="sdbadmin:sdbadmin" file="${db.path}/database" type="both" />
-				<chown owner="sdbadmin:sdbadmin" type="both">
-					<fileset dir="${db.path}/" includes="database/**/*" />
+				<!--chown owner="sdbadmin:sdbadmin_group" file="${db.path}" type="both" /-->
+				<chown owner="sdbadmin:sdbadmin_group" type="both">
+					<fileset dir="${db.path}/" includes="**/*" />
 				</chown>
 
 				<!--echo message="start catalog: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${cata.service.port}" />
@@ -162,9 +166,9 @@
 							<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 						</exec-->
 
-				<echo message="start coord: ${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}" />
-				<exec dir="${db.path}/bin" executable="${db.path}/bin/sdbstart" spawn="false">
-					<arg line="-c ${db.path}/conf/local/${coord.service.port}" />
+				<echo message="start coord: su - sdbadmin -c  '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
+				<exec dir="${db.path}/bin" executable="su - sdbadmin -c " spawn="false">
+					<arg line=" '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 				</exec>
 

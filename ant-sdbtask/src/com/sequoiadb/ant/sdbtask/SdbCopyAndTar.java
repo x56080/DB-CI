@@ -22,7 +22,6 @@ public class SdbCopyAndTar extends Task{
 	private String filehostName ; 
 	private String diaglogPath =null ; 
 	private String savePath ; 
-	private String tarPath = null ;
 	private String buildNum = "" ;
 
 	
@@ -42,10 +41,6 @@ public class SdbCopyAndTar extends Task{
 		if( value.equals( hostName3 ) ) varHostName = "suse-test3.control" ; 
 		if( value.equals( hostName4 ) ) varHostName = "suse-test4.control" ;
 		return varHostName ;
-	}
-	public void setTarPath( String value )
-	{
-		this.tarPath = value ;
 	}
 	public void setBuildNum( String value )
 	{
