@@ -90,8 +90,8 @@
 				</chown>
 				
 				<echo message="start standalone process: su - sdbadmin -c '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
-				<exec dir="${db.path}/bin" executable="su - sdbadmin -c " failonerror="true" failifexecutionfails="true" >
-					<arg line="'${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
+				<exec dir="${db.path}/bin" executable="su" failonerror="true" failifexecutionfails="true" >
+					<arg line=" - sdbadmin -c  '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 				</exec>
 			</then>
@@ -167,8 +167,8 @@
 						</exec-->
 
 				<echo message="start coord: su - sdbadmin -c  '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
-				<exec dir="${db.path}/bin" executable="su - sdbadmin -c " spawn="false">
-					<arg line=" '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
+				<exec dir="${db.path}/bin" executable="su" spawn="false">
+					<arg line=" - sdbadmin -c  '${db.path}/bin/sdbstart -c ${db.path}/conf/local/${coord.service.port}'" />
 					<env key="LD_LIBRARY_PATH" path="${env.LD_LIBRARY_PATH}:${db.path}/bin" />
 				</exec>
 
