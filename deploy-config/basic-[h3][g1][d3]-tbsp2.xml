@@ -115,6 +115,14 @@
 				<param name="antTask.jar.path" value="${test.machine.deploy.path}/deploy/ant-sdbtasks" />
 			</sdbtest>
 		</parallel>
+		
+		
+		<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<sdbCopyAndTar fileHostName="${test.machine.no1.basic}" saveHostName="${host.NAME}" diaglogPath="${install.path}/sequoiadb/database" savePath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<sdbCopyAndTar fileHostName="${test.machine.no2.basic}" saveHostName="${host.NAME}" diaglogPath="${install.path}/sequoiadb/database" savePath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<sdbCopyAndTar fileHostName="${test.machine.no3.basic}" saveHostName="${host.NAME}" diaglogPath="${install.path}/sequoiadb/database" savePath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		
+		
 	</target>
 
 </project>

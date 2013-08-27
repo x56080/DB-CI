@@ -56,6 +56,12 @@
 			</sequential>
 			
 		</for>
+		
+		
+		<mkdir dir="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		<sdbCopyAndTar fileHostName="${test.machine.no2.basic}" saveHostName="${host.NAME}" diaglogPath="${install.path}/sequoiadb/database" savePath="${WORKSPACE}/${host.NAME}-copy-log/${antFileName}" />
+		
+		
     
     <!--echo message="... test the java driver ..." />                                                                                   
 		<sdbtest host="${test.machine.no2}" testscript="${test.machine.deploy.path}/deploy/exec-driver-java-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/java/reports" masterreports="${test.reports.path}" timeout="30m">
