@@ -8,13 +8,13 @@ import com.sequoiadb.base.ReplicaGroup;
 import com.sequoiadb.base.Sequoiadb;
 import com.sequoiadb.exception.BaseException;
 /**
- * @author chenzichuan
+ * @author 
  */
 public class SdbHaveMaster extends Task {
 	private String hostName = "localhost" ;
 	private String port = "50000" ; 
 	private String groupName = null ; 
-	private String waitTime = "20" ; 
+	private String waitTime = "120" ; 
 	private String propertyName= null ;
 	
 	public void setPropertyName( String value )
