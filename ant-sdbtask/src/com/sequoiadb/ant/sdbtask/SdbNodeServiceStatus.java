@@ -30,23 +30,21 @@ public class SdbNodeServiceStatus extends Task {
 	{
 		this.groupName = value ;
 	}
-	/*public void setWaitTime( String value )
+	public void setWaitTime( String value )
 	{
 		this.waitTime = value ; 
 	}
-	*/
+	
 	private boolean checkNodeServiceStatus( ReplicaGroup RG , Sequoiadb sdb )
 	{
-		
-			
 			//GroupID  ;
 			String groupID = RG.getDetail().get( "GroupID" ).toString() ;
 			int nodeNum = RG.getNodeNum(null) ; 
-			//System.out.println( RG.getNodeNum(null) ) ;
 			BasicBSONList bson_list = (BasicBSONList)RG.getDetail().get("Group") ;
-			
+			int trueNum = 0;
 			for(int i = 0 ; i < nodeNum ; i++ )
 			{
+				String isServiceStatus = null;
 				try{
 					BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
 					String nodeID = oneBson.get( "NodeID" ).toString() ;
@@ -55,24 +53,23 @@ public class SdbNodeServiceStatus extends Task {
 							+ nodeID + "}"
 							, "{\"ServiceStatus\":null}"
 							, null).hasNext() )
-					{
-						String IsServiceStatus = sdb.getSnapshot(7,"{GroupID:"
-									+ groupID + ",NodeID:"
-									+ nodeID + "}"
-									, "{\"ServiceStatus\":null}"
-									, null)
-									.getNext().get("ServiceStatus").toString() ;
-						if( IsServiceStatus.equals( "true" ) )
-							return true ;
-					}
-				}catch( BaseException e){}
-				
-			}
-		
-		
-	//	
-		return false; 
-	}
+						{
+							isServiceStatus = sdb.getSnapshot(7,"{GroupID:"
+										+ groupID + ",NodeID:"
+										+ nodeID + "}"
+										, "{\"ServiceStatus\":null}"
+										, null)
+										.getNext().get("ServiceStatus").toString() ;
+							if( isServiceStatus.equals("true"))
+								trueNum++;
+						}
+					}catch( BaseException e){}
+				}
+			if( trueNum == 3 )
+				return true;
+			else
+				return false;
+		}
 	
 	public void execute ()
 	{
