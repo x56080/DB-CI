@@ -68,7 +68,7 @@ public class SdbHaveMaster extends Task {
 						if( isMaster.equals( "true" ) )
 							return true ;
 					}
-				}catch( BaseException e){}
+				}catch( BaseException e ){}
 				
 			}
 		
@@ -81,13 +81,28 @@ public class SdbHaveMaster extends Task {
 	{
 		Sequoiadb sdb = new Sequoiadb( this.hostName , Integer.parseInt( this.port ) , "" ,"") ;
 		ReplicaGroup RG = null ;
-		if( ! this.groupName.equals("1") )
-			RG = sdb.getReplicaGroup( this.groupName ) ;
-		else
-			RG = sdb.getReplicaGroup(1) ;
-		
-		int times = Integer.parseInt( this.waitTime ) ;
 		int i = 0 ;
+		int times = Integer.parseInt( this.waitTime ) ;
+		for(; i < times ; ++i )
+		{
+			try{
+				if( ! this.groupName.equals("1") )
+					RG = sdb.getReplicaGroup( this.groupName ) ;
+				else
+					RG = sdb.getReplicaGroup(1) ;
+				if( RG != null )
+					break;
+			}catch( BaseException e ){ 
+				try {
+				   Thread.sleep(1000) ;
+			    } catch (InterruptedException e1) {
+				   // TODO Auto-generated catch block
+				   e1.printStackTrace();
+			    }
+			}
+		}
+		
+		
 		for(; i < times ; ++i )
 		{
 			if( false == checkMaster( RG , sdb ) )

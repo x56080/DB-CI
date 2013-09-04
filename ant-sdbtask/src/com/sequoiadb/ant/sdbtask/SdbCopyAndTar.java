@@ -99,7 +99,7 @@ public class SdbCopyAndTar extends Task{
 				+ "   checkDiaglog $1 $DIAL_DIR ; \n"
 				+ "fi \n"
 				+ "\n"
-				+ "tar -zcvf $BASE_DIR/" + this.filehostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.filehostName+ "-diaglog\" ; \n" 
+				+ "tar -zcvf " + this.filehostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.filehostName+ "-diaglog\" ; \n" 
 				+ ""
 				+ ""
 				+ ""
