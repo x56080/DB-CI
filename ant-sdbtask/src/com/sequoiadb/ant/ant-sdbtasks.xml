@@ -36,6 +36,7 @@
     <typedef name="sdbRestartHost" classname="com.sequoiadb.ant.sdbtask.SdbRestartHost" onerror="ignore" />
     <typedef name="sdbCopyAndTar" classname="com.sequoiadb.ant.sdbtask.SdbCopyAndTar" onerror="ignore" />
     <typedef name="sdbHaveMaster" classname="com.sequoiadb.ant.sdbtask.SdbHaveMaster" onerror="ignore" />
-    <typedef name="SdbNodeServiceStatus" classname="com.sequoiadb.ant.sdbtask.SdbNodeServiceStatus" onerror="ignore" />
+    <typedef name="sdbNodeServiceStatus" classname="com.sequoiadb.ant.sdbtask.SdbNodeServiceStatus" onerror="ignore" />
+    <typedef name="sdbClearEnvCS" classname="com.sequoiadb.ant.sdbtask.clearEnvCS" onerror="ignore" />
   
 </antlib>
