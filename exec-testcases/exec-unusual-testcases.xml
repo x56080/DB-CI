@@ -12,6 +12,7 @@
 			  <fileset dir="${antTask.jar.path}" includes="*.jar" />
 			  <pathelement location="${STAF.PATH}/lib/JSTAF.jar" />
 			  <pathelement location="${STAF.PATH}/samples/demo/STAFDemo.jar" />
+
 		  </classpath>
 	 </taskdef>
 	 
@@ -22,8 +23,12 @@
    </taskdef>
 	
 	<target name="clean" depends="">	
+		<property file="${basedir}/ci.test.properties"/>
 		<delete dir="${reports.path}" />
 		<mkdir dir="${reports.path}" />
+		<sdbNetWork hostName="${test.machine.no1.basic}" upOrDown="up" />
+		<sdbNetWork hostName="${test.machine.no2.basic}" upOrDown="up" />
+		<sdbNetWork hostName="${test.machine.no3.basic}" upOrDown="up" />
 	</target>
 	
 	<target name="exec-unusual-test" depends="clean" >
