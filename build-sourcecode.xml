@@ -206,17 +206,17 @@
 			<equals arg1="${os.arch}" arg2="ppc64" />
 			<then>
 				<property name="PHP.VERSION" value="php_power" />
-				<property name"jdk.file.dir" value="jdk_ppclinux64"/>
+				<property name="jdk.file.dir" value="jdk_ppclinux64"/>
 			</then>
 		</if>
 		<if>
 			<equals arg1="Linux" arg2="${os.name}" />
 			<then>
-				<property name"jdk.file.dir" value="jdk_linux64"/>
+				<property name="jdk.file.dir" value="jdk_linux64"/>
 				<property name="PHP.VERSION" value="php_x86" />
 			</then>
 			<else>
-				<property name"jdk.file.dir" value="jdk_win64"/>
+				<property name="jdk.file.dir" value="jdk_win64"/>
 				<property name="PHP.VERSION" value="php_win" />
 			</else>
 		</if>
