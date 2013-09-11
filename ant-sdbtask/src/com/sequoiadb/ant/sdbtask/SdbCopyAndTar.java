@@ -100,7 +100,7 @@ public class SdbCopyAndTar extends Task{
 				+ "fi \n"
 				+ "\n"
 				+ "tar -zcvf " + this.filehostName + "-diaglog.tar.gz  $BASE_DIR\"/" + this.filehostName+ "-diaglog\" ; \n" 
-				+ ""
+				+ "mv ~/" + this.filehostName + "-diaglog.tar.gz  ${BASE_DIR}/" + this.filehostName + "-diaglog.tar.gz ; \n"
 				+ ""
 				+ ""
 				+ ""
