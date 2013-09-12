@@ -24,11 +24,13 @@ public class clearEnvCS extends Task {
 	
 	public void execute(){
 		try{
-			Sequoiadb sdb = new Sequoiadb( this.hostName , port ,"" , "");
+			Sequoiadb sdb = new Sequoiadb( this.hostName , this.port ,"" , "");
 			DBCursor cur = sdb.listCollectionSpaces();
+			String t_cs = null;
 			while( cur.hasNext() ){
-				if( cur.getNext().get("Name").toString().contains(this.csprefix) ){
-					sdb.dropCollectionSpace(cur.getCurrent().get("Name").toString() );
+				t_cs = cur.getNext().get("Name").toString();
+				if( t_cs.contains(this.csprefix) ){
+					sdb.dropCollectionSpace( t_cs );
 					//break;
 				}
 			}
