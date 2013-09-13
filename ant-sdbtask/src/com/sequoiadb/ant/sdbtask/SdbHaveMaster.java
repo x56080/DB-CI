@@ -17,6 +17,7 @@ public class SdbHaveMaster extends Task {
 	private String waitTime = "120" ; 
 	private String propertyName= null ;
 	
+	
 	public void setPropertyName( String value )
 	{
 		this.propertyName = value ;
@@ -31,7 +32,10 @@ public class SdbHaveMaster extends Task {
 	}
 	public void setGroupName( String value )
 	{
-		this.groupName = value ;
+		if( value.equals("1") )
+			this.groupName = "SYSCatalogGroup";
+		else
+			this.groupName = value ;
 	}
 	public void setWaitTime( String value )
 	{
