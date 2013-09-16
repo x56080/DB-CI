@@ -75,6 +75,9 @@
 			<arg line="${compile.arg.line} --phpversion=5.4.15" />
 		</exec>
 		
+		<echo>
+			/usr/bin/gcc  ${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -L${CODE_DIR}/SequoiaDB/engine/include/ossVer.h
+		</echo>
 		<exec executable="/usr/bin/gcc" dir="${basedir}/exec-tools" failonerror="true">
     	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -L${CODE_DIR}/SequoiaDB/engine/include/ossVer.h" />
     </exec>
@@ -225,7 +228,7 @@
 			<equals arg1="Linux" arg2="${os.name}" />
 			<then>
 				<property name="jdk.file.dir" value="jdk_linux64"/>
-				<property name="PHP.VERSION" value="php_x86" />
+				<property name="PHP.VERSION" value="php_linux" />
 			</then>
 			<else>
 				<property name="jdk.file.dir" value="jdk_win64"/>
