@@ -74,6 +74,11 @@
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
 			<arg line="${compile.arg.line} --phpversion=5.4.15" />
 		</exec>
+		
+		<exec executable="/usr/bin/gcc" dir="${basedir}/exec-tools" failonerror="true">
+    	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -L${CODE_DIR}/SequoiaDB/engine/include/ossVer.h" />
+    </exec>
+    <exec executable="${basedir}/exec-tools/print_version" dir="${basedir}/exec-tools/" failonerror="true" outputproperty="project.version" />
 
 	
 
@@ -127,7 +132,7 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy-->
 
-		<tar destfile="${RELEASE_DIR}/${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="driver/**" compression="gzip" />
+		<!--tar destfile="${RELEASE_DIR}/${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="driver/**" compression="gzip" /-->
 
 		<echo message="Make driver package completed." />
 	</target>
@@ -180,6 +185,13 @@
        	<exclude name="lib*" />
        </fileset>
     </copy>
+    
+    
+    
+    
+    
+    
+    
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/lib">
 			<fileset dir="${CODE_DIR}/client/lib/" includes="*" />

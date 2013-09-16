@@ -1,7 +1,6 @@
 STAF.PATH=/usr/local/staf
 
 project.name=sequoiadb
-project.version=1.2.3
 os.and.platform=linux_x86_64
 
 copy_tar=/test_tar
