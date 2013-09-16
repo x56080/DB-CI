@@ -76,10 +76,10 @@
 		</exec>
 		
 		<echo>
-			/usr/bin/gcc  ${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -L${CODE_DIR}/SequoiaDB/engine/include/ossVer.h
+			/usr/bin/gcc  ${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include
 		</echo>
 		<exec executable="/usr/bin/gcc" dir="${basedir}/exec-tools" failonerror="true">
-    	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -L${CODE_DIR}/SequoiaDB/engine/include" />
+    	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include" />
     </exec>
     <exec executable="${basedir}/exec-tools/print_version" dir="${basedir}/exec-tools/" failonerror="true" outputproperty="project.version" />
 
