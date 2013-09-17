@@ -82,7 +82,7 @@
     	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include" />
     </exec>
     <exec executable="${basedir}/exec-tools/print_version" dir="${basedir}/exec-tools/" failonerror="true" outputproperty="project.version" />
-
+    <echo message="&#10;project.version=${project.version}" file="${CODE_DIR}/misc/ci/ci.build.properties" append="true" />
 	
 
 		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sequoiadb.jar" />
