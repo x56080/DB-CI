@@ -72,12 +72,12 @@
 		
 		
 		<echo>
-			/usr/bin/gcc  ${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include
+			/usr/bin/gcc  ${CODE_DIR}/misc/ci/exec-tools/print_version.c -o ${CODE_DIR}/misc/ci/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include
 		</echo>
-		<exec executable="/usr/bin/gcc" dir="${basedir}/exec-tools" failonerror="true">
-    	<arg line="${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include" />
+		<exec executable="/usr/bin/gcc" dir="${CODE_DIR}/misc/ci/exec-tools" failonerror="true">
+    	<arg line="${CODE_DIR}/misc/ci/exec-tools/print_version.c -o ${CODE_DIR}/misc/ci/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include" />
     </exec>
-    <exec executable="${basedir}/exec-tools/print_version" dir="${basedir}/exec-tools/" failonerror="true" outputproperty="project.version" />
+    <exec executable="${CODE_DIR}/misc/ci/exec-tools/print_version" dir="${CODE_DIR}/misc/ci/exec-tools/" failonerror="true" outputproperty="project.version" />
     <echo message="&#10;project.version=${project.version}" file="${CODE_DIR}/misc/ci/ci.build.properties" append="true" />
 	
 

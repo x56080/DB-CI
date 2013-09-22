@@ -18,7 +18,7 @@
 	
 	<target name="clean" depends="">
 		<echo message="Begin to clean environments" />
-		<property file="${ci.script.path}/ci.test.properties" />
+		<property file="${ci.script.path}/../ci.test.properties" />
 		<delete dir="${deploy.path}/" />
 		<mkdir dir="${deploy.path}" />
 		<delete file="${WORKSPACE}/${deploy.tar.file.name}" />
@@ -62,20 +62,20 @@
 	
 	<target name="build-sdbtasks" depends="clean" >
     <echo message=" ..begin to build ant-sdbtask .." />
-    <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
+    <ant antfile="${ci.script.path}/../ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
 			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
 			<property name="base.path" value="${basedir}/ant-sdbtask" />
 		</ant>
 		<echo message=" .. over to build ant-sdbtask .." />
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
-		<copy file="${ci.script.path}/ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
+		<copy file="${ci.script.path}/../ant-sdbtask/ant-sdbtasks.jar" todir="${deploy.path}/ant-sdbtasks" />
 		<copy file="${WORKSPACE}/release/driver/java/sdbdriver.jar" todir="${deploy.path}/ant-sdbtasks" />
 	</target>
 	
 	<target name="build-java-app" depends="build-driver">
 		<echo message="... begin to build java-app-test ..." />
-		<ant antfile="${ci.script.path}/build-file/java-app-test.xml">
+		<ant antfile="${ci.script.path}/build-java-app.xml">
 			<property name="base.path" value="${build.testcases}/java-app-test" />
 			<property name="sdbdriver.jar.path" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
 		</ant>
@@ -107,9 +107,9 @@
 			<fileset dir="${build.testcases}/unusual_testcases" includes="**/*" />
 		</copy>
 
-		<copy file="${ci.script.path}/ci.test.properties" todir="${deploy.path}" />
+		<copy file="${ci.script.path}/../ci.test.properties" todir="${deploy.path}" />
 		<copy todir="${deploy.path}">
-			<fileset dir="${ci.script.path}/exec-testcases" includes="exec*.xml" />
+			<fileset dir="${ci.script.path}/../exec-testcases" includes="exec*.xml" />
 		</copy>
 		
 		
