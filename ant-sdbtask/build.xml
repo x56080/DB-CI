@@ -1,5 +1,6 @@
 <!--@param ${java.driver.jar} : The path where the java.driver.jar is -->
 <!--@param ${javac.base.dir} : The path where the javac.base.dir is -->
+<!--@param ${base.path} : The root path is-->
 
 <project name="ant-sdbtasks" default="jar" basedir=".">
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
@@ -9,7 +10,7 @@
 		</classpath>
 	</taskdef>
 
-	<property name="build.dir" value="${basedir}/build_ant_sdbtask" />
+	<property name="build.dir" value="${base.path}/build_ant_sdbtask" />
 
 	<target name="clean" depends="">
 		<delete dir="${build.dir}" />
@@ -47,19 +48,19 @@
 		</if>
     <echo message="javac srcdir=${source.dir} destdir=${target.dir} debug=true classpath=null fork=yes executable=${javac.base.dir}/java/${jdk.name}/bin/javac " />
 
-		<javac srcdir="${basedir}/src" destdir="${build.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
+		<javac srcdir="${base.path}/src" destdir="${build.dir}" debug="true" classpath="" fork="yes" executable="${javac.base.dir}/java/${jdk.name}/bin/javac">
 			<classpath>
-				<fileset dir="${basedir}/lib" includes="*.jar"/>
+				<fileset dir="${base.path}/lib" includes="*.jar"/>
 				<pathelement location="${java.driver.jar}"/>
 			</classpath>
 		</javac>
 		<!--copy file="${java.driver.jar}" tofile="${build.dir}/lib/sequoiadb.jar" /-->
 		<unjar dest="${bulid.dir}" src="${java.driver.jar}" />
 		<!--copy  todir="${build.dir}/lib" >
-			<fileset dir="${basedir}/lib" />
+			<fileset dir="${base.path}/lib" />
 		</copy-->
-		<unjar src="${basedir}/lib/JSTAF.jar" dest="${build.dir}" />
-		<copy file="${basedir}/src/com/sequoiadb/ant/ant-sdbtasks.xml" tofile="${build.dir}" />
+		<unjar src="${base.path}/lib/JSTAF.jar" dest="${build.dir}" />
+		<copy file="${base.path}/src/com/sequoiadb/ant/ant-sdbtasks.xml" tofile="${build.dir}" />
 	</target>
 
 	<target name="jar" depends="compile">
@@ -67,7 +68,7 @@
 			<format property="tstamp" pattern="dd/MM/yyy HH:mm:ss" />
 		</tstamp-->
 
-		<jar file="${basedir}/ant-sdbtasks.jar">
+		<jar file="${base.path}/ant-sdbtasks.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
 				<attribute name="Class-Path" value="lib/sequoiadb.jar lib/JSTAF.jar" />
