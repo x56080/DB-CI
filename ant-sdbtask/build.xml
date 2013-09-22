@@ -55,7 +55,7 @@
 			</classpath>
 		</javac>
 		<!--copy file="${java.driver.jar}" tofile="${build.dir}/lib/sequoiadb.jar" /-->
-		<unjar dest="${bulid.dir}" src="${java.driver.jar}" />
+		<unjar dest="${build.dir}" src="${java.driver.jar}" />
 		<!--copy  todir="${build.dir}/lib" >
 			<fileset dir="${base.path}/lib" />
 		</copy-->
