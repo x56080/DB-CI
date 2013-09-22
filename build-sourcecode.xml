@@ -67,13 +67,9 @@
 
 		<chmod file="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" perm="a+x" />
 		
-		<exec executable="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
-			<arg line="  5.4.15 " />
-		</exec>
-
-		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
-			<arg line="${compile.arg.line} --phpversion=5.4.15" />
-		</exec>
+		
+		
+		
 		
 		<echo>
 			/usr/bin/gcc  ${basedir}/exec-tools/print_version.c -o ${basedir}/exec-tools/print_version -I${CODE_DIR}/SequoiaDB/engine/include
@@ -109,7 +105,8 @@
 		<mkdir dir="${DRIVER.DIR}/java" />
 		<!--mkdir dir="${DRIVER.DIR}/java/jdk" /-->
 		<mkdir dir="${DRIVER.DIR}/include" />
-		<mkdir dir="${DRIVER.DIR}/lib" />
+		
+  	<mkdir dir="${DRIVER.DIR}/lib/phplib" />
 		<mkdir dir="${DRIVER.DIR}/include" />
 		<mkdir dir="${DRIVER.DIR}/lib" />
 		<!--mkdir dir="${DRIVER.DIR}/samples" /-->
@@ -118,8 +115,6 @@
 			<fileset dir="${CODE_DIR}/client/lib/" includes="*" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/lib/libsdbphp.so" />
-
 		<copy todir="${DRIVER.DIR}/include">
 			<fileset dir="${CODE_DIR}/client/include/" includes="**/*" />
 		</copy>
@@ -127,26 +122,42 @@
    
 		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
 
-		<!--copy todir="${DRIVER.DIR}/java/jdk">
-			<fileset dir="${CODE_DIR}/java/jdk_linux64/" />
-		</copy-->
-
-		<!--copy todir="${DRIVER.DIR}/samples">
-			<fileset dir="${CODE_DIR}/client/samples/" />
-		</copy-->
+	  <property name="test-type-list" value="5.3.3,5.3.8,5.3.10,5.3.15,5.3.18,5.4.6,5.4.15" />
+		<for list="${test-type-list}" param="php.version">
+			<sequential>
+				<antcall target="build-and-copy-php" inheritAll="true">
+					<param name="php.version" value="@{php.version}" />
+				</antcall>
+			</sequential>
+		</for>
 
 		<tar destfile="${RELEASE_DIR}/${project.name}-driver-${project.version}-${os.and.platform}.tar.gz" basedir="${RELEASE_DIR}" includes="driver/**" compression="gzip" />
 
 		<echo message="Make driver package completed." />
 	</target>
+  
+  <target name="build-and-copy-php" depends="">
+  	<delete dir="${CODE_DIR}/driver/php5/build}" />
+  	<mkdir dir="${RELEASE_DIR}/sequoiadb/lib/phplib" />
+  	<exec executable="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" dir="${WORKSPACE}/sequoiadb/driver/php5/source" failonerror="true">
+			<arg line="  ${php.version} " />
+		</exec>
 
-
+		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/php5" failonerror="true">
+			<arg line=" ${compile.arg.line} --phpversion=${php.version}" />
+		</exec>
+		
+		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${DRIVER.DIR}/lib/phplib/libsdbphp-${php.version}.so" />
+		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/phplib/libsdbphp-${php.version}.so" />
+		
+  </target>
+  
 	<target name="mk-release" depends="mk-driver,compile-src">
 		<echo message="Begin to make relase package ..." />
 
 
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/bin" />
-		<mkdir dir="${RELEASE_DIR}/sequoiadb/lib" />
+		
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/java/jdk" />
@@ -200,7 +211,7 @@
 			<fileset dir="${CODE_DIR}/client/lib/" includes="*" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/php5/build/${build.result.dir}/libsequoiadb.so" tofile="${RELEASE_DIR}/sequoiadb/lib/libsdbphp.so" />
+
 
 		<copy todir="${RELEASE_DIR}/sequoiadb/include/">
 			<fileset dir="${CODE_DIR}/client/include/" includes="**/*" />

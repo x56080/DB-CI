@@ -65,8 +65,6 @@
     <ant antfile="${ci.script.path}/ant-sdbtask/build.xml">
 			<property name="java.driver.jar" value="${WORKSPACE}/release/driver/java/sdbdriver.jar" />
 			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb" />
-			<property name="root.dir" value="${WORKSPACE}/sequoiadb/misc/ci/ant-sdbtask" />
-			<property name="WORKSPACE" value="${WORKSPACE}" />
 		</ant>
 		<echo message=" .. over to build ant-sdbtask .." />
 		<mkdir dir="${deploy.path}/ant-sdbtasks" />
