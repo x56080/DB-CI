@@ -71,7 +71,7 @@
 		<jar file="${base.path}/ant-sdbtasks.jar">
 			<manifest>
 				<attribute name="Version" value="1.0" />
-				<attribute name="Class-Path" value="lib/sequoiadb.jar lib/JSTAF.jar" />
+				<!--attribute name="Class-Path" value="lib/sequoiadb.jar lib/JSTAF.jar" /-->
 				<!--attribute name="Build-Timestamp" value="${tstamp}" /-->
 			</manifest>
 			<fileset dir="${build.dir}" includes="**/*" />
