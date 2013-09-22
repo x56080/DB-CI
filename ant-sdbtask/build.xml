@@ -60,7 +60,7 @@
 			<fileset dir="${base.path}/lib" />
 		</copy-->
 		<unjar src="${base.path}/lib/JSTAF.jar" dest="${build.dir}" />
-		<copy file="${base.path}/src/com/sequoiadb/ant/ant-sdbtasks.xml" tofile="${build.dir}" />
+		<copy file="${base.path}/src/com/sequoiadb/ant/ant-sdbtasks.xml" tofile="${build.dir}/com/sequoiadb/ant/ant-sdbtasks.xml" />
 	</target>
 
 	<target name="jar" depends="compile">
