@@ -25,7 +25,7 @@ public class SdbRestartHost extends Task{
 		STAFHandle handle = null;
 		try{
 			handle = new STAFHandle("ant-sdbtasks");
-			String strKill = " killall -9 sequoiadb" ;  
+			String strKill = " shutdown -r  0" ;  
 			String request = "START SHELL COMMAND " + strKill + " WAIT 30m " ; 
 			
 			log("exec: staf " + this.hostName + " PROCESS " + request);
