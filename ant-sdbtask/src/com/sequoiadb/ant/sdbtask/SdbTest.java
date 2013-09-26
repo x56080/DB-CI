@@ -183,6 +183,7 @@ public class SdbTest extends Task {
 			// path="${env.LD_LIBRARY_PATH}:${STAF.PATH}/lib" />
 			// <env key="STAFCONVDIR" path="${STAF.PATH}/codepage" />
 			// </exec>
+			/*
 			request = "DELETE ENTRY " + this.remoteReportsPath
 					+ " RECURSE CONFIRM";
 
@@ -193,6 +194,7 @@ public class SdbTest extends Task {
 			if (result.rc != STAFResult.Ok) {
 				throw new BuildException(STAFResultToString(result));
 			}
+			*/
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 
