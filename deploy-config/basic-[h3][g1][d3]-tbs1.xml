@@ -14,6 +14,7 @@
 		<echo message="Begin install software and test files to ${test.machine1}" />
 		<hostinfo prefix="host" />
 		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
+		<property name="USE.MONGODB" value="false" />
 		<property file="${properties.dir}" />
 	
 		<parallel>
@@ -79,6 +80,19 @@
 				</node>
 			</datagroup>
 		</sdbdeploy>
+		
+		<if>
+			<equals arg1="true" arg2="${USE.MONGODB}" />
+			<then>
+				<echo message="we will use mongodb to help us test the data" />
+				<echo message="deploy mongodb standalong now " />
+				<ant antfile="${basedir}/mongodb-test-deploy.xml">
+					<property name="mongo.install.path" value="${test.machine.deploy.path}/deploy/hlt/java-app-test" />
+				</ant>
+			</then>
+		<if>
+		
+		
 	</target>
 
 	<target name="test" depends="">
@@ -99,7 +113,7 @@
 		
 		<basename property="antFileName" file="${ant.file}" suffix=".xml" />
 		<!--property name="test-type-list" value="driver-java,driver-C,driver-CPP,sample,basic" /-->
-		<property name="test-type-list" value="basic,sample" />
+		<property name="test-type-list" value="basic,sample,ant" />
 		<for list="${test-type-list}" param="test-type">
 			<sequential>
 				<ant antfile="${WORKSPACE}/sequoiadb/misc/ci/test-type.xml" dir="." inheritAll="false">
