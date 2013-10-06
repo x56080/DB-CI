@@ -90,7 +90,7 @@
 					<property name="mongo.install.path" value="${test.machine.deploy.path}/deploy/hlt/java-app-test" />
 				</ant>
 			</then>
-		<if>
+		</if>
 		
 		
 	</target>
