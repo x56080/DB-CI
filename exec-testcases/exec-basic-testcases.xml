@@ -53,7 +53,7 @@
 		<hostinfo prefix="host" />
 
 		<property name="test.suite.class.name" value="com.sequoiadb.testcases-js.${test.package.name}.${host.NAME}-${parallel.num}-${test.suite.name}" />
-
+    <echo message="now test ${test.suite.name} suite file" />
 		<tstamp>
 			<format property="current.time" pattern="MM-dd-hh.mm.ss" />
 		</tstamp>
@@ -81,7 +81,7 @@
 
 	<target name="test-one-case" depends="">
 		<basename property="test.case.name" file="${test.case.fullname}" suffix=".js" />
-
+    <echo message="now test ${test.case.name}.js file" />
 		<!-- Add function to js test case -->
 		<loadfile property="js.context" srcFile="${test.case.fullname}" />
 		<loadfile property="js.functions.context" srcFile="${testcase.path}/libs/func.js" />
