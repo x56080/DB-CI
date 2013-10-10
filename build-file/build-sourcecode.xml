@@ -81,7 +81,7 @@
     <echo message="&#10;project.version=${project.version}" file="${CODE_DIR}/misc/ci/ci.build.properties" append="true" />
 	
 
-		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sequoiadb.jar" />
+		<copy file="${CODE_DIR}/driver/java/${java.driver.jar.name}" tofile="${CODE_DIR}/driver/java/sdbdriver.jar" />
 		
 		
 		<echo message="compile source code completed." />
