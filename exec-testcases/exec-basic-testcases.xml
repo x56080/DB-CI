@@ -43,7 +43,7 @@
 				<dirset dir="${testcase.path}/js" excludes="${excludes.dir.patterns}" />
 			</path-->
 			<fileset dir="${testcase.path}js">
-				<exclude name=="${excludes.dir.patterns}" />
+				<exclude name="${excludes.dir.patterns}" />
 				<exclude name="procedures" />
 			</fileset>
 			<param name="testcase.path" value="${testcase.path}" />
