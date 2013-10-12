@@ -120,7 +120,7 @@
 		</copy>
 
    
-		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
+		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
 
 	  <property name="test-type-list" value="5.3.3,5.3.8,5.3.10,5.3.15,5.3.18,5.4.6,5.4.15" />
 		<for list="${test-type-list}" param="php.version">
@@ -226,7 +226,7 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
-		<copy file="${CODE_DIR}/driver/java/sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
+		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
 		
 		<if>
 			<equals arg1="${os.arch}" arg2="ppc64" />
