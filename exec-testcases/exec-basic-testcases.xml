@@ -39,13 +39,13 @@
 		<chmod file="${install.path}/sequoiadb/bin/sdb" perm="u+x" />
 
 		<foreach target="test-one-suite" param="test.suite.fullname">
-			<!--path>
+			<path>
 				<dirset dir="${testcase.path}/js" excludes="${excludes.dir.patterns}" />
-			</path-->
-			<fileset dir="${testcase.path}js">
+			</path>
+			<!--fileset dir="${testcase.path}js">
 				<exclude name="${excludes.dir.patterns}" />
 				<exclude name="procedures" />
-			</fileset>
+			</fileset-->
 			<param name="testcase.path" value="${testcase.path}" />
 			<param name="sdb.fullname" value="${install.path}/sequoiadb/bin/sdb" />
 		</foreach>
