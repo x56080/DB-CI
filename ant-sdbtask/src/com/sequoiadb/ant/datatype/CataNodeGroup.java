@@ -142,7 +142,7 @@ public class CataNodeGroup extends NodeGroup {
 		while (true) {
 			try {
 				node = group.getMaster();
-				if (group != null) {
+				if (node != null) {
 					break;
 				}
 			} catch (BaseException baseException) {
