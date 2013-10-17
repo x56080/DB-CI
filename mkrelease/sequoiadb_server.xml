@@ -40,7 +40,7 @@
             </folderList>
         </component>
     </componentList>
-    <preInstallationActionList>
+    <readyToInstallActionList>
         <addGroup>
             <groupname>${username}_group</groupname>
         </addGroup>
@@ -65,7 +65,7 @@
                 </userTest>
             </ruleList>
         </exit>
-    </preInstallationActionList>
+    </readyToInstallActionList>
     <postInstallationActionList>
         <propertiesFileSet>
             <file>/etc/default/sequoiadb</file>
@@ -130,6 +130,15 @@
             <abortOnError>0</abortOnError>
             <program>service</program>
             <programArguments>sdbcm start</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>echo</program>
+            <programArguments>3 &gt; /proc/sys/net/ipv4/tcp_retries2</programArguments>
             <ruleList>
                 <platformTest>
                     <type>linux</type>
