@@ -86,11 +86,11 @@
 	<target name="test-one-case" depends="">
 		<basename property="test.case.name" file="${test.case.fullname}" suffix=".js" />
 		
-		<exec executabled="sed">
+		<exec executable="sed">
 			<arg line="-i 's/^\xEF\xBB\xBF//g'  ${test.case.fullname}"/>
 		</exec>
 		
-		<exec executabled="sed">
+		<exec executable="sed">
 			<arg line="-i 's/^\xEF\xBB\xBF//g'  ${testcase.path}/libs/func.js"/>
 		</exec>
     <echo message="now test ${test.case.name}.js file" />
