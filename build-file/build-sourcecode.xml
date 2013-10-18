@@ -64,6 +64,12 @@
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb/driver/java" failonerror="true">
 			<arg line="${compile.arg.line}" />
 		</exec>
+		
+		<ant antfile="${WORKSPACE}/sequoiadb/driver/hadoop/hive/build.xml" faileonerror="true">
+			<property name="java.driver.jar" value="${CODE_DIR}/driver/java/${java.driver.jar.name}"/>
+			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb/java"/>
+			<property name="root.dir" value="${WORKSPACE}/sequoiadb/driver/hadoop/hive/"/>
+		</ant>
 
 		<chmod file="${WORKSPACE}/sequoiadb/driver/php5/source/retriConfig.sh" perm="a+x" />
 		
@@ -102,6 +108,7 @@
 			</else>
 		</if>
 
+		<mkdir dir="${DRIVER.DIR}/hadoop"/>
 		<mkdir dir="${DRIVER.DIR}/java" />
 		<!--mkdir dir="${DRIVER.DIR}/java/jdk" /-->
 		<mkdir dir="${DRIVER.DIR}/include" />
@@ -121,6 +128,7 @@
 
    
 		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
+		<copy file="${CODE_DIR}/driver/hadoop/hive/hive-sequoiadb.jar" tofile="${DRIVER.DIR}/hadoop/hive-sequoiadb.jar" />
 
 	  <property name="test-type-list" value="5.3.3,5.3.8,5.3.10,5.3.15,5.3.18,5.4.6,5.4.15" />
 		<for list="${test-type-list}" param="php.version">
@@ -161,6 +169,7 @@
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/include" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/java/jdk" />
+		<mkdir dir="${RELEASE_DIR}/sequoiadb/hadoop" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/doc" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/samples" />
 		<mkdir dir="${RELEASE_DIR}/sequoiadb/conf/local" />
@@ -227,6 +236,7 @@
 		</copy>
 
 		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
+		<copy file="${CODE_DIR}/driver/hadoop/hive/hive-sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb/hadoop/hive-sequoiadb.jar" />
 		
 		<if>
 			<equals arg1="${os.arch}" arg2="ppc64" />
