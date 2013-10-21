@@ -143,7 +143,7 @@
 		</exec>
 
 		<echo message="the result = ${ret.code} after exec ant testcase." />
-		<if>
+		<!--if>
 			<not>
 				<equals arg1="${ret.code}" arg2="0" />
 			</not>
@@ -159,7 +159,7 @@
 				</if>
 				
 			</then>
-		</if>
+		</if-->
 
 		<echo file="${reports.path}/TEST-${test.suite.class.name}.xml" append="true" message="&lt;/testcase&gt;&#10;" />
 
