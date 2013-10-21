@@ -16,6 +16,7 @@
 		<property name="properties.dir" value="${basedir}/../ci.test.properties" />
 		<property name="USE.MONGODB" value="false" />
 		<property file="${properties.dir}" />
+		<dirname property="root.path" file="${deploy.file.fullname}" />
 	
 		<parallel>
 			<ant antfile="deploy-software-in-host.xml" dir="." inheritAll="false">
@@ -86,7 +87,7 @@
 			<then>
 				<echo message="we will use mongodb to help us test the data" />
 				<echo message="deploy mongodb standalong now " />
-				<ant antfile="${basedir}/mongodb-test-deploy.xml">
+				<ant antfile="${root.path}/../exec-tools/trans-mongo-file.xml">
 					<property name="install.path" value="${install.path}" />
 					<property name="local.mongodb.software.path" value="${basedir}/../exec-tools" />
 					<property name="properties.dir" value="${properties.dir}" />
