@@ -21,7 +21,7 @@
 		</exec>
 	</target>
 	
-	<target name="deploy-mongo" depends="trans-file-to-remot" >
+	<target name="deploy-mongo" depends="trans-file-to-remote" >
 		<exec command="${STAF.PATH}\bin\staf ${deploy.host.name} PROCESS START  SHELL COMMAND  ant 
 			 -l ${mongodb.install.path}/deploy-mongodb.log 
 			 -f ${test.machine.software.path}/mongodb-test-deploy.xml

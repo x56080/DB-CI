@@ -93,8 +93,8 @@
          <case value="java-app">
          	  <echo message="" />
          	  <sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-java-app-test.xml" remotereports="${test.machine.deploy.path}/deploy/hlt/java_app_testcases/reports" masterreports="${test.reports.path}" timeout="60m" antFileName="${antFileName}">
-         	     <param name="" value=""/>
-         	     <param name="" value=""/>
+         	     <param name="testcases.path" value="${test.machine.deploy.path}/deploy/hlt/java-app-test"/>
+         	     <param name="install.path" value="${install.path}"/>
          	  </sdbtest>
          </case>
          <case value="unusual">
