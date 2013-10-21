@@ -4,7 +4,7 @@
 <!--@param ${deploy.host.name} which machine will deploy mongodb software-->
 <project name="remote-mongo-deploy" default="deploy-mongo">
 	<property name="install.path" value="/opt" />
-	<property name=mongodb.install.path value="${install.path}/mongodb" />
+	<property name="mongodb.install.path" value="${install.path}/mongodb" />
 	<property environment="env" />
 	<property file="${properties.dir}" />
 	

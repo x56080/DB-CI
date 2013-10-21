@@ -95,6 +95,8 @@
 		<copy todir="${deploy.path}/hlt/java-app-test/js-data-source">
 			<fileset dir="${build.testcases}/java-app-test/data-source" />
 		</copy>
+		<copy todir="${deploy.path}/hlt/java-app-test" file="${build.testcases}/java-app-test/java-app-test.jar" />
+		
 		<copy todir="${deploy.path}/hlt/ant_testcases">
 			<fileset dir="${build.testcases}/ant_testcases" includes="**/*" />
 		</copy>

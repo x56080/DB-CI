@@ -54,7 +54,7 @@
       </javac>
       
       
-      <jar file="${base.path}/java-app-test.war" >
+      <jar file="${base.path}/java-app-test.jar" >
 				<manifest>
 				<attribute name="Version" value="1.0" />
 				<attribute name="Main-Class" value="com.sequoiadb.test.testMain" />
