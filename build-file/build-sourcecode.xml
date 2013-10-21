@@ -67,7 +67,7 @@
 		
 		<ant antfile="${WORKSPACE}/sequoiadb/driver/hadoop/hive/build.xml">
 			<property name="java.driver.jar" value="${CODE_DIR}/driver/java/${java.driver.jar.name}"/>
-			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb/java"/>
+			<property name="javac.base.dir" value="${WORKSPACE}/sequoiadb/"/>
 			<property name="root.dir" value="${WORKSPACE}/sequoiadb/driver/hadoop/hive/"/>
 		</ant>
 
