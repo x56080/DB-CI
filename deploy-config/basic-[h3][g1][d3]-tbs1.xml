@@ -6,7 +6,7 @@
 <!--@param ${test.reports.path}: The path where test reports directory. -->
 <!--@param ${WORKSPACE}: where the working space is it-->
 <!--@param ${properties.dir} : where the ci.test.properties file is it -->
-
+<!--@param ${USE.MONGODB} : use mongodb for test , default is false-->
 <project name="deploy" default="test">
 	<!--property file="ci.test.properties" /-->
 
@@ -87,7 +87,10 @@
 				<echo message="we will use mongodb to help us test the data" />
 				<echo message="deploy mongodb standalong now " />
 				<ant antfile="${basedir}/mongodb-test-deploy.xml">
-					<property name="mongo.install.path" value="${test.machine.deploy.path}/deploy/hlt/java-app-test" />
+					<property name="install.path" value="${install.path}" />
+					<property name="local.mongodb.software.path" value="${basedir}/../exec-tools" />
+					<property name="properties.dir" value="${properties.dir}" />
+					<property name="deploy.host.name" value="test.machine.no1.basic" />
 				</ant>
 			</then>
 		</if>

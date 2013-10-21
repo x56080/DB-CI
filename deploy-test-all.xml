@@ -81,6 +81,7 @@
 			<property name="install.package.fullname" value="${release.path}/${BUILD.INSTALL.FILENAME}" />
 			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
 			<property name="deploy.path" value="${WORKSPACE}/deploy" />
+			<property name="USE.MONGODB" value="${USE.MONGODB}" />
 		</ant>
 
 		<if>

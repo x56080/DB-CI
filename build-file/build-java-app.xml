@@ -14,6 +14,7 @@
       <mkdir dir="${build.path}/xml" />
       <unjar src="${base.path}/lib/sdbdriver.jar" dest="${build.path}" />
       <unjar src="${base.path}/lib/dom4j-2.0.0-ALPHA-2.jar" dest="${build.path}" />
+      <unjar src="${base.path}/lib/mongo-java-driver-2.11.3.jar" dest="${build.path}" />
       <copy file="${base.path}/xml/test_rule.xml" todir="${build.path}/xml" />
    </target>
    
@@ -53,7 +54,7 @@
       </javac>
       
       
-      <jar file="${base.path}/java-app-test.jar" >
+      <jar file="${base.path}/java-app-test.war" >
 				<manifest>
 				<attribute name="Version" value="1.0" />
 				<attribute name="Main-Class" value="com.sequoiadb.test.testMain" />
