@@ -38,7 +38,9 @@
 		<echo message="delete ${CODE_DIR}/bin" />
 		<delete dir="${CODE_DIR}/bin"  failonerror="true" />
     <mkdir dir="${CODE_DIR}/bin" />
-		<if>
+    
+    <property name="java.driver.jar.name" value="sdbdriver.jar" />
+		<!--if>
 			<equals arg1="${compile.debug}" arg2="true" />
 			<then>
 				<echo message="compile.debug is ture" />
@@ -52,7 +54,7 @@
 				<property name="java.driver.jar.name" value="sequoiadb-release.jar" />
 				<echo message="${compile.arg.line}" />
 			</else>
-		</if>
+		</if-->
 
 
 		<echo message="exec scons ${compile.arg.line}  --all -j 4" />
