@@ -40,7 +40,20 @@
     <mkdir dir="${CODE_DIR}/bin" />
     
     <property name="java.driver.jar.name" value="sdbdriver.jar" />
-
+    
+    <if>
+			<equals arg1="${compile.debug}" arg2="true" />
+			<then>
+				<echo message="compile.debug is ture" />
+				<property name="compile.arg.line" value="--dd" />
+				<echo message="${compile.arg.line}" />
+			</then>
+			<else>
+				<echo message="compile.debug is false" />
+				<property name="compile.arg.line" value="" />
+				<echo message="${compile.arg.line}" />
+			</else>
+		</if>
 
 		<echo message="exec scons ${compile.arg.line}  --all -j 4" />
 		<exec executable="scons" dir="${WORKSPACE}/sequoiadb" failonerror="true">
