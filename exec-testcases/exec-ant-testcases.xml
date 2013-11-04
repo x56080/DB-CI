@@ -106,7 +106,7 @@
 
 		<trycatch property="e">
 			<try>
-				<echo message="ant -f ${test.case.fullname} -Dhost.name=${host.NAME} -Dcoord.service.port=${coord.service.port} -Ddata.service.port=${data.service.port} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} test"></echo>
+				<echo message="ant -f ${test.case.fullname} -Dhost.NAME=${host.NAME} -Dcoord.service.port=${coord.service.port} -Ddata.service.port=${data.service.port} -DCS_PRIX=${CS_PRIX} -Dinstall.path=${install.path} test"></echo>
 
 				<antfetch antfile="${test.case.fullname}" target="test" inheritAll="false" return="ret.code,error.msg">
 					<property name="host.NAME" value="${host.NAME}" />
