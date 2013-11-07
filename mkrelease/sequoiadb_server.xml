@@ -41,8 +41,34 @@
         </component>
     </componentList>
     <readyToInstallActionList>
+        <runProgram>
+            <abortOnError>0</abortOnError>
+            <program>groupadd</program>
+            <programArguments>${username}_group</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <abortOnError>0</abortOnError>
+            <program>useradd</program>
+            <programArguments>-d ${installdir} -g ${username}_group -p ${userpasswd} -s /bin/bash ${username}</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
         <addGroup>
             <groupname>${username}_group</groupname>
+            <showMessageOnError>1</showMessageOnError>
+            <ruleList>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
+            </ruleList>
         </addGroup>
         <addUser>
             <homedir>${installdir}</homedir>
@@ -50,10 +76,9 @@
             <showMessageOnError>1</showMessageOnError>
             <username>${username}</username>
             <ruleList>
-                <userTest>
-                    <logic>not_exists</logic>
-                    <username>${username}</username>
-                </userTest>
+                <platformTest>
+                    <type>windows</type>
+                </platformTest>
             </ruleList>
         </addUser>
         <exit>
