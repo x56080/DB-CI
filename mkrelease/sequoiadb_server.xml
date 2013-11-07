@@ -118,6 +118,12 @@
             <files>${installdir}/java/jdk/bin/*</files>
             <permissions>0755</permissions>
         </changePermissions>
+        <iniFileSet>
+            <file>${installdir}/tools/server/php/lib/php.ini</file>
+            <key>extension_dir</key>
+            <section>PHP</section>
+            <value>${installdir}/lib/phplib</value>
+        </iniFileSet>
         <propertiesFileSet>
             <file>${installdir}/conf/sdbcm.conf</file>
             <key>defaultPort</key>
