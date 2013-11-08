@@ -59,6 +59,10 @@
                 <platformTest>
                     <type>linux</type>
                 </platformTest>
+                <userTest>
+                    <logic>not_exists</logic>
+                    <username>${username}</username>
+                </userTest>
             </ruleList>
         </runProgram>
         <addGroup>
