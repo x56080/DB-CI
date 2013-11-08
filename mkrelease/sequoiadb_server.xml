@@ -334,7 +334,7 @@
                     <description>${msg(Install.Paramers.user.password.description)}</description>
                     <explanation></explanation>
                     <value></value>
-                    <default>sequoiadb;</default>
+                    <default>sequoiadb</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
                     <width>20</width>
