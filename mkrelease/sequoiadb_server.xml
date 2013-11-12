@@ -96,6 +96,10 @@
         </exit>
     </readyToInstallActionList>
     <postInstallationActionList>
+        <createSymLink>
+            <linkName>${installdir}/www/doc</linkName>
+            <target>${installdir}/doc</target>
+        </createSymLink>
         <propertiesFileSet>
             <file>/etc/default/sequoiadb</file>
             <key>NAME</key>
