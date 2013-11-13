@@ -126,7 +126,7 @@
 			<fileset dir="${CODE_DIR}/client/include/" includes="**/*" />
 		</copy>
 
-    <copy file="${CODE_DIR}/C#.Net/build/release/sdbcs.dll" tofile="${RELEASE_DIR}/CSharp/sdbcs.dll" />
+    <copy file="${CODE_DIR}/driver/C#.Net/build/release/sdbcs.dll" tofile="${RELEASE_DIR}/CSharp/sdbcs.dll" />
 		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${DRIVER.DIR}/java/sdbdriver.jar" />
 		<copy file="${CODE_DIR}/driver/hadoop/hive/hive-sequoiadb.jar" tofile="${DRIVER.DIR}/hadoop/hive-sequoiadb.jar" />
 
@@ -230,7 +230,7 @@
 			<fileset dir="${CODE_DIR}/client/samples/" />
 		</copy>
 
-		<copy file="${CODE_DIR}/C#.Net/build/release/sdbcs.dll" tofile="${RELEASE_DIR}/sequoiadb/CSharp/sdbcs.dll" />
+		<copy file="${CODE_DIR}/driver/C#.Net/build/release/sdbcs.dll" tofile="${RELEASE_DIR}/sequoiadb/CSharp/sdbcs.dll" />
 
 		<copy file="${CODE_DIR}/driver/java/sdbdriver.jar" tofile="${RELEASE_DIR}/sequoiadb/java/sequoiadb.jar" />
 		<copy file="${CODE_DIR}/driver/hadoop/hive/hive-sequoiadb.jar" tofile="${RELEASE_DIR}/sequoiadb/hadoop/hive-sequoiadb.jar" />
