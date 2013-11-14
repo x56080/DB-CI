@@ -63,6 +63,7 @@
 		</exec>
 
 		<property file="${release.path}/build.version" />
+		<echo message="now software is ${BUILD.NUMBER.LOCAL}" />
 
 		<if>
 			<not>
