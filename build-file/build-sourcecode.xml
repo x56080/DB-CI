@@ -273,6 +273,13 @@
 		<copy file="${CODE_DIR}/script/sequoiadb" todir="${RELEASE_DIR}/sequoiadb/" />
 		<replaceregexp file="${RELEASE_DIR}/sequoiadb/sequoiadb" match="&#13;&#10;" replace="&#10;" flags="g" />
 
+	  <copy file="${CODE_DIR}/script/sdbwsart" todir="${RELEASE_DIR}/sequoiadb/bin" />
+	  <replaceregexp file="${RELEASE_DIR}/sequoiadb/bin/sdbwsart" match="&#13;&#10;" replace="&#10;" flags="g" />
+	  
+	  <copy file="${CODE_DIR}/script/sdbwstop" todir="${RELEASE_DIR}/sequoiadb/bin" />
+	  <replaceregexp file="${RELEASE_DIR}/sequoiadb/bin/sdbwstop" match="&#13;&#10;" replace="&#10;" flags="g" />
+	  
+	  
 		<copy todir="${RELEASE_DIR}/sequoiadb/doc">
 			<fileset dir="${CODE_DIR}/doc/out" />
 		</copy>
