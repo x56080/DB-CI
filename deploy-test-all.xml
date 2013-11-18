@@ -1,5 +1,4 @@
 <!--@param ${test.environment} : the control the test Environment -->
-<!--@param ${deploy.file.fullname} : the deploy file path and name -->
 <!--@param ${WORKSPACE}: The path where the deploy directory -->
 <!--@param ${ci.script.file.path} : the ci-script file path -->
 <!--@param ${deploy.conffile.wildcard}: deploy config file wildcard. just for debug -->
@@ -48,7 +47,7 @@
 				<fileset dir="${deploy.config.path}" includes="${test.environment}-${deploy.conffile.wildcard}.xml" />
 			</path>
 
-			<param name="deploy.file.fullname" value="${deploy.file.fullname}" />
+			<param name="deploy.file.fullname" value="${WORKSPACE}/${deploy.tar.file.name}" />
 		</foreach>
 	</target>
 
