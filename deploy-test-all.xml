@@ -78,7 +78,7 @@
 			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
 			<property name="install.path" value="${install.path}" />
 			<property name="install.package.fullname" value="${release.path}/${BUILD.INSTALL.FILENAME}" />
-			<property name="deploy.file.fullnam" value="${deploy.file.fullname}" />
+			<property name="deploy.file.fullname" value="${deploy.file.fullname}" />
 			<property name="deploy.path" value="${WORKSPACE}/deploy" />
 			<property name="USE.MONGODB" value="${USE.MONGODB}" />
 		</ant>
