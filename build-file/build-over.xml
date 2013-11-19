@@ -1,4 +1,4 @@
-
+<!--@param ${WORKSPACE} : The workspace path-->
 <!--@param ${release.path} :  The path where place softwore-->
 <!--@param ${BUILD_NUMBER}:  The build number. this param pass by jenkins-->
 
