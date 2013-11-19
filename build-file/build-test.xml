@@ -29,11 +29,11 @@
 	</target>
 
 	<target name="build-sample" depends="build-sdbtasks">
-		<if>
+		<!--if>
 			<not>
 			<equals arg1="ppc64" arg2="${os.arch}" />
 			</not>
-			<then>
+			<then-->
 				<echo message="Begin to build the client sample test code..." />
 				<echo message="${ci.script.path}/build-samples-test.xml" />
 				<ant antfile="${ci.script.path}/build-samples-test.xml">
@@ -43,11 +43,11 @@
 					<property name="antTask.jar.path" value="${antTask.jar.path}" />
 				</ant>
 				<echo message="Compile builded the client sample test. " />
-			</then>
+			<!--/then>
 			<else>
 				<echo message="this machin is power PC , will not build the sample tests" />
 			</else>
-		</if>
+		</if-->
 	</target>
 	
 	<target name="build-driver" depends="build-sample">
