@@ -72,7 +72,7 @@
 	<target name="deploy-one-case-and-test" depends="clean-deploy-evn-before-test">
 
 
-		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname}£¬ deploy.file.fullname=${deploy.file.fullname}" />
+		<echo message="Begin to deploy one case and test.... deploy file=${deploy.case.fullname},deploy.file.fullname=${deploy.file.fullname}" />
 
 		<ant antfile="${deploy.case.fullname}" dir="${ci.script.file.path}" target="deploy" inheritAll="true">
 			<property name="ant.sdb.tasks.path" value="${ci.script.file.path}/ant-tasks" />
