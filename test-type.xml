@@ -34,6 +34,17 @@
 						<echo message="... test ant-testcases is over ..." />
 						
          </case>
+         <case value="driver-php" >
+         	  <echo message="... test the php driver ..." />
+         	  <sdbtest host="${test.machine.no2.basic}" testscript="${test.machine.deploy.path}/deploy/exec-driver-php-test.xml" 
+         	  	remotereports="${test.machine.deploy.path}/deploy/hlt/drivers_testcases/php/reports" 
+         	  	masterreports="${test.reports.path}" timeout="30m" antFileName="${antFileName}">
+         	  	<param name="testcase.path" value="" />
+         	  	<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
+         	  	<param name="php-bin.dir" value="/opt/sequoiadb/tools/server/php/bin" />
+         	  	<param name="phpunit.phar.dir" value="/opt/sequoiadb/tools/server/php/phpunit.phar" />
+         	  </sdbtest>
+         </case>
          <case value="driver-java">
          
 				    <echo message="... test the java driver ..." />                                                                                   
