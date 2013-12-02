@@ -23,12 +23,9 @@
 	
 	<echo message="phpunit.phar.dir is ${phpunit.phar.dir}" />
 	<echo message="testcase dir is ${testcase.path}" />
-	<foreach target="test-php-folder" param="test.php.folder.dir">
+	<foreach target="test-php-folder" param="test.php.folder.dir" >
 		<path>
-			<dirset dir="${testcase.path}">
-			   <include name="**/*" />
-			   <exclude name="tools" />
-			</dirset>
+			<dirset dir="${testcase.path}" excludes="tools"/>
 		</path>
 	</foreach>
 </target>
