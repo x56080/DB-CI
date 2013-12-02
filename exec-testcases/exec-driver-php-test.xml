@@ -26,6 +26,7 @@
 	<foreach target="test-php-folder" param="test.php.folder.dir" >
 		<path>
 			<dirset dir="${testcase.path}" excludes="tools"/>
+			
 		</path>
 	</foreach>
 </target>
@@ -37,6 +38,7 @@
 		<fileset dir="${test.php.folder.dir}" includes="*.php"/>
 	</foreach>
 	<param name="test.php.folder.name" value="${test.php.folder.name}" />
+	
 </target>
 
 <target name="test-one-case" depends="">
