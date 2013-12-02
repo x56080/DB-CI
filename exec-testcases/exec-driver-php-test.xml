@@ -20,11 +20,19 @@
 	 <mkdir dir="${reports.path}" />
 </target>
 <target name="exec-driver-php-test" depends="clean-env">
-	<foreach target="test-one-case" param="one.php.fullname">
-		<fileset dir="${testcase.path}" includes="*.php" />
+	<foreach target="test-php-folder" param="test.php.folder.dir">
+		<path>
+			<dirset dir="${testcase.path}" includes="*" />
+		</path>
 	</foreach>
-   
-   
+</target>
+
+<target name="test-php-folder" depends="" >
+	<basename property="test.php.folder.name" file="${test.php.folder.dir}" />
+	<foreach target="test-one-case" param="one.php.fullname">
+		<fileset dir="${test.php.folder.dir}" includes="*.php"/>
+	</foreach>
+	<param name="test.php.folder.name" value="${test.php.folder.name}" />
 </target>
 
 <target name="test-one-case" depends="">
@@ -32,7 +40,6 @@
   <exec executable="${php-bin.dir}/php-bin" failonerror="true" dir="${php-bin.dir}">
   	<arg line="${phpunit.phar.dir}   --log-junit ${reports.path}/${php.name}.xml ${one.php.fullname}"/>
   </exec>
-
 </target>
 
 </project>
