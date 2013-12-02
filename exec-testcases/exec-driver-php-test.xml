@@ -13,7 +13,7 @@
 	</taskdef>
 	
 <property name="php-bin.dir" value="/opt/sequoiadb/tools/server/php/bin" />
-<property name="phpunit.phar.dir" value="/opt/sequoiadb/tools/server/php/phpunit.phar" />
+<property name="phpunit.phar.dir" value="${testcase.path}/tools/phpunit.phar" />
 
 <target name="clean-env" depends="">
 	 <delete dir="${reports.path}" failonerror="false" />
@@ -22,7 +22,7 @@
 <target name="exec-driver-php-test" depends="clean-env">
 	<foreach target="test-php-folder" param="test.php.folder.dir">
 		<path>
-			<dirset dir="${testcase.path}" includes="*" />
+			<dirset dir="${testcase.path}" includes="*" excludes="*tools*"  />
 		</path>
 	</foreach>
 </target>

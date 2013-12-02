@@ -42,7 +42,7 @@
          	  	<param name="testcase.path" value="${test.machine.deploy.path}/deploy/hlt/php_testcases/" />
          	  	<param name="deploy.case.fullname" value="${deploy.case.fullname}" />
          	  	<param name="php-bin.dir" value="/opt/sequoiadb/tools/server/php/bin" />
-         	  	<param name="phpunit.phar.dir" value="/opt/sequoiadb/tools/server/php/phpunit.phar" />
+         	  	<!--param name="phpunit.phar.dir" value="/opt/sequoiadb/tools/server/php/phpunit.phar" /-->
          	  </sdbtest>
          </case>
          <case value="driver-java">
