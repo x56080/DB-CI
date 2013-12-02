@@ -25,7 +25,10 @@
 	<echo message="testcase dir is ${testcase.path}" />
 	<foreach target="test-php-folder" param="test.php.folder.dir">
 		<path>
-			<dirset dir="${testcase.path}" includes="*" excludes="*tools*"  />
+			<dirset dir="${testcase.path}">
+			   <include name="**/*" />
+			   <exclude name="tools"
+			</dirset>
 		</path>
 	</foreach>
 </target>
