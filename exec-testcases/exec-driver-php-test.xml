@@ -35,8 +35,9 @@
 	<echo message="test folder is ${test.php.folder.name}" />
 	<foreach target="test-one-case" param="one.php.fullname">
 		<fileset dir="${test.php.folder.dir}" includes="*.php"/>
+		<param name="test.php.folder.name" value="${test.php.folder.name}" />
 	</foreach>
-	<param name="test.php.folder.name" value="${test.php.folder.name}" />
+	
 </target>
 
 <target name="test-one-case" depends="">
