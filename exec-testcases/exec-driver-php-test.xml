@@ -27,9 +27,8 @@
 		<path>
 			<dirset dir="${testcase.path}">
 			   <include name="**/*" />
-			   <exclude name="**/tools/**" />
+			   <!--exclude name="**/tools/**" /-->
 			</dirset>
-			
 		</path>
 	</foreach>
 </target>
