@@ -62,7 +62,8 @@
 		</parallel>
 		
 		
-		<property name="test-type-list" value="sample,driver-java" />
+		<property name="test-type-list" value="basic" />
+		<!--property name="test-type-list" value="sample,driver-java" /-->
 		<basename property="antFileName" file="${ant.file}" suffix=".xml" />
 		<for list="${test-type-list}" param="test-type">
 			<sequential>
