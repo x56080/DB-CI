@@ -41,7 +41,6 @@
 		<fileset dir="${test.php.folder.dir}" includes="*.php"/>
 	</foreach>
 	<param name="test.php.folder.name" value="${test.php.folder.name}" />
-	
 </target>
 
 <target name="test-one-case" depends="">
@@ -51,5 +50,4 @@
   	<arg line="${phpunit.phar.dir}   --log-junit ${reports.path}/${php.name}.xml ${one.php.fullname}"/>
   </exec>
 </target>
-
 </project>
