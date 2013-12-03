@@ -26,8 +26,8 @@
 	<foreach target="test-php-folder" param="test.php.folder.dir" >
 		<path>
 			<dirset dir="${testcase.path}">
-			   <include name="*" />
-			   <exclude name="tools" />
+			   <include name="**/*" />
+			   <exclude name="**/tools/**" />
 			</dirset>
 			
 		</path>
