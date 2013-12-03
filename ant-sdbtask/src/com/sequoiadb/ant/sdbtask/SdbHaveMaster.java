@@ -56,23 +56,38 @@ public class SdbHaveMaster extends Task {
 			for(int i = 0 ; i < nodeNum ; i++ )
 			{
 				try{
-					BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
-					String nodeID = oneBson.get( "NodeID" ).toString() ;
-					if( sdb.getSnapshot(7,"{GroupID:"
-							+ groupID + ",NodeID:"
-							+ nodeID + "}"
-							, "{\"IsPrimary\":null}"
-							, null).hasNext() )
-					{
-						String isMaster = sdb.getSnapshot(7,"{GroupID:"
-									+ groupID + ",NodeID:"
-									+ nodeID + "}"
-									, "{\"IsPrimary\":null}"
-									, null)
-									.getNext().get("IsPrimary").toString() ;
-						if( isMaster.equals( "true" ) )
-							return true ;
-					}
+//					BSONObject oneBson = (BSONObject) bson_list.get( i ) ; 
+//					String nodeID = oneBson.get( "NodeID" ).toString() ;
+//					if( sdb.getSnapshot(7,"{GroupID:"
+//							+ groupID + ",NodeID:"
+//							+ nodeID + "}"
+//							, "{\"IsPrimary\":null}"
+//							, null).hasNext() )
+//					{
+//						String isMaster = sdb.getSnapshot(7,"{GroupID:"
+//									+ groupID + ",NodeID:"
+//									+ nodeID + "}"
+//									, "{\"IsPrimary\":null}"
+//									, null)
+//									.getNext().get("IsPrimary").toString() ;
+//						if( isMaster.equals( "true" ) )
+//							return true ;
+//					}
+					BSONObject nodeBson = (BSONObject) bson_list.get( i ) ; 
+					//String nodeID = nodeBson.get( "NodeID" ).toString() ;
+					BasicBSONList nodeService_list = (BasicBSONList)nodeBson.get("Service");
+					//System.out.println(nodeService_list);
+					BSONObject nodePort_bson = (BSONObject) nodeService_list.get(0);
+					int nodePort = Integer.parseInt((String) nodePort_bson.get("Name"));
+					//System.out.println(nodePort);
+					String nodeHN = (String) nodeBson.get("HostName"); 
+//					System.out.println(nodeHN);
+					
+					Sequoiadb nodedb = new Sequoiadb(nodeHN, nodePort,"","");
+					String isMaster = nodedb.getSnapshot(6, "{\"HostName\":"+nodeHN+",\"ServiceName\":"+nodePort+"}",
+							"{\"IsPrimary\":null}",null).toString();
+					if( isMaster.equals( "true" ) )
+						return true ;
 				}catch( BaseException e ){}
 				
 			}
