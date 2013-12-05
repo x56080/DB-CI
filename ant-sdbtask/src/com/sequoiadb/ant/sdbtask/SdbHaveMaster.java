@@ -84,7 +84,7 @@ public class SdbHaveMaster extends Task {
 //					System.out.println(nodeHN);
 					
 					Sequoiadb nodedb = new Sequoiadb(nodeHN, nodePort,"","");
-					String isMaster = nodedb.getSnapshot(6, "{\"HostName\":"+nodeHN+",\"ServiceName\":"+nodePort+"}",
+					String isMaster = nodedb.getSnapshot(6, "{\"HostName\":\""+nodeHN+"\",\"ServiceName\":\""+nodePort+"\"}",
 							"{\"IsPrimary\":null}",null).toString();
 					if( isMaster.equals( "true" ) )
 						return true ;
