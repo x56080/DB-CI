@@ -65,6 +65,15 @@
                 </userTest>
             </ruleList>
         </runProgram>
+        <runProgram>
+            <program>echo</program>
+            <programArguments> ${username}:${userpasswd} | chpasswd</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
         <addGroup>
             <groupname>${username}_group</groupname>
             <showMessageOnError>1</showMessageOnError>
