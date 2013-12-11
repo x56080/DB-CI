@@ -54,7 +54,7 @@
         <runProgram>
             <abortOnError>0</abortOnError>
             <program>useradd</program>
-            <programArguments>-d ${installdir} -g ${username}_group -p ${userpasswd} -s /bin/bash ${username}</programArguments>
+            <programArguments>-d ${installdir} -g ${username}_group  -s /bin/bash ${username}</programArguments>
             <ruleList>
                 <platformTest>
                     <type>linux</type>
@@ -63,6 +63,15 @@
                     <logic>not_exists</logic>
                     <username>${username}</username>
                 </userTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>echo</program>
+            <programArguments> ${userpasswd} | passwd --stdin ${username}</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
             </ruleList>
         </runProgram>
         <addGroup>
@@ -85,6 +94,15 @@
                 </platformTest>
             </ruleList>
         </addUser>
+        <runProgram>
+            <program>echo</program>
+            <programArguments>3 &gt; /proc/sys/net/ipv4/tcp_retries2</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
         <exit>
             <exitCode>1</exitCode>
             <ruleList>
@@ -196,8 +214,8 @@
         </startWindowsService>
         <runProgram>
             <abortOnError>0</abortOnError>
-            <program>service</program>
-            <programArguments>sdbcm start</programArguments>
+            <program>/etc/init.d/sdbcm</program>
+            <programArguments>start</programArguments>
             <ruleList>
                 <platformTest>
                     <type>linux</type>
@@ -205,8 +223,8 @@
             </ruleList>
         </runProgram>
         <runProgram>
-            <program>echo</program>
-            <programArguments>3 &gt; /proc/sys/net/ipv4/tcp_retries2</programArguments>
+            <program>sed</program>
+            <programArguments>-i "s@/opt/sequoiadb:/sbin/nologin@/opt/sequoiadb:/bin/bash@g" /etc/passwd</programArguments>
             <ruleList>
                 <platformTest>
                     <type>linux</type>
@@ -215,28 +233,6 @@
         </runProgram>
     </postInstallationActionList>
     <preUninstallationActionList>
-        <kill>
-            <customErrorMessage>${msg(Install.ErrorMsg.StopSdbCm.error)}</customErrorMessage>
-            <name>sdbcm</name>
-            <path>${installdir}/bin</path>
-            <ruleList>
-                <processTest>
-                    <logic>is_running</logic>
-                    <name>sdbcm</name>
-                </processTest>
-            </ruleList>
-        </kill>
-        <kill>
-            <customErrorMessage>${msg(Install.ErrorMsg.StopSequoiadb.error)}</customErrorMessage>
-            <name>sequoiadb</name>
-            <path>${install}/bin/</path>
-            <ruleList>
-                <processTest>
-                    <logic>is_running</logic>
-                    <name>sequoiadb</name>
-                </processTest>
-            </ruleList>
-        </kill>
         <stopWindowsService>
             <abortOnError>1</abortOnError>
             <customErrorMessage>${msg(Install.ErrorMsg.StopSdbCm.error)}</customErrorMessage>
@@ -258,6 +254,24 @@
         <removeUnixService>
             <name>sdbcm</name>
         </removeUnixService>
+        <runProgram>
+            <program>/etc/init.d/sdbcm</program>
+            <programArguments>stop</programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+        <runProgram>
+            <program>${installdir}/bin/sdbstop</program>
+            <programArguments></programArguments>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
     </preUninstallationActionList>
     <postUninstallationActionList>
         <deleteFile>
@@ -371,7 +385,7 @@
                     <description>${msg(Install.Paramers.user.password.description)}</description>
                     <explanation></explanation>
                     <value></value>
-                    <default>sequoiadb</default>
+                    <default>${username}</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
                     <width>20</width>
