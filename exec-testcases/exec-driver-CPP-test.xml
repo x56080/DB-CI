@@ -34,7 +34,7 @@
    <foreach target="test-CPP-one-case" param="case-full-name">
 			<fileset dir="${testcase.path}/CPP/build">
 				 <include name="*" />
-				 <exclude name="rg">
+				 <exclude name="rg"/>
 			</fileset>
 	 </foreach>
    
