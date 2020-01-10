@@ -419,7 +419,7 @@
          <equals arg1="${TEST_TYPE}" arg2="MVCCTEST" />
          <then>
             <var name="diagLevel" value="5"/>
-            <var name="DEPLOY_MODE" value="CONFIGURE"/>
+            <var name="DEPLOY_MODE" value="MVCC"/>
          </then>
       </if>
       <if>
