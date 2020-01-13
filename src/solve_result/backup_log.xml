@@ -78,13 +78,10 @@
    
    <target name="backup_bin">
       <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
-      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" 
-                     replace="" defaultValue="${testhost_list}"/>
                      
-      <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
-      <staf location="${firsthost}" service="FS"
-            request="COPY FILE ${INSTALL_DIR}/bin/sequoiadb TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin"
-            throwBuildException="1"/>
+      <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
+         <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
+      </copy>
    </target>
    
    <target name="bacup_rg_info">
