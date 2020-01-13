@@ -358,7 +358,7 @@
                   request="START SHELL COMMAND mkdir -p ${INSTALL_DIR}/conf/stp WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND echo serverlist=@{testhost}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
+                  request="START SHELL COMMAND echo serverlist=${host.NAME}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
             <var name="role" value="client"/>
             <if>
