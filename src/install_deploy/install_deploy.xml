@@ -37,6 +37,13 @@
       <antcall target="change_limits"/>
       <antcall target="deploy"/> 
       <antcall target="ready_es_environment"/>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="MVCCTEST"/>
+         <then>
+            <antcall target="ready_mvcc_spt"/>
+         </then>
+      </if>
+      
    </target>
    
    <target name="clear_cluster">
@@ -100,7 +107,16 @@
    
    <target name="uninstall" depends="">    
       <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential>           
+         <sequential> 
+            <if>
+               <equals arg1="${TEST_TYPE}" arg2="MVCCTEST"/>
+               <then>
+                  <staf location="@{testhost}" service="PROCESS"
+                        request="START SHELL COMMAND ${INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
+                        throwBuildException="1"/>
+               </then>
+            </if>
+
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${INSTALL_DIR}/uninstall --mode unattended WAIT 10m RETURNSTDOUT RETURNSTDERR"
                   throwBuildException="1"/>
@@ -332,6 +348,36 @@
 
          </then>
       </if>
+   </target>
+   
+   <target name="ready_mvcc_spt">
+      <hostinfo prefix="host" />
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND mkdir -p ${INSTALL_DIR}/conf/stp WAIT 5m RETURNSTDERR"
+                  throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND echo serverlist=@{testhost}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
+                  throwBuildException="1"/>
+            <var name="role" value="client"/>
+            <if>
+               <equals arg1="@{testhost}" arg2="${host.NAME}"/>
+               <then>
+                  <var name="role" value="server"/>
+               </then>
+            </if>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND echo role:${role} >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
+                  throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/stp -R WAIT 10m RETURNSTDERR"
+                  throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND ${INSTALL_DIR}/bin/stpstart WAIT 10m RETURNSTDERR"
+                  throwBuildException="1"/>
+         </sequential>
+      </for>
    </target>
    
    <target name="deploy" depends="">
