@@ -364,6 +364,7 @@
             <if>
                <equals arg1="@{testhost}" arg2="${host.NAME}"/>
                <then>
+                  <var name="role" unset="true"/>
                   <var name="role" value="server"/>
                </then>
             </if>
