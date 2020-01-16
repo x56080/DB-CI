@@ -352,7 +352,7 @@
    
    <target name="ready_mvcc_spt">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" >
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND mkdir -p ${INSTALL_DIR}/conf/stp WAIT 5m RETURNSTDERR"
@@ -360,13 +360,15 @@
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND echo serverlist=${host.NAME}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
-            <var name="role" value="client"/>
+            
             <if>
                <equals arg1="@{testhost}" arg2="${host.NAME}"/>
                <then>
-                  <var name="role" unset="true"/>
                   <var name="role" value="server"/>
                </then>
+               <else>
+                  <var name="role" value="client"/>
+               </else>
             </if>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND echo role=${role} >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
