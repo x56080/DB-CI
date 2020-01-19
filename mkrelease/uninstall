@@ -1,0 +1,105 @@
+#!/bin/bash
+CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
+LOG_FILE=/tmp/install_${CURRENT_TIME}
+SYS_TYPE='systemd'
+SYS_CONF_FILE=/etc/default/sequoiadb
+INSTALLDIR=/opt/sequoiadb
+INSTALLMODE=normal
+FORCE=false
+USERNAME=sdbadmin
+GROUPNAME=sdbadmin_group
+USERPASSWD=sdbadmin
+PORT=11790
+PROCESSAUTOSTART=true
+SMS=false
+PACKAGE_NAME=sequoiadb.run
+
+
+function deleteEnv()
+{
+   local envFile=$1
+   local file_exist=false
+   test -f ${envFile} && file_exist=true
+   local install_dir_reg="$(echo "${INSTALLDIR}" | sed 's/\//\\\//g')"
+   if [ $file_exist == true ]; then
+      local match_reg1="^export PATH=\"\$PATH:${install_dir_reg}\/bin\"$"
+      #local line_num1=`grep -n "${match_reg1}" ${envFile} | awk -F ":" '{print \$1}'`
+      sed -i '/${match_reg1}/d' ${envFile}
+      
+      local match_reg2="^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${install_dir_reg}\/lib\"$"
+      #local line_num2=`grep -n "${match_reg2}" ${envFile} | awk -F ":" '{print \$1}'`
+      sed -i '/${match_reg2}/d' ${envFile}
+      test -s ${envFile}
+      test $? -eq 1 && rm -f ${envFile}
+   fi
+
+}
+
+function getSysType()
+{
+   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $6}'`
+}
+
+function delSystemdService()
+{
+   echo "begin to remove service" >&2
+   systemctl disable sdbcm.service
+   rm -f /usr/lib/systemd/system/sdbcm.service
+   rm -f /lib/systemd/system/sdbcm.service
+   systemctl daemon-reload
+}
+
+function stopOM()
+{
+   echo "begin to stop om" >&2
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstop -t om -r om"
+}
+
+function preUninstallation()
+{
+   `${INSTALLDIR}/preUninstall.sh`
+   test $? -ne 0 && echo "Fail to execute ${INSTALLDIR}/preUninstall.sh " >&2 && exit 1;
+   #stop process
+   service sdbcm stop >> /dev/null
+   test $? -ne 0 && 
+   ${INSTALLDIR}/bin/sdbcmtop
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstop -t all"
+   local process_num=`${INSTALLDIR}/bin/sdblist -t all | grep -v "Total" | wc -l`
+   test ${process_num} -gt 0 && echo "Relevant processes still exist after excuting 'service sdbcm stop'." >&2 && exit 1;
+}
+
+function removeFile()
+{
+   test -f ${INSTALLDIR}/uninstall.dat && cat ${INSTALLDIR}/uninstall.dat |grep -v "conf/" |xargs rm -rf
+}
+
+function postUninstallation()
+{
+   #remove service
+   getSysType
+   if [ ${SYS_TYPE} == "systemd" ];then
+      delSystemdService >> /dev/null
+   fi
+   #delete file
+   rm -f ${INSTALLDIR}/packet/*
+   rm -f ${SYS_CONF_FILE}
+   local user_home=`grep "^${USERNAME}:" /etc/passwd | awk -F : '{print $6}'`
+   deleteEnv ${user_home}/.bashrc
+   deleteEnv ${user_home}/.profile
+   deleteEnv ${user_home}/.bash_profile
+}
+
+function uninstall()
+{
+   
+   preUninstallation
+   removeFile
+   postUninstallation
+}
+
+#get /etc/default/sequoiadb
+. /etc/default/sequoiadb
+INSTALLDIR=${INSTALL_DIR}
+USERNAME=${SDBADMIN_USER}
+uninstall
+exit 0

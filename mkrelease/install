@@ -1,0 +1,342 @@
+#!/bin/bash
+lines=343
+tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
+CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
+LOG_FILE=/tmp/install_${CURRENT_TIME}
+SYS_TYPE='systemd'
+SYS_CONF_FILE=/etc/default/sequoiadb
+INSTALLDIR=/opt/sequoiadb
+INSTALLMODE=normal
+FORCE=false
+USERNAME=sdbadmin
+GROUPNAME=sdbadmin_group
+USERPASSWD=sdbadmin
+PORT=11790
+PROCESSAUTOSTART=true
+SMS=false
+PACKAGE_NAME=sequoiadb-3.4-linux_x86_64-enterprise-installer.run
+
+function checkUmask()
+{
+   echo "begin to check umask" >&2
+   local other_mask=`umask | awk '{print substr($0,length($0)-0,1)}'`
+   local group_mask=`umask | awk '{print substr($0,length($0)-1,1)}'`
+   local user_mask=`umask | awk '{print substr($0,length($0)-2,1)}'`
+   local full_mask=`umask`
+   if [ ${other_mask} -gt 2 -o ${group_mask} -gt 2 -o ${user_mask} -gt 0 ]; then
+      echo "Umask abnormal! Current umask = ${full_mask}, recommended value is 0022" >&2 && exit 1;
+   fi
+   echo "ok" >&2
+}
+
+function checkFreeDiskSpace()
+{
+   echo "begin to check free disk" >&2
+   test -d ${INSTALLDIR} || mkdir -p ${INSTALLDIR}
+   local free_disk=`df ${INSTALLDIR} | awk '/[0-9]%/{print $(NF-2)}'`
+   if [ ${free_disk} -le 1300000 ];then
+      echo "There is not enough disk space for installation. It needs at lease 1.3G" >&2 && exit 1;
+   fi
+   echo "ok" >&2
+}
+
+function checkHostnameIp()
+{
+   echo "begin to check hostname and ip " >&2
+   local machine_hostname=`hostname`
+   if [ "${machine_hostname}" == 'localhost' -o "${machine_hostname}" == '(none)' -o "${machine_hostname}" == '' ]; then
+      echo "Hostname may be null!" >&2 && exit 1;
+   fi
+   local machine_ip=`ip a | grep -w 'inet'|grep 'global'| awk '{print $2}' | awk -F / '{print $1}'`
+   local hostname_ip=`hostname -i`
+   if [ "${hostname_ip}" != "${machine_ip}" ]; then
+      echo "Hostname ${machine_hostname} can't be resolved to local ip address! Please check file /etc/hosts"  >&2 && exit 1;
+   fi
+   echo "ok" >&2
+}
+
+function linkPhpLib()
+{
+   echo "begin to create link for php " >&2
+   local php_lib_dir=${INSTALLDIR}/tools/server/php/libxml2/lib
+   
+   rm -rf ${php_lib_dir}/libxml2.so
+   ln -s ${php_lib_dir}/libxml2.so.2.9.0 ${php_lib_dir}/libxml2.so
+   chown -h ${USERNAME}:${GROUPNAME} ${php_lib_dir}/libxml2.so
+   
+   rm -rf ${php_lib_dir}/libxml2.so.2
+   ln -s ${php_lib_dir}/libxml2.so.2.9.0 ${php_lib_dir}/libxml2.so.2
+   chown -h ${USERNAME}:${GROUPNAME} ${php_lib_dir}/libxml2.so.2
+   
+   rm -rf ${php_lib_dir}/libz.so
+   ln -s ${php_lib_dir}/libz.so.1.2.5 ${php_lib_dir}/libz.so
+   chown -h ${USERNAME}:${GROUPNAME} ${php_lib_dir}/libz.so
+   
+   rm -rf ${php_lib_dir}/libz.so.1
+   ln -s ${php_lib_dir}/libz.so.1.2.5 ${php_lib_dir}/libz.so.1
+   chown -h ${USERNAME}:${GROUPNAME} ${php_lib_dir}/libz.so.1
+   echo "ok " >&2
+}
+
+function changePermissionOwner()
+{
+   echo "begin to chmod  permission" >&2
+   chmod 755 ${INSTALLDIR}/bin/{*,*/*} 
+   chmod 755 ${INSTALLDIR}/plugins/SequoiaSQL/bin/*.sh 
+   chmod 755 ${INSTALLDIR}/tools/server/php/bin/* 
+   chmod 755 ${INSTALLDIR}/www/shell/* 
+   chmod 755 ${INSTALLDIR}/install_om.sh
+   chmod 755 ${INSTALLDIR}/compatible.sh
+   chmod 755 ${INSTALLDIR}/conf/script/*/*.sh
+   chmod 755 ${INSTALLDIR}/java/jdk/bin/*
+   chmod 755 ${INSTALLDIR}/postgresql/*.so*
+   chmod 777 /tmp
+   test -f /tmp/sequoiadb && chmod 777 /tmp/sequoiadb
+   chown root:root ${INSTALLDIR}/bin/sdbomtool
+   chown root:root ${INSTALLDIR}/uninstall
+   chmod 755 ${INSTALLDIR}/uninstall
+   chmod 6755 ${INSTALLDIR}/bin/sdbomtool 
+   setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/sdbstart
+   setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/sdbcmart
+   rm -f ${INSTALLDIR}/www/doc
+   ln -s ${INSTALLDIR}/doc ${INSTALLDIR}/www/doc
+   chown -h ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/www/doc
+   mkdir -p /var/sequoiadb 
+   chown ${USERNAME}:${GROUPNAME} /var/sequoiadb
+   chmod 777 /var/sequoiadb
+   echo "ok" >&2
+}
+
+function startService()
+{
+   echo "begin to start sdbcm service" >&2
+   systemctl daemon-reload
+   service sdbcm start 
+   test $? -ne 0 && echo "Failed to start cm, execute: service sdbcm start." >&2 && exit 1;
+   echo "ok" >&2
+}
+
+function addEnv()
+{
+   local envFile=$1
+   `grep -q "^export PATH=\"\$PATH:${INSTALLDIR}\/bin\"$" ${envFile}`
+   test $? -ne 0 && echo "export PATH=\"\$PATH:${INSTALLDIR}/bin\"" >> ${envFile}
+   
+   `grep -q "^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${INSTALLDIR}\/lib\"$" ${envFile}`
+   test $? -ne 0 && echo "export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${INSTALLDIR}/lib\"" >> ${envFile}
+}
+
+function getSysType()
+{
+   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $6}'`
+}
+
+function addSystemdService()
+{
+   echo "begin to add sdbcm service " >&2
+   local install_dir_reg="$(echo "${INSTALLDIR}" | sed 's/\//\\\//g')"
+   sed -i "s/\/opt\/sequoiadb/${install_dir_reg}/" ${INSTALLDIR}/sdbcm.service
+   test -d /usr/lib/systemd/system && cp ${INSTALLDIR}/sdbcm.service /usr/lib/systemd/system
+   test -d /lib/systemd/system && cp ${INSTALLDIR}/sdbcm.service /lib/systemd/system
+   rm -f ${INSTALLDIR}/sdbcm.service
+   systemctl daemon-reload
+   systemctl enable sdbcm.service
+   echo "ok" >&2
+}
+
+function startOm()
+{
+   echo "begin to create om" >&2
+   local install_om_mode=$1
+   local om_port=11780
+   local om_dbpath=${INSTALLDIR}/database/sms/${om_port}
+   local http_port=8000
+   echo "${INSTALLDIR}/install_om.sh ${install_om_mode} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
+   `${INSTALLDIR}/install_om.sh ${install_om_mode} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}`
+   chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/packet
+   echo "ok" >&2
+}
+
+function stopOM()
+{
+   su - ${USERNAME} -c "${installdir}/bin/sdbstop -t om -r om"
+}
+
+function readyToInstall()
+{
+   #check disk
+   checkFreeDiskSpace
+   #check hostname and ip
+   checkHostnameIp
+   #check umask
+   checkUmask
+   #check process has been stoped or not
+   #TODO
+   #check install user
+   if [ ${USERNAME} == "root" ];then
+      echo "The ROOT user is not allowed to create." >&2 && exit 1;
+   fi
+   #check or create user group
+   local exist_user=false
+   local exist_group=false
+   `grep "^${USERNAME}:" /etc/passwd >> /dev/null` 
+   test $? -eq 0 && exist_user=true
+   `grep "^${GROUPNAME}:" /etc/group  >> /dev/null`
+   test $? -eq 0 && exist_group=true
+   if [ ${exist_user} == true ]
+   then
+      local act_group=`id -ng ${USERNAME}`
+      if [ "${act_group}" != "${GROUPNAME}" ];then
+         echo "User ${USERNAME} exists, but it does not belong to group ${GROUPNAME}" >&2 && exit 1;
+      fi
+   else
+      if [ ${exist_group} == false ]; then
+         `groupadd ${GROUPNAME}`
+      fi
+      `useradd ${USERNAME} -m -g ${GROUPNAME} -p ${USERPASSWD}`
+   fi
+   
+}
+
+function unpackFile()
+{
+   echo "begin to unpack install file" >&2
+   test -d ${INSTALLDIR} || mkdir -p ${INSTALLDIR}
+   touch ${INSTALLDIR}/uninstall.dat
+   tar -zxvf /tmp/sequoiadb.tar.gz -C ${INSTALLDIR} >> ${INSTALLDIR}/uninstall.dat
+   chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}
+   rm -rf /tmp/sequoiadb.tar.gz
+   echo "ok" >&2
+}
+
+function postInstallation()
+{
+   linkPhpLib
+   changePermissionOwner
+   #modify tcp
+   test -f /proc/sys/net/ipv4/tcp_retries2 && echo 3 >> /proc/sys/net/ipv4/tcp_retries2
+   #write /etc/default/sequoiadb
+   rm -f ${SYS_CONF_FILE}
+   touch ${SYS_CONF_FILE}
+   chown ${USERNAME}:${GROUPNAME} ${SYS_CONF_FILE}
+   chmod 0644 ${SYS_CONF_FILE}
+   local md5=`md5sum ${PACKAGE_NAME} | cut -c 1-32`
+   echo NAME=sdbcm >> ${SYS_CONF_FILE}
+   echo SDBADMIN_USER=${USERNAME} >> ${SYS_CONF_FILE}
+   echo INSTALL_DIR=${INSTALLDIR} >> ${SYS_CONF_FILE}
+   echo MD5=${md5} >> ${SYS_CONF_FILE}
+   #write conf/sdbcm.conf
+   #defaultPort=11790 ${INSTALLDIR}/conf/sdbcm.conf
+   #AutoStart=${PROCESSAUTOSTART} 
+   #IsGeneral=?//存在om的时候设置
+   #OMAddress=？//存在om的时候设置
+   local user_home=`grep "^${USERNAME}:" /etc/passwd | awk -F : '{print $6}'`
+   touch ${user_home}/.bashrc
+   chown -R ${USERNAME}:${GROUPNAME} ${user_home}/.bashrc
+   local env1_exists=false
+   local env2_exists=false
+   test -f ${user_home}/.bash_profile && env1_exists=true
+   test -f ${user_home}/.profile && env2_exists=true
+   if [ ${env1_exists} == false -a ${env2_exists} == false ]
+   then
+      touch ${user_home}/.bash_profile
+   fi
+   test -f ${user_home}/.bash_profile && chown -R ${USERNAME}:${GROUPNAME} ${user_home}/.bash_profile
+   addEnv ${user_home}/.bashrc
+   test -f ${user_home}/.bash_profile && addEnv ${user_home}/.bash_profile
+   test -f ${user_home}/.profile && addEnv ${user_home}/.profile
+   getSysType 
+   if [ ${SYS_TYPE} == "systemd" ];then
+      addSystemdService >> /dev/null
+   fi
+   startService
+   if [ ${SMS} == true ];then
+      startOm "normal"
+   fi
+   rm -f ${INSTALLDIR}/sequoiadb.tar.gz
+}
+
+function normalComponent()
+{
+   readyToInstall
+   unpackFile
+   postInstallation
+}
+
+function build_help()
+{
+   echo "--prefix <prefix>              Installation Directory"
+   echo "                               Default: /opt/sequoiadb"
+   echo "--installmode <installmode>    Do you want to upgrade or cover"
+   echo "                               Default:"
+   echo "                               Allowed: upgrade cover"
+   echo "--force <force>                Force Installation"
+   echo "                               Default: false"
+   echo "--username <username>          User Name"
+   echo "                               Default: sdbadmin"
+   echo "--groupname <groupname>        Group Name"
+   echo "                               Default: sdbadmin_group"
+   echo "--userpasswd <userpasswd>      Password"
+   echo "                               Default: sdbadmin"
+   echo "--port <port>                  SequoiaDB Cluster Manager Port"
+   echo "                               Default: 11790"
+   echo "--processAutoStart <processAutoStart> Do You Want To Start Sequoiadb Processes When Machine Restart?"
+   echo "                               Default: true"
+   echo "--SMS <SMS>                    Do You Want To Install OM Service?"
+   echo "                               Default: false"
+   echo "                               Allowed: true false only"
+
+}
+
+ARGS=`getopt -o h --long help,print,prefix:,installmode:,force:,username:,groupname:,userpasswd:,port:,processAutoStart:,SMS: -n 'install' -- "$@"`
+ret=$?
+test $ret -ne 0 && exit $ret
+
+eval set -- "${ARGS}"
+
+while true
+do
+   case "$1" in
+      --prefix )                        INSTALLDIR=$2
+                                        shift 2
+                                        ;;
+      --installmode )                   INSTALLMODE=$2
+                                        shift 2
+                                        ;;
+      --force )                         FORCE=$2
+                                        shift 2
+                                        ;;
+      --username )                      USERNAME=$2
+                                        shift 2
+                                        ;;
+      --groupname )                     GROUPNAME=$2
+                                        shift 2
+                                        ;;
+      --userpasswd )                    USERPASSWD=$2
+                                        shift 2
+                                        ;;
+      --port )                          PORT=$2
+                                        shift 2
+                                        ;;
+      --processAutoStart )              PROCESSAUTOSTART=$2
+                                        shift 2
+                                        ;;
+      --SMS )                           SMS=$2
+                                        shift 2
+                                        ;;
+      -h | --help )                     build_help
+                                        exit 0
+                                        ;;
+      --)                               shift
+                                        break
+                                        ;;
+      *)                                echo "Internal error!"
+                                        exit 64
+                                        ;;
+   esac
+done
+
+#确认是安装还是升级
+#校验端口号，true  false值
+normalComponent
+exit 0
