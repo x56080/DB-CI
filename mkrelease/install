@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=343
+lines=344
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -14,7 +14,7 @@ USERPASSWD=sdbadmin
 PORT=11790
 PROCESSAUTOSTART=true
 SMS=false
-PACKAGE_NAME=sequoiadb-3.4-linux_x86_64-enterprise-installer.run
+PACKAGE_NAME=sequoiadb-3.4-aarch64-enterprise-installer.run
 
 function checkUmask()
 {
@@ -87,6 +87,7 @@ function changePermissionOwner()
    chmod 755 ${INSTALLDIR}/www/shell/* 
    chmod 755 ${INSTALLDIR}/install_om.sh
    chmod 755 ${INSTALLDIR}/compatible.sh
+   chmod 755 ${INSTALLDIR}/preUninstall.sh
    chmod 755 ${INSTALLDIR}/conf/script/*/*.sh
    chmod 755 ${INSTALLDIR}/java/jdk/bin/*
    chmod 755 ${INSTALLDIR}/postgresql/*.so*
@@ -128,7 +129,7 @@ function addEnv()
 
 function getSysType()
 {
-   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $NF}'`
+   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $6}'`
 }
 
 function addSystemdService()
