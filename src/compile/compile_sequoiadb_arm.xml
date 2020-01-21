@@ -725,7 +725,7 @@
       </copy>
       
       <copy todir="${release_db_dir}/tools/server/php">
-         <fileset dir="${srccode_dir}/tools/server/php_testVersions" includes="php_arm_5.5.0/**/*,php_arm_5.6.0/**/*,php_arm_7.0.0/**/*,php_arm_7.1.11/**/*" />
+         <fileset dir="${srccode_dir}/tools/server/php_arm" />
       </copy>
 
       <copy todir="${release_db_dir}/web" >
