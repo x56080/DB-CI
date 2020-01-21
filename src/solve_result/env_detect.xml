@@ -408,7 +408,7 @@
       </if>
       <hostinfo prefix="host" />
       <resourcecount property="corefilenum">
-         <fileset dir="${CI_WORK_DIR}" includes="testcase/**/*core*" excludes="testcase/user\ scenario/*"/>
+         <fileset dir="${CI_WORK_DIR}" includes="testcase/**/*core*" excludes="testcase/user\ scenario/*,testcase/s3/python/s3-tests-master/*"/>
       </resourcecount>
       <touch file="${report_dir}/${host.NAME}_testcase_core.log"/>
       <if>
