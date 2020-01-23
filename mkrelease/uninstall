@@ -70,7 +70,7 @@ function preUninstallation()
 
 function removeFile()
 {
-   test -f ${INSTALLDIR}/uninstall.dat && cat ${INSTALLDIR}/uninstall.dat |grep -v "conf/" |xargs rm -rf
+   test -f ${INSTALLDIR}/uninstall.dat && cd ${INSTALLDIR};cat ${INSTALLDIR}/uninstall.dat |grep -v "conf/" |xargs rm -rf
 }
 
 function postUninstallation()
