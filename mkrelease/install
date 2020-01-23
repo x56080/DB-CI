@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=344
+lines=343
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -148,12 +148,11 @@ function addSystemdService()
 function startOm()
 {
    echo "begin to create om" >&2
-   local install_om_mode=$1
    local om_port=11780
    local om_dbpath=${INSTALLDIR}/database/sms/${om_port}
    local http_port=8000
-   echo "${INSTALLDIR}/install_om.sh ${install_om_mode} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
-   `${INSTALLDIR}/install_om.sh ${install_om_mode} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}`
+   echo "${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
+   ${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}
    chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/packet
    echo "ok" >&2
 }
@@ -252,7 +251,7 @@ function postInstallation()
    fi
    startService
    if [ ${SMS} == true ];then
-      startOm "normal"
+      startOm
    fi
    rm -f ${INSTALLDIR}/sequoiadb.tar.gz
 }
