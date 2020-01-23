@@ -37,7 +37,7 @@ function deleteEnv()
 
 function getSysType()
 {
-   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $6}'`
+   SYS_TYPE=`ls -l /proc/1/exe | awk -F / '{print $NF}'`
 }
 
 function delSystemdService()
