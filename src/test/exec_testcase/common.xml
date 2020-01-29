@@ -121,7 +121,10 @@
       <sequential>
       
       <if><!--execute-->
-         <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST" />
+         <or>
+             <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST" />
+             <equals arg1="${TEST_TYPE}" arg2="MVCCTEST" />
+         </or>
          <then>
             <!--get node.conf dir-->
             <var name="exec_dir" unset="true"/>
