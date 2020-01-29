@@ -28,7 +28,10 @@
          </sequential>
       </for>
       <if>
-         <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
+         <or>
+             <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
+             <equals arg1="${TEST_TYPE}" arg2="MVCCTEST"/>
+         </or>
          <then>
             <replaceregexp file="${testcase_dir}/configure.xml"
                            match='"CONFTOOL"(.*)value="(.*)"' 
