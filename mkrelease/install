@@ -338,7 +338,7 @@ done
 
 #确认是安装还是升级
 #校验端口号，true  false值
-local cur_user=`whoami`
+cur_user=`whoami`
 if [ "$cur_user" != "root" ]
 then
    echo "ERROR: the installation requires root permission" >&2
