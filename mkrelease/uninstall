@@ -101,5 +101,11 @@ function uninstall()
 . /etc/default/sequoiadb
 INSTALLDIR=${INSTALL_DIR}
 USERNAME=${SDBADMIN_USER}
+local cur_user=`whoami`
+if [ "$cur_user" != "root" ]
+then
+   echo "ERROR: the uninstall requires root permission" >&2
+   exit 1
+fi
 uninstall
 exit 0
