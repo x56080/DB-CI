@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=357
+lines=358
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -193,7 +193,8 @@ function readyToInstall()
       if [ ${exist_group} == false ]; then
          `groupadd ${GROUPNAME}`
       fi
-      `useradd ${USERNAME} -m -g ${GROUPNAME}`
+      local bash_path=`which bash`
+      `useradd ${USERNAME} -m -g ${GROUPNAME} -s ${bash_path}`
       `passwd -h | grep stdin`
       if [ $? == 0 ]
       then
