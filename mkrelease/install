@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=358
+lines=367
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -15,6 +15,7 @@ PORT=11790
 PROCESSAUTOSTART=true
 SMS=false
 PACKAGE_NAME=sequoiadb-3.4-aarch64-enterprise-installer.run
+PACKAGE_DIR=/opt
 
 function checkUmask()
 {
@@ -228,7 +229,7 @@ function postInstallation()
    touch ${SYS_CONF_FILE}
    chown ${USERNAME}:${GROUPNAME} ${SYS_CONF_FILE}
    chmod 0644 ${SYS_CONF_FILE}
-   local md5=`md5sum ${PACKAGE_NAME} | cut -c 1-32`
+   local md5=`md5sum ${PACKAGE_DIR}/${PACKAGE_NAME} | cut -c 1-32`
    echo NAME=sdbcm >> ${SYS_CONF_FILE}
    echo SDBADMIN_USER=${USERNAME} >> ${SYS_CONF_FILE}
    echo INSTALL_DIR=${INSTALLDIR} >> ${SYS_CONF_FILE}
@@ -351,6 +352,14 @@ if [ "$cur_user" != "root" ]
 then
    echo "ERROR: the installation requires root permission" >&2
    exit 1
+fi
+
+#get PACKAGE_DIR
+dir_name=`dirname $0`
+if [[ ${dir_name:0:1} != "/" ]]; then
+   PACKAGE_DIR=$(pwd)/$dir_name  #relative path
+else
+   PACKAGE_DIR=$dir_name         #absolute path
 fi
 
 normalComponent
