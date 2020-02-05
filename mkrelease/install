@@ -152,8 +152,8 @@ function startOm()
    local om_port=11780
    local om_dbpath=${INSTALLDIR}/database/sms/${om_port}
    local http_port=8000
-   echo "${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
-   ${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_NAME}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}
+   echo "${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
+   ${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}
    chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/packet
    echo "ok" >&2
 }
