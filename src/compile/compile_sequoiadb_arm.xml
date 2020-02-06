@@ -703,8 +703,9 @@
       <chmod file="${release_db_dir}/tools/deploy/mysql.conf" perm="666" />
       <chmod file="${release_db_dir}/tools/deploy/sequoiadb.conf" perm="644" />
       <copy todir="${release_db_dir}/tools">
-         <fileset dir="${srccode_dir}/tools" includes="expect/**/*,sdbmemcheck"/>
+         <fileset dir="${srccode_dir}/tools" includes="expect/**/*,sdbmemcheck" excludes="expect/bin/expect_*"/>
       </copy>
+      <copy file="${srccode_dir}/tools/expect/bin/expect_arm" tofile="${release_db_dir}/tools/expect/bin/expect"/>
 	  <chmod file="${release_db_dir}/tools/sdbmemcheck" perm="u+x" />
       <chmod file="${release_db_dir}/tools/expect/bin/expect" perm="u+x" />
       <chmod file="${release_db_dir}/tools/expect/trust/trustRelpConf.sh" perm="u+x" />
