@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=363
+lines=364
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -50,8 +50,9 @@ function checkHostnameIp()
    fi
    local machine_ip=`ip a | grep -w 'inet'|grep 'global'| awk '{print $2}' | awk -F / '{print $1}'`
    local hostname_ip=`hostname -i`
-   if [ "${hostname_ip}" != "${machine_ip}" ]; then
-      echo "Hostname ${machine_hostname} can't be resolved to local ip address! Please check file /etc/hosts"  >&2 && exit 1;
+   echo "${machine_ip}" | grep -q "${hostname_ip}"
+   if [ $? != 0 ]; then
+      echo "The ip(${hostname_ip}) of host(${machine_hostname}) does not match any ip(${machine_ip}) of network adapter! Please check file '/etc/hosts' and run command 'ip a' for more detail."  >&2 && exit 1;
    fi
    echo "ok" >&2
 }
