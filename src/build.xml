@@ -321,8 +321,13 @@
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
       </ant>
-      
-      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
+   
+      <if>
+         <equals arg1="${ISMVCC}" arg2="false" />
+         <then>
+            <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
+         </then>
+      </if>
       
       <antcallback target="status_file.get_build_status" return="build_status"/>
 
@@ -627,6 +632,12 @@
          <isset property="DEPLOY_MODE"/>
          <else>
             <var name="DEPLOY_MODE" value="G3D3" />
+         </else>
+      </if>
+      <if>
+         <isset property="ISMVCC"/>
+         <else>
+            <var name="ISMVCC" value="false" />
          </else>
       </if>
       <if>
