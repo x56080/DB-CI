@@ -61,7 +61,6 @@ function preUninstallation()
    test $? -ne 0 && echo "Fail to execute ${INSTALLDIR}/preUninstall.sh " >&2 && exit 1;
    #stop process
    service sdbcm stop >> /dev/null
-   test $? -ne 0 && 
    ${INSTALLDIR}/bin/sdbcmtop
    su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstop -t all"
    local process_num=`${INSTALLDIR}/bin/sdblist -t all | grep -v "Total" | wc -l`
