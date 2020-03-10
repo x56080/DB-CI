@@ -42,11 +42,12 @@ function getSysType()
 
 function delSystemdService()
 {
-   echo "begin to remove service" >&2
+   echo "begin to remove service sdbcm" >&2
    systemctl disable sdbcm.service
    rm -f /usr/lib/systemd/system/sdbcm.service
    rm -f /lib/systemd/system/sdbcm.service
    systemctl daemon-reload
+   echo "ok" >&2
 }
 
 function stopOM()
@@ -59,21 +60,26 @@ function preUninstallation()
 {
    `${INSTALLDIR}/preUninstall.sh`
    test $? -ne 0 && echo "Fail to execute ${INSTALLDIR}/preUninstall.sh " >&2 && exit 1;
+   echo "begin to stop sdb relevant processes" >&2
    #stop process
    service sdbcm stop >> /dev/null
    ${INSTALLDIR}/bin/sdbcmtop
    su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstop -t all"
    local process_num=`${INSTALLDIR}/bin/sdblist -t all | grep -v "Total" | wc -l`
    test ${process_num} -gt 0 && echo "Relevant processes still exist after excuting 'service sdbcm stop'." >&2 && exit 1;
+   echo "ok" >&2
 }
 
 function removeFile()
 {
+   echo "begin to remove installation files" >&2
    test -f ${INSTALLDIR}/uninstall.dat && cd ${INSTALLDIR};cat ${INSTALLDIR}/uninstall.dat |grep -v "conf/" |xargs rm -rf
+   echo "ok" >&2
 }
 
 function postUninstallation()
 {
+   
    #remove service
    getSysType
    if [ ${SYS_TYPE} == "systemd" ];then
