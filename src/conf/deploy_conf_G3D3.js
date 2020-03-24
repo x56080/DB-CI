@@ -23,7 +23,7 @@ if( typeof( diagLevel ) === "undefined" )
 var osArch = new Cmd().run('arch');
 if ( osArch === "x86_64\n" ) 
 { 
-   var fapValue = "fapmongo";
+   var fapValue = "fapmongo2";
 }
 else
 {
@@ -33,7 +33,6 @@ else
 var cataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
-                  fap:fapValue,
                   logfilenum:40
                 };
 var coordConf = { diaglevel:diagLevel,
@@ -44,6 +43,5 @@ var coordConf = { diaglevel:diagLevel,
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
-                  logfilenum:40,
-                  fap:fapValue
+                  logfilenum:40
                 };
