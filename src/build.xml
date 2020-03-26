@@ -83,6 +83,75 @@
   
    </target>
    
+   <target name="normal_mvcc_test_build">
+      <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
+      
+      <var name="TEST_TYPE" value="NORMALTEST"/>
+      <getplatform resultProperty="plat_form"/>
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
+      
+      <if>
+         <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
+         <then>
+            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+               <property name="TEST_TYPE" value="MVCCTEST"/>
+               <property name="testhost_list" value="${testhost_list}"/>
+            </ant>
+            <if>
+               <equals arg1="${COVERAGE}" arg2="true" />
+               <then>
+                  <ant antfile="get_coverage.xml" target="ready_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                     <property name="testhost_list" value="${testhost_list}"/>
+                  </ant>
+               </then>
+            </if>
+         </then>
+      </if>
+     
+      <ant antfile="normal_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+         <property name="plat_form" value="${plat_form}"/>
+         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+         <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+      </ant>
+            
+       <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+         <property name="plat_form" value="${plat_form}"/>
+      </ant>
+   
+      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
+   
+      <antcallback target="status_file.get_build_status" return="build_status"/>
+      
+      <if>
+         <equals arg1="${COVERAGE}" arg2="true" />
+         <then>
+            <ant antfile="get_coverage.xml" target="get_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+               <property name="testhost_list" value="${testhost_list}"/>
+            </ant>
+         </then>
+      </if>
+            
+      <if>
+         <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
+         <then>
+            <if>
+               <equals arg1="${build_status}" arg2="unstable" />
+               <then>
+                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                     <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+                     <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="testhost_list" value="${testhost_list}"/>
+                  </ant>
+               </then>
+            </if>
+         </then>
+      </if>
+  
+   </target>
+   
    <target name="largedata_test_build">
       <var name="TEST_TYPE" value="LARGEDATATEST"/>
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
@@ -164,6 +233,76 @@
          <then>
             <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+               <property name="plat_form" value="${plat_form}"/>
+            </ant>
+            <if>
+               <equals arg1="${COVERAGE}" arg2="true" />
+               <then>
+                  <ant antfile="get_coverage.xml" target="ready_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                     <property name="testhost_list" value="${testhost_list}"/>
+                  </ant>
+               </then>
+            </if>
+         </then>
+      </if>
+     
+      <ant antfile="sync_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+         <property name="plat_form" value="${plat_form}"/>
+         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+         <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+         <property name="BREAK_ON_FAILURE" value="${BREAK_ON_FAILURE}"/>
+      </ant>
+      
+      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+         <property name="plat_form" value="${plat_form}"/>
+      </ant>
+   
+      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
+   
+      <antcallback target="status_file.get_build_status" return="build_status"/>
+
+      <if>
+         <equals arg1="${COVERAGE}" arg2="true" />
+         <then>
+            <ant antfile="get_coverage.xml" target="get_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+               <property name="testhost_list" value="${testhost_list}"/>
+            </ant>
+         </then>
+      </if>
+      
+      <if>
+         <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
+         <then>
+            <if>
+               <equals arg1="${build_status}" arg2="unstable" />
+               <then>
+                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                     <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+                     <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="plat_form" value="${plat_form}"/>
+                  </ant>
+               </then>
+            </if>
+         </then>
+      </if>
+   
+   </target>
+   
+   <target name="sync_mvcc_test_build">
+      <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, BREAK_ON_FAILURE, COVERAGE, TESTCASE_LISTS"/>
+      
+      <var name="TEST_TYPE" value="SYNCTEST"/>
+      <getplatform resultProperty="plat_form"/>
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      
+      <if>
+         <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
+         <then>
+            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+               <property name="TEST_TYPE" value="MVCCTEST"/>
                <property name="plat_form" value="${plat_form}"/>
             </ant>
             <if>
