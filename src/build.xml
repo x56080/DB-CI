@@ -96,7 +96,7 @@
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
             <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
-               <property name="TEST_TYPE" value="MVCCTEST"/>
+               <property name="TEST_TYPE" value="MVCCNORMAL"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
             <if>
@@ -307,7 +307,7 @@
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
             <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
-               <property name="TEST_TYPE" value="MVCCTEST"/>
+               <property name="TEST_TYPE" value="MVCCNORMAL"/>
                <property name="plat_form" value="${plat_form}"/>
             </ant>
             <if>
