@@ -472,6 +472,13 @@
          </then>
       </if>
       <if>
+         <equals arg1="${TEST_TYPE}" arg2="MVCCNORMAL" />
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="MVCC"/>
+         </then>
+      </if>
+      <if>
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST" />
          <then>
             <var name="diagLevel" value="5"/>
