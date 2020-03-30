@@ -129,7 +129,7 @@
       <!--detect node by find core-->
       <for param="nodecorname">
          <path>
-            <fileset dir="${INSTALL_DIR}/database/" includes="**/*core*" />
+            <fileset dir="${INSTALL_DIR}/database/" includes="**/*core*,**/*trap*" />
          </path>
          <sequential>
             <echo message="${host.NAME}   ${host.ADDR4}   @{nodecorname}&#10;" file="${report_dir}/${host.NAME}_node_core.log" append="true"/>
@@ -138,7 +138,7 @@
       <!--detect node core from  bin -->
       <for param="nodecorname">
          <path>
-            <fileset dir="${INSTALL_DIR}/bin/" includes="**/*core*" />
+            <fileset dir="${INSTALL_DIR}/bin/" includes="**/*core*,**/*trap*" />
          </path>
          <sequential>
             <echo message="${host.NAME}   ${host.ADDR4}   @{nodecorname}&#10;" file="${report_dir}/${host.NAME}_node_core.log" append="true"/>
@@ -278,12 +278,21 @@
             <fileset dir="${report_dir}/" includes="*node_core*.log"/>
          </path-elements>
       </countstr>
+      <countstr str="trap" resultproperty="trap_count">
+         <path-elements>
+            <fileset dir="${report_dir}/" includes="*node_core*.log"/>
+         </path-elements>
+      </countstr>
       <var name="node_core_msg" value=""/>
       <if>
-        <equals arg1="${str_count}" arg2="0"/>
+        <and>
+           <equals arg1="${str_count}" arg2="0"/>
+           <equals arg1="${trap_count}" arg2="0"/>
+        </and>
         <else>
            <var name="exception_flag" value="true"/>
            <var name="node_core_msg" value="core dump total : ${str_count}&#10;"/>
+           <var name="node_core_msg" value="${node_core_msg}trap total : ${trap_count}&#10;"/>
         </else>
       </if>
       <var name="str_count" unset="true"/>
