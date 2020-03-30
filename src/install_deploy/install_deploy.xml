@@ -38,7 +38,7 @@
       <antcall target="deploy"/> 
       <antcall target="ready_es_environment"/>
       <if>
-         <equals arg1="${MVCC}" arg2="true"/>
+         <equals arg1="${ISMVCC}" arg2="true"/>
          <then>
             <antcall target="ready_mvcc_spt"/>
          </then>
