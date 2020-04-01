@@ -460,20 +460,6 @@
          </then>
       </if>
       <if>
-         <equals arg1="${TEST_TYPE}" arg2="MVCCTEST" />
-         <then>
-            <var name="diagLevel" value="3"/>
-            <var name="DEPLOY_MODE" value="MVCC"/>
-         </then>
-      </if>
-      <if>
-         <equals arg1="${TEST_TYPE}" arg2="MVCCNORMAL" />
-         <then>
-            <var name="diagLevel" value="5"/>
-            <var name="DEPLOY_MODE" value="MVCC"/>
-         </then>
-      </if>
-      <if>
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST" />
          <then>
             <var name="diagLevel" value="5"/>
@@ -493,7 +479,21 @@
             <var name="DEPLOY_MODE" value="TPCC"/>
          </then>
       </if>
-            
+        
+      <if>
+         <equals arg1="${ISMVCC}" arg2="true" />
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="MVCC"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="MVCCTEST" />
+         <then>
+            <var name="diagLevel" value="3"/>
+            <var name="DEPLOY_MODE" value="MVCC"/>
+         </then>
+      </if>
       <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
       <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
       <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};&quot;" />
