@@ -91,12 +91,11 @@
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
       
-      <var name="TEST_TYPE" unset="true"/>
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
             <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
-               <property name="TEST_TYPE" value="MVCCNORMAL"/>
+               <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
             <if>
@@ -109,9 +108,6 @@
             </if>
          </then>
       </if>
-
-      <var name="TEST_TYPE" unset="true"/>
-      <var name="TEST_TYPE" value="NORMALTEST"/>
      
       <ant antfile="normal_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
