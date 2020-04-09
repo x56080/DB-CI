@@ -157,6 +157,16 @@
          <fileset dir="${INSTALL_DIR}/conf/log" includes="sdbseadapterlog/**/*"/>
       </copy>
       
+      <!--backup stp log-->
+      <if>
+          <available file="${INSTALL_DIR}/conf/stp" type="dir"/>
+          <then>
+             <copy todir="${backup_basedir}/${backup_reltdir}">
+                <fileset dir="${INSTALL_DIR}/conf" includes="stp/*.log"/>
+             </copy>
+          </then>
+      </if>
+
       <!--backup s3 log-->
       <if>
          <available file="${INSTALL_DIR}/tools/sequoias3/log" type="dir"/>
