@@ -369,6 +369,9 @@
                   request="START SHELL COMMAND echo role=${role} >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND echo diaglevel=5 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
+                  throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/stp -R WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
