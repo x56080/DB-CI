@@ -14,6 +14,7 @@ LimitDATA=infinity
 LimitFSIZE=infinity
 LimitAS=infinity
 LimitNOFILE=infinity
+LimitSTACK=524288
 
 [Install]
 WantedBy=multi-user.target
