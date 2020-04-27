@@ -35,7 +35,6 @@ var cataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   logfilenum:40,
                   globtranson:true,
-                  enablesleep:true,
                   mvccon:true
                 };
 var coordConf = { diaglevel:diagLevel,
@@ -43,7 +42,6 @@ var coordConf = { diaglevel:diagLevel,
                   logfilenum:40,
                   globtranson:true,
                   mvccon:true,
-                  enablesleep:true,
                   fap:fapValue                  
                 };
 var dataConf  = { diaglevel:diagLevel,
@@ -52,6 +50,5 @@ var dataConf  = { diaglevel:diagLevel,
                   logfilenum:40,
                   dmschkinterval:1,
                   globtranson:true,
-                  enablesleep:true,
                   mvccon:true
                 };
