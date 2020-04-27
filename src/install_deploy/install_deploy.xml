@@ -308,7 +308,7 @@
             </for>
             <!--copy to other host -->
             
-            <for list="${testhost_list}" param="testhost" parallel="true">
+            <for list="${testhost_list}" param="testhost">
                <sequential>
                   <if>
                      <equals arg1="@{testhost}" arg2="${host.NAME}" />
