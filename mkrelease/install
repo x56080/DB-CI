@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=366
+lines=379
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -16,6 +16,9 @@ PROCESSAUTOSTART=true
 SMS=false
 PACKAGE_NAME=sequoiadb-3.4-aarch64-enterprise-installer.run
 PACKAGE_PATH==/opt/sequoiadb-3.4-aarch64-enterprise-installer.run
+GLIBCXX_VERSION=111
+GIT_VERSION="GIT_VERSION_VALUE"
+BUILD_TIME="BUILD_TIME_VALUE"
 
 function checkUmask()
 {
@@ -274,6 +277,13 @@ function normalComponent()
    postInstallation
 }
 
+function show_version()
+{
+   echo $GLIBCXX_VERSION
+   echo $GIT_VERSION
+   echo $BUILD_TIME
+}
+
 function build_help()
 {
    echo "--prefix <prefix>              Installation Directory"
@@ -299,7 +309,7 @@ function build_help()
 
 }
 
-ARGS=`getopt -o h --long help,print,prefix:,mode:,installmode:,force:,username:,groupname:,userpasswd:,port:,processAutoStart:,SMS: -n 'install' -- "$@"`
+ARGS=`getopt -o hv --long help,version,print,prefix:,mode:,installmode:,force:,username:,groupname:,userpasswd:,port:,processAutoStart:,SMS: -n 'install' -- "$@"`
 ret=$?
 test $ret -ne 0 && exit $ret
 
@@ -338,6 +348,9 @@ do
                                         shift 2
                                         ;;
       -h | --help )                     build_help
+                                        exit 0
+                                        ;;
+      -v | --version )                  show_version
                                         exit 0
                                         ;;
       --)                               shift
