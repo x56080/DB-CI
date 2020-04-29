@@ -8,13 +8,6 @@ KillMode=none
 PIDFile=/opt/sequoiadb/conf/log/sdbcm.pid
 ExecStart=/opt/sequoiadb/bin/sdbcmart
 ExecStop=-/opt/sequoiadb/bin/sdbcmtop 
-# set ulimit
-LimitCORE=0
-LimitDATA=infinity
-LimitFSIZE=infinity
-LimitAS=infinity
-LimitNOFILE=infinity
-LimitSTACK=524288
 
 [Install]
 WantedBy=multi-user.target
