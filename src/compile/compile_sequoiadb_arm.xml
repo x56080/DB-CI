@@ -766,6 +766,17 @@
       <tar destfile="${release_dir}/sequoiadb.tar.gz" 
            compression="gzip" longfile="gnu" basedir="${release_dir}/sequoiadb" includes="**/*" />
           
+      <chmod perm="u+x" file="${srccode_dir}/bin/sequoiadb"/>
+      <exec executable="bash" dir="${srccode_dir}" outputproperty="git_version_value" failonerror="true" logError="true">
+         <arg value="-c"/>
+         <arg line=" &quot;bin/sequoiadb --version | grep 'Git version'&quot; "/>
+      </exec>
+      <replace file="${release_dir}/install" token="GIT_VERSION_VALUE" value="${git_version_value}"/>
+      <exec executable="bash" dir="${srccode_dir}" outputproperty="build_time_value" failonerror="true" logError="true">
+         <arg value="-c"/>
+         <arg line=" &quot;bin/sequoiadb --version | awk 'END {print}'&quot; "/>
+      </exec>
+      <replace file="${release_dir}/install" token="BUILD_TIME_VALUE" value="${build_time_value}"/>
    </target>
    
    <target name="build_bin_package"> 
