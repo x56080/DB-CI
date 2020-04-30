@@ -767,6 +767,11 @@
            compression="gzip" longfile="gnu" basedir="${release_dir}/sequoiadb" includes="**/*" />
           
       <chmod perm="u+x" file="${srccode_dir}/bin/sequoiadb"/>
+      <exec executable="bash" dir="${srccode_dir}" outputproperty="glibcxx_version_value" failonerror="true" logError="true">
+         <arg value="-c"/>
+         <arg line=" &quot;ldd bin/sequoiadb | grep libstdc++ | awk -F ' ' '{print $3}' | xargs strings |grep 'GLIBCXX' | tail -2 | head -1&quot; "/>
+      </exec>
+      <replace file="${release_dir}/install" token="GLIBCXX_VERSION_VALUE" value="${glibcxx_version_value}"/>
       <exec executable="bash" dir="${srccode_dir}" outputproperty="git_version_value" failonerror="true" logError="true">
          <arg value="-c"/>
          <arg line=" &quot;bin/sequoiadb --version | grep 'Git version'&quot; "/>
