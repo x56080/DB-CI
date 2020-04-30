@@ -16,7 +16,7 @@ PROCESSAUTOSTART=true
 SMS=false
 PACKAGE_NAME=sequoiadb-3.4-aarch64-enterprise-installer.run
 PACKAGE_PATH==/opt/sequoiadb-3.4-aarch64-enterprise-installer.run
-GLIBCXX_VERSION=111
+GLIBCXX_VERSION="GLIBCXX_VERSION_VALUE"
 GIT_VERSION="GIT_VERSION_VALUE"
 BUILD_TIME="BUILD_TIME_VALUE"
 
