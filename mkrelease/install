@@ -285,7 +285,7 @@ function show_version()
 }
 
 function build_help()
-
+{
    echo "--version                      Display product information"
    echo "--prefix <prefix>              Installation Directory"
    echo "                               Default: /opt/sequoiadb"
