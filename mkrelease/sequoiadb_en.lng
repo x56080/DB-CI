@@ -44,6 +44,10 @@ Install.WarnMsg.CheckUmask=Umask abnormal! Current umask = ${full_mask}, recomme
 Install.WarnMsg.checkHostname=Hostname may be null!
 Install.WarnMsg.checkHostnameIp=Hostname ${machine_hostname} can't be resolved to local ip address! Please check file /etc/hosts.
 
+Cover.ErrorMsg.StopProcess=Relevant processes still exist, please execute 'service sdbcm stop'.
+Cover.Paramers.stopprocess.title=stop relevant processes
+Cover.Paramers.stopprocess.explanation=Do you want to cover the install? It may stop relevant processes.
+
 Upgrade.Paramers.Upgrade.Explanation=Do you want to upgrade or cover
 Upgrade.Paramers.Upgrade.Check=Invalid parameter: --upgrade ${upgrade_param}, should be true or false
 
