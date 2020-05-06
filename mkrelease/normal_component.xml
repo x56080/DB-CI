@@ -74,7 +74,6 @@
             <execArgs>-t om | grep -v "Total" | wc -l</execArgs>
         </setInstallerVariableFromScriptOutput>
         
-        <deleteFile path="${installdir}/tmp_${time}"/>
         
         <showQuestion>
             <title>${msg(Cover.Paramers.stopprocess.title)}</title>
@@ -127,6 +126,7 @@
             <exec>${installdir}/tmp_${time}/sdblist</exec>
             <execArgs>-t om | grep -v "Total" | wc -l</execArgs>
         </setInstallerVariableFromScriptOutput>
+       <deleteFile path="${installdir}/tmp_${time}"/>
        
         <throwError>
             <text>${msg(Cover.ErrorMsg.StopProcess)}</text>
