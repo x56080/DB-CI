@@ -190,6 +190,14 @@
                   </if>
 
                </then>
+               <else>
+                   <staf location="@{testhost}" service="PROCESS"
+                      request="START SHELL COMMAND rm -rf ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
+                      throwBuildException=""/>
+                   <staf location="@{testhost}" service="PROCESS"
+                      request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
+                      throwBuildException=""/>
+               </else>
             </if>            
          </sequential>
       </for>
