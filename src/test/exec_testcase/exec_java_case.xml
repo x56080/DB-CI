@@ -97,11 +97,30 @@
       </if>
 
       <if>
+         <available file="${testcase_dir}/output/junitreports" type="dir"/>
+         <then>
+            <countstr str="&lt;/error&gt;" resultproperty="error_end_num">
+               <path-elements>
+                  <fileset dir="${testcase_dir}/output/junitreports" includes="**/*.xml"/>
+               </path-elements>
+            </countstr>
+         </then>
+         <else>
+            <var name="error_end_num" value="0"/>
+         </else>
+      </if>
+     
+      <if>
          <and>
             <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
-            <not>
-               <equals arg1="${fail_end_num}" arg2="0"/>
-            </not>
+            <or>
+               <not>
+                  <equals arg1="${fail_end_num}" arg2="0"/>
+               </not>
+               <not>
+                  <equals arg1="${error_end_num}" arg2="0"/>
+               </not>
+            </or>
          </and>
          <then>
             <touch file="${report_dir}/.TESTCASE_FAIL"/>
