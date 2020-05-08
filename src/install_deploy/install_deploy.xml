@@ -213,6 +213,14 @@
                   resultPrefix="cmstop"
                   throwBuildException="1"/>
                   
+            <if>
+               <equals arg1="${ISMVCC}" arg2="true"/>
+               <then>
+                  <staf location="@{testhost}" service="PROCESS"
+                        request="START SHELL COMMAND sed -i 's/#DiagLevel=3/DiagLevel=5/g' ${INSTALL_DIR}/conf/sdbcm.conf WAIT 10m STDERRTOSTDOUT RETURNSTDOUT" 
+                        throwBuildException=""/>
+               </then>
+            </if>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND sed -i 's/core_file_size=0/core_file_size=-1/g' ${INSTALL_DIR}/conf/limits.conf WAIT 10m STDERRTOSTDOUT RETURNSTDOUT"
                   resultPrefix="sed"
