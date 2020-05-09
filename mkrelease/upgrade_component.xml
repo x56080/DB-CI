@@ -178,6 +178,69 @@
         <checkUmaskFunction/>
         <consoleWrite text="ok&#xA;"/>
 
+        
+        <propertiesFileGet>
+            <file>${installdir}/conf/sdbcm.conf</file>
+            <key>IsGeneral</key>
+            <variable>has_om</variable>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+        </propertiesFileGet>
+        <setInstallerVariableFromScriptOutput>
+            <exec>echo</exec>
+            <execArgs>'${has_om}' | sed 's/^\s*//g'</execArgs>
+            <name>has_om</name>
+        </setInstallerVariableFromScriptOutput>
+        
+        <setInstallerVariable name="install_om_mode" value="normal"/>
+        <setInstallerVariable>
+            <name>install_om_mode</name>
+            <value>upgrade</value>
+            <ruleList>
+                <isTrue value="${has_om}"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="need_install_om" value="true"/>
+        <setInstallerVariable>
+            <name>need_install_om</name>
+            <value>false</value>
+            <ruleList>
+                <isFalse value="${has_om}"/>
+                <compareText logic="equals" text="${SMS}" value="false"/>
+            </ruleList>
+        </setInstallerVariable>
+        
+        <if>
+            <conditionRuleList>
+                <compareText logic="equals" text="${install_om_mode}" value="normal"/>
+                <isTrue value="${need_install_om}"/>
+            </conditionRuleList>
+            <actionList>
+                <consoleWrite text="${msg(Upgrade.NormalMsg.CheckOmPort)}"/>
+                <throwError>
+                    <text>${msg(Install.ErrorMsg.CheckOmPort)}</text>
+                    <ruleList>
+                        <portTest>
+                            <condition>cannot_bind</condition>
+                            <port>${om_port}</port>
+                        </portTest>
+                    </ruleList>
+                </throwError>
+                <consoleWrite text="ok&#xA;"/>
+                <consoleWrite text="${msg(Upgrade.NormalMsg.CheckHttpPort)}"/>
+                <throwError>
+                    <text>${msg(Install.ErrorMsg.CheckHttpPort)}</text>
+                    <ruleList>
+                        <portTest>
+                            <condition>cannot_bind</condition>
+                            <port>${http_port}</port>
+                        </portTest>
+                    </ruleList>
+                </throwError>
+                <consoleWrite text="ok&#xA;"/>
+            </actionList>
+        </if>
+        
         <!--check user and get group-->
         <consoleWrite text="${msg(Upgrade.NormalMsg.UserExist)}"/>
         <throwError>
@@ -321,6 +384,7 @@
             </ruleList>
         </throwError>
         <consoleWrite text="ok&#xA;"/>
+
     </readyToInstallActionList>
 
     <folderList>
@@ -469,39 +533,8 @@
         </consoleWrite>
 
         <!--start om-->
-        <propertiesFileGet>
-            <file>${installdir}/conf/sdbcm.conf</file>
-            <key>IsGeneral</key>
-            <variable>has_om</variable>
-            <abortOnError>0</abortOnError>
-            <showMessageOnError>0</showMessageOnError>
-        </propertiesFileGet>
-        <setInstallerVariableFromScriptOutput>
-            <exec>echo</exec>
-            <execArgs>'${has_om}' | sed 's/^\s*//g'</execArgs>
-            <name>has_om</name>
-        </setInstallerVariableFromScriptOutput>
-        <setInstallerVariable name="om_port"    value="11780"/>
-        <setInstallerVariable name="om_dbpath"  value="${installdir}/database/sms/${om_port}"/>
-        <setInstallerVariable name="http_port"  value="8000"/>
 
-        <setInstallerVariable name="install_om_mode" value="normal"/>
-        <setInstallerVariable>
-            <name>install_om_mode</name>
-            <value>upgrade</value>
-            <ruleList>
-                <isTrue value="${has_om}"/>
-            </ruleList>
-        </setInstallerVariable>
-        <setInstallerVariable name="need_install_om" value="true"/>
-        <setInstallerVariable>
-            <name>need_install_om</name>
-            <value>false</value>
-            <ruleList>
-                <isFalse value="${has_om}"/>
-                <compareText logic="equals" text="${SMS}" value="false"/>
-            </ruleList>
-        </setInstallerVariable>
+        <setInstallerVariable name="om_dbpath"  value="${installdir}/database/sms/${om_port}"/>
 
         <runProgram>
             <program>${installdir}/install_om.sh</program>

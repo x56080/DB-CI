@@ -505,6 +505,16 @@
                 <compareText text="${installer_command_line_arguments}" value="--port" logic="contains"/>
             </ruleList>
         </setInstallerVariable>
+        <setInstallerVariable name="parameter(om_port).ask" value="0">
+            <ruleList>
+                <compareText text="${installer_command_line_arguments}" value="--om-port" logic="contains"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="parameter(http_port).ask" value="0">
+            <ruleList>
+                <compareText text="${installer_command_line_arguments}" value="--http-port" logic="contains"/>
+            </ruleList>
+        </setInstallerVariable>
         <setInstallerVariable name="parameter(processAutoStart).ask" value="0">
             <ruleList>
                 <compareText text="${installer_command_line_arguments}" value="--processAutoStart" logic="contains"/>
@@ -709,6 +719,7 @@
                 <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
             </ruleList>
         </parameterGroup>
+        
         <stringParameter name="port">
             <insertAfter>user_data</insertAfter>
             <title>${msg(Install.Paramers.port.title)}</title>
@@ -722,6 +733,7 @@
                 <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
             </ruleList>
         </stringParameter>
+        
         <booleanParameter name="processAutoStart">
             <insertAfter>port</insertAfter>
             <description>${msg(Install.Paramers.processAutoStart.Description)}</description>
@@ -759,6 +771,31 @@
             </ruleList-->
         </choiceParameter>
 
+        <stringParameter name="om_port">
+            <insertAfter>SMS</insertAfter>
+            <cliOptionName>om-port</cliOptionName>
+            <description>${msg(Install.Paramers.om.port.Description)}</description>
+            <value>11780</value>
+            <default>11780</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+            <ruleList>
+                <compareValues value1="${SMS}" value2="false" logic="does_not_equal"/>
+            </ruleList>
+        </stringParameter>
+    
+        <stringParameter name="http_port">
+            <insertAfter>om_port</insertAfter>
+            <cliOptionName>http-port</cliOptionName>
+            <description>${msg(Install.Paramers.http.port.Description)}</description>
+            <value>8000</value>
+            <default>8000</default>
+            <allowEmptyValue>1</allowEmptyValue>
+            <width>40</width>
+            <ruleList>
+                <compareValues value1="${SMS}" value2="false" logic="does_not_equal"/>
+            </ruleList>
+        </stringParameter>
     </parameterList>
 
     <!--select compoment, and check environment-->

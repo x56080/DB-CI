@@ -18,7 +18,7 @@
 
         <!--check umask-->
         <checkUmaskFunction/>
-
+        
         <!--check process has been stoped or not-->
         <createDirectory path="${installdir}/tmp_${time}"/>
         <unpackFile>
@@ -231,6 +231,7 @@
             <program>echo</program>
             <programArguments> ${username}:${userpasswd} | chpasswd</programArguments>
         </runProgram>
+       
         <propertiesFileGet>
             <file>${installdir}/conf/sdbcm.conf</file>
             <key>IsGeneral</key>
@@ -259,6 +260,49 @@
                <isTrue value="${has_om}"/>
             </ruleList>
         </propertiesFileGet>
+        <setInstallerVariable name="install_om_mode" value="normal"/>
+        <setInstallerVariable>
+            <name>install_om_mode</name>
+            <value>upgrade</value>
+            <ruleList>
+                <isTrue value="${has_om}"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="need_install_om" value="true"/>
+        <setInstallerVariable>
+            <name>need_install_om</name>
+            <value>false</value>
+            <ruleList>
+                <isFalse value="${has_om}"/>
+                <compareText logic="equals" text="${SMS}" value="false"/>
+            </ruleList>
+        </setInstallerVariable>
+        <if>
+            <conditionRuleList>
+                <compareText logic="equals" text="${install_om_mode}" value="normal"/>
+                <isTrue value="${need_install_om}"/>
+            </conditionRuleList>
+            <actionList>
+                <throwError>
+                    <text>${msg(Install.ErrorMsg.CheckOmPort)}</text>
+                    <ruleList>
+                        <portTest>
+                            <condition>cannot_bind</condition>
+                            <port>${om_port}</port>
+                        </portTest>
+                    </ruleList>
+                </throwError>
+                <throwError>
+                    <text>${msg(Install.ErrorMsg.CheckHttpPort)}</text>
+                    <ruleList>
+                        <portTest>
+                            <condition>cannot_bind</condition>
+                            <port>${http_port}</port>
+                        </portTest>
+                    </ruleList>
+                </throwError>
+            </actionList>
+        </if>
     </readyToInstallActionList>
 
     <folderList>
@@ -445,29 +489,9 @@
                 <startServiceFunction/>
             </elseActionList>
         </if>
-
-        <setInstallerVariable name="install_om_mode" value="normal"/>
-        <setInstallerVariable>
-            <name>install_om_mode</name>
-            <value>upgrade</value>
-            <ruleList>
-                <isTrue value="${has_om}"/>
-            </ruleList>
-        </setInstallerVariable>
-        <setInstallerVariable name="need_install_om" value="true"/>
-        <setInstallerVariable>
-            <name>need_install_om</name>
-            <value>false</value>
-            <ruleList>
-                <isFalse value="${has_om}"/>
-                <compareText logic="equals" text="${SMS}" value="false"/>
-            </ruleList>
-        </setInstallerVariable>
         
         <!--start om-->
-        <setInstallerVariable name="om_port"    value="11780"/>
         <setInstallerVariable name="om_dbpath"  value="${installdir}/database/sms/${om_port}"/>
-        <setInstallerVariable name="http_port"  value="8000"/>
 
         <runProgram>
             <program>${installdir}/install_om.sh</program>
