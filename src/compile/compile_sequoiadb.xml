@@ -649,12 +649,14 @@
          <fileset dir="${srccode_dir}/tools/sequoiafs" includes="bin/*" />
       </copy>
        
-      <chmod file="${release_db_dir}/tools/sequoiafs/bin/sequoiafs" perm="u+x" />
-    
       <copy todir="${release_db_dir}/tools/sequoiafs" >
          <fileset dir="${srccode_dir}/SequoiaDB/engine/tools/sequoiafs" includes="conf/**/*" />
       </copy>
-     
+      <copy todir="${release_db_dir}/tools/sequoiafs/bin" >
+         <fileset dir="${srccode_dir}/SequoiaDB/engine/tools/sequoiafs/bin" includes="**/*" />
+      </copy>
+      <chmod dir="${release_db_dir}/tools/sequoiafs/bin" perm="u+x" includes="*"/>
+    
       <delete dir="${release_db_dir}/plugins/SequoiaSQL/source" failonerror="false"/>
       
       <copy todir="${release_db_dir}/include">
