@@ -82,6 +82,11 @@
             <elseif>
                <equals arg1="${TESTCASE_TYPE}" arg2="s3_python"/>
                <then>
+                  <exec executable="s3virtualenv_pip" 
+                        dir="@{testcasedir}" 
+                        failonerror="false" >
+                     <arg line=" install --no-index  --find-links=./tools/s3-requirements/requirements-py3.5 -r requirements.txt "/>
+                  </exec>
                   <var name="screen_output" unset="true"/>
                   <var name="rc" unset="true"/>
                   <exec executable="@{pyversion}" 
