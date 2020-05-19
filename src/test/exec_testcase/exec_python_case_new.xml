@@ -80,7 +80,10 @@
                <echo message="${screen_output}" />
             </then>
             <elseif>
-               <equals arg1="${TESTCASE_TYPE}" arg2="s3_python"/>
+               <and>
+                  <equals arg1="${TESTCASE_TYPE}" arg2="s3_python"/>
+                  <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
+               </and>
                <then>
                   <exec executable="s3virtualenv_pip" 
                         dir="@{testcasedir}" 
