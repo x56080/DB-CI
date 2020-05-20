@@ -81,7 +81,7 @@
             </then>
             <elseif>
                <and>
-                  <equals arg1="${TESTCASE_TYPE}" arg2="s3_python"/>
+                  <equals arg1="${testcase_type}" arg2="s3_python"/>
                   <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
                </and>
                <then>
@@ -102,7 +102,14 @@
                   <echo message="${screen_output}" />
                </then>
             </elseif>
-            <else>               
+            <elseif>   
+               <and>
+                  <not>
+                     <equals arg1="${testcase_type}" arg2="s3_python"/>
+                  </not>
+                  <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
+               </and>            
+               <then>
                <for param="suitfullname">
                   <path>
                      <dirset dir="@{testcasedir}" includes="*" excludes="lib"/>
@@ -130,7 +137,8 @@
                   
                   </sequential>
                </for> 
-            </else>
+               </then>
+            </elseif>
 
          </if>      
       </sequential>
