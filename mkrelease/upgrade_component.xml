@@ -384,7 +384,7 @@
             </ruleList>
         </throwError>
         <consoleWrite text="ok&#xA;"/>
-
+        <consoleWrite text="${msg(Upgrade.NormalMsg.EndUpgrade)}&#xA;"/>
     </readyToInstallActionList>
 
     <folderList>
@@ -565,6 +565,7 @@
             <owner>${username}</owner>
         </changeOwnerAndGroup>
         <deleteFile path="${installdir}/sdbbp.log"/>
+        
     </postInstallationActionList>
 
     <installationAbortedActionList>
