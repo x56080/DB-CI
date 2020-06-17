@@ -252,7 +252,7 @@
                 <!--delete export line-->
                 <setInstallerVariableFromScriptOutput>
                     <exec>grep</exec>
-                    <execArgs>-n "^export PATH=\"\$PATH:${installdir}\/bin\"$" ${envFile} | awk -F ":" '{print $1}'</execArgs>
+                    <execArgs>-n "^export PATH=\"${installdir}\/bin:\$PATH\"$" ${envFile} | awk -F ":" '{print $1}'</execArgs>
                     <name>line_num1</name>
                 </setInstallerVariableFromScriptOutput>
                 <runProgram>
@@ -264,7 +264,7 @@
                 </runProgram>
                 <setInstallerVariableFromScriptOutput>
                     <exec>grep</exec>
-                    <execArgs>-n "^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${installdir}\/lib\"$" ${envFile} | awk -F ":" '{print $1}'</execArgs>
+                    <execArgs>-n "^export LD_LIBRARY_PATH=\"${installdir}\/lib:\$LD_LIBRARY_PATH\"$" ${envFile} | awk -F ":" '{print $1}'</execArgs>
                     <name>line_num2</name>
                 </setInstallerVariableFromScriptOutput>
                 <runProgram>
@@ -293,28 +293,28 @@
             <actionList>
                 <runProgram>
                     <program>grep</program>
-                    <programArguments>-q "^export PATH=\"\$PATH:${installdir}\/bin\"$" ${envFile}</programArguments> 
+                    <programArguments>-q "^export PATH=\"${installdir}\/bin:\$PATH\"$" ${envFile}</programArguments> 
                     <abortOnError>0</abortOnError>
                     <showMessageOnError>0</showMessageOnError>
                 </runProgram>
                 <runProgram>
                     <abortOnError>0</abortOnError>
                     <program>echo</program>
-                    <programArguments>"export PATH=\"\$PATH:${installdir}/bin\"" &gt;&gt; ${envFile}</programArguments>
+                    <programArguments>"export PATH=\"${installdir}/bin:\$PATH\"" &gt;&gt; ${envFile}</programArguments>
                     <ruleList>
                         <compareText logic="does_not_equal" text="${program_exit_code}" value="0"/>
                     </ruleList>
                 </runProgram>
                 <runProgram>
                     <program>grep</program>
-                    <programArguments>-q "^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${installdir}\/lib\"$" ${envFile}</programArguments> 
+                    <programArguments>-q "^export LD_LIBRARY_PATH=\"${installdir}\/lib:\$LD_LIBRARY_PATH\"$" ${envFile}</programArguments> 
                     <abortOnError>0</abortOnError>
                     <showMessageOnError>0</showMessageOnError>
                 </runProgram>
                 <runProgram>
                     <abortOnError>0</abortOnError>
                     <program>echo</program>
-                    <programArguments>"export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${installdir}/lib\"" &gt;&gt; ${envFile}</programArguments>
+                    <programArguments>"export LD_LIBRARY_PATH=\"${installdir}/lib:\$LD_LIBRARY_PATH\"" &gt;&gt; ${envFile}</programArguments>
                     <ruleList>
                         <compareText logic="does_not_equal" text="${program_exit_code}" value="0"/>
                     </ruleList>
