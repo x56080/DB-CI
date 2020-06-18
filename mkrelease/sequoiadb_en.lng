@@ -47,6 +47,8 @@ Install.ErrorMsg.SystemctlReload=Fail to excute 'systemctl daemon-reload'.
 Install.WarnMsg.CheckUmask=Umask abnormal! Current umask = ${full_mask}, recommended value is 0022
 Install.WarnMsg.checkHostname=Hostname may be null!
 Install.WarnMsg.checkHostnameIp=Hostname ${machine_hostname} can't be resolved to local ip address! Please check file /etc/hosts.
+Install.WarnMsg.CheckMySQLPackage=There is no sequoiasql-mysql installation package for ${product_version} under ${installer_directory}, when install sequoiasql-mysql througn SAC, you need to copy the installation package to ${installdir}/packet.
+Install.WarnMsg.CheckPGSQLPackage=There is no sequoiasql-postgresql installation package for ${product_version} under ${installer_directory}, when install sequoiasql-postgresql througn SAC, you need to copy the installation package to ${installdir}/packet.
 
 Cover.ErrorMsg.StopProcess=Relevant processes still exist, please execute 'service sdbcm stop'.
 Cover.Paramers.stopprocess.title=stop relevant processes

@@ -492,7 +492,6 @@
         
         <!--start om-->
         <setInstallerVariable name="om_dbpath"  value="${installdir}/database/sms/${om_port}"/>
-
         <runProgram>
             <program>${installdir}/install_om.sh</program>
             <programArguments>${install_om_mode} "${installdir}" "${installer_pathname}" ${port} ${om_port} "${om_dbpath}" ${http_port}</programArguments>
@@ -515,9 +514,32 @@
                 <consoleWrite text="&#xA;error message:&#xA;${program_stdout}&#xA;"/>
             </onErrorActionList>
         </runProgram>
+        <showWarning>
+            <text>${msg(Install.WarnMsg.CheckMySQLPackage)}</text>
+            <ruleList>
+                <isTrue value="${need_install_om}"/>
+                <fileExists path="${installer_directory}/sequoiasql-mysql-${product_version}-*.run" negate="1"/>
+            </ruleList>
+        </showWarning>
+        <showWarning>
+            <text>${msg(Install.WarnMsg.CheckPGSQLPackage)}</text>
+            <ruleList>
+                <isTrue value="${need_install_om}"/>
+                <fileExists path="${installer_directory}/sequoiasql-postgresql-${product_version}-*.run" negate="1"/>
+            </ruleList>
+        </showWarning>
+        
+        <runProgram>
+            <program>cp</program>
+            <programArguments> -f ${installer_directory}/sequoiasql-*-${product_version}-*.run  ${installdir}/packet</programArguments>
+            <ruleList>
+                <isTrue value="${need_install_om}"/>
+                <fileExists path="${installer_directory}/sequoiasql-*-${product_version}-*.run" negate="0"/>
+            </ruleList>
+        </runProgram>
         
         <changeOwnerAndGroup>
-            <files>${installdir}/packet;${installdir}/packet/${installerFilename}</files>
+            <files>${installdir}/packet/*</files>
             <group>${groupname}</group>
             <owner>${username}</owner>
         </changeOwnerAndGroup>
