@@ -462,7 +462,7 @@
                   resultproperty="testresult"
                   failonerror="false">
                <arg value="-c"/>
-               <arg value="test ${openfilenum} -le 200" />
+               <arg value="test ${openfilenum} -le 300" />
             </exec>
             <var name="lsofinfo" value="${lsofinfo}&#10;${host.NAME}  @{itempid}   ${openfilenum}"/>
             <if>
