@@ -55,6 +55,7 @@
                <property name="svcname" value="${SVCNAME}"/>
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT_RELIABILITY}"/>
+               <property name="testhost_list" value="${testhost_list}"/>
             </ant>
          </then>
          <else>
@@ -69,6 +70,7 @@
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT}"/>
                <property name="s3svcname" value="${S3SVCNAME}"/>
+               <property name="testhost_list" value="${testhost_list}"/>
             </ant>
          </else>
       </if>

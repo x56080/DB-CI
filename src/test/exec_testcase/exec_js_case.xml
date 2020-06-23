@@ -281,13 +281,9 @@
             </else>
          </if>
          
-         <var name="IDXPREFIX" value="${TEST_TYPE}"/>
-         <if>
-            <equals arg1="${TEST_TYPE}" arg2="NORMALTEST"/>
-            <then>
-               <var name="IDXPREFIX" value="${TEST_TYPE}${DEPLOY_MODE}"/>
-            </then>
-         </if>
+         <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+         <var name="IDXPREFIX" unset="true"/>
+         <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
          
          <var name="cmd1" value="-f &quot;${func_option}${commlib_option}@{jsfile}&quot;" />
          <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var COORDHOSTNAME='localhost';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';&quot;" />

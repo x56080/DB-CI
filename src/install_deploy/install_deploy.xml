@@ -243,13 +243,8 @@
    
    <target name="ready_es_environment">
       <!--clear es environment-->
-      <var name="IDXPREFIX" value="${TEST_TYPE}"/>
-      <if>
-         <equals arg1="${TEST_TYPE}" arg2="NORMALTEST"/>
-         <then>
-            <var name="IDXPREFIX" value="${TEST_TYPE}${DEPLOY_MODE}"/>
-         </then>
-      </if>
+      <var name="IDXPREFIX" unset="true"/>
+      <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
       <var name="esport" value="${ES_PORT}"/>
       <if>
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
