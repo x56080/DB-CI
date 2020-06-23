@@ -201,7 +201,7 @@ function readyToInstall()
       fi
       local bash_path=`which bash`
       `useradd ${USERNAME} -m -g ${GROUPNAME} -s ${bash_path}`
-      `passwd --help | grep stdin`
+      `passwd --help | grep stdin >> /dev/null`
       if [ $? == 0 ]
       then
          `echo "${USERPASSWD}" | passwd --stdin ${USERNAME} >> /dev/null`
