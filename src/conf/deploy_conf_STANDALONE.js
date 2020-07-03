@@ -33,5 +33,6 @@ else
 var nodeConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
-                  logfilenum:40
+                  logfilenum:40,
+                  fap:fapValue
                 };
