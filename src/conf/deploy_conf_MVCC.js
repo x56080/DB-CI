@@ -44,7 +44,8 @@ var coordConf = { diaglevel:diagLevel,
                   globtranson:true,
                   mvccon:true,
                   ftfusingtimeout:300,
-                  fap:fapValue                  
+                  fap:fapValue,
+                  transactiontimeout:5
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
@@ -53,5 +54,6 @@ var dataConf  = { diaglevel:diagLevel,
                   dmschkinterval:1,
                   globtranson:true,
                   ftfusingtimeout:300,
-                  mvccon:true
+                  mvccon:true,
+                  transactiontimeout:5
                 };
