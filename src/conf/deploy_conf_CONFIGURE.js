@@ -40,14 +40,12 @@ var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   logfilenum:40,
                   ftfusingtimeout:300,
-                  fap:fapValue,
-                  transactiontimeout:5
+                  fap:fapValue
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   logfilenum:40,
                   ftfusingtimeout:300,
-                  dmschkinterval:1,
-                  transactiontimeout:5
+                  dmschkinterval:1
                 };

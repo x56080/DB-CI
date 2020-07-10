@@ -32,15 +32,13 @@ var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/opt/sequoiadb/database/coord/[svcname]/diaglog',
-                  transactiontimeout:5
+                  diagpath:'/opt/sequoiadb/database/coord/[svcname]/diaglog'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/opt/sequoiadb/database/data/[svcname]/diaglog',
-                  transactiontimeout:5
+                  diagpath:'/opt/sequoiadb/database/data/[svcname]/diaglog'
                 };
                 
