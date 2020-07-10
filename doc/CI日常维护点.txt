@@ -1,14 +1,36 @@
 CI日常维护
-CI地址：
-      DB：192.168.30.185:8080
-      SCM：192.168.28.121:8080
-      mysql:192.168.28.14:8080
+DB：192.168.28.27:8080
 1.每天查看CI测试工程是否正常，红色为工程构建失败，黄色为用例失败 daily_db,daily_pg,reliability
   其中reliability是手工触发，正常情况下一天跑一次，只跑主干
 2.分发失败用例给对应特性负责人查看原因，并登记在“CI失败用例excel表中”
+3.主干每日构建在晚上12点都自动触发，3.2分支每日构建每天早上6点左右自动触发，2.8分支每日构建每天上午9点，如需调整可在配置项“构建触发器”中设置合理时间
+4.mvcc分支未合入主干前每天中午开始自动触发，合入主干后相关编译测试工程废弃删除
+4.各个CI工程机器使用情况在http://gitlab.sequoiadb.com/sequoiadb/ci/db-ci/blob/master/doc/hostlist_new.txt中记录，如有调整需更新该文档
+
+SCM：192.168.28.121:8080
+1.不同测试工程的配置可在http://gitlab.sequoiadb.com/sequoiadb/ci/sequoiacm-ci/tree/master/src/conf/deploy_*.cfg
+2.提交修改时需注意是否需要同步到hengfeng分支
+
+mysql:192.168.28.14:8080
+1.mysql的主干和3.2分支区别：可通过工程配置项源码管理模块看出db驱动取的不同引擎分支编译生成
+2.测试工程的db集群是手工搭建的，必要时手工升级
+3.目前mysql的编译打包脚本均在http://gitlab.sequoiadb.com/sequoiadb/sequoiasql-mysql中，因此修改时需要基于该项目修改方可生效
+
+arm:
+1.arm安装包是由shell和tar包通过cat连接制成的，可在工程配置Execute shell中看出
+2.版本号和安装包名称目前是在工程配置Execute shell写死的，因此更换版本时需要修改该地方
+3.目前arm的编译机有192.168.30.88  192.168.30.89 192.168.30.107分别对应不同的arm操作系统（这些操作系统间不兼容）
+4.arm的安装和uninstall脚本均在各自的CI项目下，修改install脚本时需要注意根据实际情况修改脚本中lines的值，lines=实际代码行数+1
+
+日常易出现的问题及定位方式：
+1.机器掉线，一般控制台会有agent offline字样，或者在节点配置->日志中[SSH] Connection closed.字样
+2.当CI红掉时，首先查看失败构建的控制台信息，一般在最后会提示失败原因，当日志比较多时，可以通过点击“完整日志”查看CI构建的流程
+3.其他较难疑问在http://gitlab.sequoiadb.com/sequoiadb/ci/db-ci/tree/master/doc/work_log中有部分记载，后续出现其他较难解决问题时，可在该目录下新增解决方案
+4.新增测试机和编译机时，参考http://gitlab.sequoiadb.com/sequoiadb/ci/db-ci/blob/master/doc/add_new_machine.docx部署相关环境
 
 
-发版本：
+发版本
+db：
 1.和版本发起人确认是否同时发布对应的pg，mysql，scm
 2.和版本发起人确认信息中心版本信息是否填写完成，版本号是否更新
 3.触发CI打包版本，例如主干：
@@ -23,13 +45,11 @@ CI地址：
       c.填写readme，例如3.0.1，则文件名叫readme_sp1.txt，参考以往归档内容
       d.归档驱动包，驱动包取企业版的
       e.归档run包 bin包 tar.gz包
+6.归档完成后需告知开发补充版本说明在readme中
       
 mysql出包：
-1.和开发确认驱动使用版本，测试时db集群使用版本，需要索男将对于版本run包和驱动包拷贝到外网
-2.将驱动包拷贝到mysql编译机192.168.3.26 /home/ci/SequoiaDB下，剩下路径和归档路径一致
-3.将测试环境db集群升级192.168.3.11   192.168.3.12  192.168.3.13
-4.修改CI工程配置项，修改SDB_VERSION信息与实际使用版本一致，修改外网mysqlsvn上misc/ci/src/conf/test.conf中run包版本，这个需要和mysql负责人确认版本号
-5.无特殊情况均是基于mysql 5.7.24打包，这一点和开发确认
-6.触发dailybuild_trunk，选择IS_ENTERPRISE，USE_ARCHIVE打包测试企业版
-7.触发dailybuild_trunk，选择USE_ARCHIVE打包测试社区版
+1.将测试环境db集群升级192.168.28.11   192.168.28.12  192.168.28.13
+2.无特殊情况均是基于mysql 5.7.25打包，这一点和开发确认
+3.触发对应版本工程，去掉测试用例打包选项EXCLUDE_TEST，发布版本中不包含测试用例
+4.参考以往归档内容，新建readme，版本信息记录完成后需告知开发补充版本说明在readme中
       
