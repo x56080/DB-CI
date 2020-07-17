@@ -352,15 +352,30 @@
       <hostinfo prefix="host" />
       <for list="${testhost_list}" param="testhost" >
          <sequential>
+            <if>
+               <not>
+                  <equals arg1="@{testhost}" arg2="${host.NAME}"/>
+               </not>
+               <then>
+                  <var name="stpserver02" value="@{testhost}" />
+               </then>
+            </if>
+         </sequential>
+      </for>
+      <for list="${testhost_list}" param="testhost" >
+         <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND mkdir -p ${INSTALL_DIR}/conf/stp WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND echo serverlist=${host.NAME}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
+                  request="START SHELL COMMAND echo serverlist=${host.NAME}:9622,${stpserver02}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf WAIT 5m RETURNSTDERR"
                   throwBuildException="1"/>
             
             <if>
-               <equals arg1="@{testhost}" arg2="${host.NAME}"/>
+               <or>
+                  <equals arg1="@{testhost}" arg2="${host.NAME}"/>
+                  <equals arg1="@{testhost}" arg2="${stpserver02}"/>
+               </or>
                <then>
                   <var name="role" value="server"/>
                </then>
