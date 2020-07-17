@@ -274,7 +274,6 @@
          <var name="@{rc}" unset="true"/>
          <exec executable="@{pyexecutable}" 
                dir="${testcase_dir}" 
-               timeout="1200000" 
                outputproperty="screen_output" 
                resultproperty="@{rc}" 
                failonerror="false" >

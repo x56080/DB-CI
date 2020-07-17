@@ -98,7 +98,6 @@
          <var name="@{output}" unset="true"/>
          <var name="@{envisok}" unset="true"/>
          <exec executable="${INSTALL_DIR}/bin/sdb" 
-               timeout="300000" 
                outputproperty="@{output}" 
                resultproperty="@{envisok}"
                failonerror="false">
@@ -293,7 +292,6 @@
          <var name="@{rc}" unset="true"/>
          <exec executable="${INSTALL_DIR}/bin/sdb" 
                dir="${jsdir}" 
-               timeout="${timelimit}" 
                outputproperty="screen_output" 
                resultproperty="@{rc}"
                failonerror="false">

@@ -165,7 +165,6 @@
          <var name="@{rc}" unset="true"/>
          <exec executable="@{casefullname}" 
                dir="${testcase_dir}" 
-               timeout="1200000" 
                outputproperty="screen_output" 
                resultproperty="@{rc}" 
                failonerror="false" >
