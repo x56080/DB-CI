@@ -36,7 +36,8 @@ var cataConf  = { diaglevel:diagLevel,
                   logfilenum:40,
                   globtranson:true,
                   ftfusingtimeout:300,
-                  mvccon:true
+                  mvccon:true,
+                  mvccrbsnum:4
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
@@ -44,7 +45,8 @@ var coordConf = { diaglevel:diagLevel,
                   globtranson:true,
                   mvccon:true,
                   ftfusingtimeout:300,
-                  fap:fapValue
+                  fap:fapValue,
+                  mvccrbsnum:4
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
@@ -53,5 +55,6 @@ var dataConf  = { diaglevel:diagLevel,
                   dmschkinterval:1,
                   globtranson:true,
                   ftfusingtimeout:300,
-                  mvccon:true
+                  mvccon:true,
+                  mvccrbsnum:4
                 };
