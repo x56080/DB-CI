@@ -237,7 +237,7 @@
          
          <var name="begin_time" unset="true"/>
          <tstamp>
-            <format property="begin_time" pattern="yyyy-MM-dd_HH:mm:ss" />
+            <format property="begin_time" pattern="yyyy-MM-dd HH:mm:ss" />
          </tstamp>       
          <script language="javascript">
             project.setProperty('start_ms', new Date().getTime());
@@ -304,7 +304,7 @@
          
          <var name="end_time" unset="true"/>
          <tstamp>
-            <format property="end_time" pattern="yyyy-MM-dd_HH:mm:ss" />
+            <format property="end_time" pattern="yyyy-MM-dd HH:mm:ss" />
          </tstamp>
          <script language="javascript">
             project.setProperty('total_time', ( new Date().getTime() - start_ms ) / 1000 );
