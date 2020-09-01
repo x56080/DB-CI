@@ -95,12 +95,15 @@
       <staf location="${firsthost}" service="FS"
          request="COPY DIRECTORY ${INSTALL_DIR}/java TODIRECTORY ${INSTALL_DIR}/java TOMACHINE ${host.NAME} RECURSE"
          throwBuildException="1"/>
+      <staf location="${firsthost}" service="FS"
+         request="COPY DIRECTORY ${INSTALL_DIR}/tools/sequoias3/java TODIRECTORY ${INSTALL_DIR}/tools/sequoias3/java TOMACHINE ${host.NAME} RECURSE"
+         throwBuildException="1"/>
          
       <staf location="local" service="PROCESS"
-            request="START SHELL COMMAND chown -R jenkins:jenkins ${INSTALL_DIR}/java WAIT 1m"
+            request="START SHELL COMMAND chown -R jenkins:jenkins ${INSTALL_DIR} WAIT 1m"
             throwBuildException="1"/>
             
-      <property name="remote_chmod_exec" value="chmod a+rwx,u+rwx,g+rwx ${INSTALL_DIR}/java -R"/>
+      <property name="remote_chmod_exec" value="chmod a+rwx,u+rwx,g+rwx ${INSTALL_DIR} -R"/>
       <staf location="local" service="PROCESS"
             request="START SHELL COMMAND ${remote_chmod_exec} WAIT 1m"
             throwBuildException="1"/>      
