@@ -514,20 +514,20 @@
                 <consoleWrite text="&#xA;error message:&#xA;${program_stdout}&#xA;"/>
             </onErrorActionList>
         </runProgram>
-        <showWarning>
+        <consoleWrite>
             <text>${msg(Install.WarnMsg.CheckMySQLPackage)}</text>
             <ruleList>
                 <isTrue value="${need_install_om}"/>
                 <fileExists path="${installer_directory}/sequoiasql-mysql-${product_version}-*.run" negate="1"/>
             </ruleList>
-        </showWarning>
-        <showWarning>
+        </consoleWrite>
+        <consoleWrite>
             <text>${msg(Install.WarnMsg.CheckPGSQLPackage)}</text>
             <ruleList>
                 <isTrue value="${need_install_om}"/>
                 <fileExists path="${installer_directory}/sequoiasql-postgresql-${product_version}-*.run" negate="1"/>
             </ruleList>
-        </showWarning>
+        </consoleWrite>
         
         <runProgram>
             <program>cp</program>
