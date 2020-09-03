@@ -847,6 +847,25 @@
 
     </readyToInstallActionList>
 
+    <finalPageActionList>
+        <consoleWrite>
+            <text>${msg(Install.WarnMsg.CheckMySQLPackage)}&#xA;</text>
+            <show>0</show>
+            <ruleList>
+               <compareValues value1="${SMS}" value2="false" logic="does_not_equal"/>
+               <fileExists path="${installer_directory}/sequoiasql-mysql-${product_version}-*.run" negate="1"/>
+            </ruleList>
+        </consoleWrite>
+        <consoleWrite>
+            <text>&#xA;${msg(Install.WarnMsg.CheckPGSQLPackage)}&#xA;</text>
+            <show>0</show>
+            <ruleList>
+               <compareValues value1="${SMS}" value2="false" logic="does_not_equal"/>
+               <fileExists path="${installer_directory}/sequoiasql-postgresql-${product_version}-*.run" negate="1"/>
+            </ruleList>
+        </consoleWrite>
+    </finalPageActionList>
+    
     <componentList>
         <include file="upgrade_component.xml" />
         <include file="normal_component.xml" />
