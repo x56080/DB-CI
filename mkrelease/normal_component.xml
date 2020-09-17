@@ -186,12 +186,12 @@
                 <setInstallerVariableFromScriptOutput>
                     <name>actual_group</name>
                     <exec>id</exec>
-                    <execArgs>-ng ${username}</execArgs>
+                    <execArgs>-nG ${username}</execArgs>
                 </setInstallerVariableFromScriptOutput>
                 <throwError>
                     <text>${msg(Install.ErrorMsg.CheckGroup)}</text>
                     <ruleList>
-                        <compareValues value1="${actual_group}" logic="does_not_equal" value2="${groupname}"/>
+                        <compareText text="${actual_group}" logic="does_not_contain" value="${groupname}"/>
                     </ruleList>
                 </throwError>
                 <createDirectory path="~${username}"/>
