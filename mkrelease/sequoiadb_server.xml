@@ -902,6 +902,12 @@
             <abortOnError>0</abortOnError>
             <showMessageOnError>0</showMessageOnError>
         </runProgram>
+        <runProgram>
+            <program>${installdir}/bin/stpstop</program>
+            <programArguments></programArguments>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+        </runProgram>
 
         <!--check process has been stoped or not-->
         <setInstallerVariable name="process_num" value="-1"/>

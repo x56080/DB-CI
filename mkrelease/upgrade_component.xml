@@ -342,6 +342,15 @@
                <compareText logic="does_not_equal" text="${SMS}" value="only"/>
             </ruleList>
         </runProgram>
+        <runProgram>
+            <program>${installdir}/bin/stpstop</program>
+            <programArguments></programArguments>
+            <abortOnError>0</abortOnError>
+            <showMessageOnError>0</showMessageOnError>
+            <ruleList>
+               <compareText logic="does_not_equal" text="${SMS}" value="only"/>
+            </ruleList>
+        </runProgram>
 
         <!--check process has been stoped or not-->
         <createDirectory path="${installdir}/tmp_${time}"/>
