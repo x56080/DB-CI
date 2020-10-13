@@ -105,6 +105,8 @@ function changePermissionOwner()
    chmod 6755 ${INSTALLDIR}/bin/sdbomtool 
    setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/sdbstart
    setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/sdbcmart
+   setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/stpstart
+   setcap 'CAP_SYS_RESOURCE=+ep' ${INSTALLDIR}/bin/stp
    rm -f ${INSTALLDIR}/www/doc
    ln -s ${INSTALLDIR}/doc ${INSTALLDIR}/www/doc
    chown -h ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/www/doc
