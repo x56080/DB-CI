@@ -871,7 +871,7 @@
             <exec>${installdir}/preUninstall.sh</exec>
             <execArgs></execArgs>
             <abortOnError>0</abortOnError>
-            <showMessageOnError>0</showMessageOnError>
+            <showMessageOnError>1</showMessageOnError>
         </setInstallerVariableFromScriptOutput>
         <if>
             <conditionRuleList>
@@ -879,6 +879,7 @@
             </conditionRuleList>
             <actionList>
                 <consoleWrite text="&#xA;${msg(Uninstall.ErrorMsg.ExcutepreUnInstallSh)}&#xA;"/>
+                <consoleWrite text="Error: ${preuninstall_value}&#xA;"/>
                 <exit exitCode="1"/><!--exit uninstallation-->
             </actionList>
         </if>
