@@ -615,7 +615,7 @@
       </copy>
       <copy file="${srccode_dir}/conf/sdbcm.conf" todir="${release_db_dir}/conf" />
       <copy file="${srccode_dir}/conf/limits.conf" todir="${release_db_dir}/conf" />
-      <copy file="${srccode_dir}/conf/samples/stp.conf" todir="${release_db_dir}/conf/stp/stp.conf.samples" />
+      <copyfile src="${srccode_dir}/conf/samples/stp.conf" dest="${release_db_dir}/conf/stp/stp.conf.samples" />
       
       <copy todir="${release_db_dir}/doc">
          <fileset dir="${srccode_dir}/../archive/" includes="*.pdf,*.chm,*.tar.gz"/>
