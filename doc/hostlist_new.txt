@@ -12,10 +12,10 @@
 192.168.28.26 ets112-01
 
 #doc compile（windows机）
-192.168.10.200 ci-cmpl-doc
+192.168.30.200 ci-cmpl-doc
 
 #csharp  test/csharp compile （windows机）
-192.168.10.199 sequoiadb   jenkins_1
+192.168.30.199 sequoiadb   jenkins_1
 
 #branch2.6/1.12 doc compile
 192.168.28.240 test-ci-ubun1
