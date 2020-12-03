@@ -62,7 +62,9 @@
             <var name="TESTCASE_TYPE" value="tdd_c,tdd_cpp,tdd_php,tdd_mongoc,
                                              story_java,story_js,
                                              sdv_java,sdv_js,
-                                             driver_c,driver_cpp,driver_java,driver_php,driver_python" />
+                                             driver_c,driver_cpp,driver_java,driver_php,driver_python,
+                                             thirdparty_fapmongo_fap3-java-mongo2,
+                                             thirdparty_fapmongo_fap3-java-mongo3" />
          </else>
       </if>
       <if>
@@ -79,6 +81,9 @@
       <copy todir="${case_basedir}">
          <fileset dir="${WORKSPACE}/sequoiadb/testcase"/>
       </copy>
+<!--      <move todir="${case_basedir}">
+         <fileset dir="${case_basedir}/thirdparty" includes="**/*"/>
+      </move> -->
       
       <if>
          <equals arg1="${plat_form}" arg2="PPC" />
@@ -287,99 +292,99 @@
    
    <target name="exec_remote_testcase">
       <property name="report_basedir" value="${CI_WORK_DIR}/report" />
+      <property name="test_basedir" value="${CI_WORK_DIR}/testcase" />
       <delete dir="${report_basedir}"/>
       <mkdir dir="${report_basedir}"/>
       
-      <mkdir dir="${CI_WORK_DIR}/testcase"/>
-      <for param="casetype">
-         <path>
-            <dirset dir="${CI_WORK_DIR}/testcase" includes="*" excludes="tools"/>
-         </path>
+      <mkdir dir="${report_basedir}"/>
+      
+      <for list="${TESTCASE_TYPE}" param="casetype" trim="true" parallel="false">
          <sequential>
-            <for param="casesubtype">
-               <path>
-                  <dirset dir="@{casetype}" includes="*"/>
-               </path>
-               <sequential>
+            <var name="testcase_type" unset="true"/>
+            <property name="testcase_type" value="@{casetype}"/>
+            <var name="casesubtype" unset="true"/>
+            <propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />
+            
+            <switch value="@{casetype}">
+            
+               <case value="tdd_c">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
+               </case>
+               <case value="tdd_cpp">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
+               </case>
+               <case value="driver_c">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
+               </case>
+               <case value="driver_cpp">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
+               </case>
                
-                  <var name="testcase_totaltype" unset="true"/>
-                  <basename property="testcase_totaltype" file="@{casetype}"/>
-                  <var name="testcase_subtype" unset="true"/>
-                  <basename property="testcase_subtype" file="@{casesubtype}"/>
-                  <var name="testcase_type" value="${testcase_totaltype}_${testcase_subtype}"/>
-                  
-                  
-                  <switch value="${testcase_type}">
-                  
-                     <case value="tdd_c">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
-                     </case>
-                     <case value="tdd_cpp">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
-                     </case>
-                     <case value="driver_c">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
-                     </case>
-                     <case value="driver_cpp">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_c_case.xml"/>
-                     </case>
-                     
-                     <case value="story_java">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
-                     </case>
-                     <case value="sdv_java">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
-                     </case>
-                     <case value="driver_java">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
-                     </case>
-                     
-                     <case value="s3_java">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
-                     </case>
-                     
-                     <case value="story_js">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_js_case.xml"/>
-                     </case>
-                     <case value="sdv_js">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_js_case.xml"/>
-                     </case>
-                     
-                     <case value="tdd_php">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_php_case.xml"/>
-                     </case>
-                     <case value="driver_php">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_php_case.xml"/>
-                     </case>
+               <case value="story_java">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
+               </case>
+               <case value="sdv_java">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
+               </case>
+               <case value="driver_java">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
+               </case>
+               
+               <case value="s3_java">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
+               </case>
+               
+               <case value="thirdparty_fapmongo_fap3-java-mongo2">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongo_java_case.xml"/>
+               </case>
+               <case value="thirdparty_fapmongo_fap3-java-mongo3">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongo_java_case.xml"/>
+               </case>
+               
+               <case value="story_js">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_js_case.xml"/>
+               </case>
+               <case value="sdv_js">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_js_case.xml"/>
+               </case>
+               
+               <case value="tdd_php">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_php_case.xml"/>
+               </case>
+               <case value="driver_php">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_php_case.xml"/>
+               </case>
 
-                     <case value="driver_python">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
-                     </case>
-                    
-                     <case value="s3_python">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
-                     </case>
-                     
-                     <case value="tdd_mongoc">
-                        <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongoc_case.xml"/>
-                     </case>
-                     
-                     <default>
-                     </default>
-                 
-                  </switch>
-                  
-                  <ant antfile="${exec_file}" inheritAll="false">
-                     <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-                     <property name="TESTCASE_TYPE" value="${testcase_type}"/>
-                     <property name="testcase_dir" value="@{casesubtype}"/>
-                     <property name="report_dir" value="${report_basedir}/${testcase_type}" />
-                     <property name="plat_form" value="${plat_form}"/>
-                     <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
-                     <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
-                  </ant>
-               </sequential>
-            </for>           
+               <case value="driver_python">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
+               </case>
+              
+               <case value="s3_python">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
+               </case>
+               
+               <case value="tdd_mongoc">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongoc_case.xml"/>
+               </case>
+               
+               <case value="thirdparty_fapmongo">
+                  <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongo3_case.xml"/>
+               </case>
+               
+               <default>
+               </default>
+           
+            </switch>
+            <ant antfile="${exec_file}" inheritAll="false">
+               <property name="TEST_TYPE" value="${TEST_TYPE}"/>
+               <property name="testcase_type" value="${testcase_type}"/>
+               <property name="testcase_dir" value="${casesubtype}"/>
+               <property name="test_basedir" value="${test_basedir}"/>
+               <property name="report_dir" value="${report_basedir}/${testcase_type}" />
+               <property name="plat_form" value="${plat_form}"/>
+               <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+               <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+            </ant>
          </sequential>
       </for>
       
