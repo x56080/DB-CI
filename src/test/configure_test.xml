@@ -330,7 +330,7 @@
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
                </case>
                
-               <case value="s3_java">
+               <case value="thirdparty_s3_java">
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_java_case.xml"/>
                </case>
                
@@ -359,7 +359,7 @@
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
                </case>
               
-               <case value="s3_python">
+               <case value="thirdparty_s3_python">
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
                </case>
                

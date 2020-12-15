@@ -67,7 +67,7 @@
             </ant>
          </then>
          <else>
-            <ant antfile="${testcase_dir}/../../tools/runtest_java.xml" target="exec_testcase">
+            <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>
                <property name="reportdir" value="${report_dir}"/>
