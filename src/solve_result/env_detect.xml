@@ -417,14 +417,14 @@
       </if>
       <hostinfo prefix="host" />
       <resourcecount property="corefilenum">
-         <fileset dir="${CI_WORK_DIR}" includes="testcase/**/*core*" excludes="testcase/user\ scenario/*,testcase/s3/python/s3-tests-master/**/*"/>
+         <fileset dir="${CI_WORK_DIR}" includes="testcase/**/*core*" excludes="testcase/user\ scenario/*,testcase/thirdparty/s3/python/s3-tests-master/**/*"/>
       </resourcecount>
       <touch file="${report_dir}/${host.NAME}_testcase_core.log"/>
       <if>
          <equals arg1="${corefilenum}" arg2="0"/>
          <else>
             <for param="corfilename">
-               <fileset dir="${CI_WORK_DIR}/testcase/" includes="**/*core*" excludes="**/*core*.jar,user\ scenario/*,s3/python/s3-tests-master/**/*"/>
+               <fileset dir="${CI_WORK_DIR}/testcase/" includes="**/*core*" excludes="**/*core*.jar,user\ scenario/*,thirdparty/s3/python/s3-tests-master/**/*"/>
                <sequential>
                   <echo message="${host.NAME}   ${host.ADDR4}   @{corfilename} &#10;" file="${report_dir}/${host.NAME}_testcase_core.log" append="true"/>
                </sequential>

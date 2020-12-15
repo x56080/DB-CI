@@ -44,7 +44,7 @@
       <for list="${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate 192.168.30.200 WAIT 2m"
+                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT 2m"
                   throwBuildException=""/>
          </sequential>
       </for>
@@ -207,6 +207,7 @@
 
       
       <property name="report_basedir" value="${CI_WORK_DIR}/report" />
+      <property name="test_basedir" value="${CI_WORK_DIR}/testcase" />
       <delete dir="${report_basedir}"/>
       <mkdir dir="${report_basedir}"/>
    
@@ -295,6 +296,7 @@
                                  <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                                  <property name="testcase_type" value="${testcase_type}"/>
                                  <property name="testcase_dir" value="@{casesubtype}"/>
+                                 <property name="test_basedir" value="${test_basedir}"/>
                                  <property name="report_dir" value="${report_basedir}/${testcase_type}" />
                                  <property name="plat_form" value="${plat_form}"/>
                                  <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
