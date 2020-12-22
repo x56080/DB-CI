@@ -46,8 +46,10 @@
             <fileset dir="${testcase_dir}/jars" includes="mongo-java-driver-*.jar"/>
          </path>
          <sequential>
+            <var name="mongoversion" unset="true" />
             <propertyregex property="mongoversion" input="@{fullfilename}" regexp="${testcase_dir}/jars/mongo-java-driver-(.*).jar" select="\1" casesensitive="false"/>
             
+            <var name="version" unset="true" />
             <propertyregex property="version" input="${mongoversion}" regexp="\." replace="_" defaultValue="2_14_2"/>
             <propertyfile file="${testcase_dir}/src/test/resources/mongodb.properties">
                <entry key="mongodb.javaMongoVersion" value="${version}" />
