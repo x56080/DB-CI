@@ -47,6 +47,11 @@
          </path>
          <sequential>
             <propertyregex property="mongoversion" input="@{fullfilename}" regexp="${testcase_dir}/jars/mongo-java-driver-(.*).jar" select="\1" casesensitive="false"/>
+            
+            <propertyregex property="version" input="${mongoversion}" regexp="." replace="_" defaultValue="2_14_2"/>
+            <propertyfile file="${testcase_dir}/src/test/resources/mongodb.properties">
+               <entry key="mongodb.javaMongoVersion" value="${version}" />
+            </propertyfile>
          
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
