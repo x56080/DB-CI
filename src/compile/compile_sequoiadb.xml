@@ -764,6 +764,7 @@
       <copy todir="${release_db_dir}/tools/ptmallocstats">
          <fileset dir="${srccode_dir}/tools/ptmallocstats" includes="**/*" />
       </copy>
+      <chmod file="${release_db_dir}/tools/ptmallocstats/ptmalloc_stats.py" perm="u+x" />
       <copy todir="${release_db_dir}/tools/crontask">
          <fileset dir="${srccode_dir}/tools/crontask" includes="**/*" />
       </copy>
@@ -776,6 +777,7 @@
       <copy todir="${release_db_dir}/tools/sdbaudit">
          <fileset dir="${srccode_dir}/tools/sdbaudit" includes="**/*" />
       </copy>
+      <chmod dir="${release_db_dir}/tools/sdbaudit" includes="**/*.py" perm="u+x" />
       <copy todir="${release_db_dir}/web" >
          <fileset dir="${srccode_dir}/SequoiaDB/web" includes="**/*"/>
       </copy>
