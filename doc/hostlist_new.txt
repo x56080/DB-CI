@@ -38,7 +38,7 @@
 192.168.28.114 test-ci-cent3 (cent6.3)
 192.168.28.200 test-ci-ubun6（ubun12.04）
 
-#trunk om test
+#trunk om test（已废弃，机器已被其他工程借用）
 192.168.28.142 test-ci-cent9 (cent7.1)
 192.168.28.202 test-ci-ubun3（ubun12.04）
 192.168.28.144 test-ci-cent11 (cent7.1)
@@ -102,7 +102,7 @@
 192.168.28.133 scm-test-ci-cent7
 192.168.28.134 scm-test-ci-rhel2
 
-部署微服务机器
+#部署微服务机器
 192.168.28.138 scm-test-ci-ubun2 (clouddisk,virtualclouddisk)
 192.168.28.139 scm-test-ci-cent1（schedule,config）
 192.168.28.140 scm-test-ci-cent2（网关）
@@ -110,6 +110,12 @@
 
 #scm zookeeper环境
 192.168.28.136 scm-test-ci-suse2
+
+#scm es环境
+192.168.28.144 test-ci-cent11 (cent7.1)
+
+#jenkins开发测试
+192.168.28.142 test-ci-cent9 (cent7.1)
 
 #mysql master
 192.168.28.14 u1604-et04
@@ -123,3 +129,6 @@
 192.168.28.145 test-ci-ubun10
 192.168.28.146 test-ci-cent12
 192.168.28.147 test-ci-rhel10
+
+#数据源机器
+192.168.28.104 test-ci-rhel3(空闲)
