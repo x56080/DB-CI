@@ -95,7 +95,7 @@ function changePermissionOwner()
    chmod 744 ${INSTALLDIR}/tools/expect/trust/trustRelpConf.sh
    chmod 744 ${INSTALLDIR}/tools/sdbmigrate/bin/*.sh
    chmod 744 ${INSTALLDIR}/tools/sequoiafs/bin/*.sh
-   chmod 744 ${INSTALLDIR}/tools/sequoiafs/sequoias3.sh
+   chmod 744 ${INSTALLDIR}/tools/sequoias3/sequoias3.sh
    chmod 744 ${INSTALLDIR}/tools/ptmallocstats/ptmalloc_stats.py
    chmod 744 ${INSTALLDIR}/tools/sdbaudit/sdbaudit_*.py
    chmod 755 ${INSTALLDIR}/www/shell/* 
