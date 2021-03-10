@@ -26,22 +26,19 @@ var cataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/opt/sequoiadb/database/cata/[svcname]/diaglog',
-                  ftmask:'NONE'
+                  diagpath:'/opt/sequoiadb/database/cata/[svcname]/diaglog'
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/opt/sequoiadb/database/coord/[svcname]/diaglog',
-                  ftmask:'NONE'
+                  diagpath:'/opt/sequoiadb/database/coord/[svcname]/diaglog'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/opt/sequoiadb/database/data/[svcname]/diaglog',
-                  ftmask:'NONE'
+                  diagpath:'/opt/sequoiadb/database/data/[svcname]/diaglog'
                 };
                 
