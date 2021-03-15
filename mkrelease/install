@@ -1,5 +1,5 @@
 #!/bin/bash
-lines=382
+lines=394
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -90,6 +90,18 @@ function changePermissionOwner()
    chmod 755 ${INSTALLDIR}/plugins/SequoiaSQL/bin/*.sh 
    chmod 755 ${INSTALLDIR}/tools/server/php/bin/* 
    chmod 755 ${INSTALLDIR}/tools/expect/bin/*
+   chmod 755 ${INSTALLDIR}/tools/deploy/quickDeploy.sh
+   chmod 744 ${INSTALLDIR}/tools/dr_ha/*.sh
+   chmod 744 ${INSTALLDIR}/tools/expect/trust/trustRelpConf.sh
+   chmod 744 ${INSTALLDIR}/tools/sdbmigrate/bin/*.sh
+   chmod 744 ${INSTALLDIR}/tools/sequoiafs/bin/*.sh
+   chmod 744 ${INSTALLDIR}/tools/sequoias3/sequoias3.sh
+   chmod 744 ${INSTALLDIR}/tools/ptmallocstats/ptmalloc_stats.py
+   chmod 744 ${INSTALLDIR}/tools/sdbaudit/sdbaudit_ctl.py
+   chmod 744 ${INSTALLDIR}/tools/sdbaudit/sdbaudit_daemon.py
+   chmod 744 ${INSTALLDIR}/tools/sdbsupport/sdbsupport.sh
+   chmod 744 ${INSTALLDIR}/tools/crontask/sdbtaskctl
+   chmod 744 ${INSTALLDIR}/tools/crontask/sdbtaskdaemon
    chmod 755 ${INSTALLDIR}/www/shell/* 
    chmod 755 ${INSTALLDIR}/install_om.sh
    chmod 755 ${INSTALLDIR}/compatible.sh
