@@ -86,6 +86,16 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
+      <for list="${testhost_list}" param="testhost" parallel="false">
+         <sequential>
+            <staf location="@{testhost}" service="FS"
+                        request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
+                        throwBuildException=""/>
+            <staf location="@{testhost}" service="FS"
+                        request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
+                        throwBuildException="1"/>
+         </sequential>
+      </for>
    </target>
    
    <target name="ready_lib">
@@ -238,14 +248,7 @@
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
-            <var name="tar_filename" value="testcase_@{testhost}.tar.gz" />          
-            
-            <staf location="@{testhost}" service="FS"
-                        request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
-                        throwBuildException=""/>
-            <staf location="@{testhost}" service="FS"
-                        request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
-                        throwBuildException="1"/>
+            <var name="tar_filename" value="testcase_@{testhost}.tar.gz" />
                         
             <if>
                <available file="${tar_srcdir}" type="dir" property="srcdir_exist" />

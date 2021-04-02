@@ -23,7 +23,7 @@
       
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
-      <property name="testcase_outdir" location="${WORKSPACE}/tmp" />
+      <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
       
       <antcall target="ntpdate_time"/>
@@ -91,6 +91,16 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
+      <for list="${testhost_list}" param="testhost" parallel="false">
+         <sequential>
+            <staf location="@{testhost}" service="FS"
+                        request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
+                        throwBuildException=""/>
+            <staf location="@{testhost}" service="FS"
+                        request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
+                        throwBuildException="1"/>
+         </sequential>
+      </for>            
    </target>
    
    <target name="ready_lib">
@@ -208,13 +218,6 @@
             <var name="tar_desdir" value="${testcase_outdir}" />
             <var name="tar_filename" value="testcase_@{testhost}.tar.gz" />          
             
-            <staf location="@{testhost}" service="FS"
-                        request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
-                        throwBuildException=""/>
-            <staf location="@{testhost}" service="FS"
-                        request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
-                        throwBuildException="1"/>
-                        
             <if>
                <available file="${tar_srcdir}" type="dir" property="srcdir_exist" />
                <then>
