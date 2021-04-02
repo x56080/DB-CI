@@ -23,7 +23,7 @@
       
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_largedata" />
-      <property name="testcase_outdir" location="${WORKSPACE}/tmp" />
+      <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
       
       <antcall target="ntpdate_time"/>
