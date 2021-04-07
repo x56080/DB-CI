@@ -1,5 +1,6 @@
 #!/bin/bash
-lines=392
+#the $lines is equal to the number of rows plus 1
+lines=587
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -15,14 +16,22 @@ PORT=11790
 PROCESSAUTOSTART=true
 SMS=false
 PACKAGE_NAME=sequoiadb-3.4-aarch64-enterprise-installer.run
-PACKAGE_PATH==/opt/sequoiadb-3.4-aarch64-enterprise-installer.run
+PACKAGE_PATH=/opt/sequoiadb-3.4-aarch64-enterprise-installer.run
+BACKUPDIR=""
+SERVICE_ORIGIN_STATUS=0
+SERVICE_STATUS=false
 GLIBCXX_VERSION="GLIBCXX_VERSION_VALUE"
 GIT_VERSION="GIT_VERSION_VALUE"
 BUILD_TIME="BUILD_TIME_VALUE"
+OLD_VERSION=""
+NEW_VERSION=""
+OLD_RELEASE=0
+NEW_RELEASE=0
+OLD_EDITION_FULL=Community
+NEW_EDITION_FULL=Community
 
 function checkUmask()
 {
-   echo "begin to check umask" >&2
    local other_mask=`umask | awk '{print substr($0,length($0)-0,1)}'`
    local group_mask=`umask | awk '{print substr($0,length($0)-1,1)}'`
    local user_mask=`umask | awk '{print substr($0,length($0)-2,1)}'`
@@ -30,23 +39,19 @@ function checkUmask()
    if [ ${other_mask} -gt 2 -o ${group_mask} -gt 2 -o ${user_mask} -gt 0 ]; then
       echo "Umask abnormal! Current umask = ${full_mask}, recommended value is 0022" >&2 && exit 1;
    fi
-   echo "ok" >&2
 }
 
 function checkFreeDiskSpace()
 {
-   echo "begin to check free disk" >&2
    test -d ${INSTALLDIR} || mkdir -p ${INSTALLDIR}
    local free_disk=`df ${INSTALLDIR} | awk '/[0-9]%/{print $(NF-2)}'`
    if [ ${free_disk} -le 1300000 ];then
       echo "There is not enough disk space for installation. It needs at lease 1.3G" >&2 && exit 1;
    fi
-   echo "ok" >&2
 }
 
 function checkHostnameIp()
 {
-   echo "begin to check hostname and ip " >&2
    local machine_hostname=`hostname`
    if [ "${machine_hostname}" == 'localhost' -o "${machine_hostname}" == '(none)' -o "${machine_hostname}" == '' ]; then
       echo "Hostname may be null!" >&2 && exit 1;
@@ -57,12 +62,52 @@ function checkHostnameIp()
    if [ $? != 0 ]; then
       echo "The ip(${hostname_ip}) of host(${machine_hostname}) does not match any ip(${machine_ip}) of network adapter! Please check file '/etc/hosts' and run command 'ip a' for more detail."  >&2 && exit 1;
    fi
-   echo "ok" >&2
+}
+
+function checkCompatible()
+{
+   mkdir -p ${INSTALLDIR}/tmp_${CURRENT_TIME}
+   tar -xf /tmp/sequoiadb.tar.gz -C ${INSTALLDIR}/tmp_${CURRENT_TIME} compatible.sh
+   tar -xf /tmp/sequoiadb.tar.gz -C ${INSTALLDIR}/tmp_${CURRENT_TIME} version.conf
+   tar -xf /tmp/sequoiadb.tar.gz -C ${INSTALLDIR}/tmp_${CURRENT_TIME} bin/sequoiadb
+   chmod 755 ${INSTALLDIR}/tmp_${CURRENT_TIME}/compatible.sh
+   chmod 755 ${INSTALLDIR}/tmp_${CURRENT_TIME}/bin/sequoiadb
+   OLD_VERSION=`${INSTALLDIR}/bin/sequoiadb --version | grep -v "Git" | grep "version" | awk '{print $3}'`
+   OLD_RELEASE=`${INSTALLDIR}/bin/sequoiadb --version | grep "Release" | awk '{print $2}'`
+   local old_is_enterprise=`${INSTALLDIR}/bin/sequoiadb --version | grep -i enterprise | wc -l`
+   local old_edition=C
+   OLD_EDITION_FULL=Community
+   test ${old_is_enterprise} -ne 0 && old_edition=E
+   test ${old_is_enterprise} -ne 0 && OLD_EDITION_FULL=Enterprise
+   NEW_VERSION=`${INSTALLDIR}/tmp_${CURRENT_TIME}/bin/sequoiadb --version | grep -v "Git" | grep "version" | awk '{print $3}'`
+   NEW_RELEASE=`${INSTALLDIR}/tmp_${CURRENT_TIME}/bin/sequoiadb --version | grep "Release" | awk '{print $2}'`
+   local new_is_enterprise=`${INSTALLDIR}/tmp_${CURRENT_TIME}/bin/sequoiadb --version | grep -i enterprise | wc -l`
+   local new_edition=C
+   NEW_EDITION_FULL=Community
+   test ${new_is_enterprise} -ne 0 && new_edition=E
+   test ${old_is_enterprise} -ne 0 && NEW_EDITION_FULL=Enterprise
+   local compatible_ret=`${INSTALLDIR}/tmp_${CURRENT_TIME}/compatible.sh ${OLD_VERSION} ${old_edition} ${NEW_VERSION} ${new_edition} --db`
+   rm -rf ${INSTALLDIR}/tmp_${CURRENT_TIME}
+   if [[ ${compatible_ret} != true ]]; then
+      echo "You can't upgrade from version ${OLD_VERSION} ${OLD_EDITION_FULL} to ${NEW_VERSION} ${NEW_EDITION_FULL}, for the compatibility" >&2 && exit 1;
+   fi
+}
+
+function exist_installation()
+{
+   if test -s ${SYS_CONF_FILE}; then
+      INSTALLDIR=`grep 'INSTALL_DIR' /etc/default/sequoiadb | awk -F = '{print $2}'`
+      USERNAME=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
+      return 0;
+   elif [ ${INSTALLMODE} == "upgrade" ]; then
+      echo "File ${SYS_CONF_FILE} does not exist" >&2 && exit 1;
+   fi
+   
+   return 1;
 }
 
 function linkPhpLib()
 {
-   echo "begin to create link for php " >&2
    local php_lib_dir=${INSTALLDIR}/tools/server/php/libxml2/lib
    
    rm -rf ${php_lib_dir}/libxml2.so
@@ -80,12 +125,10 @@ function linkPhpLib()
    rm -rf ${php_lib_dir}/libz.so.1
    ln -s ${php_lib_dir}/libz.so.1.2.5 ${php_lib_dir}/libz.so.1
    chown -h ${USERNAME}:${GROUPNAME} ${php_lib_dir}/libz.so.1
-   echo "ok " >&2
 }
 
 function changePermissionOwner()
 {
-   echo "begin to chmod  permission" >&2
    chmod 755 ${INSTALLDIR}/bin/{*,*/*} 
    chmod 755 ${INSTALLDIR}/plugins/SequoiaSQL/bin/*.sh 
    chmod 755 ${INSTALLDIR}/tools/server/php/bin/* 
@@ -123,16 +166,25 @@ function changePermissionOwner()
    mkdir -p /var/sequoiadb 
    chown ${USERNAME}:${GROUPNAME} /var/sequoiadb
    chmod 777 /var/sequoiadb
-   echo "ok" >&2
 }
 
 function startService()
 {
-   echo "begin to start sdbcm service" >&2
    systemctl daemon-reload
-   service sdbcm start 
-   test $? -ne 0 && echo "Failed to start cm, execute: service sdbcm start." >&2 && exit 1;
-   echo "ok" >&2
+   service sdbcm start >> /dev/null 2>&1
+   test $? -ne 0 && echo "Failed to start cm, execute: service sdbcm start." >&2 && return 1;
+   return 0;
+}
+
+function stopService()
+{
+   service sdbcm stop >> /dev/null 2>&1
+   test $? -ne 0 && echo "Failed to stop cm, execute: service sdbcm stop." >&2 && exit 1;
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmtop" >> /dev/null
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstop -t all" >> /dev/null
+   local process_num=`${INSTALLDIR}/bin/sdblist -t all | grep -v "Total" | wc -l`
+   test ${process_num} -gt 0 && echo "Relevant processes still exist after excuting 'service sdbcm stop'." >&2 && exit 1;
+   return 0;
 }
 
 function addEnv()
@@ -152,27 +204,28 @@ function getSysType()
 
 function addSystemdService()
 {
-   echo "begin to add sdbcm service " >&2
    local install_dir_reg="$(echo "${INSTALLDIR}" | sed 's/\//\\\//g')"
    sed -i "s/\/opt\/sequoiadb/${install_dir_reg}/" ${INSTALLDIR}/sdbcm.service
    test -d /usr/lib/systemd/system && cp ${INSTALLDIR}/sdbcm.service /usr/lib/systemd/system
    test -d /lib/systemd/system && cp ${INSTALLDIR}/sdbcm.service /lib/systemd/system
    rm -f ${INSTALLDIR}/sdbcm.service
-   systemctl daemon-reload
-   systemctl enable sdbcm.service
-   echo "ok" >&2
+   systemctl daemon-reload >> /dev/null 2>&1
+   test $? -ne 0 && echo "Failed to reload daemon, execute: systemctl daemon-reload." >&2 && exit 1;
+   systemctl enable sdbcm.service >> /dev/null 2>&1
+   test $? -ne 0 && echo "Failed to enable service, execute: systemctl enable sdbcm.service." >&2 && exit 1;
 }
 
 function startOm()
 {
-   echo "begin to create om" >&2
    local om_port=11780
    local om_dbpath=${INSTALLDIR}/database/sms/${om_port}
    local http_port=8000
-   echo "${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}"
-   ${INSTALLDIR}/install_om.sh ${INSTALLMODE} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port}
+   local installom_mode=normal
+   if [ ${INSTALLMODE} != "normal" ]; then
+      installom_mode=upgrade
+   fi
+   ${INSTALLDIR}/install_om.sh ${installom_mode} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port} >>/dev/null
    chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}/packet
-   echo "ok" >&2
 }
 
 function stopOM()
@@ -188,11 +241,22 @@ function readyToInstall()
    checkHostnameIp
    #check umask
    checkUmask
-   #check process has been stoped or not
-   #TODO
    #check install user
    if [ ${USERNAME} == "root" ];then
       echo "The ROOT user is not allowed to create." >&2 && exit 1;
+   fi
+   #check process has been stoped or not
+   if [ ${INSTALLMODE} == "cover" ]; then
+      service sdbcm status >> /dev/null 2>&1
+      SERVICE_ORIGIN_STATUS=$?
+      if [ ${SMS} != "only" ]; then
+         test ${SERVICE_ORIGIN_STATUS} -eq 0 && stopService
+      else
+         test ${SERVICE_ORIGIN_STATUS} -eq 0 && service sdbcm stop >> /dev/null 2>&1
+         test $? -ne 0 && echo "Failed to stop cm, execute: service sdbcm stop." >&2 && exit 1;
+         su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmtop" >> /dev/null 2>&1
+         test $? -ne 0 && echo "Failed to stop sdbcm, execute: bin/sdbcmtop." >&2 && exit 1;
+      fi
    fi
    #check or create user group
    local exist_user=false
@@ -224,15 +288,76 @@ function readyToInstall()
    
 }
 
+function readyToUpgrade()
+{
+   #check install user
+   if [ ${USERNAME} == "root" ];then
+      echo "The ROOT user is not allowed to create." >&2 && exit 1;
+   fi
+   #check installdir
+   if [ ! -d ${INSTALLDIR} ]; then
+      echo "Install dir ${INSTALLDIR} not-existed" >&2
+      exit 1;
+   fi
+   if [[ "`ls -A ${INSTALLDIR}`" == "" ]]; then 
+      echo "Install dir ${INSTALLDIR} is empty" >&2
+      exit 1;
+   fi
+   #check sequoiadb
+   if [ ! -s ${INSTALLDIR}/bin/sequoiadb ]; then
+      echo "${INSTALLDIR}/bin/sequoiadb does not exist" >&2
+      exit 1;
+   fi
+   #check user
+   `grep "^${USERNAME}:" /etc/passwd >> /dev/null` 
+   test $? -ne 0 && echo "User ${USERNAME} does not exist." >&2 && exit 1;
+   GROUPNAME=`id -ng ${USERNAME}`
+   #check disk
+   checkFreeDiskSpace
+   #check hostname and ip
+   checkHostnameIp
+   #check umask
+   checkUmask
+   #check process has been stoped or not
+   service sdbcm status >> /dev/null 2>&1
+   SERVICE_ORIGIN_STATUS=$?
+   local process_num=`${INSTALLDIR}/bin/sdblist -t all | grep -v "Total" | wc -l`
+   if [ "${SERVICE_ORIGIN_STATUS}" == 0 -o "${process_num}" != 0 -o "${SMS}" ]; then
+      if [ ${SMS} != "only" ]; then
+         stopService
+      else
+         service sdbcm stop >> /dev/null 2>&1
+         test $? -ne 0 && echo "Failed to stop cm, execute: service sdbcm stop." >&2 && exit 1;
+         su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmtop" >> /dev/null 2>&1
+         test $? -ne 0 && echo "Failed to stop sdbcm, execute: bin/sdbcmtop." >&2 && exit 1;
+      fi
+   fi  
+}
+
+function backupInstallDir()
+{
+   BACKUPDIR=${INSTALLDIR}/rollback/BackupDir_${CURRENT_TIME}
+   su - ${USERNAME} -c "mkdir -p ${BACKUPDIR}${INSTALLDIR}"
+   test $? -ne 0 && echo "mkdir backupdir ${BACKUPDIR}${INSTALLDIR} failed." >&2 && return 1;
+   su - ${USERNAME} -c "cd ${INSTALLDIR};cp -rf `ls ${INSTALLDIR} | grep -v rollback | grep -v database | xargs` ${BACKUPDIR}${INSTALLDIR}"
+   test $? -ne 0 && echo "backup installation to backupdir ${BACKUPDIR} failed." >&2 && return 1;
+   return 0;
+}
+
 function unpackFile()
 {
-   echo "begin to unpack install file" >&2
    test -d ${INSTALLDIR} || mkdir -p ${INSTALLDIR}
+   test $? -ne 0 && echo "mkdir installdir ${INSTALLDIR} failed." >&2 && return 1;
+   if [ ${SMS} == "only" ]; then
+      rm -rf ${INSTALLDIR}/bin/*
+   fi
    touch ${INSTALLDIR}/uninstall.dat
    tar -zxvf /tmp/sequoiadb.tar.gz -C ${INSTALLDIR} >> ${INSTALLDIR}/uninstall.dat
+   test $? -ne 0 && echo "failed to unpack the installation package." >&2 && return 1;
    chown -R ${USERNAME}:${GROUPNAME} ${INSTALLDIR}
+   test $? -ne 0 && echo "failed to modify the user to which the installation directory belongs" >&2 && return 1;
    rm -rf /tmp/sequoiadb.tar.gz
-   echo "ok" >&2
+   return 0;
 }
 
 function postInstallation()
@@ -273,20 +398,90 @@ function postInstallation()
    test -f ${user_home}/.profile && addEnv ${user_home}/.profile
    getSysType 
    if [ ${SYS_TYPE} == "systemd" ];then
-      addSystemdService >> /dev/null
+      addSystemdService
    fi
    startService
-   if [ ${SMS} == true ];then
+   test $? -ne 0 && exit 1;
+   if [ ${SMS} == true -o ${SMS} == "only" ];then
       startOm
    fi
    rm -f ${INSTALLDIR}/sequoiadb.tar.gz
+}
+
+function postUpgrade()
+{
+   linkPhpLib
+   changePermissionOwner
+   #write /etc/default/sequoiadb
+   local md5=`md5sum ${PACKAGE_PATH} | cut -c 1-32`
+   sed -i 's/MD5.*$/MD5=${md5}/g' /etc/default/sequoiadb
+   #restore the old configuration
+   su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/limits.conf ${INSTALLDIR}/conf/limits.conf"
+   su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/sdbcm.conf ${INSTALLDIR}/conf/sdbcm.conf"
+   #write an upgrade log
+   test -s ${INSTALLDIR}/upgrade.log || su - sdbadmin -c "touch ${INSTALLDIR}/upgrade.log" >&2
+   echo "time: ${CURRENT_TIME}" >> ${INSTALLDIR}/upgrade.log
+   echo "upgrade from version ${OLD_VERSION} ${OLD_EDITION_FULL} (release ${OLD_RELEASE}) to ${NEW_VERSION} ${NEW_EDITION_FULL} (release ${NEW_RELEASE})" >> ${INSTALLDIR}/upgrade.log 
+   getSysType 
+   if [ ${SYS_TYPE} == "systemd" ];then
+      addSystemdService
+   fi
+   startService
+   test $? -ne 0 && exit 1;
+   if [ ${SMS} == true -o ${SMS} == "only" ];then
+      startOm
+   fi
+   #start all node
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmart" >> /dev/null
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstart -t all" >> /dev/null
+   rm -f ${INSTALLDIR}/sequoiadb.tar.gz
+   return 0;
+}
+
+function rollbackUpgrade()
+{
+   echo "Begin to rollback upgrade." >&2
+   su - ${USERNAME} -c "cp -rfp ${BACKUPDIR}/${INSTALLDIR}/* ${INSTALLDIR}/"
+   test $? -ne 0 && echo "rollback upgrade failed: copy ${BACKUPDIR}/${INSTALLDIR} to ${INSTALLDIR} failed." >&2 && exit 1;
+   if [ ${SERVICE_ORIGIN_STATUS} == 0 ]; then
+      startService
+      test $? -ne 0 && exit 1;
+   fi
+   rm -rf ${BACKUPDIR}
+   echo "Rollback upgrade success." >&2
 }
 
 function normalComponent()
 {
    readyToInstall
    unpackFile
+   test $? -ne 0 && echo "Failed to unpack the installation package." >&2 && exit 1;
    postInstallation
+   echo "SequoiaDB installation complete. The program is installed in the ${INSTALLDIR}" >&2
+}
+
+function upgradeComponent()
+{
+   checkCompatible
+   readyToUpgrade
+   backupInstallDir
+   test $? -ne 0 && echo "backup installation failed." >&2 && exit 1;
+   unpackFile
+   test $? -ne 0 && echo "unpack the installation package failed." >&2 && rollbackUpgrade && exit 1;
+   postUpgrade
+   test $? -ne 0 && echo "upgrade process failed." >&2 && rollbackUpgrade && exit 1;
+   echo "SequoiaDB upgrade complete. The program is installed in the ${INSTALLDIR}" >&2
+}
+
+function installSDB()
+{
+   echo "Start installation program ..." >&2
+   exist_installation
+   if [ $? == 0 -a ${INSTALLMODE} != "cover" ]; then
+      upgradeComponent
+   else
+      normalComponent
+   fi
 }
 
 function show_version()
@@ -387,5 +582,5 @@ fi
 #get PACKAGE_PATH
 PACKAGE_PATH=$0
 
-normalComponent
+installSDB
 exit 0
