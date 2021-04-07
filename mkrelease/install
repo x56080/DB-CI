@@ -464,8 +464,8 @@ function normalComponent()
 
 function upgradeComponent()
 {
-   checkCompatible
    readyToUpgrade
+   checkCompatible
    backupInstallDir
    test $? -ne 0 && echo "backup installation failed." >&2 && exit 1;
    unpackFile
