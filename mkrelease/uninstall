@@ -24,11 +24,11 @@ function deleteEnv()
    if [ $file_exist == true ]; then
       local match_reg1="^export PATH=\"\$PATH:${install_dir_reg}\/bin\"$"
       #local line_num1=`grep -n "${match_reg1}" ${envFile} | awk -F ":" '{print \$1}'`
-      sed -i '/${match_reg1}/d' ${envFile}
+      sed -i "/${match_reg1}/d" ${envFile}
       
       local match_reg2="^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${install_dir_reg}\/lib\"$"
       #local line_num2=`grep -n "${match_reg2}" ${envFile} | awk -F ":" '{print \$1}'`
-      sed -i '/${match_reg2}/d' ${envFile}
+      sed -i "/${match_reg2}/d" ${envFile}
       test -s ${envFile}
       test $? -eq 1 && rm -f ${envFile}
    fi
