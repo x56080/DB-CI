@@ -584,5 +584,17 @@ fi
 #get PACKAGE_PATH
 PACKAGE_PATH=$0
 
+#参数校验
+if [ "$INSTALLMODE" != normal -a "$INSTALLMODE" != upgrade -a "$INSTALLMODE" != cover ]
+then
+   echo "ERROR: Invalid value \"$INSTALLMODE\" for --installmode. Allowed values are: upgrade cover" >&2
+   exit 1
+fi
+if [ "$SMS" != true -a "$SMS" != false -a "$SMS" != only ]
+then
+   echo "ERROR: Invalid value \"$SMS\" for --SMS. Allowed values are: true false only" >&2
+   exit 1
+fi
+
 installSDB
 exit 0
