@@ -43,6 +43,7 @@ Install.ErrorMsg.checkDisk.error=There is not enough disk space for installation
 Install.ErrorMsg.StartCM.error=Failed to start cm, execute: service sdbcm start.
 Install.ErrorMsg.CheckInstallmodeAndUpgrade.error=Parameters 'upgrade' and 'installmode' are not allowed to be used at the same time, please use 'installmode'.
 Install.ErrorMsg.SystemctlReload=Fail to excute 'systemctl daemon-reload'.
+Install.ErrorMsg.CheckCoverInstallUser.error=Cannot specify another user, which can cause the database to be unavailable.
 
 Install.WarnMsg.CheckUmask=Umask abnormal! Current umask = ${full_mask}, recommended value is 0022
 Install.WarnMsg.checkHostname=Hostname may be null!

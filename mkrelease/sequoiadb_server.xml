@@ -821,6 +821,23 @@
                 <compareText text="${installer_command_line_arguments}" value="--installmode" logic="contains"/>
             </ruleList>
         </throwError>
+        <propertiesFileGet>
+            <file>${sys_conf_file}</file>
+            <key>SDBADMIN_USER</key>
+            <variable>username_in_conf</variable>
+            <customErrorMessage>${msg(Upgrade.ErrorMsg.GetUser)}</customErrorMessage>
+            <ruleList>
+                <isTrue value="${exist_installation}"/>
+            </ruleList>
+        </propertiesFileGet>
+        <throwError>
+            <text>${msg(Install.ErrorMsg.CheckCoverInstallUser.error)}</text>
+            <ruleList>
+                <isTrue value="${exist_installation}"/>
+                <compareValues value1="${installmode}" value2="cover" logic="equals"/>
+                <compareValues value1="${username}" value2="${username_in_conf}" logic="does_not_equal"/>
+            </ruleList>
+        </throwError>
         <setInstallerVariable name="project.installationType" value="upgrade">
             <ruleEvaluationLogic>or</ruleEvaluationLogic>
             <ruleList>

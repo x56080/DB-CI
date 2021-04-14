@@ -43,6 +43,7 @@ Install.ErrorMsg.checkDisk.error=磁盘剩余空间不足1.3G
 Install.ErrorMsg.StartCM.error=启动cm失败，执行命令：service sdbcm start。
 Install.ErrorMsg.CheckInstallmodeAndUpgrade.error=参数upgarde和installmode不允许同时使用，建议使用installmode
 Install.ErrorMsg.SystemctlReload=执行'systemctl daemon-reload'失败.
+Install.ErrorMsg.CheckCoverInstallUser.error=覆盖安装时不能指定其他用户，否则会导致数据库服务不可用
 
 Install.WarnMsg.CheckUmask=umask值异常！当前umask=${full_mask}，建议改成0022
 Install.WarnMsg.checkHostname=没有配置主机名，主机名可能为空！
