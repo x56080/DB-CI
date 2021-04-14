@@ -1,6 +1,6 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1
-lines=607
+lines=611
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -100,7 +100,6 @@ function exist_installation()
 {
    if test -s ${SYS_CONF_FILE}; then
       INSTALLDIR=`grep 'INSTALL_DIR' /etc/default/sequoiadb | awk -F = '{print $2}'`
-      USERNAME=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
       return 0;
    elif [ ${INSTALLMODE} == "upgrade" ]; then
       echo "File ${SYS_CONF_FILE} does not exist" >&2 && exit 1;
@@ -250,6 +249,10 @@ function readyToInstall()
    fi
    #check process has been stoped or not
    if [ ${INSTALLMODE} == "cover" ]; then
+      local user_in_conf=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
+      if [ "${USERNAME}" != "${user_in_conf}" -a "${user_in_conf}" != '' ]; then
+         echo "ERROR: The specified user is different from the original installation user." >&2 && exit 1;
+      fi
       HAS_OM=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
       if [ "${HAS_OM}" == TRUE ]; then
          IsGeneral=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
@@ -317,6 +320,7 @@ function readyToUpgrade()
       exit 1;
    fi
    #check user
+   USERNAME=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
    `grep "^${USERNAME}:" /etc/passwd >> /dev/null` 
    test $? -ne 0 && echo "User ${USERNAME} does not exist." >&2 && exit 1;
    GROUPNAME=`id -ng ${USERNAME}`
