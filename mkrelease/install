@@ -1,6 +1,6 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1
-lines=587
+lines=607
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -29,6 +29,9 @@ OLD_RELEASE=0
 NEW_RELEASE=0
 OLD_EDITION_FULL=Community
 NEW_EDITION_FULL=Community
+HAS_OM=false
+IsGeneral=TRUE
+OMAddress=''
 
 function checkUmask()
 {
@@ -221,7 +224,7 @@ function startOm()
    local om_dbpath=${INSTALLDIR}/database/sms/${om_port}
    local http_port=8000
    local installom_mode=normal
-   if [ ${INSTALLMODE} != "normal" ]; then
+   if [ "${INSTALLMODE}" != "normal" -a "${HAS_OM}" == TRUE ]; then
       installom_mode=upgrade
    fi
    ${INSTALLDIR}/install_om.sh ${installom_mode} "${INSTALLDIR}" "${PACKAGE_PATH}" ${PORT} ${om_port} "${om_dbpath}" ${http_port} >>/dev/null
@@ -247,6 +250,11 @@ function readyToInstall()
    fi
    #check process has been stoped or not
    if [ ${INSTALLMODE} == "cover" ]; then
+      HAS_OM=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
+      if [ "${HAS_OM}" == TRUE ]; then
+         IsGeneral=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
+         OMAddress=`grep "OMAddress" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
+      fi
       service sdbcm status >> /dev/null 2>&1
       SERVICE_ORIGIN_STATUS=$?
       if [ ${SMS} != "only" ]; then
@@ -377,10 +385,10 @@ function postInstallation()
    echo INSTALL_DIR=${INSTALLDIR} >> ${SYS_CONF_FILE}
    echo MD5=${md5} >> ${SYS_CONF_FILE}
    #write conf/sdbcm.conf
-   #defaultPort=11790 ${INSTALLDIR}/conf/sdbcm.conf
-   #AutoStart=${PROCESSAUTOSTART} 
-   #IsGeneral=?//存在om的时候设置
-   #OMAddress=？//存在om的时候设置
+   if [ "${HAS_OM}" == TRUE ]; then
+      echo IsGeneral=${IsGeneral} >> ${INSTALLDIR}/conf/sdbcm.conf
+      echo OMAddress=${OMAddress} >> ${INSTALLDIR}/conf/sdbcm.conf
+   fi
    local user_home=`grep "^${USERNAME}:" /etc/passwd | awk -F : '{print $6}'`
    touch ${user_home}/.bashrc
    chown -R ${USERNAME}:${GROUPNAME} ${user_home}/.bashrc
