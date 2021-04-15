@@ -1,6 +1,6 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1
-lines=615
+lines=617
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -332,6 +332,8 @@ function readyToUpgrade()
    checkHostnameIp
    #check umask
    checkUmask
+   #check OM
+   HAS_OM=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
    #check process has been stoped or not
    service sdbcm status >> /dev/null 2>&1
    SERVICE_ORIGIN_STATUS=$?
@@ -416,7 +418,7 @@ function postInstallation()
    fi
    startService
    test $? -ne 0 && exit 1;
-   if [ ${SMS} == true -o ${SMS} == "only" ];then
+   if [ ${SMS} == true -o ${SMS} == "only" -o "${HAS_OM}" == TRUE ];then
       startOm
    fi
    rm -f ${INSTALLDIR}/sequoiadb.tar.gz
@@ -442,7 +444,7 @@ function postUpgrade()
    fi
    startService
    test $? -ne 0 && exit 1;
-   if [ ${SMS} == true -o ${SMS} == "only" ];then
+   if [ ${SMS} == true -o ${SMS} == "only" -o "${HAS_OM}" == TRUE ];then
       startOm
    fi
    #start all node
