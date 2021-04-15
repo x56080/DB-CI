@@ -1,6 +1,6 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1
-lines=613
+lines=615
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
@@ -447,7 +447,9 @@ function postUpgrade()
    fi
    #start all node
    su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmart" >> /dev/null
+   test $? -ne 0 && echo "Failed to start cm, execute: ${INSTALLDIR}/bin/sdbcmart, See the ${INSTALLDIR}/conf/sdbcm.log for more message" >&2
    su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstart -t all" >> /dev/null
+   test $? -ne 0 && echo "Failed to start all node, execute: ${INSTALLDIR}/bin/sdbstart -t all, See the ${INSTALLDIR}/conf/sdbcm.log for more message" >&2
    rm -f ${INSTALLDIR}/sequoiadb.tar.gz
    return 0;
 }
