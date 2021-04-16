@@ -433,7 +433,7 @@ function postUpgrade()
    su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/limits.conf ${INSTALLDIR}/conf/limits.conf"
    su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/sdbcm.conf ${INSTALLDIR}/conf/sdbcm.conf"
    #write an upgrade log
-   test -s ${INSTALLDIR}/upgrade.log || su - sdbadmin -c "touch ${INSTALLDIR}/upgrade.log" >&2
+   test -s ${INSTALLDIR}/upgrade.log || su - ${USERNAME} -c "touch ${INSTALLDIR}/upgrade.log" >&2
    echo "time: ${CURRENT_TIME}" >> ${INSTALLDIR}/upgrade.log
    echo "upgrade from version ${OLD_VERSION} ${OLD_EDITION_FULL} (release ${OLD_RELEASE}) to ${NEW_VERSION} ${NEW_EDITION_FULL} (release ${NEW_RELEASE})" >> ${INSTALLDIR}/upgrade.log 
    getSysType 
