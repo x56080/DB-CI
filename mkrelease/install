@@ -192,10 +192,10 @@ function stopService()
 function addEnv()
 {
    local envFile=$1
-   `grep -q "^export PATH=\"\$PATH:${INSTALLDIR}\/bin\"$" ${envFile}`
+   grep -q "^export PATH=\"\$PATH:${INSTALLDIR}\/bin\"$" ${envFile}
    test $? -ne 0 && echo "export PATH=\"\$PATH:${INSTALLDIR}/bin\"" >> ${envFile}
    
-   `grep -q "^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${INSTALLDIR}\/lib\"$" ${envFile}`
+   grep -q "^export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${INSTALLDIR}\/lib\"$" ${envFile}
    test $? -ne 0 && echo "export LD_LIBRARY_PATH=\"\$LD_LIBRARY_PATH:${INSTALLDIR}/lib\"" >> ${envFile}
 }
 
