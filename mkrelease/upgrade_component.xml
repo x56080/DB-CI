@@ -506,6 +506,17 @@
                 <compareText logic="does_not_equal" text="${SMS}" value="only"/>
             </conditionRuleList>
             <actionList>
+                <runProgram>
+                   <program>${installdir}/bin/sdbstart</program>
+                   <programArguments>-t all</programArguments>
+                   <abortOnError>0</abortOnError>
+                   <showMessageOnError>0</showMessageOnError>
+                   <onErrorActionList>
+                       <consoleWrite>
+                           <text>${msg(Upgrade.WarnMsg.StartNodes)}&#xA;</text>
+                       </consoleWrite>
+                   </onErrorActionList>
+                </runProgram>
                 <startServiceFunction/>
             </actionList>
             <elseActionList>
