@@ -486,6 +486,17 @@
                </runProgram>
             </actionList>
             <elseActionList>
+                <runProgram>
+                   <program>${installdir}/bin/sdbstart</program>
+                   <programArguments>-t all</programArguments>
+                   <abortOnError>0</abortOnError>
+                   <showMessageOnError>0</showMessageOnError>
+                   <onErrorActionList>
+                       <consoleWrite>
+                           <text>${msg(Upgrade.WarnMsg.StartNodes)}&#xA;</text>
+                       </consoleWrite>
+                   </onErrorActionList>
+                </runProgram>
                 <startServiceFunction/>
             </elseActionList>
         </if>

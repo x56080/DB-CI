@@ -79,6 +79,7 @@ Upgrade.NormalMsg.Rollback.RestoreFile=Begin to restore files ......
 Upgrade.NormalMsg.Rollbak.StartProcess=Begin to restart service ......   
 
 Upgrade.WarnMsg.StartProcess=Warn: sdbcm or sdbcmd has not been started after service sdbcm start
+Upgrade.WarnMsg.StartNodes=Warn: Some nodes failed to start, please see ${installdir}/conf/log/sdbcm.log for details
 
 Upgrade.ErrorMsg.SystemConfExist=File ${sys_conf_file} does not exist
 Upgrade.ErrorMsg.SequoiadbExist=${installdir}/bin/sequoiadb does not exist

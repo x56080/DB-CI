@@ -79,6 +79,7 @@ Upgrade.NormalMsg.Rollback.RestoreFile=开始恢复文件 ......
 Upgrade.NormalMsg.Rollbak.StartProcess=开始重启服务 ......  
 
 Upgrade.WarnMsg.StartProcess=警告：执行service sdbcm start后sdbcm或者sdbcmd未启动
+Upgrade.WarnMsg.StartNodes=警告：部分节点启动失败，详细信息请查看${installdir}/conf/log/sdbcm.log
 
 Upgrade.ErrorMsg.SystemConfExist=系统配置文件${sys_conf_file}不存在
 Upgrade.ErrorMsg.SequoiadbExist=${installdir}/bin/sequoiadb不存在
