@@ -58,37 +58,37 @@
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot0dot15" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-3.0.15"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.0.15"/>
          </then>
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot2dot22" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-3.2.22"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.2.22"/>
          </then>                                                                            
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot4dot24" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-3.4.24"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.6.20"/>
          </then>
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot6dot17" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-3.6.17"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.6.20"/>
          </then>
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo4dot0dot17" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-4.0.17"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-4.0.20"/>
          </then>
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo4dot2dot5" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-4.2.5"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-4.2.10"/>
          </then>
       </if>
       
