@@ -90,10 +90,10 @@
 
 #scm db（hbase）
 192.168.28.173 scm-test-ci-suse1（控制机）
-192.168.28.171 scm-test-ci-rhel1  (redhat6.0) 主站点（Ldap）
-192.168.28.122 scm-test-ci-ubun1 （ubun12.04）
-192.168.28.172 scm-test-ci-cent6  (cent6.3)
-192.168.28.137 scm-ci-test-ubun1 （ubun12.04）
+192.168.28.171 scm-test-ci-rhel1  (redhat6.0) 主站点（Ldap）(db部署)
+192.168.28.122 scm-test-ci-ubun1 （ubun12.04）(db部署)
+192.168.28.172 scm-test-ci-cent6  (cent6.3)   (db部署)
+192.168.28.137 scm-ci-test-ubun1 （ubun12.04）(db部署)
 
 #scm  ceph
 192.168.28.201 scm-test-ci-ubun7（控制机）
