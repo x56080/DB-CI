@@ -39,9 +39,9 @@
             <execallcase mongoversion="mongo3dot0dot15" testcasedir="${testcase_dir}/fap3-js-mongo3.0/" reportdir="${report_dir}"/>
             <execallcase mongoversion="mongo3dot2dot22" testcasedir="${testcase_dir}/fap3-js-mongo3.2/" reportdir="${report_dir}"/>
             <execallcase mongoversion="mongo3dot4dot24" testcasedir="${testcase_dir}/fap3-js-mongo3.4/" reportdir="${report_dir}"/>
-            <execallcase mongoversion="mongo3dot6dot17" testcasedir="${testcase_dir}/fap3-js-mongo3.4/" reportdir="${report_dir}"/>
-            <execallcase mongoversion="mongo4dot0dot17" testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
-            <execallcase mongoversion="mongo4dot2dot5"  testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo3dot6dot23" testcasedir="${testcase_dir}/fap3-js-mongo3.4/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo4dot0dot24" testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo4dot2dot13"  testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
          </then>
       </if>
       <changeconf mode="after" conffullname="${testcase_dir}/node.conf.ini"
@@ -58,37 +58,37 @@
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot0dot15" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.0.15"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.0.15-rhel"/>
          </then>
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot2dot22" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.2.22"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.2.22-rhel"/>
          </then>                                                                            
       </if>
       <if>
          <equals arg1="@{mongoversion}" arg2="mongo3dot4dot24" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.6.20"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.4.24-rhel"/>
          </then>
       </if>
       <if>
-         <equals arg1="@{mongoversion}" arg2="mongo3dot6dot17" />
+         <equals arg1="@{mongoversion}" arg2="mongo3dot6dot23" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-3.6.20"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.6.23-rhel"/>
          </then>
       </if>
       <if>
-         <equals arg1="@{mongoversion}" arg2="mongo4dot0dot17" />
+         <equals arg1="@{mongoversion}" arg2="mongo4dot0dot24" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-4.0.20"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-4.0.24-rhel"/>
          </then>
       </if>
       <if>
-         <equals arg1="@{mongoversion}" arg2="mongo4dot2dot5" />
+         <equals arg1="@{mongoversion}" arg2="mongo4dot2dot13" />
          <then>
-            <var name="mongo" value="${testcase_dir}/tools/mongo-rhel6-4.2.10"/>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-4.2.13-rhel"/>
          </then>
       </if>
       
