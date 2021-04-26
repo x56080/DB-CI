@@ -472,6 +472,11 @@
                  <compareText logic="equals" text="${program_exit_code}" value="0"/>
              </ruleList>
         </setInstallerVariable>
+        <setInstallerVariableFromScriptOutput>
+            <name>node_num</name>
+            <exec>${installdir}/bin/sdblist</exec>
+            <execArgs>-m local | grep "Total" | awk -F : '{print $2}'</execArgs>
+        </setInstallerVariableFromScriptOutput>
         <if>
             <conditionRuleList>
                 <compareText logic="equals" text="${SMS}" value="only"/>
@@ -496,6 +501,9 @@
                            <text>${msg(Upgrade.WarnMsg.StartNodes)}&#xA;</text>
                        </consoleWrite>
                    </onErrorActionList>
+                   <ruleList>
+                       <compareValues value1="${node_num}" logic="greater" value2="0"/>
+                   </ruleList>
                 </runProgram>
                 <startServiceFunction/>
             </elseActionList>
