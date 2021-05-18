@@ -33,8 +33,18 @@
             <mkdir dir="${report_dir}"/>
             <replace file="${testcase_dir}/s3-tests-master/run_all_case.py" token='"report"' value='"${report_dir}"'/>
             <execallcase pyversion="s3virtualenv_python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
-             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
+            <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
          </then>
+         <elseif>
+            <equals arg1="${testcase_type}" arg2="thirdparty_fapmongo_fap3-pymongo3.10.1"/>
+            <then>
+               <delete dir="${report_dir}" failonerror="false"/>
+               <mkdir dir="${report_dir}"/>
+               <replace file="${testcase_dir}/run_all_case.py" token='"report"' value='"${report_dir}"'/>
+               <execallcase pyversion="python3" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
+               <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_fapmongo_fap3-pymongo3.10.1"/>
+            </then>
+         </elseif>
          <else>
             <pythondriver type="install"/>
       
