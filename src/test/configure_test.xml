@@ -372,7 +372,7 @@
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_mongo_js_case.xml"/>
                </case>
                
-               <case value="thirdparty_fapmongo_fap3-pymongo3.10.1">
+               <case value="thirdparty_fapmongo_python">
                   <var name="exec_file" value="${basedir}/src/test/exec_testcase/exec_python_case_new.xml"/>
                </case>
                
