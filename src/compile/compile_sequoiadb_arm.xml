@@ -793,6 +793,10 @@
          <fileset dir="${srccode_dir}/SequoiaDB/web" includes="**/*"/>
       </copy>
       
+      <copy todir="${release_db_dir}/tools/generateJSforcopycluster">
+         <fileset dir="${srccode_dir}/tools/generateJSforcopycluster" includes="**/*" />
+      </copy>
+      
       <copy todir="${release_db_dir}/www">
          <fileset dir="${srccode_dir}/client/admin/admintpl" />
       </copy>
