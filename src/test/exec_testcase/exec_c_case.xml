@@ -155,7 +155,7 @@
          
          <hostinfo prefix="host" />
          <var name="report_fullname" value="@{reportdir}/@{casename}_${host.NAME}.xml"/>
-         <var name="cmd" value="--gtest_filter=* --gtest_output=xml:${report_fullname}"/>   
+         <var name="cmd" value="-o ${DS_IP} -p ${DS_PORT} --gtest_filter=* --gtest_output=xml:${report_fullname}"/>   
          <echo message="${line.separator}exec cmd: @{casefullname} ${cmd}"/>
          
          <!--run testcase-->
