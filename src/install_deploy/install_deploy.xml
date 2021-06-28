@@ -35,14 +35,14 @@
          </else>
       </if>  
       <antcall target="change_limits"/>
-      <antcall target="deploy"/> 
-      <antcall target="ready_es_environment"/>
       <if>
          <equals arg1="${ISMVCC}" arg2="true"/>
          <then>
             <antcall target="ready_mvcc_spt"/>
          </then>
       </if>
+      <antcall target="deploy"/> 
+      <antcall target="ready_es_environment"/>
       
    </target>
    
