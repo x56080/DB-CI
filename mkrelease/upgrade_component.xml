@@ -499,13 +499,31 @@
                <addDefaultService/>
            </actionList>
         </if>
-
+        <setInstallerVariableFromScriptOutput>
+            <name>node_num</name>
+            <exec>${installdir}/bin/sdblist</exec>
+            <execArgs>-m local | grep "Total" | awk -F : '{print $2}'</execArgs>
+        </setInstallerVariableFromScriptOutput>
         <!--start service-->
         <if>
             <conditionRuleList>
                 <compareText logic="does_not_equal" text="${SMS}" value="only"/>
             </conditionRuleList>
             <actionList>
+                <runProgram>
+                   <program>${installdir}/bin/sdbstart</program>
+                   <programArguments>-t all</programArguments>
+                   <abortOnError>0</abortOnError>
+                   <showMessageOnError>0</showMessageOnError>
+                   <onErrorActionList>
+                       <consoleWrite>
+                           <text>${msg(Upgrade.WarnMsg.StartNodes)}&#xA;</text>
+                       </consoleWrite>
+                   </onErrorActionList>
+                   <ruleList>
+                       <compareValues value1="${node_num}" logic="greater" value2="0"/>
+                   </ruleList>
+                </runProgram>
                 <startServiceFunction/>
             </actionList>
             <elseActionList>

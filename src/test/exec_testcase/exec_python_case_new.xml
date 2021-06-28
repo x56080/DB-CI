@@ -33,8 +33,18 @@
             <mkdir dir="${report_dir}"/>
             <replace file="${testcase_dir}/s3-tests-master/run_all_case.py" token='"report"' value='"${report_dir}"'/>
             <execallcase pyversion="s3virtualenv_python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
-             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
+            <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
          </then>
+         <elseif>
+            <equals arg1="${testcase_type}" arg2="thirdparty_fapmongo_python"/>
+            <then>
+               <delete dir="${report_dir}" failonerror="false"/>
+               <mkdir dir="${report_dir}"/>
+               <replace file="${testcase_dir}/fap3-pymongo3.10.1/run_all_case.py" token='"report"' value='"${report_dir}"'/>
+               <execallcase pyversion="python3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
+               <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_fapmongo_python"/>
+            </then>
+         </elseif>
          <else>
             <pythondriver type="install"/>
       
@@ -102,10 +112,39 @@
                   <echo message="${screen_output}" />
                </then>
             </elseif>
+            <elseif>
+               <and>
+                  <equals arg1="${testcase_type}" arg2="thirdparty_fapmongo_python"/>
+                  <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
+               </and>
+               <then>
+                  <changeconf mode="before" conffullname="@{testcasedir}/../node.conf"
+                                 rc="conf_rc1" casetype="${testcase_type}"
+                                 rptfullname="@{reportdir}/configure_before_${testcase_type}.xml" />
+
+                  <var name="screen_output" unset="true"/>
+                  <var name="rc" unset="true"/>
+                  <exec executable="@{pyversion}"
+                        dir="@{testcasedir}"
+                        outputproperty="screen_output"
+                        resultproperty="rc"
+                        failonerror="false" >
+                  <arg line="run_all_case.py"/>
+                  </exec>
+                  <echo message="${screen_output}" />
+
+                  <changeconf mode="after" conffullname="@{testcasedir}/../node.conf.ini"
+                                 rc="conf_rc2" casetype="${testcase_type}"
+                                 rptfullname="@{reportdir}/configure_after_${testcase_type}.xml"/>
+               </then>
+            </elseif>
             <elseif>   
                <and>
                   <not>
                      <equals arg1="${testcase_type}" arg2="thirdparty_s3_python"/>
+                  </not>
+                  <not>
+                     <equals arg1="${testcase_type}" arg2="thirdparty_fapmongo_python"/>
                   </not>
                   <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
                </and>            

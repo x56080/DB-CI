@@ -430,7 +430,7 @@ function postUpgrade()
    changePermissionOwner
    #write /etc/default/sequoiadb
    local md5=`md5sum ${PACKAGE_PATH} | cut -c 1-32`
-   sed -i 's/MD5.*$/MD5=${md5}/g' /etc/default/sequoiadb
+   sed -i "s/MD5.*$/MD5=${md5}/g" /etc/default/sequoiadb
    #restore the old configuration
    su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/limits.conf ${INSTALLDIR}/conf/limits.conf"
    su - ${USERNAME} -c "cp -f ${BACKUPDIR}/${INSTALLDIR}/conf/sdbcm.conf ${INSTALLDIR}/conf/sdbcm.conf"
@@ -448,10 +448,10 @@ function postUpgrade()
       startOm
    fi
    #start all node
-   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmart" >> /dev/null
-   test $? -ne 0 && echo "Failed to start cm, execute: ${INSTALLDIR}/bin/sdbcmart, See the ${INSTALLDIR}/conf/sdbcm.log for more message" >&2
    su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbstart -t all" >> /dev/null
-   test $? -ne 0 && echo "Failed to start all node, execute: ${INSTALLDIR}/bin/sdbstart -t all, See the ${INSTALLDIR}/conf/sdbcm.log for more message" >&2
+   test $? -ne 0 && echo "Warn: Some nodes failed to start, please see ${INSTALLDIR}/conf/sdbcm.log for details" >&2
+   su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmart" >> /dev/null
+   test $? -ne 0 && echo "Warn: Failed to start sdbcm, please see ${INSTALLDIR}/conf/sdbcm.log for details" >&2
    rm -f ${INSTALLDIR}/sequoiadb.tar.gz
    return 0;
 }

@@ -1,0 +1,292 @@
+<!-- ============================================================================
+@description:  exec mongo3 testcase
+@parameter:    TEST_TYPE              eg: CONFIGURETEST
+               testcase_type          eg: mongo3
+               testcase_dir           eg: /SequoiaDB/testcase_new/thirdparty/fapmongo
+               report_dir             eg：/tmp/ci/report/thirdparty_fapmongo
+@author:       Luweikang 2020-9-8
+============================================================================= -->
+
+<project default="exec_mongo_js_testcase" basedir="../../../">     
+   <taskdef resource="net/sf/antcontrib/antlib.xml">
+      <classpath>
+         <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
+      </classpath>
+   </taskdef>
+   <import file="${basedir}/src/test/exec_testcase/common.xml" />
+   
+   <target name="exec_mongo_js_testcase">
+      <property file="${basedir}/src/conf/test.conf" />
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <!--init-->
+      <if>
+         <isset property="BREAK_ON_FAILURE"/>
+         <else>
+            <var name="BREAK_ON_FAILURE" value="false"/>
+         </else>
+      </if>
+      
+      <chmod dir="${testcase_dir}/tools" perm="u+x" includes="*" />
+      <changeconf mode="before" conffullname="${testcase_dir}/fap.node.conf" 
+                        rc="conf_rc1" casetype="${testcase_type}" 
+                        rptfullname="${report_dir}/configure_before_${testsuit_name}.xml" />
+            
+      <!--execute-->
+      <var name="processrc" value="0"/>
+      <if>
+         <equals arg1="${conf_rc1}" arg2="0" />
+         <then>                                  
+            <execallcase mongoversion="mongo3dot0dot15" testcasedir="${testcase_dir}/fap3-js-mongo3.0/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo3dot2dot22" testcasedir="${testcase_dir}/fap3-js-mongo3.2/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo3dot4dot24" testcasedir="${testcase_dir}/fap3-js-mongo3.4/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo3dot6dot23" testcasedir="${testcase_dir}/fap3-js-mongo3.4/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo4dot0dot24" testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
+            <execallcase mongoversion="mongo4dot2dot13"  testcasedir="${testcase_dir}/fap3-js-mongo4.0/" reportdir="${report_dir}"/>
+         </then>
+      </if>
+      <changeconf mode="after" conffullname="${testcase_dir}/node.conf.ini"
+                  rc="conf_rc2" casetype="${testcase_type}" 
+                  rptfullname="${report_dir}/configure_after_${testsuit_name}.xml"/>
+   </target>
+
+   <macrodef name="execallcase">       
+      <attribute name="mongoversion"/>
+      <attribute name="testcasedir"/>
+      <attribute name="reportdir"/>
+      <sequential>
+      
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo3dot0dot15" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.0.15-rhel"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo3dot2dot22" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.2.22-rhel"/>
+         </then>                                                                            
+      </if>
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo3dot4dot24" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.4.24-rhel"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo3dot6dot23" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-3.6.23-rhel"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo4dot0dot24" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-4.0.24-rhel"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="@{mongoversion}" arg2="mongo4dot2dot13" />
+         <then>
+            <var name="mongo" value="${testcase_dir}/tools/mongo-4.2.13-rhel"/>
+         </then>
+      </if>
+      
+      <processonesuit testsuit="@{testcasedir}" 
+                      reportdir="@{reportdir}" 
+                      mongo="${mongo}"/>
+         
+      </sequential>
+   </macrodef>      
+
+   <macrodef name="processonesuit">
+      <attribute name="testsuit"/>
+      <attribute name="reportdir"/>
+      <attribute name="mongo" /> 
+      <sequential>
+      <for param="casefullname">
+         <path>
+            <fileset dir="@{testsuit}" includes="*"/>
+         </path>
+         <sequential>
+         <var name="is_continue_exec" unset="true"/>
+         <condition property="is_continue_exec" value="true" else="false">
+            <or>
+               <equals arg1="${BREAK_ON_FAILURE}" arg2="false"/>
+               <and>
+                  <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
+                  <equals arg1="${processrc}" arg2="0"/>
+               </and>
+            </or>
+         </condition>
+            
+         <available property="is_exist" file="${CI_WORK_DIR}/report/.TESTCASE_FAIL" type="file"/>
+         <if>
+            <and>
+               <equals arg1="${is_exist}" arg2="true"/>
+               <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
+            </and>
+            <then>
+               <var name="is_continue_exec" unset="true"/>
+               <var name="is_continue_exec" value="false"/>
+            </then>
+         </if>
+            
+         <if>
+            <equals arg1="${is_continue_exec}" arg2="true"/>
+            <then>
+               <processonecase casefullname="@{casefullname}" 
+                               mongo="@{mongo}" 
+                               reportdir="@{reportdir}"/>
+            </then>
+         </if>
+         </sequential>
+      </for>
+      
+      <if>
+         <equals arg1="${is_continue_exec}" arg2="false"/>
+         <then>
+            <touch file="@{reportdir}/.TESTCASE_FAIL"/>
+            <for list="${testhost_list}" param="testhost" parallel="true">
+               <sequential>  
+                  <staf location="local" service="FS"
+                        request="COPY FILE ${report_dir}/.TESTCASE_FAIL TODIRECTORY ${CI_WORK_DIR}/report TOMACHINE @{testhost}"
+                        throwBuildException="1"/>
+               </sequential>
+            </for>
+         </then>
+      </if>
+      
+      </sequential>
+   </macrodef>
+   
+   <macrodef name="processonecase">
+      <attribute name="casefullname"/>
+      <attribute name="mongo" />
+      <attribute name="reportdir" />
+      <sequential>
+         <var name="testcase_name" unset="true" />
+         <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
+         
+         <if>
+            <and>
+               <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
+               <not>
+                  <equals arg1="${envrc}" arg2="0"/>
+               </not>
+            </and>
+            <else>
+               <runonecase jsfile="@{casefullname}"
+                           mongo="@{mongo}"
+                           report="@{reportdir}/${testcase_name}.xml"
+                           rc="caserc" />
+            </else>
+         </if>
+         
+         <var name="@{pcsrc}" unset="true"/>
+         <condition property="@{pcsrc}" value="0" else="1">
+            <and>
+               <equals arg1="${envrc}" arg2="0"/>
+               <equals arg1="${caserc}" arg2="0"/>
+            </and>
+         </condition>
+         
+      </sequential>
+      
+   </macrodef>
+   
+   <macrodef name="runonecase">
+      <attribute name="jsfile" />
+      <attribute name="mongo" />
+      <attribute name="report" />
+      <attribute name="rc"/>
+      <sequential>
+         <!--before-->
+         <var name="jsdir" unset="true"/>
+         <var name="casename" unset="true"/>
+         <var name="suitname" unset="true"/>
+         <dirname property="jsdir" file="@{jsfile}" />
+         <basename property="casename" file="@{jsfile}" suffix=".js"/>
+         <basename property="suitname" file="${jsdir}" />
+         
+         <var name="begin_time" unset="true"/>
+         <tstamp>
+            <format property="begin_time" pattern="yyyy-MM-dd HH:mm:ss" />
+         </tstamp>       
+         <script language="javascript">
+            project.setProperty('start_ms', new Date().getTime());
+         </script>
+
+         <markinlog casename="@{jsfile}" marktype="begin"/>
+         
+         <!--execute-->
+         <var name="fapport" unset="true" />
+         <math result="fapport" operand1="${SVCNAME}" operation="+" operand2="7" datatype="int"/>
+         <var name="cmd" value="--host localhost --port ${fapport} @{jsfile}" />
+         <echo message="exec cmd: @{mongo} ${cmd}"/>      
+         
+         <var name="screen_output" unset="true"/>
+         <var name="@{rc}" unset="true"/>
+         <exec executable="@{mongo}" 
+               dir="${jsdir}" 
+               outputproperty="screen_output" 
+               resultproperty="@{rc}"
+               failonerror="false">
+            <arg line="${cmd}" />
+         </exec>
+         <echo message="${screen_output}" />
+         
+         <!--after-->
+         <markinlog casename="@{jsfile}" marktype="end"/>
+         
+         <var name="end_time" unset="true"/>
+         <tstamp>
+            <format property="end_time" pattern="yyyy-MM-dd HH:mm:ss" />
+         </tstamp>
+         <script language="javascript">
+            project.setProperty('total_time', ( new Date().getTime() - start_ms ) / 1000 );
+         </script>
+         <echo message="the result code is ${@{rc}}, begin at ${begin_time}, end at ${end_time}" />
+         
+         <!--generate report-->
+         <if>
+            <equals arg1="${@{rc}}" arg2="0" />
+            <then>
+               <copy file="${basedir}/src/test/exec_testcase/report_succ_temple.xml" tofile="@{report}"/>
+            </then>
+            <else>
+               <copy file="${basedir}/src/test/exec_testcase/report_fail_temple.xml" tofile="@{report}"/>            
+            </else>
+         </if>
+         
+         <replace file="@{report}" token='TESTCASE_TYPE' value='${testcase_type}'/>
+         <replace file="@{report}" token='TESTSUIT_NAME' value='${suitname}'/>
+         <replace file="@{report}" token='TESTCASE_NAME' value='${casename}'/>
+         <replace file="@{report}" token='0000' value='${total_time}'/>
+         
+         <var name="cluster_host_info" value=""/>
+         <for list="${testhost_list}" param="testhost">
+            <sequential>
+               <hostinfo prefix="prefix@{testhost}" host="@{testhost}"/>
+               <var name="cluster_host_info" value="${cluster_host_info} @{testhost}/${prefix@{testhost}.ADDR4}"/>
+            </sequential>
+         </for>
+         
+         <if>
+            <equals arg1="${@{rc}}" arg2="0" />            
+            <else>
+               <hostinfo prefix="host" />
+               <var name="backup_reltdir" value="${TEST_TYPE}_${DEPLOY_MODE}_${BUILD_NUMBER}.tar.gz"/>
+               <var name="download_url" value="&#10;DOWNLOAD DIAGLOG :&#10;http://192.168.28.27:8081/${backup_reltdir}&#10;" />
+               <var name="ms0" value="EXECUTE HOST: ${host.NAME}/${host.ADDR4}&#10;&#10;"/>
+               <var name="ms1" value="CLUSTER HOST:${cluster_host_info}&#10;&#10;"/>
+               <var name="ms2" value="EXECUTE CMD:&#10;@{mongo} ${cmd}&#10;"/>
+               <var name="ms3" value="RETURN CODE: ${@{rc}}&#10;"/>
+               <var name="ms4" value="OUTPUT MESSAGE:&#10;${screen_output}&#10;&#10;"/>
+               <var name="ms5" value="EXCUTE before_usecase.js OUTPUT MESSAGE:&#10;@{beforeoutput}&#10;"/>
+               <replace file="@{report}" token="ERROR_MESSAGE" value="${ms0}${ms1}${ms2}${ms3}${ms4}${ms5}${download_url}"/>
+            </else>
+         </if>
+      </sequential>
+   </macrodef>
+</project>
