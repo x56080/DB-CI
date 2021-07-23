@@ -20,11 +20,29 @@
       <var name="TEST_TYPE" value="NORMALTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
@@ -39,14 +57,14 @@
          </then>
       </if>
      
-      <ant antfile="normal_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${normal_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
       </ant>
             
-       <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+       <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -71,7 +89,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
@@ -90,11 +108,29 @@
       <var name="TEST_TYPE" value="NORMALTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
@@ -109,14 +145,14 @@
          </then>
       </if>
      
-      <ant antfile="normal_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${normal_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
       </ant>
             
-       <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+       <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -141,7 +177,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
@@ -162,7 +198,7 @@
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
@@ -185,7 +221,7 @@
          <property name="BREAK_ON_FAILURE" value="${BREAK_ON_FAILURE}"/>
       </ant>
       
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -210,7 +246,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
@@ -228,11 +264,29 @@
       <var name="TEST_TYPE" value="SYNCTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
             </ant>
@@ -247,7 +301,7 @@
          </then>
       </if>
      
-      <ant antfile="sync_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${sync_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
@@ -255,7 +309,7 @@
          <property name="BREAK_ON_FAILURE" value="${BREAK_ON_FAILURE}"/>
       </ant>
       
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -280,7 +334,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
@@ -298,11 +352,29 @@
       <var name="TEST_TYPE" value="SYNCTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-   
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
             </ant>
@@ -316,7 +388,7 @@
             </if>
          </then>
       </if>
-      <ant antfile="sync_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${sync_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
@@ -324,7 +396,7 @@
          <property name="BREAK_ON_FAILURE" value="${BREAK_ON_FAILURE}"/>
       </ant>
       
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -349,7 +421,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
@@ -369,7 +441,25 @@
 
       <var name="TEST_TYPE" value="PERFORMANCETEST_TPCC"/>
       <propertycopy name="testhost_list" from="${TEST_TYPE}_HOST" /> 
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <ant antfile="ready_package.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
          <property name="SELECT_DB_PACKAGE" value="${SELECT_DB_PACKAGE}"/>
          <property name="SELECT_PG_PACKAGE" value="${SELECT_PG_PACKAGE}"/>
@@ -378,7 +468,7 @@
       <if>
          <equals arg1="${UPDATE_DB_PACKAGE}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
             </ant>
@@ -411,7 +501,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
@@ -429,11 +519,29 @@
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
@@ -448,14 +556,14 @@
          </then>
       </if>
 
-      <ant antfile="configure_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${configure_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
       </ant>
 
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -485,7 +593,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
@@ -504,11 +612,29 @@
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
-      
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
-            <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
@@ -523,14 +649,14 @@
          </then>
       </if>
 
-      <ant antfile="configure_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${configure_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
       </ant>
 
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -555,7 +681,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
@@ -572,6 +698,25 @@
       <antcallback target="check_parameter" return="DEPLOY_MODE, TESTCASE_LISTS"/> 
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="normal_test_file" value="normal_test_arm.xml"/>
+             <property name="configure_test_file" value="configure_test_arm.xml"/>
+             <property name="sync_test_file" value="sync_test_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="normal_test_file" value="normal_test.xml"/>
+             <property name="configure_test_file" value="configure_test.xml"/>
+             <property name="sync_test_file" value="sync_test.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       <if>
          <resourcecontains resource="${WORKSPACE}/archive/compile_db_trunk/sequoiadb.version" substring="Debug"/>
          <then>
@@ -624,7 +769,7 @@
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, BREAK_ON_FAILURE, TESTCASE_LISTS"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+      <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="testhost_list" value="${testhost_list}"/>
@@ -637,7 +782,7 @@
          <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
       </ant>
       
-      <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
@@ -651,7 +796,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
@@ -721,7 +866,7 @@
             <if>
                <equals arg1="${build_status}" arg2="unstable" />
                <then>
-                  <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${firsthost}"/>
@@ -824,6 +969,9 @@
          <condition property="@{resultProperty}" value="PPC">
             <equals arg1="${uname}" arg2="ppc64" />
          </condition>
+         <condition property="@{resultProperty}" value="ARM">
+            <equals arg1="${uname}" arg2="aarch64" />
+         </condition>
       </sequential>
    </macrodef>
    
@@ -831,7 +979,7 @@
       <attribute name="serialnumber"/>
       <attribute name="buildstatus"/>
       <sequential>      
-         <ant antfile="install_deploy.xml" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
+         <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
             <property name="TEST_TYPE" value="${TEST_TYPE}"/>
             <property name="testhost_list" value="${testhost_list}"/>
          </ant>
@@ -840,7 +988,7 @@
             <property name="plat_form" value="${plat_form}"/>
             <property name="serial_number" value="@{serialnumber}"/>
          </ant>
-         <ant antfile="env_detect.xml" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
+         <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
             <property name="TEST_TYPE" value="${TEST_TYPE}"/>
             <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
             <property name="plat_form" value="${plat_form}"/>
@@ -850,7 +998,7 @@
          <if>
             <equals arg1="${@{buildstatus}}" arg2="unstable" />
             <then>
-               <ant antfile="backup_log.xml" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
+               <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                   <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                   <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                   <property name="testhost_list" value="${testhost_list}"/>

@@ -4,18 +4,19 @@
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
-   <taskdef name="staf" classname="com.ibm.staf.ant.taskdef.STAF" >
-      <classpath>
-         <pathelement location="${basedir}/lib/STAFAnt.jar" />
-      </classpath>
-   </taskdef>
+   <property name="user" value="root" />
+   <property name="passwd" value="jenkins@123" />
 
    <target name="main_target">
       <property file="${basedir}/src/conf/test.conf" />
       <property name="report_dir" value="${CI_WORK_DIR}/report/env_detect"/>
       
-      <delete dir="${report_dir}" failonerror="false"/> 
-      <mkdir dir="${report_dir}"/>
+      <hostinfo prefix="host" />
+      <sshexec host="${host.NAME}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="rm -rf ${report_dir}; mkdir -p ${report_dir}; chmod -R 777 ${report_dir}" />
 
       <antcall target="detect_remote_env">
          <param name="detect_target_name" value="dectect_node_status"/>
@@ -54,7 +55,6 @@
 
       <!-- cp report to ${WORKSPACE}/report-->
       <delete dir="${WORKSPACE}/report/env_detect"/>
-      <mkdir dir="${WORKSPACE}/report/env_detect"/>
       <copy todir="${WORKSPACE}/report/env_detect">
          <fileset dir="${report_dir}" includes="*.xml"/>
       </copy>
@@ -67,55 +67,36 @@
       <hostinfo prefix="host" />
 
       <property name="remote_cmd1" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE}" />
          
       <property name="remote_cmd_lsof" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml detect_handle_number -Dcontrol_host=${host.NAME}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml detect_handle_number -Dcontrol_host=${host.NAME}" />
    
       <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential>         
-            <staf location="@{testhost}" service="PROCESS"
-                  resultPrefix="remote_exec1"
-                  request="START SHELL COMMAND ${remote_cmd1} WAIT STDERRTOSTDOUT RETURNSTDOUT"
-                  throwBuildException="1"/>
-            <propertyregex property="remote_exec_rc1" input="${remote_exec1.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>
-            <if>
-               <equals arg1="${remote_exec_rc1}" arg2="0" />
-               <else>
-                  <fail message="exec: ${remote_cmd1}, in host: @{testhost}, return code: ${remote_exec_rc1}"/>
-               </else>
-            </if>        
-            
-            <staf location="@{testhost}" service="PROCESS"
-                  resultPrefix="remote_exec_lsof"
-                  request="START SHELL COMMAND ${remote_cmd_lsof} WAIT STDERRTOSTDOUT RETURNSTDOUT"
-                  throwBuildException="1"/>
-            <propertyregex property="remote_exec_lsof" input="${remote_exec_lsof.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>
-            <if>
-               <equals arg1="${remote_exec_lsof}" arg2="0" />
-               <else>
-                  <fail message="exec: ${remote_cmd_lsof}, in host: @{testhost}, return code: ${remote_exec_lsof}"/>
-               </else>
-            </if> 
+         <sequential>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="source /etc/profile; ${remote_cmd1}" />
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="source /etc/profile; ${remote_cmd_lsof}" />
          </sequential>
       </for>
       
       <property name="remote_cmd2" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME}" />
         
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
-         <staf location="@{testhost}" service="PROCESS"
-               resultPrefix="remote_exec2"
-               request="START SHELL COMMAND ${remote_cmd2} WAIT STDERRTOSTDOUT RETURNSTDOUT"
-               throwBuildException="1"/>
-         <propertyregex property="remote_exec_rc2" input="${remote_exec2.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>
-         <if>
-            <equals arg1="${remote_exec_rc2}" arg2="0" />
-            <else>
-               <fail message="exec: ${remote_cmd2}, in host: @{testhost}, return code: ${remote_exec_rc2}"/>
-            </else>
-         </if>        
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="source /etc/profile; ${remote_cmd2}" />
          </sequential>
       </for>      
       
@@ -124,8 +105,6 @@
    <target name="dectect_node_status">
       <property file="${basedir}/src/conf/test.conf" />
       <property name="report_dir" value="${CI_WORK_DIR}/report/env_detect"/>
-      <delete dir="${report_dir}"/>
-      <mkdir dir="${report_dir}"/>
       <hostinfo prefix="host" />
       <!--detect node by find core-->
       <for param="nodecorname">
@@ -236,17 +215,21 @@
             <if>
                <available file="${backup_fullname}" type="file"/>
                <then>
-                  <staf location="local" service="FS"
-                        request="COPY FILE ${backup_fullname} TODIRECTORY ${backup_dir} TOMACHINE ${control_host}"
-                        throwBuildException="1"/>
+                  <scp file="${backup_fullname}"
+                       todir="${user}@${control_host}:${backup_dir}"
+                       password="${passwd}" 
+                       trust="true">
+                  </scp>
                </then>
             </if>
             <if>
                <available file="${backup_fullname2}" type="file"/>
                <then>
-                  <staf location="local" service="FS"
-                        request="COPY FILE ${backup_fullname2} TODIRECTORY ${backup_dir} TOMACHINE ${control_host}"
-                        throwBuildException="1"/>
+                  <scp file="${backup_fullname2}"
+                       todir="${user}@${control_host}:${backup_dir}"
+                       password="${passwd}" 
+                       trust="true">
+                  </scp>
                </then>
             </if>
          </else>
@@ -262,9 +245,11 @@
       <if>
          <equals arg1="${control_host}" arg2="${host.NAME}" />
          <else>
-            <staf location="local" service="FS"
-                  request="COPY FILE ${backup_fullname} TODIRECTORY ${backup_dir} TOMACHINE ${control_host}"
-                  throwBuildException="1"/>
+            <scp file="${backup_fullname}"
+                 todir="${user}@${control_host}:${backup_dir}"
+                 password="${passwd}" 
+                 trust="true">
+            </scp>
          </else>
       </if>
    </target>
@@ -482,9 +467,11 @@
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTCASE_TYPE" value="detect_env"/>
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTSUIT_NAME" value="detect_node"/>
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTCASE_NAME" value="node_lsof"/>
-            <staf location="local" service="FS"
-                  request="COPY FILE ${report_dir}/${host.NAME}_node_lsof_report.xml TODIRECTORY ${CI_WORK_DIR}/report/env_detect TOMACHINE ${control_host}"
-                  throwBuildException="1"/>
+            <scp file="${report_dir}/${host.NAME}_node_lsof_report.xml"
+                 todir="${user}@${control_host}:${CI_WORK_DIR}/report/env_detect"
+                 password="${passwd}" 
+                 trust="true">
+            </scp>
          </then>
       </if>
    </target>

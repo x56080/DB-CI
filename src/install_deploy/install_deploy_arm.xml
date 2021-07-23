@@ -1,0 +1,538 @@
+<!-- ============================================================================
+@description:  install and deploy sequoiadb
+@parameter:    DEPLOY_MODE: G1D3|G3D3|STANDALONE, from jenkins configure page
+               TEST_TYPE: from build.xml
+               testhost_list: from build.xml
+@author:       Ting YU 2016-10-19
+============================================================================= -->
+
+<project default="main" basedir="../../">  
+   <property file="${basedir}/src/conf/test.conf" /> 
+   <taskdef resource="net/sf/antcontrib/antlib.xml">
+      <classpath>
+         <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
+      </classpath>
+   </taskdef>
+   <property name="user" value="root" />
+   <property name="passwd" value="jenkins@123" />
+   
+   <target name="main">  
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="SMOKETEST"/>
+         <then>
+            <antcall target="clear_cluster"/>
+            <antcall target="ready_bin_and_conf"/>
+            <antcall target="ready_cm"/>
+         </then>
+         <else>
+            <antcall target="uninstall"/>
+            <antcallback target="ready_package" return="package_name"/><!--variable package_name used in target install--> 
+            <antcall target="install"/>
+         </else>
+      </if>  
+      <antcall target="change_limits"/>
+      <if>
+         <equals arg1="${ISMVCC}" arg2="true"/>
+         <then>
+            <antcall target="ready_mvcc_spt"/>
+         </then>
+      </if>
+      <antcall target="deploy"/> 
+      <antcall target="ready_es_environment"/>
+      
+   </target>
+   
+   <target name="clear_cluster">
+      <var name="cmd_clear_cluster" 
+           value="${INSTALL_DIR}/bin/sdbcmtop;${INSTALL_DIR}/bin/sdbstop -t all;rm -rf ${INSTALL_DIR} "/>
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="${cmd_clear_cluster}" />
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="ready_bin_and_conf">
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="mkdir -p ${INSTALL_DIR}" />
+                  
+            <for param="fullfilename">
+               <path>
+                  <fileset dir="${WORKSPACE}/release" includes="*.tar.gz"/>
+               </path>
+               <sequential>
+                  <scp file="@{fullfilename}" 
+                       todir="${user}@@@{testhost}:${INSTALL_DIR}"
+                       password="${passwd}"
+                       trust="true"/>      
+                  <local name="tarname"/>
+                  <propertyregex property="tarname" input="@{fullfilename}" regexp="${WORKSPACE}/release/(.*.tar.gz)" select="\1" casesensitive="false"/>
+                  <!--untar-->
+                  <sshexec host="@{testhost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="tar zxvf ${INSTALL_DIR}/${tarname} -C ${INSTALL_DIR};rm -rf ${INSTALL_DIR}/${tarname}" />
+               </sequential>
+            </for>
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="ready_cm">
+      <var name="cmd_start_cm" 
+           value="${INSTALL_DIR}/bin/sdbcmart"/>
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="chmod 777 ${INSTALL_DIR}/bin -R;${cmd_start_cm}" />
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="uninstall" depends="">    
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     failonerror="false"
+                     trust="true"
+                     command="${INSTALL_DIR}/bin/stpstop; ${INSTALL_DIR}/uninstall --mode unattended; rm -rf ${INSTALL_DIR}" />
+            <if>
+               <equals arg1="${TEST_TYPE}" arg2="PERFORMANCETEST_TPCC" />
+               <then>
+                  <for list="${TPCC_DBPATH_LIST}" param="dbpath" parallel="false">
+                     <sequential>
+                        <sshexec host="@{testhost}" 
+                                 username="${user}" 
+                                 password="${passwd}" 
+                                 trust="true"
+                                 command="rm -rf @{dbpath}" />
+                     </sequential>
+                  </for>
+               </then>
+               <elseif>
+                  <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
+                  <then>
+                     <for list="${RELIABILITYTEST_DBPATH_LIST}" param="dbpath" parallel="false">
+                        <sequential>
+                           <sshexec host="@{testhost}" 
+                                    username="${user}" 
+                                    password="${passwd}" 
+                                    trust="true"
+                                    command="rm -rf @{dbpath}" />
+                        </sequential>
+                     </for>
+                  </then>
+               </elseif>
+            </if>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="ps -ef |grep sdbseadapter |grep -v grep | awk '{print $2}' |  xargs -r kill -9" />
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="ready_package" depends="">
+      <!--get run package name-->
+      <property name="package_dir" location="${WORKSPACE}/archive/current" />
+      <first id="package_fullname">
+         <fileset dir="${package_dir}" includes="sequoiadb*.run" />
+      </first>
+      <property name="package_fullname" location="${toString:package_fullname}" />
+      <basename property="package_name_part" file="${package_fullname}" suffix=".run"/>
+      <property name="package_name" value="${package_name_part}.run" />     
+      
+      <!--copy run package to remote host-->
+      <for list="${testhost_list}" param="testhost" parallel="false">
+         <sequential>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="mkdir -p ${CI_WORK_DIR}" />
+            <echo message="${user}@@@{testhost}:${CI_WORK_DIR}"/>
+            <echo message="${package_fullname}"/>
+            <scp file="${package_fullname}" 
+                 todir="${user}@@@{testhost}:${CI_WORK_DIR}"
+                 password="${passwd}"
+                 trust="true"/>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="chmod +x ${CI_WORK_DIR}/${package_name}" />
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="install" depends="">       
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="${CI_WORK_DIR}/${package_name} --mode unattended" />
+         </sequential>         
+      </for>
+   </target>
+   
+   <target name="change_limits">
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="${INSTALL_DIR}/bin/sdbcmtop" />
+            <if>
+               <equals arg1="${ISMVCC}" arg2="true"/>
+               <then>
+                  <sshexec host="@{testhost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="sed -i 's/#DiagLevel=3/DiagLevel=5/g' ${INSTALL_DIR}/conf/sdbcm.conf" />
+               </then>
+            </if>
+            <sshexec host="@{testhost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="sed -i 's/core_file_size=0/core_file_size=-1/g' ${INSTALL_DIR}/conf/limits.conf" />
+            <sshexec host="@{testhost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="${INSTALL_DIR}/bin/sdbcmart" />
+         </sequential>         
+      </for>
+   </target>
+   
+   <target name="ready_es_environment">
+      <!--clear es environment-->
+      <var name="IDXPREFIX" unset="true"/>
+      <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
+      <var name="esport" value="${ES_PORT}"/>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
+         <then>
+            <var name="esport" value="${ES_PORT_RELIABILITY}"/>
+         </then>
+      </if>
+      <var name="cmd" value="echo 'http://${ES_IP}:${esport}/${IDXPREFIX}*' | tr A-Z a-z | xargs curl -XDELETE"/>
+      
+      <sshexec host="${ES_IP}" 
+                           username="root" 
+                           password="jenkins" 
+                           trust="true"
+                           command="${cmd}" />
+      <sshexec host="${firsthost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="rm -rf ${INSTALL_DIR}/conf/sdbseadpter" />
+      <sshexec host="${firsthost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="mkdir -p ${INSTALL_DIR}/conf/sdbseadpter" />
+      <sshexec host="${firsthost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R" />
+      
+      <hostinfo prefix="host" />
+      <if>
+         <or>
+            <equals arg1="${DEPLOY_MODE}" arg2="G1D3"/>
+            <equals arg1="${DEPLOY_MODE}" arg2="G3D3"/>
+         </or>
+         <then>
+            <for param="dirtype">
+               <path>
+                  <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
+               </path>
+               <sequential>
+                  <var name="svcname" unset="true"/>
+                  <basename property="svcname" file="@{dirtype}"/>
+                  <mkdir dir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
+                  <copy file="${INSTALL_DIR}/conf/samples/sdbseadapter.conf" todir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
+                  
+                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchenginehost=localhost" value="searchenginehost=${ES_IP}"/>
+                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchengineport=9200" value="searchengineport=${esport}"/>
+                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="diaglevel=3" value="diaglevel=5"/>
+                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="optimeout=10000" value="optimeout=60000"/>
+                  <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)idxprefix=" replace="idxprefix=${IDXPREFIX}" byline="true"/>
+                  <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)datasvcname=" replace="datasvcname=${svcname}" byline="true"/>
+               </sequential>
+            </for>
+            <!--copy to other host -->
+            
+            <for list="${testhost_list}" param="testhost">
+               <sequential>
+                  <if>
+                     <equals arg1="@{testhost}" arg2="${host.NAME}" />
+                     <else>
+                        <echo message="${user}@@@{testhost}:${INSTALL_DIR}/conf/sdbseadpter"/>
+                        <sshexec host="@{testhost}"
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="mkdir -p ${INSTALL_DIR}/conf/sdbseadpter" />
+                        <scp todir="${user}@@@{testhost}:${INSTALL_DIR}/conf/sdbseadpter"
+                             password="${passwd}" 
+                             trust="true">
+                             <fileset dir="${INSTALL_DIR}/conf/sdbseadpter"/>
+                        </scp>
+                     </else>
+                  </if>
+                  <sshexec host="@{testhost}"
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R" />
+                  <sshexec host="@{testhost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="chmod 755 ${INSTALL_DIR}/conf/sdbseadpter -R" />
+                  
+                  <for param="dirtype">
+                     <path>
+                        <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
+                     </path>
+                     <sequential>
+                        <var name="svcname" unset="true"/>
+                        <basename property="svcname" file="@{dirtype}"/>
+                        <sshexec host="@{testhost}" 
+                                 username="${user}" 
+                                 password="${passwd}" 
+                                 trust="true"
+                                 command="nohup ${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} >/dev/null 2>&amp;1 &amp;" />
+                     </sequential>
+                  </for>
+               </sequential>
+            </for>
+
+         </then>
+      </if>
+   </target>
+   
+   <target name="ready_mvcc_spt">
+      <hostinfo prefix="host" />
+      <for list="${testhost_list}" param="testhost" >
+         <sequential>
+            <if>
+               <not>
+                  <equals arg1="@{testhost}" arg2="${firsthost}"/>
+               </not>
+               <then>
+                  <var name="stpserver02" value="@{testhost}" />
+               </then>
+            </if>
+         </sequential>
+      </for>
+      <for list="${testhost_list}" param="testhost" >
+         <sequential>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="mkdir -p ${INSTALL_DIR}/conf/stp" />
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="echo serverlist=${firsthost}:9622,${stpserver02}:9622 >> ${INSTALL_DIR}/conf/stp/stp.conf" />
+            
+            <if>
+               <or>
+                  <equals arg1="@{testhost}" arg2="${firsthost}"/>
+                  <equals arg1="@{testhost}" arg2="${stpserver02}"/>
+               </or>
+               <then>
+                  <var name="role" value="server"/>
+               </then>
+               <else>
+                  <var name="role" value="client"/>
+               </else>
+            </if>
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="echo -e 'role=${role}\ndiaglevel=5' >> ${INSTALL_DIR}/conf/stp/stp.conf" />
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/stp -R" />
+            <sshexec host="@{testhost}" 
+                     username="${user}" 
+                     password="${passwd}" 
+                     trust="true"
+                     command="${INSTALL_DIR}/bin/stpstart" />
+         </sequential>
+      </for>
+   </target>
+   
+   <target name="deploy" depends="">
+      <!--format host list-->
+      <propertyregex property="testhost_jsarr" input="${testhost_list}" regexp="," replace="','" defaultValue="${testhost_list}"/>
+      <var name="testhost_jsarr" value="['${testhost_jsarr}']"/>
+      
+      <!--create dbPath-->
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="PERFORMANCETEST_TPCC" />
+         <then>
+            <for list="${testhost_list}" param="testhost" parallel="true">
+               <sequential>
+                  <for list="${TPCC_DBPATH_LIST}" param="dbpath" parallel="false">
+                     <sequential>
+                     <sshexec host="@{testhost}" 
+                              username="${user}" 
+                              password="${passwd}" 
+                              trust="true"
+                              command="mkdir -p @{dbpath}" />
+                     <sshexec host="@{testhost}" 
+                              username="${user}" 
+                              password="${passwd}" 
+                              trust="true"
+                              command="chown sdbadmin:sdbadmin_group @{dbpath}" />
+                     </sequential>
+                  </for>
+               </sequential>
+            </for>
+         </then>
+         <elseif>
+            <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
+            <then>
+               <for list="${testhost_list}" param="testhost" parallel="true">
+                  <sequential>
+                     <for list="${RELIABILITYTEST_DBPATH_LIST}" param="dbpath" parallel="false">
+                        <sequential>
+                           <sshexec host="@{testhost}" 
+                                    username="${user}" 
+                                    password="${passwd}" 
+                                    trust="true"
+                                    command="mkdir -p @{dbpath}" />
+                           <sshexec host="@{testhost}" 
+                                    username="${user}" 
+                                    password="${passwd}" 
+                                    trust="true"
+                                    command="chown sdbadmin:sdbadmin_group @{dbpath}" />      
+                        </sequential>
+                     </for>
+                  </sequential>
+               </for>
+            </then>
+         </elseif>
+      </if>
+      
+      <!--copy sdb shell to localhost-->
+      <delete file="${CI_WORK_DIR}/sdb" failonerror="false"/>
+      <!--mkdir dir="${CI_WORK_DIR}"/-->
+      <sshexec host="${firsthost}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="cp ${INSTALL_DIR}/bin/sdb ${CI_WORK_DIR}" />
+      <sshexec host="${firsthost}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="chmod a+x ${CI_WORK_DIR}/sdb" /> 
+      <!--exec deploy.js-->
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="NORMALTEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="LARGEDATATEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="SYNCTEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="CONFIGURE"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="RELIABILITY"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="SMOKETEST" />
+         <then>
+            <var name="diagLevel" value="5"/>
+         </then>
+      </if>
+      <if>
+         <equals arg1="${TEST_TYPE}" arg2="PERFORMANCETEST_TPCC" />
+         <then>
+            <var name="diagLevel" value="3"/>
+            <var name="DEPLOY_MODE" value="TPCC"/>
+         </then>
+      </if>
+        
+      <if>
+         <equals arg1="${ISMVCC}" arg2="true" />
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="MVCC"/>
+         </then>
+      </if>
+      <if>
+         <and>
+             <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST" />
+             <equals arg1="${ISMVCC}" arg2="true" />
+         </and>
+         <then>
+            <var name="diagLevel" value="5"/>
+            <var name="DEPLOY_MODE" value="CONFIGURE"/>
+         </then>
+      </if>
+      <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
+      <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
+      <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};&quot;" />
+      <echo message="exec cmd: ${sdb_shell} ${deploy_cmd1} ${deploy_cmd2}"/>
+      <exec executable="${sdb_shell}" timeout="1200000" outputproperty="deploy_out" failonerror="true" logError="true">                                   
+         <arg line="${deploy_cmd1} ${deploy_cmd2}" />
+      </exec>
+      <echo message="${deploy_out}"/>
+   </target>
+
+</project>

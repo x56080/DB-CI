@@ -139,7 +139,7 @@
          </else>
       </if>
       
-      <var name="cmd" value="${cmd_debug} ${cmd_etp} ${cmd_cov} --all -j 64" />
+      <var name="cmd" value="${cmd_debug} ${cmd_etp} ${cmd_cov} --all -j 4" />
       <echo message="exec cmd: scons ${cmd}" />
       <exec executable="scons" dir="${srccode_dir}" failonerror="true" logError="true">
          <arg line="${cmd}" />
@@ -576,7 +576,7 @@
       <delete dir="${srccode_dir}/tools/server/php" failonerror="false"/>
       <mkdir dir="${srccode_dir}/tools/server/php"/>
       <copy todir="${srccode_dir}/tools/server/php">
-         <fileset dir="${srccode_dir}/tools/server/php_linux" includes="**/*"/>
+         <fileset dir="${srccode_dir}/tools/server/php_arm" includes="**/*"/>
       </copy>
       <!--conf,bin,jdk -->
       <tar destfile="${release_dir}/sequoiadb-commit-build-tools.tar.gz" 
