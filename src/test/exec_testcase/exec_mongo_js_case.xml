@@ -149,9 +149,22 @@
             <touch file="@{reportdir}/.TESTCASE_FAIL"/>
             <for list="${testhost_list}" param="testhost" parallel="true">
                <sequential>  
-                  <staf location="local" service="FS"
-                        request="COPY FILE ${report_dir}/.TESTCASE_FAIL TODIRECTORY ${CI_WORK_DIR}/report TOMACHINE @{testhost}"
-                        throwBuildException="1"/>
+                  <if>
+                     <equals arg1="${plat_form}" arg2="ARM" />
+                     <then>
+                         <property name="user" value="root" />
+                         <property name="passwd" value="jenkins@123" />
+                         <scp file="${report_dir}/.TESTCASE_FAIL" 
+                              todir="${user}@@@@@{testhost}:${CI_WORK_DIR}/report"
+                              password="${passwd}"
+                              trust="true"/> 
+                     </then>
+                     <else>
+                         <staf location="local" service="FS"
+                               request="COPY FILE ${report_dir}/.TESTCASE_FAIL TODIRECTORY ${CI_WORK_DIR}/report TOMACHINE @{testhost}"
+                               throwBuildException="1"/>
+                     </else>
+                  </if>
                </sequential>
             </for>
          </then>

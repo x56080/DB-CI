@@ -36,6 +36,19 @@
    <macrodef name="compilemongoccase">
       <attribute name="srcdir"/>
       <sequential>         
+         <if>
+            <equals arg1="${plat_form}" arg2="ARM" />
+            <then>
+               <delete dir="@{srcdir}/lib" />
+               <delete dir="@{srcdir}/include" />
+               <move todir="@{srcdir}/lib">
+                  <fileset dir="@{srcdir}/lib_arm"/>
+               </move>
+               <move todir="@{srcdir}/include">
+                  <fileset dir="@{srcdir}/include_arm"/>
+               </move>
+            </then>
+         </if>
          <property name="scons_cmd" value="--dd " />         
          <echo message="exec cmd: scons ${scons_cmd}"/>
          <echo message="exec dir: @{srcdir}"/>
