@@ -194,6 +194,19 @@
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
+             <property name="env_detect_name" value="env_detect_arm.xml"/>
+             <property name="backup_log_file" value="backup_log_arm.xml"/>
+         </then>
+         <else>
+             <property name="deploy_file_name" value="install_deploy.xml"/>
+             <property name="env_detect_name" value="env_detect.xml"/>
+             <property name="backup_log_file" value="backup_log.xml"/>
+         </else>
+      </if> 
       
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />

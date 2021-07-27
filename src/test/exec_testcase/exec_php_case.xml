@@ -221,9 +221,18 @@
          
          <!--execute-->
          <if>
+            <equals arg1="${plat_form}" arg2="ARM" />
+            <then>
+               <property name="php_exec_file" value="php"/>
+            </then>
+            <else>
+               <property name="php_exec_file" value="php-bin"/>
+            </else>
+         </if>
+         <if>
             <equals arg1="@{phpver}" arg2="php5dot4" />
             <then>
-               <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/php"/>
+               <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
                <var name="ini_cmd" value=""/>
                <var name="libxml2_dir" value=""/>
             </then>
