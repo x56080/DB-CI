@@ -149,6 +149,11 @@
                  trust="true">
                  <fileset dir="${case_basedir}"/>
             </scp>
+            <sshexec host="@{tmphost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="chmod -R 777 ${CI_WORK_DIR}/testcase" />
          </sequential> 
       </for>
    </target>
