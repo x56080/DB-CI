@@ -144,11 +144,21 @@
       
       <for list="${testhost_list}" param="tmphost" parallel="false">
          <sequential> 
+            <sshexec host="@{tmphost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="mkdir -p ${CI_WORK_DIR}/testcase" />
             <scp todir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
                  password="${passwd}" 
                  trust="true">
                  <fileset dir="${case_basedir}"/>
             </scp>
+            <sshexec host="@{tmphost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="chmod -R 777 ${CI_WORK_DIR}/testcase" />
          </sequential> 
       </for>
    </target>

@@ -297,6 +297,7 @@
    <target name="execute_testcase">
       <var name="testscript_dir" value="${CI_WORK_DIR}/script/src/test" />     
       <var name="testscript_log" value="${testscript_dir}/normal_test.log" />
+      <hostinfo prefix="host" />
       
       <!--ready in remote host-->
       <for list="${testhost_list}" param="testhost" parallel="true">
@@ -343,6 +344,11 @@
             </scp>
          </sequential>
       </for>
+      <sshexec host="${host.NAME}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="chmod -R 777 ${WORKSPACE}/report" />
    </target>
    
    <target name="exec_remote_testcase">

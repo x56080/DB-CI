@@ -32,6 +32,12 @@
             <delete dir="${report_dir}" failonerror="false"/>
             <mkdir dir="${report_dir}"/>
             <replace file="${testcase_dir}/s3-tests-master/run_all_case.py" token='"report"' value='"${report_dir}"'/>
+            <if>
+               <equals arg1="${plat_form}" arg2="ARM" />
+               <then>
+                   <replace file="${testcase_dir}/s3-tests-master/s3tests.json" token='"jenkins"' value='"jenkins@123"'/>
+               </then>
+            </if>
             <execallcase pyversion="s3virtualenv_python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
          </then>
