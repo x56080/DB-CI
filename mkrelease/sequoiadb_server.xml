@@ -812,6 +812,11 @@
 
     <!--select compoment, and check environment-->
     <readyToInstallActionList>
+        <pathManipulation>
+            <action>absolutize</action>
+            <path>${installdir}</path>
+            <variable>installdir</variable>
+        </pathManipulation>
         <setInstallerVariable name="project.rollbackBackupDirectory" value="${installdir}/rollback/BackupDir_${time}"/>
 
         <throwError>
