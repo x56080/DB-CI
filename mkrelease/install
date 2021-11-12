@@ -11,7 +11,7 @@ INSTALLMODE=normal
 FORCE=false
 USERNAME=sdbadmin
 GROUPNAME=sdbadmin_group
-USERPASSWD=sdbadmin
+USERPASSWD=Sdbadmin@1024
 PORT=11790
 PROCESSAUTOSTART=true
 SMS=false
@@ -524,7 +524,7 @@ function build_help()
    echo "--groupname <groupname>        Group Name"
    echo "                               Default: sdbadmin_group"
    echo "--userpasswd <userpasswd>      Password"
-   echo "                               Default: sdbadmin"
+   echo "                               Default: Sdbadmin@1024"
    echo "--port <port>                  SequoiaDB Cluster Manager Port"
    echo "                               Default: 11790"
    echo "--processAutoStart <processAutoStart> Do You Want To Start Sequoiadb Processes When Machine Restart?"
