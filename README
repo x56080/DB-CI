@@ -1,0 +1,142 @@
+├─db-ci
+│  │  README
+│  │
+│  ├─doc                                                             CI文档
+│  │  │  add_new_machine.docx                                           CI新增机器文档
+│  │  │  ci_vm_original_parameter.txt                                   CI机器原始配置记录文件
+│  │  │  CI日常维护点.txt                                               CI日常工作文档
+│  │  │  hostlist.txt                                                   CI机器统计列表（旧）
+│  │  │  hostlist_new.txt                                               CI机器统计列表（新）
+│  │  │  name_rule.txt                                                  CI机器命名规范
+│  │  │
+│  │  ├─ci_improve_plan                                              CI设计文档
+│  │  │      ant_code_standard.docx
+│  │  │      CI develop guide.docx
+│  │  │      CI maintenance guide.docx
+│  │  │      ci_imporve_plan.xlsx
+│  │  │      ci_improve_analysis.docx
+│  │  │      ci_improve_design.docx
+│  │  │
+│  │  └─work_log                                                     CI问题处理记录
+│  │          connect_slavenode_error.txt
+│  │          create_cata_node_fail.txt
+│  │          excute_testcase_deadlock.txt
+│  │          git_up_checkout_specify_path_too_long_fail.txt
+│  │          install_staf.txt
+│  │          jenkins_hang.txt
+│  │          machine_crash.txt
+│  │          master_node_with_svn_time_out_of_sync.txt
+│  │          Python_stuct.txt
+│  │          rocksdb_compile.txt
+│  │          sdb_residue.txt
+│  │          slave_node_OOM.txt
+│  │          staf_cannot_find_com.ibm.staf.ant.taskdef.STAF.txt
+│  │          staf_remote_host.txt
+│  │          svn_up_403Forbidden .txt
+│  │          svn_up_Chinese_path_fail.txt
+│  │          windows_conn_error.txt
+│  │
+│  ├─lib                                                             CI工程jar包
+│  │      ant-contrib-1.0b2.jar
+│  │      STAFAnt.jar
+│  │
+│  ├─mkrelease                                                       DB打包工程脚本
+│  │  │  compatible.sh                                                  升级的版本比较脚本
+│  │  │  install                                                        ARM安装包的安装脚本
+│  │  │  normal_component.xml                                           x86安装包的安装脚本
+│  │  │  om_ver.conf                                                    om版本信息文件，用于参考是否可升级
+│  │  │  preUninstall.sh                                                卸载时预先执行的脚本
+│  │  │  sdbcm.service                                                  sdbcm系统服务
+│  │  │  sequoiadb_en.lng                                               x86安装包的中文语言包
+│  │  │  sequoiadb_server.xml                                           x86安装包脚本
+│  │  │  sequoiadb_zh.lng                                               x86安装包的中文语言包
+│  │  │  uninstall                                                      ARM安装包卸载脚本
+│  │  │  upgrade_component.xml                                          x86安装包升级脚本
+│  │  │  version.conf                                                   db版本信息文件，用于参考是否可升级
+│  │  │
+│  │  └─license                                                       SDB用户协议
+│  │          license_en.txt
+│  │          license_free_en.txt
+│  │          license_free_zh.txt
+│  │          license_zh.txt
+│  │
+│  ├─mysqlrelease                                                     mysql打包工程文件，已废弃可删除
+│  │  │  sequoiamysql_en.lng
+│  │  │  sequoiamysql_server.xml
+│  │  │  sequoiamysql_zh.lng
+│  │  │
+│  │  └─license
+│  │          license_en.txt
+│  │          license_zh.txt
+│  │
+│  └─src                                                              CI测试工程脚本存放目录
+│      │  build.xml                                                      CI工程调度总脚本
+│      │
+│      ├─compile                                                      编译工程脚本目录
+│      │      compile_csharp.xml                                         C#编译工程脚本
+│      │      compile_doc.xml                                            文档编译工程脚本
+│      │      compile_mysql.xml                                          mysql编译工程脚本（已废弃可删除）
+│      │      compile_sequoiadb.xml                                      x86的db编译工程脚本
+│      │      compile_sequoiadb_arm.xml                                  arm的db编译工程脚本
+│      │      print_version.c
+│      │
+│      ├─conf                                                         测试工程部署配置目录
+│      │      deploy_conf_CONFIGURE.js                                   配置工程部署脚本
+│      │      deploy_conf_G1D3.js                                        一组三节点工程部署脚本（暂时已废弃该工程）
+│      │      deploy_conf_G3D3.js                                        三组三节点工程部署脚本
+│      │      deploy_conf_MVCC.js                                        mvcc三组三节点工程部署脚本
+│      │      deploy_conf_RELIABILITY.js                                 可靠性三组三节点工程部署脚本
+│      │      deploy_conf_STANDALONE.js                                  独立模式工程部署脚本
+│      │      deploy_conf_TPCC.js                                        TPCC工程部署脚本（暂未使用）
+│      │      test.conf                                                  测试工程对应机器配置文件
+│      │
+│      ├─install_deploy                                               安装脚本目录
+│      │      deploy.js                                                  集群节点部署脚本
+│      │      install_deploy.xml                                         x86 sdb安装脚本
+│      │      install_deploy_arm.xml                                     arm sdb安装脚本
+│      │      install_deploy_om.xml                                      x86 sdb安装脚本（应该是写给om测试工程用的，但是后来没使用）
+│      │      install_deploy_pg.xml                                      pg安装脚本
+│      │      ready_package.xml                                          准备安装包脚本
+│      │
+│      ├─solve_result                                                 工程产物处理脚本目录
+│      │      backup_log.xml                                             x86备份日志脚本
+│      │      backup_log_arm.xml                                         arm备份日志脚本
+│      │      count_skiped_case.xml                                      统计skip用例脚本
+│      │      detect_db_datagroup.js                                     集群环境检测脚本
+│      │      env_detect.xml                                             x86工程结束后环境检测脚本
+│      │      env_detect_arm.xml                                         arm工程结束后环境检测脚本
+│      │      get_build_status.xml                                       获取构建状态结果脚本
+│      │      get_coverage.xml                                           收集覆盖率报告脚本
+│      │
+│      └─test                                                         测试工程脚本目录
+│          │  compile_testcase.xml                                       测试用例编译脚本
+│          │  configure_test.xml                                         x86配置工程调度脚本
+│          │  configure_test_arm.xml                                     arm配置工程调度脚本
+│          │  distribute_testcase.xml                                    用例分发脚本
+│          │  largedata_test.xml                                         大数据工程调度脚本
+│          │  normal_test.xml                                            x86三组三节点工程调度脚本
+│          │  normal_test_arm.xml                                        arm三组三节点工程调度脚本
+│          │  om_test.xml                                                om测试工程脚本
+│          │  performance_tpcc_test.xml                                  tpcc测试工程脚本
+│          │  reliability_test.xml                                       可靠性工程脚本
+│          │  smoke_test.xml                                             冒烟测试工程脚本（未使用）
+│          │  sync_test.xml                                              x86串行工程脚本
+│          │  sync_test_arm.xml                                          arm串行工程脚本
+│          │
+│          └─exec_testcase                                            测试用例执行脚本目录
+│              │  common.xml                                             工程环境配置和检测脚本
+│              │  exec_c_case.xml                                        执行c用例脚本
+│              │  exec_java_case.xml                                     执行java用例脚本
+│              │  exec_js_case.xml                                       执行js用例脚本
+│              │  exec_mongoc_case.xml                                   执行mongoc用例脚本
+│              │  exec_mongo_java_case.xml                               执行mongojava用例脚本
+│              │  exec_mongo_js_case.xml                                 执行mongojs用例脚本
+│              │  exec_om_case.xml                                       执行om用例脚本（未使用）
+│              │  exec_php_case.xml                                      执行php用例脚本
+│              │  exec_python_case_new.xml                               执行python
+│              │  report_fail_temple.xml                                 用例失败报告模板
+│              │  report_succ_temple.xml                                 用例成功报告模板
+│              │
+│              └─lib
+│                      detect_cluster.js
+│                      func.js
