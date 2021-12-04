@@ -1,12 +1,13 @@
 #!/bin/bash
-#the $lines is equal to the number of rows plus 1
-lines=619
+#the $lines is equal to the number of rows plus 1 
+lines=606
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
 SYS_TYPE='systemd'
 SYS_CONF_FILE=/etc/default/sequoiadb
 INSTALLDIR=/opt/sequoiadb
+LACK_FILE=""
 INSTALLMODE=normal
 FORCE=false
 USERNAME=sdbadmin
@@ -60,7 +61,7 @@ function checkHostnameIp()
       echo "Hostname may be null!" >&2 && exit 1;
    fi
    local machine_ip=`ip a | grep -w 'inet'|grep 'global'| awk '{print $2}' | awk -F / '{print $1}'`
-   local hostname_ip=`hostname -i`
+   local hostname_ip=`hostname -i`  
    echo "${machine_ip}" | grep -q "${hostname_ip}"
    if [ $? != 0 ]; then
       echo "The ip(${hostname_ip}) of host(${machine_hostname}) does not match any ip(${machine_ip}) of network adapter! Please check file '/etc/hosts' and run command 'ip a' for more detail."  >&2 && exit 1;
@@ -99,13 +100,20 @@ function checkCompatible()
 function exist_installation()
 {
    if test -s ${SYS_CONF_FILE}; then
-      INSTALLDIR=`grep 'INSTALL_DIR' /etc/default/sequoiadb | awk -F = '{print $2}'`
-      return 0;
-   elif [ ${INSTALLMODE} == "upgrade" ]; then
-      echo "File ${SYS_CONF_FILE} does not exist" >&2 && exit 1;
+      INSTALLDIR=`grep 'INSTALL_DIR' ${SYS_CONF_FILE} | awk -F = '{print $2}'`
+   else 
+      LACK_FILE="${SYS_CONF_FILE}"
+      return 1;
    fi
-   
-   return 1;
+   if [ ! -s ${INSTALLDIR}/bin/sequoiadb ]; then
+      LACK_FILE="${INSTALLDIR}/bin/sequoiadb"
+      return 1;
+   fi
+   if [ ! -s ${INSTALLDIR}/bin/sdbstop ]; then
+      LACK_FILE="${INSTALLDIR}/bin/sdbstop"
+      return 1;
+   fi
+   return 0;
 }
 
 function linkPhpLib()
@@ -237,19 +245,13 @@ function stopOM()
 
 function readyToInstall()
 {
-   #check disk
-   checkFreeDiskSpace
-   #check hostname and ip
-   checkHostnameIp
-   #check umask
-   checkUmask
    #check install user
    if [ ${USERNAME} == "root" ];then
       echo "The ROOT user is not allowed to create." >&2 && exit 1;
    fi
    #check process has been stoped or not
    if [ ${INSTALLMODE} == "cover" ]; then
-      local user_in_conf=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
+      local user_in_conf=`grep 'SDBADMIN_USER' ${SYS_CONF_FILE} | awk -F = '{print $2}'`
       if [ "${USERNAME}" != "${user_in_conf}" -a "${user_in_conf}" != '' ]; then
          echo "ERROR: The specified user is different from the original installation user." >&2 && exit 1;
       fi
@@ -268,7 +270,7 @@ function readyToInstall()
          su - ${USERNAME} -c "${INSTALLDIR}/bin/sdbcmtop" >> /dev/null 2>&1
          test $? -ne 0 && echo "Failed to stop sdbcm, execute: bin/sdbcmtop." >&2 && exit 1;
       fi
-   fi
+   fi 
    #check or create user group
    local exist_user=false
    local exist_group=false
@@ -301,35 +303,11 @@ function readyToInstall()
 
 function readyToUpgrade()
 {
-   #check install user
-   if [ ${USERNAME} == "root" ];then
-      echo "The ROOT user is not allowed to create." >&2 && exit 1;
-   fi
-   #check installdir
-   if [ ! -d ${INSTALLDIR} ]; then
-      echo "Install dir ${INSTALLDIR} not-existed" >&2
-      exit 1;
-   fi
-   if [[ "`ls -A ${INSTALLDIR}`" == "" ]]; then 
-      echo "Install dir ${INSTALLDIR} is empty" >&2
-      exit 1;
-   fi
-   #check sequoiadb
-   if [ ! -s ${INSTALLDIR}/bin/sequoiadb ]; then
-      echo "${INSTALLDIR}/bin/sequoiadb does not exist" >&2
-      exit 1;
-   fi
    #check user
-   USERNAME=`grep 'SDBADMIN_USER' /etc/default/sequoiadb | awk -F = '{print $2}'`
+   USERNAME=`grep 'SDBADMIN_USER' ${SYS_CONF_FILE} | awk -F = '{print $2}'`
    `grep "^${USERNAME}:" /etc/passwd >> /dev/null` 
    test $? -ne 0 && echo "User ${USERNAME} does not exist." >&2 && exit 1;
    GROUPNAME=`id -ng ${USERNAME}`
-   #check disk
-   checkFreeDiskSpace
-   #check hostname and ip
-   checkHostnameIp
-   #check umask
-   checkUmask
    #check OM
    HAS_OM=`grep "IsGeneral" ${INSTALLDIR}/conf/sdbcm.conf | awk -F = '{print $2}'`
    #check process has been stoped or not
@@ -492,8 +470,17 @@ function upgradeComponent()
 function installSDB()
 {
    echo "Start installation program ..." >&2
+   #check disk
+   checkFreeDiskSpace
+   #check hostname and ip
+   checkHostnameIp
+   #check umask
+   checkUmask
    exist_installation
-   if [ $? == 0 -a ${INSTALLMODE} != "cover" ]; then
+   local intallationIsExist=$?
+   if [ ${intallationIsExist} == 1 -a ${INSTALLMODE} == "upgrade" ]; then
+      echo "can't find necessary file ${LACK_FILE} " >&2 && exit 1;
+   elif [ ${intallationIsExist} == 0 -a ${INSTALLMODE} != "cover" ]; then
       upgradeComponent
    else
       normalComponent
