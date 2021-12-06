@@ -701,7 +701,7 @@
                     <description>${msg(Install.Paramers.user.password.description)}</description>
                     <explanation></explanation>
                     <value></value>
-                    <default>${username}</default>
+                    <default>Admin@1024</default>
                     <allowEmptyValue>0</allowEmptyValue>
                     <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
                     <width>20</width>

@@ -12,7 +12,7 @@ INSTALLMODE=normal
 FORCE=false
 USERNAME=sdbadmin
 GROUPNAME=sdbadmin_group
-USERPASSWD=sdbadmin
+USERPASSWD=Admin@1024
 PORT=11790
 PROCESSAUTOSTART=true
 SMS=false
@@ -498,20 +498,20 @@ function build_help()
 {
    echo "--version                      Display product information"
    echo "--prefix <prefix>              Installation Directory"
-   echo "                               Default: /opt/sequoiadb"
+   echo "                               Default: ${INSTALLDIR}"
    echo "--installmode <installmode>    Do you want to upgrade or cover"
    echo "                               Default:"
    echo "                               Allowed: upgrade cover"
    echo "--force <force>                Force Installation"
    echo "                               Default: false"
    echo "--username <username>          User Name"
-   echo "                               Default: sdbadmin"
+   echo "                               Default: ${USERNAME}"
    echo "--groupname <groupname>        Group Name"
-   echo "                               Default: sdbadmin_group"
+   echo "                               Default: ${GROUPNAME}"
    echo "--userpasswd <userpasswd>      Password"
-   echo "                               Default: sdbadmin"
+   echo "                               Default: ${USERPASSWD}"
    echo "--port <port>                  SequoiaDB Cluster Manager Port"
-   echo "                               Default: 11790"
+   echo "                               Default: ${PORT}"
    echo "--processAutoStart <processAutoStart> Do You Want To Start Sequoiadb Processes When Machine Restart?"
    echo "                               Default: true"
    echo "--SMS <SMS>                    Do You Want To Install OM Service?"
