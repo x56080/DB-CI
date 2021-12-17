@@ -180,7 +180,13 @@
                     <owner>root</owner>
                 </changeOwnerAndGroup>
                 <changePermissions permissions="6755" files="${installdir}/bin/sdbomtool"/>
-                
+
+                <changeOwnerAndGroup>
+                    <files>${installdir}</files>
+                    <group>${groupname}</group>
+                    <owner>${username}</owner>
+                </changeOwnerAndGroup>
+
                 <runProgram>
                     <abortOnError>0</abortOnError>
                     <showMessageOnError>0</showMessageOnError>
