@@ -13,21 +13,16 @@
                 <fileTest condition="not_exists" path="${installdir}/conf/limits.conf"/>
             </ruleList>
         </setInstallerVariable>
-        <consoleWrite text="${msg(Upgrade.NormalMsg.BeginUpgrade)}&#xA;"/>
-        <consoleWrite text="${msg(Upgrade.NormalMsg.CheckList)}&#xA;"/>
 
         <!--check /etc/default/sequoiadb exist-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.SystemConfExist)}"/>
         <throwError>
             <text>${msg(Upgrade.ErrorMsg.SystemConfExist)}</text>
             <ruleList>
                 <fileTest condition="not_exists" path="${sys_conf_file}"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--get sequoiadb user and installdir-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.GetInstallDir.GetUser)}"/>
         <setInstallerVariable name="installdir_inconf" value=""/>
         <setInstallerVariable name="username" value=""/>
         <propertiesFileGet>
@@ -50,12 +45,10 @@
                  <compareTextLength text="${installdir_inconf}" logic="equals" length="0"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--check installation exist-->
         <setInstallerVariable name="installdir" value="${installdir_inconf}"/>
         <setInstallerVariable name="project.rollbackBackupDirectory" value="${installdir}/rollback/BackupDir_${time}"/>
-        <consoleWrite text="${msg(Upgrade.NormalMsg.InstallationExist)}"/>
         <throwError>
             <text>${msg(Upgrade.ErrorMsg.InstallationExist)}</text>
             <ruleEvaluationLogic>or</ruleEvaluationLogic>
@@ -64,17 +57,14 @@
                 <fileTest condition="is_empty" path="${installdir}"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
         
         <!--check ${installdir}/bin/sequoiadb exist-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.SequoiadbExist)}"/>
         <throwError>
             <text>${msg(Upgrade.ErrorMsg.SequoiadbExist)}</text>
             <ruleList>
                 <fileTest condition="not_exists" path="${installdir}/bin/sequoiadb"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--check version compatibility-->
         <setInstallerVariable name="old_version" value="0"/>
@@ -145,7 +135,6 @@
             <destination>${installdir}/tmp_${time}</destination>
         </unpackFile>
 
-        <consoleWrite text="${msg(Upgrade.NormalMsg.JudgeComatible)}"/>
         <changePermissions files="${installdir}/tmp_${time}/compatible.sh" permissions="0755"/>
         <setInstallerVariableFromScriptOutput>
             <customErrorMessage>${msg(Upgrade.ErrorMsg.excuteComatibleSh)}</customErrorMessage>
@@ -161,24 +150,16 @@
                 <isFalse value="${is_compatible}"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--check disk-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.DiskSpace)}"/>
         <checkFreeDiskSpaceFunction/>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--check hostname and ip-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.HostnameIp)}"/>
         <checkHostnameIp/>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--check umask-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.Umask)}"/>
         <checkUmaskFunction/>
-        <consoleWrite text="ok&#xA;"/>
 
-        
         <propertiesFileGet>
             <file>${installdir}/conf/sdbcm.conf</file>
             <key>IsGeneral</key>
@@ -216,7 +197,6 @@
                 <isTrue value="${need_install_om}"/>
             </conditionRuleList>
             <actionList>
-                <consoleWrite text="${msg(Upgrade.NormalMsg.CheckOmPort)}"/>
                 <throwError>
                     <text>${msg(Install.ErrorMsg.CheckOmPort)}</text>
                     <ruleList>
@@ -226,8 +206,7 @@
                         </portTest>
                     </ruleList>
                 </throwError>
-                <consoleWrite text="ok&#xA;"/>
-                <consoleWrite text="${msg(Upgrade.NormalMsg.CheckHttpPort)}"/>
+
                 <throwError>
                     <text>${msg(Install.ErrorMsg.CheckHttpPort)}</text>
                     <ruleList>
@@ -237,12 +216,10 @@
                         </portTest>
                     </ruleList>
                 </throwError>
-                <consoleWrite text="ok&#xA;"/>
             </actionList>
         </if>
         
         <!--check user and get group-->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.UserExist)}"/>
         <throwError>
             <text>${msg(Upgrade.ErrorMsg.UserExist)}</text>
             <ruleList>
@@ -255,10 +232,8 @@
             <execArgs>-ng ${username}</execArgs>
             <customErrorMessage>${msg(Upgrade.ErrorMsg.GetGoup)}</customErrorMessage>
         </setInstallerVariableFromScriptOutput>
-        <consoleWrite text="ok&#xA;"/>
 
         <!--before upgrade, stop service -->
-        <consoleWrite text="${msg(Upgrade.NormalMsg.StopProcess)}"/>
         <runProgram>
             <program>service</program>
             <programArguments> sdbcm status</programArguments>
@@ -383,12 +358,9 @@
                 <compareText logic="does_not_equal" text="${SMS}" value="false"/>
             </ruleList>
         </throwError>
-        <consoleWrite text="ok&#xA;"/>
-        <consoleWrite text="${msg(Upgrade.NormalMsg.EndUpgrade)}&#xA;"/>
     </readyToInstallActionList>
 
     <folderList>
-        
         <folder>
             <name>files_except_conf</name>
             <actionList>
@@ -592,7 +564,6 @@
             <owner>${username}</owner>
         </changeOwnerAndGroup>
         <deleteFile path="${installdir}/sdbbp.log"/>
-        
     </postInstallationActionList>
 
     <installationAbortedActionList>
