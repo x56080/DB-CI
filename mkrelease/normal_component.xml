@@ -176,8 +176,6 @@
                  <compareText logic="equals" text="${program_exit_code}" value="0"/>
              </ruleList>
         </setInstallerVariable>
-
-
         <actionGroup>
             <ruleList>
                 <isTrue value="${exist_user}"/>
@@ -376,6 +374,10 @@
             <key>MD5</key>
             <value>${md5sum}</value>
         </propertiesFileSet>
+        <addTextToFile><!--Linefeed at the end of the file-->
+            <file>${sys_conf_file}</file>
+            <text>&#xA;</text>
+        </addTextToFile>
 
         <!--write conf/sdbcm.conf-->
         <propertiesFileSet>
