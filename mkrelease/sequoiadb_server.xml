@@ -575,7 +575,6 @@
                  <fileTest condition="is_not_empty" path="${installdir_inconf}"/>
             </ruleList>
         </setInstallerVariable>
-        
     </preInstallationActionList>
 
     <parameterList>
@@ -868,7 +867,18 @@
                 </ruleGroup>
             </ruleList>
         </setInstallerVariable>
-
+        
+        <consoleWrite>
+            <text>&#xA;${msg(Install.WarnMsg.unattendedModeAndInstalldirIsNotExist)}&#xA;</text>
+            <show>0</show>
+            <ruleEvaluationLogic>and</ruleEvaluationLogic>
+            <ruleList>
+                <compareValues logic="equals" value1="${installer_ui}" value2="unattended"/>
+                <compareValues value1="${installmode}" logic="does_not_equal" value2="cover"/>
+                <isFalse value="${exist_installation}"/>
+            </ruleList>
+        </consoleWrite>
+        
         <!--select component-->
         <componentSelection>
             <select>upgrade_component</select>
