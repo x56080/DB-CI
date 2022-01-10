@@ -50,6 +50,7 @@ Install.WarnMsg.checkHostname=没有配置主机名，主机名可能为空！
 Install.WarnMsg.checkHostnameIp=无法解析主机名${machine_hostname}到本机ip地址！请检查/etc/hosts中的映射关系。
 Install.WarnMsg.CheckMySQLPackage=${installer_directory}目录下不存在${product_version}版本sequoiasql-mysql安装包，SAC安装sequoiasql-mysql时需要手工将安装包拷贝到${installdir}/packet下。
 Install.WarnMsg.CheckPGSQLPackage=${installer_directory}目录下不存在${product_version}版本sequoiasql-postgresql安装包，SAC安装sequoiasql-postgresql时需要手工将安装包拷贝到${installdir}/packet下。
+Install.WarnMsg.unattendedModeAndInstalldirIsNotExist=检测到 /etc/default/sequoiadb 中存在安装路径配置项 "INSTALL_DIR=${installdir_inconf}" ，但是该路径不存在或为空，因此安装程序将以“cover”模式进行安装
 
 Cover.ErrorMsg.StopProcess=数据库相关进程未停止，请先用service sdbcm stop停止数据库服务
 Cover.Paramers.stopprocess.title=停止数据库相关进程
