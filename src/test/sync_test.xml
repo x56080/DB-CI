@@ -44,7 +44,7 @@
       <for list="${testhost_list},${DS_IP_SYNC},${DS_IP_SYNC2}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT 2m"
+                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
                   throwBuildException=""/>
          </sequential>
       </for>
