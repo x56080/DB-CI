@@ -50,6 +50,18 @@
             <exec>${installdir}/tmp_${time}/sdblist</exec>
             <execArgs>-t all | grep -v "Total" | wc -l</execArgs>
         </setInstallerVariableFromScriptOutput>
+
+        <showQuestion>
+            <title>${msg(Cover.Paramers.stopprocess.title)}</title>
+            <text>${msg(Cover.Paramers.stopprocess.explanation)}</text>
+            <variable>stop_db</variable>
+            <default>yes</default>
+            <ruleList>
+                <compareValues value1="${process_num}" logic="greater" value2="0"/>
+                <compareValues value1="${installer_ui}" logic="does_not_equal" value2="unattended"/>
+            </ruleList>
+        </showQuestion>
+
         <!--stop om  and  omplugin-->
         <if>
             <conditionRuleList>
@@ -74,17 +86,6 @@
             <execArgs>-t om | grep -v "Total" | wc -l</execArgs>
         </setInstallerVariableFromScriptOutput>
         
-        
-        <showQuestion>
-            <title>${msg(Cover.Paramers.stopprocess.title)}</title>
-            <text>${msg(Cover.Paramers.stopprocess.explanation)}</text>
-            <variable>stop_db</variable>
-            <default>yes</default>
-            <ruleList>
-                <compareValues value1="${process_num}" logic="greater" value2="0"/>
-                <compareValues value1="${installer_ui}" logic="does_not_equal" value2="unattended"/>
-            </ruleList>
-        </showQuestion>
         
         <if>
             <conditionRuleList>
@@ -212,10 +213,10 @@
                          <compareText logic="equals" text="${program_exit_code}" value="0"/>
                      </ruleList>
                 </setInstallerVariable>
-                <runProgram>
+                <runProgram><!--some shell don't support specifying password when adding user,set the password to use "echo username:userpassword | chpasswd" later-->
                     <customErrorMessage>${msg(Install.ErrorMsg.CreateUser)}</customErrorMessage>
                     <program>useradd</program>
-                    <programArguments>${username} -m -p ${userpasswd} -g ${groupname}  -s /bin/bash </programArguments>
+                    <programArguments>${username} -m  -g ${groupname}  -s /bin/bash </programArguments>
                 </runProgram>
                 <setInstallerVariable name="add_user_done" value="true">
                      <ruleList>
@@ -225,11 +226,19 @@
             </actionList>
         </actionGroup>
 
+        <setInstallerVariable name="change_password" value="true">
+            <ruleList>
+                <isTrue value="${add_user_done}"/>
+            </ruleList>
+        </setInstallerVariable>
         <runProgram>
             <program>echo</program>
             <programArguments> ${username}:${userpasswd} | chpasswd</programArguments>
+            <ruleList>
+                <isTrue value="${change_password}"/>
+            </ruleList>
         </runProgram>
-       
+
         <propertiesFileGet>
             <file>${installdir}/conf/sdbcm.conf</file>
             <key>IsGeneral</key>
@@ -510,7 +519,7 @@
                 <startServiceFunction/>
             </elseActionList>
         </if>
-        
+
         <!--start om-->
         <setInstallerVariable name="om_dbpath"  value="${installdir}/database/sms/${om_port}"/>
         <runProgram>
@@ -544,7 +553,7 @@
                 <fileExists path="${installer_directory}/sequoiasql-*-${product_version}-*.run" negate="0"/>
             </ruleList>
         </runProgram>
-        
+
         <changeOwnerAndGroup>
             <files>${installdir}/packet/*</files>
             <group>${groupname}</group>
