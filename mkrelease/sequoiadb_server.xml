@@ -199,7 +199,7 @@
                     <program>setcap</program>
                     <programArguments>'CAP_SYS_RESOURCE=+ep' ${installdir}/bin/sdbcmart</programArguments>
                 </runProgram>
-                
+
                 <if>
                     <conditionRuleList>
                         <fileExists path="${installdir}/doc/index.html"/>
@@ -424,7 +424,7 @@
                 </runProgram>
             </actionList>
         </actionDefinition>
-    
+
         <actionDefinition name="stopOM">
            <actionList>
               <runProgram>
@@ -491,17 +491,17 @@
                 <compareText text="${installer_command_line_arguments}" value="--prefix" logic="contains"/>
             </ruleList>
         </setInstallerVariable>
-        <setInstallerVariable name="parameter(user_data).parameter(username).ask" value="0">
+        <setInstallerVariable name="parameter(username).ask" value="0">
             <ruleList>
                 <compareText text="${installer_command_line_arguments}" value="--username" logic="contains"/>
             </ruleList>
         </setInstallerVariable>
-        <setInstallerVariable name="parameter(user_data).parameter(groupname).ask" value="0">
+        <setInstallerVariable name="parameter(groupname).ask" value="0">
             <ruleList>
                 <compareText text="${installer_command_line_arguments}" value="--groupname" logic="contains"/>
             </ruleList>
         </setInstallerVariable>
-        <setInstallerVariable name="parameter(user_data).parameter(userpasswd).ask" value="0">
+        <setInstallerVariable name="parameter(userpasswd).ask" value="0">
             <ruleList>
                 <compareText text="${installer_command_line_arguments}" value="--userpasswd" logic="contains"/>
             </ruleList>
@@ -529,14 +529,6 @@
         <setInstallerVariable name="parameter(SMS).ask" value="0">
             <ruleList>
                 <compareText text="${installer_command_line_arguments}" value="--SMS" logic="contains"/>
-            </ruleList>
-        </setInstallerVariable>
-        <setInstallerVariable name="parameter(user_data).ask" value="0">
-            <ruleEvaluationLogic>and</ruleEvaluationLogic>
-            <ruleList>
-                <compareText text="${installer_command_line_arguments}" value="--username"   logic="contains"/>
-                <compareText text="${installer_command_line_arguments}" value="--groupname"  logic="contains"/>
-                <compareText text="${installer_command_line_arguments}" value="--userpasswd" logic="contains"/>
             </ruleList>
         </setInstallerVariable>
 
@@ -676,57 +668,95 @@
             <description>${msg(Install.Paramers.Force.Description)}</description>
         </booleanParameter>
 
-        <parameterGroup name="user_data">
+        <stringParameter>
             <insertAfter>force</insertAfter>
             <title>${msg(Install.Paramers.user.title)}</title>
-            <explanation>${msg(Install.Paramers.user.explanation)}</explanation>
-            <value></value>
-            <default></default>
-            <parameterList>
-                <stringParameter>
-                    <name>username</name>
-                    <description>${msg(Install.Paramers.user.username.description)}</description>
-                    <explanation></explanation>
-                    <value>sdbadmin</value>
-                    <default>sdbadmin</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>40</width>
-                </stringParameter>
-                <stringParameter>
-                    <name>groupname</name>
-                    <description>${msg(Install.Paramers.user.groupname.description)}</description>
-                    <explanation></explanation>
-                    <value>${username}_group</value>
-                    <default>${username}_group</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <width>40</width>
-                </stringParameter>
-                <passwordParameter>
-                    <name>userpasswd</name>
-                    <description>${msg(Install.Paramers.user.password.description)}</description>
-                    <explanation></explanation>
-                    <value></value>
-                    <default>Admin@1024</default>
-                    <allowEmptyValue>0</allowEmptyValue>
-                    <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
-                    <width>20</width>
-                    <validationActionList>
-                        <throwError>
-                            <text>${msg(Install.Paramers.user.password.error)}</text>
-                            <ruleList>
-                                <compareText logic="equals" text="${userpasswd}" value=""/>
-                            </ruleList>
-                        </throwError>
-                    </validationActionList>
-                </passwordParameter>
-            </parameterList>
+            <name>username</name>
+            <description>${msg(Install.Paramers.user.username.description)}</description>
+            <explanation></explanation>
+            <value>sdbadmin</value>
+            <default>sdbadmin</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>40</width>
+            <postShowPageActionList>
+                <setInstallerVariable name="exist_user" value="false"/>
+                <setInstallerVariable>
+                    <name>exist_user</name>
+                    <value>true</value>
+                    <ruleList>
+                        <userTest logic="exists" username="${username}"/>
+                    </ruleList>
+                </setInstallerVariable>
+            </postShowPageActionList>
             <ruleList>
                 <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
+                <compareValues value1="${installmode}" value2="cover" logic="does_not_equal"/>
             </ruleList>
-        </parameterGroup>
-        
+        </stringParameter>
+
+        <booleanParameter name="change_password">
+            <insertAfter>username</insertAfter>
+            <title>Select whether you want to change the password</title>
+            <description>${msg(Install.Paramers.isChangePassword.description)}</description>
+            <explanation></explanation>
+            <value></value>
+            <default>false</default>
+            <cliOptionShow>0</cliOptionShow>
+            <ruleList>
+                <isTrue value="${exist_user}"/>
+                <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
+                <compareValues value1="${installmode}" value2="cover" logic="does_not_equal"/>
+            </ruleList>
+        </booleanParameter>
+
+        <passwordParameter>
+            <insertAfter>change_password</insertAfter>
+            <name>userpasswd</name>
+            <description>${msg(Install.Paramers.user.password.description)}</description>
+            <explanation></explanation>
+            <value></value>
+            <default>Admin@1024</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <descriptionRetype>${msg(Install.Paramers.user.reentry_password.description)}</descriptionRetype>
+            <width>20</width>
+            <validationActionList>
+                <throwError>
+                    <text>${msg(Install.Paramers.user.password.error)}</text>
+                    <ruleList>
+                         <compareText logic="equals" text="${userpasswd}" value=""/>
+                    </ruleList>
+                </throwError>
+            </validationActionList>
+            <ruleEvaluationLogic>or</ruleEvaluationLogic>
+            <ruleList>
+                <ruleGroup ruleEvaluationLogic="and">
+                    <ruleList>
+                        <isFalse value="${exist_user}"/>
+                        <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
+                        <compareValues value1="${installmode}" value2="cover" logic="does_not_equal"/>
+                    </ruleList>
+                </ruleGroup>
+                <isTrue value="${change_password}"/>
+            </ruleList>
+        </passwordParameter>
+
+        <stringParameter>
+            <insertAfter>userpasswd</insertAfter>
+            <name>groupname</name>
+            <description>${msg(Install.Paramers.user.groupname.description)}</description>
+            <explanation></explanation>
+            <value>${username}_group</value>
+            <default>${username}_group</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <width>40</width>
+            <ruleList>
+                <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
+                <compareValues value1="${installmode}" value2="cover" logic="does_not_equal"/>
+            </ruleList>
+        </stringParameter>
+
         <stringParameter name="port">
-            <insertAfter>user_data</insertAfter>
+            <insertAfter>groupname</insertAfter>
             <title>${msg(Install.Paramers.port.title)}</title>
             <description>${msg(Install.Paramers.port.Description)}</description>
             <explanation>${msg(Install.Paramers.port.explanation)}</explanation>
@@ -738,7 +768,7 @@
                 <compareValues value1="${installmode}" value2="upgrade" logic="does_not_equal"/>
             </ruleList>
         </stringParameter>
-        
+
         <booleanParameter name="processAutoStart">
             <insertAfter>port</insertAfter>
             <description>${msg(Install.Paramers.processAutoStart.Description)}</description>
@@ -788,7 +818,7 @@
                 <compareValues value1="${SMS}" value2="false" logic="does_not_equal"/>
             </ruleList>
         </stringParameter>
-    
+
         <stringParameter name="http_port">
             <insertAfter>om_port</insertAfter>
             <cliOptionName>http-port</cliOptionName>
@@ -884,14 +914,14 @@
         </componentSelection>
 
     </readyToInstallActionList>
-    
+
     <componentList>
         <include file="upgrade_component.xml" />
         <include file="normal_component.xml" />
     </componentList>
 
     <preUninstallationActionList>
-    
+
         <setInstallerVariableFromScriptOutput>
             <name>preuninstall_value</name>
             <exec>${installdir}/preUninstall.sh</exec>
@@ -967,7 +997,7 @@
         <!--delete file-->
         <deleteFile path="${installdir}/packet/${installerFilename}"/>
         <deleteFile path="${sys_conf_file}"/>
-        
+
         <!--delete environment-->
         <deleteEnv envFile="~${username}/.bashrc"/>
         <deleteEnv envFile="~${username}/.profile"/>
@@ -992,7 +1022,7 @@
             </ruleList>
         </consoleWrite>
     </postUninstallerCreationActionList>
-    
+
     <installerFilename>${product_shortname}-${product_version}-${platform}${enterpriseversion}-installer.${platform_exec_suffix}</installerFilename>
     <allowLanguageSelection>1</allowLanguageSelection>
     <allowedLanguages>en zh_CN</allowedLanguages>
