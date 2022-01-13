@@ -79,9 +79,9 @@
    <target name="backup_bin">
       <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
                      
-      <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
-         <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
-      </copy>
+      <staf location="local" service="FS"
+               request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}"
+               throwBuildException="1"/>
    </target>
    
    <target name="bacup_rg_info">
