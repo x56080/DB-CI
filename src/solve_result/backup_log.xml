@@ -78,10 +78,14 @@
    
    <target name="backup_bin">
       <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
-                     
-      <staf location="local" service="FS"
+      <if>  
+	   <available file="${INSTALL_DIR}/bin/" type="dir"/>
+	   <then>
+             <staf location="local" service="FS"
                request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}"
-               throwBuildException="1"/>
+	       throwBuildException="1"/>
+            </then>
+       </if>
    </target>
    
    <target name="bacup_rg_info">
