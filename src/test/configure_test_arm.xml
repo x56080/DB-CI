@@ -13,7 +13,7 @@
    <import file="${basedir}/src/test/distribute_testcase.xml" />
    <property file="${basedir}/src/conf/test.conf" /> 
    <property name="user" value="root" />
-   <property name="passwd" value="jenkins@123" />
+   <property name="passwd" value="Admin@2048" />
    
    <target name="main">     
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>

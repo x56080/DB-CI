@@ -9,7 +9,7 @@
       </classpath>
    </taskdef>
    <property name="user" value="root" />
-   <property name="passwd" value="jenkins@123" />
+   <property name="passwd" value="Admin@2048" />
    
    <import file="${basedir}/src/test/compile_testcase.xml" />
    <import file="${basedir}/src/test/distribute_testcase.xml" />

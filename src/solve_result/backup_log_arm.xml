@@ -14,7 +14,7 @@
       </classpath>
    </taskdef>
    <property name="user" value="root" />
-   <property name="passwd" value="jenkins@123" />
+   <property name="passwd" value="Admin@2048" />
    
    <target name="main">
       <if>
