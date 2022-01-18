@@ -32,7 +32,7 @@
       <var name="processrc" value="0"/>
       <for param="casefullname">
          <path>
-            <fileset dir="${testcase_dir}" includes="*" excludes="*.node.conf,node.conf.ini"/>
+            <fileset dir="${testcase_dir}" includes="*" excludes="*.node.conf,node.conf.ini,*.js"/>
          </path>
          <sequential>  
          
