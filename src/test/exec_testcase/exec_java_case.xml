@@ -169,7 +169,7 @@
                      <equals arg1="${plat_form}" arg2="ARM" />
                      <then>
                          <property name="user" value="root" />
-                         <property name="passwd" value="jenkins@123" />
+                         <property name="passwd" value="Admin@2048" />
                          <scp file="${report_dir}/.TESTCASE_FAIL" 
                               todir="${user}@@@{testhost}:${CI_WORK_DIR}/report"
                               password="${passwd}"
