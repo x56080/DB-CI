@@ -35,7 +35,7 @@
             <if>
                <equals arg1="${plat_form}" arg2="ARM" />
                <then>
-                   <replace file="${testcase_dir}/s3-tests-master/s3tests.json" token='"jenkins"' value='"jenkins@123"'/>
+                   <replace file="${testcase_dir}/s3-tests-master/s3tests.json" token='"jenkins"' value='"Admin@2048"'/>
                </then>
             </if>
             <execallcase pyversion="s3virtualenv_python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
