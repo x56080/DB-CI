@@ -15,7 +15,7 @@
    </taskdef>
    <import file="${basedir}/src/test/exec_testcase/common.xml" />
    
-   <target name="exec_js_testcase">
+   <target name="exec_js_testcase">   
       <property file="${basedir}/src/conf/test.conf" /> 
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <if>
@@ -157,7 +157,8 @@
          <equals arg1="${is_continue_exec}" arg2="false"/>
          <then>
             <touch file="@{reportdir}/.TESTCASE_FAIL"/>
-            <for list="${testhost_list}" param="testhost" parallel="true">
+            <for list="${testhost_lists}" param="testhost" parallel="true">
+               <property name="host" value="@{testhost}"/>
                <sequential>  
                   <if>
                      <equals arg1="${plat_form}" arg2="ARM" />
@@ -165,7 +166,7 @@
                          <property name="user" value="root" />
                          <property name="passwd" value="Admin@2048" />
                          <scp file="${report_dir}/.TESTCASE_FAIL" 
-                              todir="${user}@@@{testhost}:${CI_WORK_DIR}/report"
+                              todir="${user}@@${host}:${CI_WORK_DIR}/report"
                               password="${passwd}"
                               trust="true"/> 
                      </then>
