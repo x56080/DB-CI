@@ -6,6 +6,7 @@
 ============================================================================= -->
 
 <project default="normal_test_build" basedir="../">
+   <!--引入ant扩展包依赖-->
    <taskdef resource="net/sf/antcontrib/antlib.xml">
       <classpath>
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
@@ -13,7 +14,12 @@
    </taskdef>
    <include file="${basedir}/src/solve_result/get_build_status.xml" as="status_file"/>
    <property file="${basedir}/src/conf/test.conf" />
-   
+   <!--日志备份机器信息-->
+   <property name="logMachine" value="192.168.28.27" />
+   <property name="user" value="root" />
+   <property name="passwd" value="jenkins" /> 
+    
+   <!--三组三节点测试工程和独立模式-->
    <target name="normal_test_build">
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
       
@@ -39,12 +45,15 @@
              <property name="backup_log_file" value="backup_log.xml"/>
          </else>
       </if> 
+      <!--安装部署-->
       <if>
          <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
          <then>
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+               <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -82,7 +91,8 @@
             </ant>
          </then>
       </if>
-            
+      
+      <!--备份日志-->      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -94,11 +104,43 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
+                  <!--压缩打包远程日志文件-->
+                  <sshexec host="${logMachine}" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-  
+      <!--删除日志文件夹-->
+      <sshexec host="${logMachine}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
+      <!--获取操作系统类型-->
+      <getplatform resultProperty="plat_form"/>
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="password" value="Admin@2048" />    
+         </then>
+         <else>
+             <property name="password" value="jenkins" />  
+         </else>
+      </if>
+      <!--停止inotify进程-->
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+           <sshexec host="@{testhost}" 
+                    username="${user}" 
+                    password="${password}" 
+                    trust="true"
+                    command="killall -r inotify*" />
+         </sequential>
+      </for>
    </target>
    
    <target name="normal_mvcc_test_build">
@@ -271,6 +313,7 @@
    
    </target>
    
+   <!--同步测试工程-->
    <target name="sync_test_build">
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, BREAK_ON_FAILURE, COVERAGE, TESTCASE_LISTS"/>
       
@@ -302,6 +345,8 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
+               <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+               <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -352,11 +397,43 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
+                  <!--压缩打包远程日志文件-->
+                  <sshexec host="${logMachine}" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-   
+      <!--删除日志文件夹-->
+      <sshexec host="${logMachine}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
+      <!--获取操作系统类型-->
+      <getplatform resultProperty="plat_form"/>
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="password" value="Admin@2048" />    
+         </then>
+         <else>
+             <property name="password" value="jenkins" />  
+         </else>
+      </if>
+      <!--停止inotify进程-->
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+           <sshexec host="@{testhost}" 
+                    username="${user}" 
+                    password="${password}" 
+                    trust="true"
+                    command="killall -r inotify*" />
+         </sequential>
+      </for>
    </target>
    
    <target name="sync_mvcc_test_build">
@@ -525,6 +602,7 @@
    
    </target>
    
+   <!--配置工程-->
    <target name="configure_test_build">
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, TESTCASE_TYPE, BACKUP_LOG_WHEN_FAIL, COVERAGE, TESTCASE_LISTS"/>
       
@@ -557,6 +635,8 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
+               <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -611,11 +691,43 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
+                  <!--压缩打包远程日志文件-->
+                  <sshexec host="${logMachine}" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-  
+      <!--删除日志文件夹-->
+      <sshexec host="${logMachine}" 
+               username="${user}" 
+               password="${passwd}" 
+               trust="true"
+               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
+      <!--获取操作系统类型-->
+      <getplatform resultProperty="plat_form"/>
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+             <property name="password" value="Admin@2048" />    
+         </then>
+         <else>
+             <property name="password" value="jenkins" />  
+         </else>
+      </if>
+      <!--停止inotify进程-->
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential> 
+           <sshexec host="@{testhost}" 
+                    username="${user}" 
+                    password="${password}" 
+                    trust="true"
+                    command="killall -r inotify*" />
+         </sequential>
+      </for>
    </target>
    
    <target name="mvcc_test_build">

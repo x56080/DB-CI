@@ -18,6 +18,8 @@
          <pathelement location="${basedir}/lib/STAFAnt.jar" />
       </classpath>
    </taskdef>    
+   <property name="user" value="root" />
+   <property name="passwd" value="jenkins" />
    
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
@@ -43,7 +45,13 @@
       </if>
       <antcall target="deploy"/> 
       <antcall target="ready_es_environment"/>
-      
+      <!--调用日志归档-->
+      <if>
+         <isset property="PROJECT_NAME"/>
+         <then>
+             <antcall target="sync_log"/>
+         </then>
+      </if>
    </target>
    
    <target name="clear_cluster">
@@ -527,5 +535,55 @@
       </exec>
       <echo message="${deploy_out}"/>
    </target>
+   
+   <!--同步日志-->
+   <target name="sync_log"> 
+       <!--同步脚本存放位置-->
+       <var name="sync_script_dir" value="/opt"/>
+       <for list="${testhost_list}" param="testhost" parallel="false">
+           <sequential>
+                <!--拷贝脚本到同步脚本存放位置-->    
+                <scp todir="${user}@@@{testhost}:${sync_script_dir}"
+                             password="${passwd}" 
+                             trust="true">
+                             <fileset dir="${basedir}/src/conf">
+                                <include name="logsync.sh"/>
+                             </fileset>
+                </scp>
+                <!--拷贝日志远程备份地址配置-->
+                <scp todir="${user}@@@{testhost}:${sync_script_dir}"
+                             password="${passwd}" 
+                             trust="true">
+                             <fileset dir="${basedir}/src/conf">
+                                <include name="logAddrConfig"/>
+                             </fileset>
+                </scp>
+                <!--赋予脚本执行权限-->
+                <sshexec host="@{testhost}" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="chmod 777 ${sync_script_dir}/logsync.sh"/>
+                <!--创建备份目录-->
+                <sshexec host="192.168.28.27" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="mkdir -p /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
+                <sshexec host="192.168.28.27" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="chmod 777 /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
+                <!--执行日志归档脚本-->
+                <sshexec host="@{testhost}" 
+                         username="${user}" 
+                         password="${passwd}" 
+                         trust="true"
+                         command="${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} >>/dev/null &amp;"/>
+           </sequential>
+       </for>
+   </target>
+
 
 </project>
