@@ -572,12 +572,12 @@
                  <!--创建备份目录-->
                 <sshexec host="192.168.28.27" 
                          username="${user}" 
-                         password="${passwd}" 
+                         password="jenkins" 
                          trust="true"
                          command="mkdir -p /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
                 <sshexec host="192.168.28.27" 
                          username="${user}" 
-                         password="${passwd}" 
+                         password="jenkins" 
                          trust="true"
                          command="chmod 777 /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
                 <!--执行日志归档脚本-->
@@ -585,7 +585,9 @@
                          username="${user}" 
                          password="${passwd}" 
                          trust="true"
-                         command="${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} >>/dev/null &amp;"/>
+                         command="${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} >>/dev/null &amp;"
+                         failonerror="false"
+                         timeout="5000"/>
            </sequential>
        </for>
    </target>

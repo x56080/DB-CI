@@ -17,7 +17,7 @@
    <!--日志备份机器信息-->
    <property name="logMachine" value="192.168.28.27" />
    <property name="user" value="root" />
-   <property name="passwd" value="jenkins" /> 
+   <property name="logMachinePasswd" value="jenkins" /> 
     
    <!--三组三节点测试工程和独立模式-->
    <target name="normal_test_build">
@@ -107,7 +107,7 @@
                   <!--压缩打包远程日志文件-->
                   <sshexec host="${logMachine}" 
                          username="${user}" 
-                         password="${passwd}" 
+                         password="${logMachinePasswd}" 
                          trust="true"
                          command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
@@ -117,7 +117,7 @@
       <!--删除日志文件夹-->
       <sshexec host="${logMachine}" 
                username="${user}" 
-               password="${passwd}" 
+               password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
       <!--获取操作系统类型-->
@@ -138,7 +138,8 @@
                     username="${user}" 
                     password="${password}" 
                     trust="true"
-                    command="killall -r inotify*" />
+                    command="killall -r inotify*"
+                    failonerror="false" />
          </sequential>
       </for>
    </target>
@@ -400,7 +401,7 @@
                   <!--压缩打包远程日志文件-->
                   <sshexec host="${logMachine}" 
                          username="${user}" 
-                         password="${passwd}" 
+                         password="${logMachinePasswd}" 
                          trust="true"
                          command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
@@ -410,7 +411,7 @@
       <!--删除日志文件夹-->
       <sshexec host="${logMachine}" 
                username="${user}" 
-               password="${passwd}" 
+               password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
       <!--获取操作系统类型-->
@@ -431,7 +432,8 @@
                     username="${user}" 
                     password="${password}" 
                     trust="true"
-                    command="killall -r inotify*" />
+                    command="killall -r inotify*"
+                    failonerror="false" />
          </sequential>
       </for>
    </target>
@@ -694,7 +696,7 @@
                   <!--压缩打包远程日志文件-->
                   <sshexec host="${logMachine}" 
                          username="${user}" 
-                         password="${passwd}" 
+                         password="${logMachinePasswd}" 
                          trust="true"
                          command="tar czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
@@ -704,7 +706,7 @@
       <!--删除日志文件夹-->
       <sshexec host="${logMachine}" 
                username="${user}" 
-               password="${passwd}" 
+               password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
       <!--获取操作系统类型-->
@@ -725,7 +727,8 @@
                     username="${user}" 
                     password="${password}" 
                     trust="true"
-                    command="killall -r inotify*" />
+                    command="killall -r inotify*"
+                    failonerror="false" />
          </sequential>
       </for>
    </target>

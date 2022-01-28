@@ -167,7 +167,7 @@ function fullSyncLog() {
     do
         local prefixDirName=`dirname $(dirname $(dirname $dir))`
 	    dir=`echo $dir | sed "s#$prefixDirName#$prefixDirName/.#g"`
-        ensure source /etc/profile && rsync -avR  --exclude={'*.trap','*.core','core.*'} $dir $REMOTE_SERVER::backup/$syncPath
+        ensure source /etc/profile && rsync -avR  --exclude={'*.trap','*.core','core.*'} $dir 192.168.28.27::backup/$syncPath
     done
 }
 
@@ -186,7 +186,7 @@ function incrSyncLog() {
 	  if [[ $EVENT =~ "MOVE" ]] || [[ $EVENT =~ "CLOSE" ]];  then
 	            local prefixDirName=`dirname $(dirname $(dirname $DIRECTORY))`
 	            DIRECTORY=`echo $DIRECTORY | sed "s#$prefixDirName#$prefixDirName/.#g"`
-				ensure source /etc/profile && rsync -avR --exclude={'*.core','*.trap','core.*'} $DIRECTORY$FILE $REMOTE_SERVER::backup/$syncPath/
+				ensure source /etc/profile && rsync -avR --exclude={'*.core','*.trap','core.*'} $DIRECTORY$FILE 192.168.28.27::backup/$syncPath/
 				if [ $isopen -eq 1 ];then
 					exec 3>&-
 					isopen=0
