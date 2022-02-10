@@ -158,8 +158,9 @@
          <then>
             <touch file="@{reportdir}/.TESTCASE_FAIL"/>
             <for list="${testhost_lists}" param="testhost" parallel="true">
-               <property name="host" value="@{testhost}"/>
-               <sequential>  
+               <sequential>
+                  <!--为testhost重新赋值-->
+                  <property name="host" value="@{testhost}"/>
                   <if>
                      <equals arg1="${plat_form}" arg2="ARM" />
                      <then>
@@ -175,7 +176,9 @@
                                request="COPY FILE ${report_dir}/.TESTCASE_FAIL TODIRECTORY ${CI_WORK_DIR}/report TOMACHINE @{testhost}"
                                throwBuildException="1"/>
                      </else>
-                  </if> 
+                  </if>
+                  <!--取消host变量之前设置的值-->
+                  <var name="host" unset="true"/>     
                </sequential>
             </for>
          </then>
