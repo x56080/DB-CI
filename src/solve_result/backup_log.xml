@@ -78,14 +78,18 @@
    
    <target name="backup_bin">
       <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
+      <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
       <if>  
 	   <available file="${INSTALL_DIR}/bin/" type="dir"/>
 	   <then>
-             <staf location="local" service="FS"
-               request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}"
-	       throwBuildException="1"/>
-            </then>
-       </if>
+           <staf location="local" service="FS"
+                 request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin"
+	             throwBuildException="1"/>
+	       <staf location="local" service="PROCESS"
+                 request="START SHELL COMMAND chmod -R 777 ${CI_WORK_DIR}/${backup_reltdir}/bin"
+	             throwBuildException="0"/>
+       </then>
+      </if>
    </target>
    
    <target name="bacup_rg_info">

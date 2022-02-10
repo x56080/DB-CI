@@ -69,11 +69,12 @@
    </target>
    
    <target name="backup_bin">
-      <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
-                     
+      <echo>${line.separator}****begin to backup bin/sequoiadb</echo>             
       <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
          <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
       </copy>
+      <chmod dir="${CI_WORK_DIR}/${backup_reltdir}/bin" perm="ugo+rx"
+             includes="*"/>
    </target>
    
    <target name="bacup_rg_info">
