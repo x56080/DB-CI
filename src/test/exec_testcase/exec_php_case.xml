@@ -173,9 +173,13 @@
                </not>
             </and>
             <else>
+               <!--初始化配置参数-->
+               <var name="conf_rc1" value="0"/>
                <if>
                    <available file="@{testsuit}/node.conf" type="file"/>
                    <then>
+                         <!--取消配置参数之前的赋值-->
+                         <var name="conf_rc1" unset="true"/>
                          <changeconf mode="before" conffullname="@{testsuit}/node.conf" 
                                      rc="conf_rc1" casetype="${testcase_type}" 
                                      rptfullname="@{reportdir}/configure_before_${testsuit_name}.xml" />
