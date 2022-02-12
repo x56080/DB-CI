@@ -169,9 +169,16 @@
                </not>
             </and>
             <else>
-               <changeconf mode="before" conffullname="@{testsuit}/node.conf" 
-                           rc="conf_rc1" casetype="${testcase_type}" 
-                           rptfullname="@{reportdir}/configure_before_${testsuit_name}.xml" />
+               <var name="conf_rc1" value="0"/>
+               <if>
+                   <available file="@{testsuit}/node.conf" type="file"/>
+                   <then>
+                         <var name="conf_rc1" unset="true"/>
+                         <changeconf mode="before" conffullname="@{testsuit}/node.conf" 
+                                     rc="conf_rc1" casetype="${testcase_type}" 
+                                     rptfullname="@{reportdir}/configure_before_${testsuit_name}.xml" />
+                   </then>
+               </if>
 
                <if>
                   <equals arg1="${conf_rc1}" arg2="0" />
@@ -185,11 +192,15 @@
                                   rc="caserc"/>
                   </then>
                </if>
-
-               <changeconf mode="after" conffullname="@{testsuit}/node.conf.ini" 
-                           rc="conf_rc2" casetype="${testcase_type}" 
-                           rptfullname="@{reportdir}/configure_after_${testsuit_name}.xml"/>
-            
+               
+               <if>
+                  <available file="@{testsuit}/node.conf.ini" type="file"/>
+                  <then>
+                        <changeconf mode="after" conffullname="@{testsuit}/node.conf.ini" 
+                                    rc="conf_rc2" casetype="${testcase_type}" 
+                                    rptfullname="@{reportdir}/configure_after_${testsuit_name}.xml"/>
+                  </then>
+               </if>           
             </else>
          </if>
          
