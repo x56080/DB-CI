@@ -74,6 +74,8 @@
       <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
          <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
       </copy>
+      <chmod dir="${CI_WORK_DIR}/${backup_reltdir}/bin" perm="ugo+rx"
+             includes="*"/>
    </target>
    
    <target name="bacup_rg_info">
