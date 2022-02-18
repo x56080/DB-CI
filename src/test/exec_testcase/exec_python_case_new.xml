@@ -90,7 +90,7 @@
                      dir="@{testcasedir}" 
                      outputproperty="screen_output" 
                      resultproperty="rc" 
-                     failonerror="false" >
+                     failonerror="true" >
                   <arg line="run_all_case.py"/>
                </exec>
                <echo message="${screen_output}" />
@@ -134,7 +134,7 @@
                         dir="@{testcasedir}"
                         outputproperty="screen_output"
                         resultproperty="rc"
-                        failonerror="false" >
+                        failonerror="true" >
                   <arg line="run_all_case.py"/>
                   </exec>
                   <echo message="${screen_output}" />
