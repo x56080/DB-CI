@@ -260,8 +260,11 @@
 
       
       <!--compress-->
-      <tar destfile="${backup_fullname}" longfile="gnu" compression="gzip" 
-           basedir="${backup_basedir}" includes="${backup_reltdir}/**/*"/>
+      <tar destfile="${backup_fullname}" longfile="gnu" compression="gzip"> 
+           <tarfileset dir="${backup_basedir}" filemode="777" username="jenkins" group="jenkins">
+                <include="${backup_reltdir}/**/*"/>
+           </tarfileset>
+      </tar>
       <delete dir="${backup_basedir}/${backup_reltdir}"/>
    </target>
     
