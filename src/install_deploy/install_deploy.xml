@@ -161,7 +161,7 @@
       <property name="package_name" value="${package_name_part}.run" />     
       
       <!--copy run package to remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="FS"
                   request="CREATE DIRECTORY ${CI_WORK_DIR}"
