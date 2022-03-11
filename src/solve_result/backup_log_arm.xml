@@ -95,8 +95,11 @@
       <property name="tar_fullname" location="${CI_WORK_DIR}/${backup_reltdir}.tar.gz"/>
       <move file="${CI_WORK_DIR}/diaglog" tofile="${CI_WORK_DIR}/${backup_reltdir}"/>
       <delete dir="${tar_fullname}" failonerror="false"/>
-      <tar destfile="${tar_fullname}" longfile="gnu" compression="gzip" 
-           basedir="${CI_WORK_DIR}" includes="${backup_reltdir}/**/*"/>
+      <tar destfile="${tar_fullname}" longfile="gnu" compression="gzip"> 
+           <tarfileset dir="${CI_WORK_DIR}" filemode="777" username="root" group="root">
+               <include name="${backup_reltdir}/**/*"/>
+           </tarfileset>
+      </tar>
       <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
       
       <echo>${line.separator}****begin to send diaglog to backup host</echo>
