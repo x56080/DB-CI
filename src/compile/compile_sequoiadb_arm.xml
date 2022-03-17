@@ -27,7 +27,6 @@
       <antcall target="compile_hadoop_connector"/>
       <antcall target="compile_spark_connector"/>
       <antcall target="compile_spark3_connector"/>
-	  <antcall target="compile_flink_connector"/>
       <antcall target="compile_postgresql_plugin"/>
       <antcall target="compile_sequoias3"/>
       <antcall target="build_driver_package"/>
@@ -398,27 +397,6 @@
       </exec>
    </target>
    
-   <target name="compile_flink_connector">
-      <var name="src_dir" value="${srccode_dir}/driver/flink" />
-      <if>
-         <equals arg1="${IS_DEBUG}" arg2="true"/>
-         <then>
-            <gitversion dir="${src_dir}" version="fdw_svn" />
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}"/>
-         </then>
-         <else>
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}"/>
-         </else>
-      </if>
-      <exec executable="mvn" dir="${srccode_dir}/driver/flink" failonerror="true" logError="true">
-         <arg line=" ${cmd_mvn} " />
-      </exec>
-      <exec executable="mvn" dir="${srccode_dir}/driver/flink" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
-         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
-      </exec>
-   </target>
-   
    <target name="compile_php_driver">
       <property name="php_version_list" value="5.3.3,5.3.8,5.3.10,5.3.15,5.4.6,5.5.0,5.6.0,7.0.0,7.1.11" />
       <var name="src_dir" value="${srccode_dir}/driver/php" />
@@ -492,7 +470,6 @@
       <mkdir dir="${release_driver_dir}/Postgresql" />
       <mkdir dir="${release_driver_dir}/Python" />
       <mkdir dir="${release_driver_dir}/Spark" />
-      <mkdir dir="${release_driver_dir}/Flink" />
       
       <copy file="${srccode_dir}/driver/C#.Net/build/release/sequoiadb.dll" 
             tofile="${release_driver_dir}/C#/sequoiadb.dll" />
@@ -519,10 +496,6 @@
          <fileset dir="${srccode_dir}/driver/spark-3.0/target" includes="*.jar" />
       </copy>
 	  
-      <copy todir="${release_driver_dir}/Flink" >
-         <fileset dir="${srccode_dir}/driver/flink/target" includes="*.jar" />
-      </copy>
-
       <for param="filepath">
          <path>
             <fileset dir="${srccode_dir}/driver/java/target">
@@ -639,7 +612,6 @@
       <mkdir dir="${release_db_dir}/web" />
       <mkdir dir="${release_db_dir}/www" />
       <mkdir dir="${release_db_dir}/spark" />
-      <mkdir dir="${release_db_dir}/flink" />
       <mkdir dir="${release_db_dir}/plugins" />
       <mkdir dir="${release_db_dir}/plugins/SequoiaSQL" />
       
@@ -684,10 +656,6 @@
       
       <copy todir="${release_db_dir}/spark" >
          <fileset dir="${srccode_dir}/driver/spark-3.0/target" includes="*.jar" />
-      </copy>
-	  
-      <copy todir="${release_db_dir}/flink" >
-         <fileset dir="${srccode_dir}/driver/flink/target" includes="*.jar" />
       </copy>
       
       <copy todir="${release_db_dir}/plugins/SequoiaSQL" >

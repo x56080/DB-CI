@@ -165,7 +165,6 @@
                 <changePermissions permissions="0755" files="${installdir}/www/shell/*"/>
                 <changePermissions permissions="0755" files="${installdir}/install_om.sh"/>
                 <changePermissions permissions="0755" files="${installdir}/compatible.sh"/>
-		<changePermissions permissions="0755" files="${installdir}/upgrade/sdbupgradeidx"/>
                 <changePermissions permissions="0755" files="${installdir}/conf/script/{*.sh,*/*.sh}"/>
                 <changePermissions permissions="0755" files="${installdir}/java/jdk/bin/*"/>
                 <changePermissions permissions="0755" files="${installdir}/postgresql/*.so*"/>
