@@ -608,7 +608,6 @@
       <mkdir dir="${release_db_dir}/tools/sequoias3"/>
       <mkdir dir="${release_db_dir}/tools/sequoias3/java"/>
       <mkdir dir="${release_db_dir}/tools/sequoiafs"/>
-	  <mkdir dir="${release_db_dir}/tools/upgrade"/>
       <mkdir dir="${release_db_dir}/web" />
       <mkdir dir="${release_db_dir}/www" />
       <mkdir dir="${release_db_dir}/spark" />
@@ -797,10 +796,8 @@
       <copy todir="${release_db_dir}/tools/generateJSforcopycluster">
          <fileset dir="${srccode_dir}/tools/generateJSforcopycluster" includes="**/*" />
       </copy>
-      <copy todir="${release_db_dir}/tools/upgrade">
-         <fileset dir="${srccode_dir}/tools/upgrade" includes="**/*" />
-      </copy>
-      <chmod dir="${release_db_dir}/tools/upgrade" includes="**/*.sh" perm="u+x" />
+     
+     
       <copy todir="${release_db_dir}/www">
          <fileset dir="${srccode_dir}/client/admin/admintpl" />
       </copy>
