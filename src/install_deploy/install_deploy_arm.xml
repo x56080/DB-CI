@@ -115,7 +115,7 @@
             <sshexec host="@{testhost}" 
                      username="${user}" 
                      password="${passwd}" 
-                     failonerror="false"
+                     failonerror="true"
                      trust="true"
                      command="${INSTALL_DIR}/bin/stpstop; ${INSTALL_DIR}/uninstall --mode unattended; rm -rf ${INSTALL_DIR}" />
             <if>
