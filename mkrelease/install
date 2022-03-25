@@ -1,6 +1,12 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1 
-lines=606
+lines=612
+arch=$(uname -i)
+if [ ${arch} != "aarch64" ];then
+   echo "This installation package only suppports ARM!"
+   exit 1
+fi
+
 tail -n +$lines "$0" >/tmp/sequoiadb.tar.gz
 CURRENT_TIME=$(date "+%Y-%m-%d_%H:%M:%S")
 LOG_FILE=/tmp/install_${CURRENT_TIME}
