@@ -1,8 +1,11 @@
 #!/bin/bash
 #the $lines is equal to the number of rows plus 1 
-lines=612
+lines=615
 arch=$(uname -i)
-if [ ${arch} != "aarch64" ];then
+if [ "${arch}" == "unknown" ];then
+  uname -a |grep aarch64 -q && arch=aarch64
+fi
+if [ "${arch}" != "aarch64" ];then
    echo "This installation package only suppports ARM!"
    exit 1
 fi
