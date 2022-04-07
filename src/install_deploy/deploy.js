@@ -31,6 +31,18 @@ function main()
    }
 }
 
+function updateConf( db )
+{
+   try
+   {
+      db.getRecycleBin().alter({MaxItemNum:50,AutoDrop:true});
+   }
+   catch(e)
+   {
+      throw new Error(e) ;
+   }
+}
+
 function deployCluster()
 {
    println("------deploy mode: H" + hostNum + "G" + datagroupNum + "D" + replSize );
@@ -38,6 +50,7 @@ function deployCluster()
    createCata( db );
    createCoord( db );
    createData( db );
+   updateConf( db ) ;
    clean( db );
    println("------succed to deploy");
 }
