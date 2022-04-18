@@ -35,7 +35,7 @@ function updateConf( db )
 {
    try
    {
-      db.getRecycleBin().alter({Enable:true,MaxItemNum:50,AutoDrop:true});
+      db.getRecycleBin().alter({Enable:true,MaxItemNum:30,AutoDrop:true});
    }
    catch(e)
    {
