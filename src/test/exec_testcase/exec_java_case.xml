@@ -77,6 +77,9 @@
                <property name="dshostname" value="${DS_IP_RELIABILITY}"/>
                <property name="dssvcname" value="${DS_PORT}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="remoteuser" value="" />
+               <property name="remotepwd" value="" />
+               <property name="rootpwd" value="${passwd}" />
             </ant>
          </then>
          <elseif>
@@ -97,8 +100,8 @@
                   <property name="dssvcname" value="${DS_PORT}"/>
                   <property name="s3svcname" value="${S3SVCNAME}"/>
                   <property name="s3client" value="${s3tmpversion}" />
-				  <property name="remoteuser" value="${user}" />
-				  <property name="remotepassword" value="${passwd}" />
+		  <property name="remoteuser" value="${user}" />
+		  <property name="remotepwd" value="${passwd}" />
                   <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                   <property name="testhost_list" value="${testhost_list}"/>
                </ant>
@@ -119,8 +122,8 @@
                <property name="dssvcname" value="${DS_PORT}"/>
                <property name="s3svcname" value="${S3SVCNAME}"/>
                <property name="s3client" value="${s3tmpversion}" />
-			   <property name="remoteuser" value="${user}" />
-			   <property name="remotepassword" value="${passwd}" />
+	       <property name="remoteuser" value="${user}" />
+	       <property name="remotepwd" value="${passwd}" />
                <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>
