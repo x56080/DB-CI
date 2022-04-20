@@ -19,6 +19,18 @@
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <mkdir dir="${report_dir}"/>
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+            <then>
+               <property name="user" value="root" />
+               <property name="passwd" value="Admin@2048" />
+            </then>
+      <else>
+            <property name="user" value="root" />
+            <property name="passwd" value="jenkins" />
+      </else>
+      </if>
+
       <for param="fullfilename">
          <path>
             <fileset dir="${INSTALL_DIR}/java" includes="sequoiadb-driver-*.jar"/>
