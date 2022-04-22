@@ -77,8 +77,8 @@
                <property name="dshostname" value="${DS_IP_RELIABILITY}"/>
                <property name="dssvcname" value="${DS_PORT}"/>
                <property name="testhost_list" value="${testhost_list}"/>
-               <property name="remoteuser" value="" />
-               <property name="remotepwd" value="" />
+               <property name="remoteuser" value="${user}" />
+               <property name="remotepwd" value="${passwd}" />
                <property name="rootpwd" value="${passwd}" />
             </ant>
          </then>
