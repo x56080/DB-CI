@@ -91,7 +91,9 @@
             </ant>
          </then>
       </if>
-      
+
+      <antcall target="stopInotify"/>
+
       <!--备份日志-->      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -104,6 +106,7 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
+
                   <!--压缩打包远程日志文件-->
                   <sshexec host="${logMachine}" 
                          username="${user}" 
@@ -120,28 +123,6 @@
                password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-      <!--获取操作系统类型-->
-      <getplatform resultProperty="plat_form"/>
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-             <property name="password" value="Admin@2048" />    
-         </then>
-         <else>
-             <property name="password" value="jenkins" />  
-         </else>
-      </if>
-      <!--停止inotify进程-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential> 
-           <sshexec host="@{testhost}" 
-                    username="${user}" 
-                    password="${password}" 
-                    trust="true"
-                    command="killall -r inotify*"
-                    failonerror="false" />
-         </sequential>
-      </for>
    </target>
    
    <target name="normal_mvcc_test_build">
@@ -386,6 +367,8 @@
             </ant>
          </then>
       </if>
+
+      <antcall target="stopInotify"/>
       
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -414,28 +397,6 @@
                password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-      <!--获取操作系统类型-->
-      <getplatform resultProperty="plat_form"/>
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-             <property name="password" value="Admin@2048" />    
-         </then>
-         <else>
-             <property name="password" value="jenkins" />  
-         </else>
-      </if>
-      <!--停止inotify进程-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential> 
-           <sshexec host="@{testhost}" 
-                    username="${user}" 
-                    password="${password}" 
-                    trust="true"
-                    command="killall -r inotify*"
-                    failonerror="false" />
-         </sequential>
-      </for>
    </target>
    
    <target name="sync_mvcc_test_build">
@@ -681,6 +642,9 @@
             </ant>
          </then>
       </if>
+
+
+      <antcall target="stopInotify"/>
       
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -709,28 +673,6 @@
                password="${logMachinePasswd}" 
                trust="true"
                command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-      <!--获取操作系统类型-->
-      <getplatform resultProperty="plat_form"/>
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-             <property name="password" value="Admin@2048" />    
-         </then>
-         <else>
-             <property name="password" value="jenkins" />  
-         </else>
-      </if>
-      <!--停止inotify进程-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential> 
-           <sshexec host="@{testhost}" 
-                    username="${user}" 
-                    password="${password}" 
-                    trust="true"
-                    command="killall -r inotify*"
-                    failonerror="false" />
-         </sequential>
-      </for>
    </target>
    
    <target name="mvcc_test_build">
@@ -1082,6 +1024,31 @@
             <var name="TESTCASE_LISTS" value="" />
          </else>
       </if>
+   </target>
+   
+   <target name="stopInotify">
+      <!--获取操作系统类型-->
+      <getplatform resultProperty="plat_form"/>
+      <if>
+         <equals arg1="${plat_form}" arg2="ARM" />
+         <then>
+            <property name="password" value="Admin@2048" />
+         </then>
+         <else>
+            <property name="password" value="jenkins" />
+         </else>
+      </if>
+      <!--停止inotify进程-->
+      <for list="${testhost_list}" param="testhost" parallel="true">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${user}"
+                     password="${password}"
+                     trust="true"
+                     command="killall -r inotify*"
+                     failonerror="false" />
+         </sequential>
+      </for>
    </target>
    
    <macrodef name="getplatform">
