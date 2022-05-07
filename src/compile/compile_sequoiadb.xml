@@ -25,7 +25,7 @@
 
       <antcall target="compile_src"/>
       <dbversion srccodedir="${srccode_dir}" version="sequoiadb_version"/>
-      <antcall target="compile_java8_driver"/>
+      <antcall target="compile_java_driver"/>
       <antcall target="compile_php_driver"/>
       <antcall target="compile_python_driver"/>
       <antcall target="compile_pg_connector"/>
@@ -218,7 +218,7 @@
 
    </target>
    
-   <target name="compile_java8_driver">
+   <target name="compile_java_driver">
       <var name="src_dir" value="${srccode_dir}/driver/java" />
       <if>
          <equals arg1="${IS_DEBUG}" arg2="true"/>
@@ -256,6 +256,7 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/tools/om_plugins/sequoiasql/source" failonerror="true" logError="true">
          <arg line=" clean package -Drevision=${fdw_svn}" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
    
@@ -309,6 +310,7 @@
       <property name="open.source.hive_connector.filename" value="hive-sequoiadb-apache.jar" />
       <property name="cdh.hive_connector.filename" value="hive-sequoiadb-cdh-5.0.0-beta-2.jar" />     
       <ant antfile="${src_dir}/build.xml">
+         <property name="JAVA_HOME" value="${JAVA8_HOME}"/>
          <property name="java.driver.jar" value="${java_dir_path}"/>
          <property name="javac.base.dir" value="${srccode_dir}"/>
          <property name="root.dir" value="${src_dir}"/>
@@ -335,11 +337,13 @@
          </sequential>
       </for>
       <ant antfile="${src_dir}/build.xml">
+         <property name="JAVA_HOME" value="${JAVA8_HOME}"/>
          <property name="hadoop.version" value="1.2" />
          <property name="basedir" value="${src_dir}" />
          <property name="java.driver.jar" value="${java_dir_path}"/>
       </ant>
       <ant antfile="${src_dir}/build.xml">
+         <property name="JAVA_HOME" value="${JAVA8_HOME}"/>
          <property name="hadoop.version" value="2.2" />
          <property name="basedir" value="${src_dir}" />
          <property name="java.driver.jar" value="${java_dir_path}"/>
@@ -382,6 +386,7 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/spark" failonerror="true" logError="true">
          <arg line=" clean package -Drevision=${fdw_svn}" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
    
