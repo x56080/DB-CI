@@ -19,7 +19,7 @@
       <getplatform resultProperty="platform" />
       <antcall target="compile_src"/>
       <dbversion srccodedir="${srccode_dir}" version="sequoiadb_version"/>
-      <antcall target="compile_java_driver"/>
+      <antcall target="compile_java8_driver"/>
       <antcall target="compile_php_driver"/>
       <antcall target="compile_python_driver"/>
       <antcall target="compile_pg_connector"/>
@@ -27,7 +27,7 @@
       <antcall target="compile_hadoop_connector"/>
       <antcall target="compile_spark_connector"/>
       <antcall target="compile_spark3_connector"/>
-	  <antcall target="compile_flink_connector"/>
+      <antcall target="compile_flink_connector"/>
       <antcall target="compile_postgresql_plugin"/>
       <antcall target="compile_sequoias3"/>
       <antcall target="build_driver_package"/>
@@ -211,7 +211,7 @@
 
    </target>
    
-   <target name="compile_java_driver">
+   <target name="compile_java8_driver">
       <var name="src_dir" value="${srccode_dir}/driver/java" />
       <if>
          <equals arg1="${IS_DEBUG}" arg2="true"/>
@@ -228,6 +228,7 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
          <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
    
