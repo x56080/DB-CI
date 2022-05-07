@@ -25,7 +25,8 @@
 
       <antcall target="compile_src"/>
       <dbversion srccodedir="${srccode_dir}" version="sequoiadb_version"/>
-      <antcall target="compile_java_driver"/>
+      <antcall target="compile_java7_driver"/>
+      <antcall target="compile_java8_driver"/>
       <antcall target="compile_php_driver"/>
       <antcall target="compile_python_driver"/>
       <antcall target="compile_pg_connector"/>
@@ -217,7 +218,27 @@
 
    </target>
    
-   <target name="compile_java_driver">
+   <target name="compile_java7_driver">
+      <var name="src_dir" value="${srccode_dir}/driver/java7" />
+      <if>
+         <equals arg1="${IS_DEBUG}" arg2="true"/>
+         <then>
+            <gitversion dir="${src_dir}" version="fdw_svn" />
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}"/>
+         </then>
+         <else>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}"/>
+         </else>
+      </if>
+      <exec executable="mvn" dir="${srccode_dir}/driver/java7" failonerror="true" logError="true">
+         <arg line=" ${cmd_mvn} " />
+      </exec>
+      <exec executable="mvn" dir="${srccode_dir}/driver/java7" failonerror="true" logError="true">
+         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+      </exec>
+   </target>
+   
+   <target name="compile_java8_driver">
       <var name="src_dir" value="${srccode_dir}/driver/java" />
       <if>
          <equals arg1="${IS_DEBUG}" arg2="true"/>
@@ -234,6 +255,7 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
          <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
    
@@ -295,7 +317,7 @@
       </if>
       <for param="filepath">
          <path>
-            <fileset dir="${srccode_dir}/driver/java/target">
+            <fileset dir="${srccode_dir}/driver/java7/target">
                <include name="sequoiadb*.jar"/>
             </fileset>
          </path>
@@ -324,7 +346,7 @@
       <var name="src_dir" value="${srccode_dir}/driver/hadoop/hadoop-connector" />
       <for param="filepath">
          <path>
-            <fileset dir="${srccode_dir}/driver/java/target">
+            <fileset dir="${srccode_dir}/driver/java7/target">
                <include name="sequoiadb*.jar"/>
             </fileset>
          </path>
@@ -505,6 +527,19 @@
       <for param="filepath">
          <path>
             <fileset dir="${srccode_dir}/driver/java/target">
+               <include name="sequoiadb*.jar"/>
+            </fileset>
+         </path>
+         <sequential>
+            <var name="java_dir_path" value="@{filepath}"/>
+         </sequential>
+      </for>
+      <copy todir="${release_driver_dir}/Java" 
+            file="${java_dir_path}" />
+
+      <for param="filepath">
+         <path>
+            <fileset dir="${srccode_dir}/driver/java7/target">
                <include name="sequoiadb*.jar"/>
             </fileset>
          </path>
@@ -704,6 +739,18 @@
          <fileset dir="${srccode_dir}/client/include" includes="**/*" />
       </copy>
       
+      <for param="filepath">
+         <path>
+            <fileset dir="${srccode_dir}/driver/java7/target">
+               <include name="sequoiadb*.jar"/>
+            </fileset>
+         </path>
+         <sequential>
+            <var name="java_dir_path" value="@{filepath}"/>
+         </sequential>
+      </for>
+      <copy file="${java_dir_path}" todir="${release_db_dir}/java" />
+    
       <for param="filepath">
          <path>
             <fileset dir="${srccode_dir}/driver/java/target">
