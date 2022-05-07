@@ -217,10 +217,10 @@
          <equals arg1="${IS_DEBUG}" arg2="true"/>
          <then>
             <gitversion dir="${src_dir}" version="fdw_svn" />
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre7-r${fdw_svn}"/>
          </then>
          <else>
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre7"/>
          </else>
       </if>
       <exec executable="mvn" dir="${srccode_dir}/driver/java7" failonerror="true" logError="true">
@@ -238,10 +238,10 @@
          <equals arg1="${IS_DEBUG}" arg2="true"/>
          <then>
             <gitversion dir="${src_dir}" version="fdw_svn" />
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre8-r${fdw_svn}"/>
          </then>
          <else>
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre8"/>
          </else>
       </if>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
