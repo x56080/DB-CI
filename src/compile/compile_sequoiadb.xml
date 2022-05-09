@@ -34,6 +34,7 @@
       <antcall target="compile_hadoop_connector"/>
       <antcall target="compile_spark_connector"/>
       <antcall target="compile_spark3_connector"/>
+      <antcall target="compile_flink_connector"/>
       <antcall target="compile_postgresql_plugin"/>
       <antcall target="compile_sequoias3"/>
       <antcall target="build_driver_package"/>
@@ -234,7 +235,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java7" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean install -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
       </exec>
    </target>
    
@@ -254,7 +255,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean install -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -401,7 +402,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/spark" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn}" />
+         <arg line=" clean package -Drevision=${fdw_svn} -Dsequoiadb.driver.version=${sequoiadb_version}.jre7" />
       </exec>
    </target>
    
@@ -421,7 +422,28 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/spark-3.0" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true -Dsequoiadb.driver.version=${sequoiadb_version}.jre8" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
+      </exec>
+   </target>
+
+   <target name="compile_flink_connector">
+      <var name="src_dir" value="${srccode_dir}/driver/flink" />
+      <if>
+         <equals arg1="${IS_DEBUG}" arg2="true"/>
+         <then>
+            <gitversion dir="${src_dir}" version="fdw_svn" />
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}"/>
+         </then>
+         <else>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}"/>
+      </else>
+      </if>
+      <exec executable="mvn" dir="${srccode_dir}/driver/flink" failonerror="true" logError="true">
+         <arg line=" ${cmd_mvn} " />
+      </exec>
+      <exec executable="mvn" dir="${srccode_dir}/driver/flink" failonerror="true" logError="true">
+         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true -Dsequoiadb.driver.version=${sequoiadb_version}.jre8" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -499,6 +521,7 @@
       <mkdir dir="${release_driver_dir}/Postgresql" />
       <mkdir dir="${release_driver_dir}/Python" />
       <mkdir dir="${release_driver_dir}/Spark" /> 
+      <mkdir dir="${release_driver_dir}/Flink" />
       <copy file="${srccode_dir}/driver/C#.Net/build/release/sequoiadb.dll" 
             tofile="${release_driver_dir}/C#/sequoiadb.dll" />
       
@@ -522,6 +545,10 @@
       
       <copy todir="${release_driver_dir}/Spark" >
          <fileset dir="${srccode_dir}/driver/spark-3.0/target" includes="*.jar" />
+      </copy>
+      
+      <copy todir="${release_driver_dir}/Flink" >
+         <fileset dir="${srccode_dir}/driver/flink/target" includes="*.jar" />
       </copy>
 
       <for param="filepath">
@@ -578,6 +605,7 @@
             <move file ="${release_driver_dir}/Postgresql" tofile="${release_driver_dir}/Postgresql-${sequoiadb_version}-${platform}"/>
             <move file ="${release_driver_dir}/Python" tofile="${release_driver_dir}/Python-${sequoiadb_version}-${platform}"/>
             <move file ="${release_driver_dir}/Spark" tofile="${release_driver_dir}/Spark-${sequoiadb_version}-${platform}"/>
+            <move file ="${release_driver_dir}/Flink" tofile="${release_driver_dir}/Flink-${sequoiadb_version}-${platform}"/>
             
             
             <tar destfile="${release_driver_dir}/C#-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
@@ -596,6 +624,8 @@
                  basedir="${release_driver_dir}" includes="Python-${sequoiadb_version}-${platform}/**/*"/>     
             <tar destfile="${release_driver_dir}/Spark-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
                  basedir="${release_driver_dir}" includes="Spark-${sequoiadb_version}-${platform}/**/*"/>    
+            <tar destfile="${release_driver_dir}/Flink-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
+                 basedir="${release_driver_dir}" includes="Flink-${sequoiadb_version}-${platform}/**/*"/>    
          </then>
       </if>
       
@@ -652,6 +682,7 @@
       <mkdir dir="${release_db_dir}/web" />
       <mkdir dir="${release_db_dir}/www" />
       <mkdir dir="${release_db_dir}/spark" />
+      <mkdir dir="${release_db_dir}/flink" />
       <mkdir dir="${release_db_dir}/plugins" />
       <mkdir dir="${release_db_dir}/plugins/SequoiaSQL" />
       
@@ -698,7 +729,9 @@
          <fileset dir="${srccode_dir}/driver/spark-3.0/target" includes="*.jar" />
       </copy>
 	  
-      
+      <copy todir="${release_db_dir}/flink" >
+         <fileset dir="${srccode_dir}/driver/flink/target" includes="*.jar" />
+      </copy> 
       <copy todir="${release_db_dir}/plugins/SequoiaSQL" >
          <fileset dir="${srccode_dir}/tools/om_plugins/sequoiasql" includes="**/*" excludes="source/**/*"/>
       </copy>
