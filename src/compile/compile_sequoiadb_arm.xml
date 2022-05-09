@@ -211,7 +211,7 @@
 
    </target>
    
-   <target name="compile_java8_driver">
+   <target name="compile_java_driver">
       <var name="src_dir" value="${srccode_dir}/driver/java" />
       <if>
          <equals arg1="${IS_DEBUG}" arg2="true"/>
