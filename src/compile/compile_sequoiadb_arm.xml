@@ -250,6 +250,7 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
          <arg line=" clean install -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <env key="JAVA_HOME" path="${JAVA8_HOME}" /> 
       </exec>
    </target>
 
