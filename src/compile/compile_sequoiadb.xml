@@ -234,7 +234,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/java" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean install -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -256,7 +256,6 @@
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/tools/om_plugins/sequoiasql/source" failonerror="true" logError="true">
          <arg line=" clean package -Drevision=${fdw_svn}" />
-         <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
    
@@ -385,7 +384,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/spark" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn}" />
+         <arg line=" clean package -Drevision=${fdw_svn} -Dsequoiadb.driver.version=${sequoiadb_version}" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -406,7 +405,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/spark-3.0" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true -Dsequoiadb.driver.version=${sequoiadb_version}" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -427,7 +426,7 @@
          <arg line=" ${cmd_mvn} " />
       </exec>
       <exec executable="mvn" dir="${srccode_dir}/driver/flink" failonerror="true" logError="true">
-         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true" />
+         <arg line=" clean package -Drevision=${fdw_svn} -Dmaven.test.skip=true -Dsequoiadb.driver.version=${sequoiadb_version}" />
          <env key="JAVA_HOME" path="${JAVA8_HOME}" />
       </exec>
    </target>
@@ -576,6 +575,7 @@
             <move file ="${release_driver_dir}/Postgresql" tofile="${release_driver_dir}/Postgresql-${sequoiadb_version}-${platform}"/>
             <move file ="${release_driver_dir}/Python" tofile="${release_driver_dir}/Python-${sequoiadb_version}-${platform}"/>
             <move file ="${release_driver_dir}/Spark" tofile="${release_driver_dir}/Spark-${sequoiadb_version}-${platform}"/>
+            <move file ="${release_driver_dir}/Flink" tofile="${release_driver_dir}/Flink-${sequoiadb_version}-${platform}"/>
             
             
             <tar destfile="${release_driver_dir}/C#-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
@@ -594,12 +594,10 @@
                  basedir="${release_driver_dir}" includes="Python-${sequoiadb_version}-${platform}/**/*"/>     
             <tar destfile="${release_driver_dir}/Spark-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
                  basedir="${release_driver_dir}" includes="Spark-${sequoiadb_version}-${platform}/**/*"/>    
+            <tar destfile="${release_driver_dir}/Flink-${sequoiadb_version}-${platform}.tar.gz" compression="gzip" longfile="gnu" 
+                 basedir="${release_driver_dir}" includes="Flink-${sequoiadb_version}-${platform}/**/*"/>    
          </then>
       </if>
-      
-      
-      
-
    </target>
 
    
@@ -651,7 +649,7 @@
       <mkdir dir="${release_db_dir}/web" />
       <mkdir dir="${release_db_dir}/www" />
       <mkdir dir="${release_db_dir}/spark" />
-	  <mkdir dir="${release_db_dir}/flink" />
+      <mkdir dir="${release_db_dir}/flink" />
       <mkdir dir="${release_db_dir}/plugins" />
       <mkdir dir="${release_db_dir}/plugins/SequoiaSQL" />
       
