@@ -225,7 +225,7 @@
          <equals arg1="${IS_DEBUG}" arg2="true"/>
          <then>
             <gitversion dir="${src_dir}" version="fdw_svn" />
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre7-r${fdw_svn}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}.jre7"/>
          </then>
          <else>
             <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre7"/>
@@ -245,7 +245,7 @@
          <equals arg1="${IS_DEBUG}" arg2="true"/>
          <then>
             <gitversion dir="${src_dir}" version="fdw_svn" />
-            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre8-r${fdw_svn}"/>
+            <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}-r${fdw_svn}.jre8"/>
          </then>
          <else>
             <var name="cmd_mvn" value="versions:set -DnewVersion=${sequoiadb_version}.jre8"/>
