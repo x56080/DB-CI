@@ -709,7 +709,7 @@
 
         <booleanParameter name="change_password">
             <insertAfter>username</insertAfter>
-            <title>Select whether you want to change the password</title>
+            <title>${msg(Install.Paramers.user.password.change.title)}</title>
             <description>${msg(Install.Paramers.isChangePassword.description)}</description>
             <explanation></explanation>
             <value></value>
@@ -899,7 +899,7 @@
             </ruleList>
         </setInstallerVariable>
         
-        <consoleWrite>
+        <!-- consoleWrite>
             <text>&#xA;${msg(Install.WarnMsg.unattendedModeAndInstalldirIsNotExist)}&#xA;</text>
             <show>0</show>
             <ruleEvaluationLogic>and</ruleEvaluationLogic>
@@ -908,7 +908,7 @@
                 <compareValues value1="${installmode}" logic="does_not_equal" value2="cover"/>
                 <isFalse value="${exist_installation}"/>
             </ruleList>
-        </consoleWrite>
+        </consoleWrite -->
         
         <!--select component-->
         <componentSelection>
