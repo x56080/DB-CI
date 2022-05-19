@@ -5,6 +5,7 @@ Install.Paramers.user.groupname.description=用户组
 Install.Paramers.user.password.description=密码
 Install.Paramers.user.reentry_password.description=确认密码
 Install.Paramers.user.password.error=密码不能为空
+Install.Paramers.user.password.change.title=选择是否要更改密码
 Install.Paramers.isChangePassword.description=该用户已存在，是否需要修改密码？
 Install.Paramers.port.title=集群管理服务端口配置
 Install.Paramers.port.Description=集群管理服务端口

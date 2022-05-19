@@ -5,6 +5,7 @@ Install.Paramers.user.groupname.description=Group Name
 Install.Paramers.user.password.description=Password
 Install.Paramers.user.reentry_password.description=Re-enter
 Install.Paramers.user.password.error=The password must not be empty
+Install.Paramers.user.password.change.title=Select whether you want to change the password
 Install.Paramers.isChangePassword.description=The user already exists.Do you want to change the password?
 Install.Paramers.port.title=SDBCM Port
 Install.Paramers.port.Description=SequoiaDB Cluster Manager Port
