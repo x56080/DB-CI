@@ -30,7 +30,9 @@
                username="root"
                password="sequoiadb"
                trust="true"
-               command="/etc/init.d/sphinxsearch restart" />
+               command="/etc/init.d/sphinxsearch restart" 
+               failonerror="false" />
+                   
    </target>
 
    <target name="check_parameter">  
