@@ -32,10 +32,18 @@
 	  </if>
       <for param="fullfilename">
          <path>
-            <fileset dir="${INSTALL_DIR}/java" includes="sequoiadb-driver-*.jar"/>
+            <fileset dir="${INSTALL_DIR}/java" includes="sequoiadb-driver-*.jre8.jar"/>
          </path>
          <sequential>
-            <propertyregex property="tmpversion" input="@{fullfilename}" regexp="${INSTALL_DIR}/java/sequoiadb-driver-(.*).jar" select="\1" casesensitive="false"/>
+            <propertyregex property="tmpversion8" input="@{fullfilename}" regexp="${INSTALL_DIR}/java/sequoiadb-driver-(.*).jar" select="\1" casesensitive="false"/>
+         </sequential>
+      </for>
+      <for param="fullfilename">
+         <path>
+            <fileset dir="${INSTALL_DIR}/java" includes="sequoiadb-driver-*.jre7.jar"/>
+         </path>
+         <sequential>
+            <propertyregex property="tmpversion7" input="@{fullfilename}" regexp="${INSTALL_DIR}/java/sequoiadb-driver-(.*).jar" select="\1" casesensitive="false"/>
          </sequential>
       </for>
       <for param="s3fullfilename">
@@ -68,7 +76,7 @@
                <property name="casedir" value="${testcase_dir}"/>
                <property name="reportdir" value="${report_dir}"/>
                <property name="serial_number" value="${serial_number}"/>
-               <property name="sdbdriver" value="${tmpversion}" />
+               <property name="sdbdriver" value="${tmpversion8}" />
                <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
                <property name="hostname" value="${firsthost}"/>
                <property name="svcname" value="${SVCNAME}"/>
@@ -90,7 +98,7 @@
                   <property name="casedir" value="${testcase_dir}"/>
                   <property name="testcasetype" value="${testcase_type}"/>
                   <property name="reportdir" value="${report_dir}"/>
-                  <property name="sdbdriver" value="${tmpversion}" />
+                  <property name="sdbdriver" value="${tmpversion8}" />
                   <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
                   <property name="hostname" value="localhost"/>
                   <property name="svcname" value="${SVCNAME}"/>
@@ -107,12 +115,36 @@
                </ant>
             </then>
          </elseif>
+         <elseif>
+            <equals arg1="${testcase_type}" arg2="driver_java7"/>
+            <then>
+               <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
+                  <property name="casedir" value="${testcase_dir}"/>
+                  <property name="testcasetype" value="${testcase_type}"/>
+                  <property name="reportdir" value="${report_dir}"/>
+                  <property name="sdbdriver" value="${tmpversion7}" />
+                  <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
+                  <property name="hostname" value="localhost"/>
+                  <property name="svcname" value="${SVCNAME}"/>
+                  <property name="eshostname" value="${ES_IP}"/>
+                  <property name="essvcname" value="${ES_PORT}"/>
+                  <property name="dshostname" value="${DS_IP}"/>
+                  <property name="dssvcname" value="${DS_PORT}"/>
+                  <property name="s3svcname" value="${S3SVCNAME}"/>
+                  <property name="s3client" value="${s3tmpversion}" />
+                  <property name="remoteuser" value="${user}" />
+                  <property name="remotepwd" value="${passwd}" />
+                  <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
+                  <property name="testhost_list" value="${testhost_list}"/>
+               </ant>
+            </then>
+         </elseif>
          <else>
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>
                <property name="reportdir" value="${report_dir}"/>
-               <property name="sdbdriver" value="${tmpversion}" />
+               <property name="sdbdriver" value="${tmpversion8}" />
                <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
                <property name="hostname" value="localhost"/>
                <property name="svcname" value="${SVCNAME}"/>
