@@ -329,6 +329,11 @@
                      username="${user}" 
                      password="${passwd}" 
                      trust="true"
+                     failonerror="false"
+                     output="${testscript_log}"
+                     errorOutput="${testscript_log}"
+                     append="true"
+                     errAppend="true"
                      command="source /etc/profile; rm -rf ${testscript_log}; echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}; ${test_remote_cmd}" />
          </sequential>
       </for>
