@@ -111,6 +111,7 @@
                          username="${user}" 
                          password="${logMachinePasswd}" 
                          trust="true"
+                         failonerror="false"
                          command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
@@ -386,6 +387,7 @@
                          username="${user}" 
                          password="${logMachinePasswd}" 
                          trust="true"
+                         failonerror="false"
                          command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
@@ -662,6 +664,7 @@
                          username="${user}" 
                          password="${logMachinePasswd}" 
                          trust="true"
+                         failonerror="false"
                          command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
