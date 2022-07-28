@@ -15,7 +15,7 @@
       <property name="srccode_dir" location="${WORKSPACE}/sequoiadb" />
       <property name="release_dir" location="${WORKSPACE}/release" />    
 
-      <antcallback target="check_parameter" return="cmd_debug, cmd_etp, SPARK_VERSION, SCALA_VERSION, BIN_PACKAGE, COVERAGE, cmd_cov"/>
+      <antcallback target="check_parameter" return="cmd_debug, cmd_etp, hybrid, SPARK_VERSION, SCALA_VERSION, BIN_PACKAGE, COVERAGE, cmd_cov"/>
       
       <delete dir="${release_dir}" failonerror="false"/>
       <mkdir dir="${release_dir}"/>
@@ -86,7 +86,23 @@
             <var name="cmd_etp" value="" />
          </else>
       </if>
-      
+     
+      <if>
+         <isset property="IS_HYBRID"/>
+         <else>
+            <var name="IS_HYBRID" value="false" />
+         </else>
+      </if>
+      <if>
+         <equals arg1="${IS_HYBRID}" arg2="true" />
+         <then>
+            <var name="hybrid" value="--hybrid" />
+         </then>
+         <else>
+            <var name="hybrid" value="" />
+         </else>
+      </if>
+ 
       <if>
          <isset property="SPARK_VERSION"/>
          <else>           
@@ -148,7 +164,7 @@
          </else>
       </if>
       
-      <var name="cmd" value="${cmd_debug} ${cmd_etp} ${cmd_cov} --all -j 4" />
+      <var name="cmd" value="${cmd_debug} ${cmd_etp} ${hybrid} ${cmd_cov} --all -j 4" />
       <echo message="exec cmd: scons ${cmd}" />
       <exec executable="scons" dir="${srccode_dir}" failonerror="true" logError="true">
          <arg line="${cmd}" />
@@ -932,7 +948,7 @@
       <if>
          <equals arg1="${IS_ENTERPRISE}" arg2="true" />
          <then>
-            <property name="editon_str" value="-enterprise " />
+            <property name="editon_str" value="-enterprise-hybrid" />
          </then>
          <else>          
             <property name="editon_str" value="" />
