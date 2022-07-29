@@ -929,14 +929,22 @@
       <if>
          <equals arg1="${IS_ENTERPRISE}" arg2="true" />
          <then>
-            <property name="editon_str" value="-enterprise " />
+            <property name="editon_str" value="-enterprise" />
          </then>
          <else>          
             <property name="editon_str" value="" />
          </else>
       </if>
-
-      <var name="cmd" value="build sequoiadb_server.xml --setvars project.version=${sequoiadb_version} --setvars platform=${platform} --setvars enterpriseversion=${editon_str} --setvars project.outputDirectory=${release_dir}"/>
+       <if>
+         <equals arg1="${IS_HYBRID}" arg2="true" />
+         <then>
+            <property name="hybrid_str" value="-hybrid" />
+         </then>
+         <else>
+            <property name="hybrid_str" value="" />
+         </else>
+      </if>
+      <var name="cmd" value="build sequoiadb_server.xml --setvars project.version=${sequoiadb_version} --setvars platform=${platform} --setvars enterpriseversion=${editon_str}${hybrid_str} --setvars project.outputDirectory=${release_dir}"/>
       <echo>exec : tar -zcvf sequoiadb.tar.gz *</echo>
       <echo>exec in dir: ${release_dir}/sequoiadb</echo>
       <tar destfile="${release_dir}/sequoiadb.tar.gz" 
@@ -971,9 +979,18 @@
         </else>
       </if>
       <if>
+        <equals arg1="${IS_HYBRID}" arg2="true" />
+        <then>
+           <property name="hybrid_str" value="-hybrid" />
+        </then>
+        <else>
+           <property name="hybrid_str" value="" />
+        </else>
+      </if>
+      <if>
          <equals arg1="${BIN_PACKAGE}" arg2="true" />
          <then>
-         <tar destfile="${release_dir}/sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}-bin.tar.gz" 
+         <tar destfile="${release_dir}/sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}${hybrid_str}-bin.tar.gz" 
               compression="gzip" basedir="${release_dir}/sequoiadb/" includes="bin/**" />
          </then>
       </if>  

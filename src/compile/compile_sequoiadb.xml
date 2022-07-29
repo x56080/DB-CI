@@ -948,14 +948,23 @@
       <if>
          <equals arg1="${IS_ENTERPRISE}" arg2="true" />
          <then>
-            <property name="editon_str" value="-enterprise-hybrid" />
+            <property name="editon_str" value="-enterprise" />
          </then>
          <else>          
             <property name="editon_str" value="" />
          </else>
       </if>
 
-      <var name="cmd" value="build sequoiadb_server.xml --setvars project.version=${sequoiadb_version} --setvars platform=${platform} --setvars enterpriseversion=${editon_str} --setvars project.outputDirectory=${release_dir}"/>
+      <if>
+         <equals arg1="${IS_HYBRID}" arg2="true" />
+         <then>
+            <property name="hybrid_str" value="-hybrid" />
+         </then>
+         <else>
+            <property name="hybrid_str" value="" />
+         </else>
+      </if>
+      <var name="cmd" value="build sequoiadb_server.xml --setvars project.version=${sequoiadb_version} --setvars platform=${platform} --setvars enterpriseversion=${editon_str}${hybrid_str} --setvars project.outputDirectory=${release_dir}"/>
       <echo>exec cmd: builder ${cmd}</echo>
       <echo>exec in dir: ${release_dir}</echo>
       <exec executable="builder" dir="${release_dir}" failonerror="true" logError="true">
@@ -977,9 +986,18 @@
                  <property name="enterprise_str" value="" />
               </else>
             </if>
-            <var name="run_package_name" value="sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}-installer.run"/>
+            <if>
+              <equals arg1="${IS_HYBRID}" arg2="true" />
+              <then>
+                 <property name="hybrid_str" value="-hybrid" />
+              </then>
+              <else>
+                 <property name="hybrid_str" value="" />
+              </else>
+            </if>
+            <var name="run_package_name" value="sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}${hybrid_str}-installer.run"/>
             <chmod file="${release_dir}/${run_package_name}" perm="755" />
-            <var name="cmd" value="cd ${release_dir}; chown root:root ${run_package_name}; tar -zcvf sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}-installer.tar.gz ${run_package_name};chown jenkins:jenkins ${run_package_name};"/>
+            <var name="cmd" value="cd ${release_dir}; chown root:root ${run_package_name}; tar -zcvf sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}${hybrid_str}-installer.tar.gz ${run_package_name};chown jenkins:jenkins ${run_package_name};"/>
             <staf location="local" service="PROCESS"
                   request="START SHELL COMMAND ${cmd}  WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
@@ -998,9 +1016,18 @@
         </else>
       </if>
       <if>
+        <equals arg1="${IS_HYBRID}" arg2="true" />
+        <then>
+           <property name="hybrid_str" value="-hybrid" />
+        </then>
+        <else>
+           <property name="hybrid_str" value="" />
+        </else>
+      </if>
+      <if>
          <equals arg1="${BIN_PACKAGE}" arg2="true" />
          <then>
-         <tar destfile="${release_dir}/sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}-bin.tar.gz" 
+         <tar destfile="${release_dir}/sequoiadb-${sequoiadb_version}-${platform}${enterprise_str}${hybrid_str}-bin.tar.gz" 
               compression="gzip" basedir="${release_dir}/sequoiadb/" includes="bin/**" />
          </then>
       </if>  
