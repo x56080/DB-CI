@@ -212,7 +212,7 @@
                         <var name="excludelist" value="${excludelist},${excludepathfile}"/>
                      </sequential>
                   </for>
-                  <delete includeEmptyDirs="true">
+                  <delete includeEmptyDirs="true" verbose="true">
                      <fileset dir="@{casedir}" excludes="lib/**/*,test-mongo,testcase.conf,${excludelist}"/>
                   </delete>
                   <!--delete other testcase by testcaselist-->
