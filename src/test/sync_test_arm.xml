@@ -140,10 +140,15 @@
    </target>
       
    <target name="distribute_testcase">
-      <delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />
+      <!--<delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />-->
       
       <for list="${testhost_list}" param="tmphost" parallel="false">
-         <sequential> 
+         <sequential>
+      		<sshexec host="@{tmphost}" 
+                           username="${user}" 
+                           password="${passwd}" 
+                           trust="true"
+                           command="rm -rf ${CI_WORK_DIR}/testcase" />
             <sshexec host="@{tmphost}" 
                            username="${user}" 
                            password="${passwd}" 
