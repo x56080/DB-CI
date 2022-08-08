@@ -28,7 +28,7 @@
       </if>
       
       <property file="${basedir}/src/conf/test.conf" />
-      <property name="backup_reltdir" value="${TEST_TYPE}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
+      <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
       
       <antcall target="backup_remote_log" />
       <antcall target="collect_remote_log" />

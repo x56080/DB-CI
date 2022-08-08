@@ -104,6 +104,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
                   <!--压缩打包远程日志文件-->
@@ -205,6 +206,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
                </then>
@@ -287,6 +289,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
                </then>
@@ -380,6 +383,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
                   <!--压缩打包远程日志文件-->
@@ -480,6 +484,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
                </then>
@@ -657,6 +662,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
                   <!--压缩打包远程日志文件-->
@@ -758,6 +764,7 @@
                   <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
+                     <property name="SDBBRANCH" value="${SDBBRANCH}" />
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
                </then>
