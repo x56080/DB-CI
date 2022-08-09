@@ -97,12 +97,14 @@
          <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
          <var name="@{output}" unset="true"/>
          <var name="@{envisok}" unset="true"/>
-         <exec executable="${INSTALL_DIR}/bin/sdb" 
-               outputproperty="@{output}" 
-               resultproperty="@{envisok}"
-               failonerror="false">
-            <arg line="${cmd1} ${cmd2}" />
-         </exec>
+         <sshexec host="localhost"
+                  trust="true"
+                  username="sdbadmin"
+                  password="Admin@1024"
+                  outputproperty="@{output}" 
+                  resultproperty="@{envisok}"
+                  failonerror="false"
+                  command="${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>
          <echo message="${@{output}}" />       
       </sequential>
    </macrodef>
