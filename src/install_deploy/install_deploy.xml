@@ -345,7 +345,7 @@
                         <basename property="svcname" file="@{dirtype}"/>
 
                         <staf location="@{testhost}" service="PROCESS"
-                              request="START SHELL COMMAND ${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} &amp; WAIT 10m RETURNSTDERR"
+                              request="START SHELL COMMAND su - sdbadmin -c '${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} &amp;' WAIT 10m RETURNSTDERR"
                               throwBuildException="1"/>
                      </sequential>
                   </for>
