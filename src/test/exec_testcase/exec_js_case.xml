@@ -24,6 +24,17 @@
             <var name="BREAK_ON_FAILURE" value="false"/>
          </else>
       </if>
+	  
+	    
+      <chmod owner="sdbadmin">
+         <dirset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
+         <fileset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+      </chmod>
+      <chgrp group="sdbadmin_group">
+         <dirset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+         <fileset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+      </chgrp>
+
       
       <prefix resultproperty="prefix"/>
       <detectenv detectfile="${testcase_dir}/lib/all_prepare.js" prefix="${prefix}" envisok="envrc"/>   
