@@ -25,10 +25,10 @@
          </else>
       </if>
 	  
-      <chmod owner="sdbadmin">
+      <chown owner="sdbadmin">
          <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
          <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-      </chmod>
+      </chown>
       <chgrp group="sdbadmin_group">
          <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
          <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
