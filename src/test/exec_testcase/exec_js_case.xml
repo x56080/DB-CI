@@ -27,12 +27,12 @@
 	  
 	    
       <chmod owner="sdbadmin">
-         <dirset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
-         <fileset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
+         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
       </chmod>
       <chgrp group="sdbadmin_group">
-         <dirset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-         <fileset="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
       </chgrp>
 
       
