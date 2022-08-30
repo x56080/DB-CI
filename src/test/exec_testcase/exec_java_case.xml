@@ -272,7 +272,7 @@
             <fileset dir="@{reportdir}" includes="**/*"/>
          </replaceregexp>
          <!--<replaceregexp match='&lt;\/error&gt;' -->
-         <!--               replace='${download_url}&lt;\/error&gt;' -->-->
+         <!--               replace='${download_url}&lt;\/error&gt;' -->
          <!--               flags="g" -->
          <!--               byline="true" -->
          <!--               encoding="utf-8">-->
