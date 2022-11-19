@@ -13,7 +13,7 @@ var coordnumPerhost = 1;
 var cataNum         = 3;                           //total catalog number
 var datagroupNum    = 3;
 var replSize        = 3;
-var diskList        = [ '/opt/sequoiadb' ];        //disks for dbPath
+var diskList        = [ '/home/sequoiadb' ];        //disks for dbPath
 
 if( typeof( diagLevel ) === "undefined" ) 
 {
