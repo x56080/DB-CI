@@ -577,8 +577,9 @@
             <var name="java_dir_path" value="@{filepath}"/>
          </sequential>
       </for>
-      <copy todir="${release_driver_dir}/Java" 
-            file="${java_dir_path}" />
+      <untar src="${srccode_dir}/jdk/Orcale_OpenJDK/jdk8/aarch64/OpenJDK8U-jdk_aarch64_linux_8u292b10.tar.gz" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/>
+      <!--copy todir="${release_driver_dir}/Java" 
+            file="${java_dir_path}" /-->
 
       <for param="filepath">
          <path>
