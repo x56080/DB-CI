@@ -757,7 +757,7 @@
       </for>
       <copy file="${java_dir_path}" todir="${release_db_dir}/java" />
 
-      <untar src="${srccode_dir}/java/Orcale_OpenJDK/jdk8/aarch64/OpenJDK8U-jdk_aarch64_linux_8u292b10.tar.gz" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/> 
+      <untar src="${srccode_dir}/jdk/Orcale_OpenJDK/jdk8/aarch64/OpenJDK8U-jdk_aarch64_linux_8u292b10.tar.gz" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/> 
       <!--copy todir="${release_db_dir}/java/jdk">
          <fileset dir="${srccode_dir}/java/jdk8_armlinux64/" />
       </copy-->

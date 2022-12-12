@@ -772,7 +772,7 @@
             <property name="php_version_arch" value="php_linux" />
          </then>        
       </if>
-      <untar src="${srccode_dir}/java/${jdk_arch}" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/>
+      <untar src="${srccode_dir}/jdk/${jdk_arch}" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/>
       <!--copy todir="${release_db_dir}/java/jdk">
          <fileset dir="${srccode_dir}/java/${jdk_arch}/" />
       </copy-->
