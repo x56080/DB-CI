@@ -767,13 +767,14 @@
       <if>
          <equals arg1="Linux" arg2="${os.name}" />
          <then>
-            <property name="jdk_arch" value="jdk_linux64"/>
+            <property name="jdk_arch" value="Orcale_OpenJDK/jdk8/x86_64/OpenJDK8U-jdk_x64_linux_8u292b10.tar.gz"/>
             <property name="php_version_arch" value="php_linux" />
          </then>        
       </if>
-      <copy todir="${release_db_dir}/java/jdk">
+      <untar src="${srccode_dir}/jdk/${jdk_arch}" dest="${release_db_dir}/java/jdk" overwrite="false" compression="gzip"/>
+      <!--copy todir="${release_db_dir}/java/jdk">
          <fileset dir="${srccode_dir}/java/${jdk_arch}/" />
-      </copy>
+      </copy-->
       
       <copy todir="${release_db_dir}/lib">
          <fileset dir="${srccode_dir}/client/lib" includes="**/*" />
