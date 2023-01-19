@@ -455,12 +455,16 @@
         <if>
            <conditionRuleList>
               <compareValues value1="${sys_type}" logic="equals" value2="SysV"/>
-              <compareValues value1="${exist_old_limits_conf}" logic="equals" value2="false"/>
+              <!--compareValues value1="${exist_old_limits_conf}" logic="equals" value2="false"/-->
            </conditionRuleList>
            <actionList>
                <delDefaultService/>
                <addDefaultService/>
            </actionList>
+           <elseActionList>
+               <delSystemdService/>
+               <addSystemdService/>
+           </elseActionList>
         </if>
         <setInstallerVariableFromScriptOutput>
             <name>node_num</name>
