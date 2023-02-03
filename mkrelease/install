@@ -169,7 +169,7 @@ function changePermissionOwner()
    chmod 755 ${INSTALLDIR}/compatible.sh
    chmod 755 ${INSTALLDIR}/preUninstall.sh
    chmod 755 ${INSTALLDIR}/conf/script/*/*.sh
-   chmod 755 ${INSTALLDIR}/java/jdk/bin/*
+   chmod 755 ${INSTALLDIR}/java/jdk/openjdk-8u292-b10/bin/*
    chmod 755 ${INSTALLDIR}/postgresql/*.so*
    chmod 777 /tmp
    test -f /tmp/sequoiadb && chmod 777 /tmp/sequoiadb
