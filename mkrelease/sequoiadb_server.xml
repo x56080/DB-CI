@@ -166,7 +166,7 @@
                 <changePermissions permissions="0755" files="${installdir}/install_om.sh"/>
                 <changePermissions permissions="0755" files="${installdir}/compatible.sh"/>
                 <changePermissions permissions="0755" files="${installdir}/conf/script/{*.sh,*/*.sh}"/>
-                <changePermissions permissions="0755" files="${installdir}/java/jdk/bin/*"/>
+                <changePermissions permissions="0755" files="${installdir}/java/jdk/openjdk-8u292-b10/bin/*"/>
                 <changePermissions permissions="0755" files="${installdir}/postgresql/*.so*"/>
                 <changePermissions permissions="0777" files="/tmp"/>
                 <changePermissions permissions="0777" files="/tmp/sequoiadb">
