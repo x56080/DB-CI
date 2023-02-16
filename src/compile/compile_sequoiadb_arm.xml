@@ -531,7 +531,7 @@
       </copy>
 	  
       <copy todir="${release_driver_dir}/Flink" >
-         <fileset dir="${srccode_dir}/driver/flink/target" includes="*with-dependencies.jar" />
+         <fileset dir="${srccode_dir}/driver/flink/target" includes="sdb-flink-connector-*.jar" />
       </copy>
 
       <for param="filepath">
