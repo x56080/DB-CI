@@ -810,8 +810,8 @@
       </for>
       <copy file="${java_dir_path}" todir="${release_db_dir}/java" />
 
-      <copy todir="${release_db_dir}/java/jdk">
-         <fileset dir="${srccode_dir}/java/jdk8_armlinux64/" />
+      <!--copy todir="${release_db_dir}/java/jdk">
+         <fileset dir="${srccode_dir}/java/jdk8_armlinux64/" /-->
       </copy>
       
       <copy todir="${release_db_dir}/lib">
