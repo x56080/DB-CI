@@ -182,6 +182,10 @@
                               trust="true"/> 
                      </then>
                      <else>
+                        <staf location="@{testhost}" service="PROCESS"
+                               request="CREATE DIRECTORY ${CI_WORK_DIR}/report FULLPATH"
+                               throwBuildException="1"/>
+
                          <staf location="local" service="FS"
                                request="COPY FILE ${report_dir}/.TESTCASE_FAIL TODIRECTORY ${CI_WORK_DIR}/report TOMACHINE @{testhost}"
                                throwBuildException="1"/>
