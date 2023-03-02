@@ -622,8 +622,12 @@
          <fileset dir="${srccode_dir}/tools/server/php_linux" includes="**/*"/>
       </copy>
       <!--conf,bin,jdk -->
+      <mkdir dir="jdk/Orcale_OpenJDK/jdk8/x86_64/java/"/>
+      <gunzip src="jdk/Orcale_OpenJDK/jdk8/x86_64/OpenJDK8U-jdk_x64_linux_8u292b10.tar.gz" />
+      <untar src="jdk/Orcale_OpenJDK/jdk8/x86_64/OpenJDK8U-jdk_x64_linux_8u292b10.tar" dest="jdk/Orcale_OpenJDK/jdk8/x86_64/java" />
+      
       <tar destfile="${release_dir}/sequoiadb-commit-build-tools.tar.gz" 
-           compression="gzip" longfile="gnu" basedir="${srccode_dir}" includes="conf/**/*,bin/**/*,tools/server/php/bin/**/*,tools/sdbmemcheck" />
+           compression="gzip" longfile="gnu" basedir="${srccode_dir}" includes="conf/**/*,bin/**/*,jdk/Orcale_OpenJDK/jdk8/x86_64/java/**/*,tools/server/php/bin/**/*,tools/sdbmemcheck" />
    </target>
    
    <target name="copy_package_file" >
@@ -767,7 +771,7 @@
       <if>
          <equals arg1="Linux" arg2="${os.name}" />
          <then>
-            <property name="jdk_arch" value="Orcale_OpenJDK/jdk8/x86_64/OpenJDK8U-jdk_x64_linux_8u292b10.tar.gz"/>
+            <property name="jdk_arch" value="Orcale_OpenJDK/jdk8/x86_64/jdk/OpenJDK8U-jdk_x64_linux_8u292b10.tar.gz"/>
             <property name="php_version_arch" value="php_linux" />
          </then>        
       </if>

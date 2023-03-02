@@ -615,9 +615,12 @@
       <copy todir="${srccode_dir}/tools/server/php">
          <fileset dir="${srccode_dir}/tools/server/php_arm" includes="**/*"/>
       </copy>
+      <mkdir dir="jdk/Orcale_OpenJDK/jdk8/aarch64/java" />
+      <gunzip src="jdk/Orcale_OpenJDK/jdk8/aarch64/OpenJDK8U-jdk_aarch64_linux_8u292b10.tar.gz" />
+      <untar src="jdk/Orcale_OpenJDK/jdk8/aarch64/OpenJDK8U-jdk_aarch64_linux_8u292b10.tar" dest="jdk/Orcale_OpenJDK/jdk8/aarch64/java" />
       <!--conf,bin,jdk -->
       <tar destfile="${release_dir}/sequoiadb-commit-build-tools.tar.gz" 
-           compression="gzip" longfile="gnu" basedir="${srccode_dir}" includes="conf/**/*,bin/**/*,tools/server/php/bin/**/*,tools/sdbmemcheck" />
+           compression="gzip" longfile="gnu" basedir="${srccode_dir}" includes="conf/**/*,bin/**/*,tools/server/php/bin/**/*,jdk/Orcale_OpenJDK/jdk8/aarch64/java/**/*,tools/sdbmemcheck" />
    </target>
    
    <target name="copy_package_file" >
