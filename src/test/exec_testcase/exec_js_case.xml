@@ -182,7 +182,7 @@
                               trust="true"/> 
                      </then>
                      <else>
-                        <staf location="@{testhost}" service="PROCESS"
+                        <staf location="@{testhost}" service="FS"
                                request="CREATE DIRECTORY ${CI_WORK_DIR}/report FULLPATH"
                                throwBuildException="1"/>
 
