@@ -706,7 +706,7 @@
       </copy>
 	  
 	  <copy todir="${release_db_dir}/flink" >
-         <fileset dir="${srccode_dir}/driver/flink/target" includes="*with-dependencies.jar" />
+         <fileset dir="${srccode_dir}/driver/flink/target" includes="sdb-flink-connector-*.jar" />
       </copy>
       
       <copy todir="${release_db_dir}/plugins/SequoiaSQL" >
