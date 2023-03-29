@@ -82,8 +82,6 @@
                <property name="svcname" value="${SVCNAME}"/>
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT_RELIABILITY}"/>
-               <property name="dshostname" value="${DS_IP_RELIABILITY}"/>
-               <property name="dssvcname" value="${DS_PORT}"/>
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="remoteuser" value=""/>
                <property name="remotepwd" value=""/>
@@ -104,8 +102,6 @@
                   <property name="svcname" value="${SVCNAME}"/>
                   <property name="eshostname" value="${ES_IP}"/>
                   <property name="essvcname" value="${ES_PORT}"/>
-                  <property name="dshostname" value="${DS_IP_SYNC}"/>
-                  <property name="dssvcname" value="${DS_PORT}"/>
                   <property name="s3svcname" value="${S3SVCNAME}"/>
                   <property name="s3client" value="${s3tmpversion}" />
 		  <property name="remoteuser" value="${user}" />
@@ -128,8 +124,6 @@
                   <property name="svcname" value="${SVCNAME}"/>
                   <property name="eshostname" value="${ES_IP}"/>
                   <property name="essvcname" value="${ES_PORT}"/>
-                  <property name="dshostname" value="${DS_IP}"/>
-                  <property name="dssvcname" value="${DS_PORT}"/>
                   <property name="s3svcname" value="${S3SVCNAME}"/>
                   <property name="s3client" value="${s3tmpversion}" />
                   <property name="remoteuser" value="${user}" />
@@ -150,8 +144,6 @@
                <property name="svcname" value="${SVCNAME}"/>
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT}"/>
-               <property name="dshostname" value="${DS_IP}"/>
-               <property name="dssvcname" value="${DS_PORT}"/>
                <property name="s3svcname" value="${S3SVCNAME}"/>
                <property name="s3client" value="${s3tmpversion}" />
 	       <property name="remoteuser" value="${user}" />
