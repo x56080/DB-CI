@@ -55,11 +55,6 @@
                      command="ntpdate 192.168.20.200" />
          </sequential>
       </for>
-      <sshexec host="${DS_IP}" 
-                     username="root" 
-                     password="jenkins" 
-                     trust="true"
-                     command="ntpdate 192.168.20.200" />
    </target>
    
    <target name="check_parameter">  

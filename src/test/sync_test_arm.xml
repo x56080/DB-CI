@@ -47,16 +47,6 @@
                      command="ntpdate 192.168.20.200" />
          </sequential>
       </for>
-      <sshexec host="${DS_IP_SYNC}" 
-               username="root" 
-               password="jenkins" 
-               trust="true"
-               command="ntpdate 192.168.20.200" />
-      <sshexec host="${DS_IP_SYNC2}" 
-               username="root" 
-               password="jenkins" 
-               trust="true"
-               command="ntpdate 192.168.20.200" />
    </target>
    
    <target name="ready_testcase">      
