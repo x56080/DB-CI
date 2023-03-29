@@ -47,7 +47,7 @@
    
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list},${host.NAME},${DS_IP_RELIABILITY}" param="testhost">
+      <for list="${testhost_list},${host.NAME}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT 2m"
