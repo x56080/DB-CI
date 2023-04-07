@@ -179,7 +179,11 @@
       <attribute name="reportdir" />
       <sequential>
          <var name="testcase_name" unset="true" />
-         <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
+         <var name="jsdir" unset="true"/>
+          <var name="suitname" unset="true"/>
+          <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
+          <dirname property="jsdir" file="@{jsfile}" />
+          <basename property="suitname" file="${jsdir}" />
          
          <if>
             <and>
@@ -191,7 +195,7 @@
             <else>
                <runonecase jsfile="@{casefullname}"
                            mongo="@{mongo}"
-                           report="@{reportdir}/${testcase_name}.xml"
+                           report="@{reportdir}/${suitname}_${testcase_name}.xml"
                            rc="caserc" />
             </else>
          </if>
