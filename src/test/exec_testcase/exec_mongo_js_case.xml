@@ -257,9 +257,9 @@
          <if>
          <equals arg1="${file.size}" arg2="0" />
          <then>
-         <return />
+         <echo message="skip @{jsfile}" />
          </then>
-         </if>
+         <else>
          <!--after-->
          <markinlog casename="@{jsfile}" marktype="end"/>
          
@@ -310,6 +310,8 @@
                <var name="ms5" value="EXCUTE before_usecase.js OUTPUT MESSAGE:&#10;@{beforeoutput}&#10;"/>
                <replace file="@{report}" token="ERROR_MESSAGE" value="${ms0}${ms1}${ms2}${ms3}${ms4}${ms5}${download_url}"/>
             </else>
+         </if>
+         </else>
          </if>
       </sequential>
    </macrodef>
