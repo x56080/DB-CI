@@ -182,7 +182,7 @@
          <var name="jsdir" unset="true"/>
          <var name="suitname" unset="true"/>
          <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
-         <dirname property="jsdir" file="@{jsfile}" />
+         <dirname property="jsdir" file="@{casefullname}" />
          <basename property="suitname" file="${jsdir}" />
          <if>
             <and>
@@ -253,6 +253,15 @@
          <echo message="${screen_output}" />
          
          <!--after-->
+         <var name="file.size" unset="true"/>
+         <length file="@{jsfile}" property="file.size" />
+         <echo message="@{jsfile}=${file.size}" />
+         <if>
+         <equals arg1="${file.size}" arg2="0" />
+         <then>
+           <eho message="skipi @{jsfile}" />
+         </then>
+         <else>
          <markinlog casename="@{jsfile}" marktype="end"/>
          
          <var name="end_time" unset="true"/>
@@ -302,6 +311,8 @@
                <var name="ms5" value="EXCUTE before_usecase.js OUTPUT MESSAGE:&#10;@{beforeoutput}&#10;"/>
                <replace file="@{report}" token="ERROR_MESSAGE" value="${ms0}${ms1}${ms2}${ms3}${ms4}${ms5}${download_url}"/>
             </else>
+         </if>
+         </else>
          </if>
       </sequential>
    </macrodef>
