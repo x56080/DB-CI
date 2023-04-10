@@ -259,7 +259,7 @@
          <if>
          <equals arg1="${file.size}" arg2="0" />
          <then>
-           <eho message="skipi @{jsfile}" />
+           <echo message="skipi @{jsfile}" />
          </then>
          <else>
          <markinlog casename="@{jsfile}" marktype="end"/>
