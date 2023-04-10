@@ -182,7 +182,7 @@
          <var name="jsdir" unset="true"/>
          <var name="suitname" unset="true"/>
          <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
-         <dirname property="jsdir" file="@{jsfile}" />
+         <dirname property="jsdir" file="@{casefullname}" />
          <basename property="suitname" file="${jsdir}" />
          
          <if>
@@ -252,7 +252,14 @@
             <arg line="${cmd}" />
          </exec>
          <echo message="${screen_output}" />
-         
+         <var name="file.size" unset="true"/> 
+         <length file="@{jsfile}" property="file.size" />
+         <if>
+         <equals arg1="${file.size}" arg2="0" />
+         <then>
+         <return />
+         </then>
+         </if>
          <!--after-->
          <markinlog casename="@{jsfile}" marktype="end"/>
          
