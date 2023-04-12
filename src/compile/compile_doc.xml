@@ -64,7 +64,7 @@
       </exec>
       
       <copy todir="${WORKSPACE}/release" failonerror="true" >
-         <fileset dir="${srccode_dir}/doc/build/output" includes="*.pdf,*.doc"/>
+         <fileset dir="${srccode_dir}/doc/build/output" includes="*.pdf"/>
       </copy>
       
       <delete dir="${srccode_dir}/compile_chm.bat" failonerror="false" />
