@@ -17,7 +17,7 @@ if ( typeof(UUID) == "undefined" ) { UUID = 1 ; }
 if ( typeof(UUNAME) == "undefined" ) { UUNAME = "ID"+UUID+"NAME" ; }
 if ( typeof(RSRVPORTBEGIN) == "undefined" ) 	{ RSRVPORTBEGIN = '26000'; }
 if ( typeof(RSRVPORTEND)   == "undefined" ) 	{ RSRVPORTEND   = '27000'; }
-if ( typeof(RSRVNODEDIR)   == "undefined" ) 	{ RSRVNODEDIR   = "/opt/sequoiadb/database/"; }
+if ( typeof(RSRVNODEDIR)   == "undefined" ) 	{ RSRVNODEDIR   = "/hdd/sequoiadb/database/"; }
 
 var COMMCSNAME = CHANGEDPREFIX + "_cs" ;
 var COMMCLNAME = CHANGEDPREFIX + "_cl" ;
