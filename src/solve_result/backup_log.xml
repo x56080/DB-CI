@@ -107,7 +107,7 @@
       <move file="${CI_WORK_DIR}/diaglog" tofile="${CI_WORK_DIR}/${backup_reltdir}"/>
       <delete dir="${tar_fullname}" failonerror="false"/>
       <tar destfile="${tar_fullname}" longfile="gnu" compression="gzip">
-           <tarfileset dir="${CI_WORK_DIR}" filemode="777" username="jenkins" group="jenkins"> 
+           <tarfileset dir="${CI_WORK_DIR}" filemode="777" username="sdbadmin" group="sdbadmin_group"> 
                 <include name="${backup_reltdir}/**/*"/>
            </tarfileset>
       </tar>
@@ -264,7 +264,7 @@
       
       <!--compress-->
       <tar destfile="${backup_fullname}" longfile="gnu" compression="gzip"> 
-           <tarfileset dir="${backup_basedir}" filemode="777" username="jenkins" group="jenkins">
+           <tarfileset dir="${backup_basedir}" filemode="777" username="sdbadmin" group="sdbadmin_group">
                 <include name="${backup_reltdir}/**/*"/>
            </tarfileset>
       </tar>

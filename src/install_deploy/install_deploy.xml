@@ -264,7 +264,7 @@
                   request="CREATE DIRECTORY ${INSTALL_DIR}/conf/sdbseadpter FULLPATH"
                   throwBuildException="1"/>
       <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND chown jenkins:jenkins ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
+            request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
             throwBuildException="1"/>
       <hostinfo prefix="host" />
       <if>
