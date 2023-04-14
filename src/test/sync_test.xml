@@ -83,7 +83,7 @@
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
       <!-- untar -->
-      <untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>
+      <!--<untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
    </target>
 
    <target name="compile_testcase">      
