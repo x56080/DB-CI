@@ -48,7 +48,7 @@
    
    <target name="clear_cluster">
       <var name="cmd_clear_cluster" 
-           value="${INSTALL_DIR}/bin/sdbcmtop;${INSTALL_DIR}/bin/sdbstop -t all;rm -rf ${INSTALL_DIR} "/>
+           value="${INSTALL_DIR}/bin/sdbcmtop;${INSTALL_DIR}/bin/sdbstop -t all;rm -rf ${INSTALL_DIR}; rm -rf ${METADATA_DIR} "/>
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="PROCESS"
