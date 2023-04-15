@@ -26,6 +26,10 @@
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
       
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
+      <exec executable="hostname" outputproperty="myhostname">
+         <arg line="-i" />
+      </exec>
+
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_normaltest" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
@@ -50,7 +54,7 @@
    
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost">
+      <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
@@ -93,7 +97,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list},localhost" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -186,7 +190,7 @@
 
             <case value="driver_php">               
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.php" excludes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </dividedfileele>
@@ -198,7 +202,7 @@
             
             <case value="sdv_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js"/>
                   </dividedfileele>
@@ -209,7 +213,7 @@
             </case>
             <case value="story_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
                   </dividedfileele>
@@ -232,7 +236,7 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -240,7 +244,7 @@
       </if>
       
       <!--copy tools-->
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
@@ -251,7 +255,7 @@
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -290,7 +294,7 @@
       <var name="testscript_log" value="${testscript_dir}/normal_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list},localhost" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
@@ -302,7 +306,7 @@
       
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/normal_test.xml exec_remote_testcase -DTESTCASE_TYPE=${TESTCASE_TYPE} -DTEST_TYPE=${TEST_TYPE} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER}" />
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"                  
                   request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}  WAIT 10m"
@@ -329,10 +333,10 @@
       
       <!--send report to control host-->
       <delete dir="${WORKSPACE}/report"/>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>                        
             <hostinfo prefix="host" />
-            <staf location="@{testhost},localhost" service="FS"
+            <staf location="@{testhost}" service="FS"
                   request="COPY DIRECTORY ${CI_WORK_DIR}/report TODIRECTORY ${WORKSPACE}/report TOMACHINE ${host.NAME} RECURSE"
                   throwBuildException="1"/>           
          </sequential>

@@ -21,6 +21,9 @@
    <target name="main">     
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
       
+      <exec executable="hostname" outputproperty="myhostname">
+         <arg line="-i" />
+      </exec>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
       <property name="testcase_outdir" location="${WORKSPACE}/tmp" />
@@ -46,7 +49,7 @@
 
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost">
+      <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
@@ -184,7 +187,7 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -192,7 +195,7 @@
       </if>
       
       <!--copy tools-->
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
@@ -203,7 +206,7 @@
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -248,7 +251,7 @@
       <var name="testscript_log" value="${testscript_dir}/configure_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
