@@ -93,7 +93,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list},localhost" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -290,7 +290,7 @@
       <var name="testscript_log" value="${testscript_dir}/normal_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list},localhost" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
@@ -332,7 +332,7 @@
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>                        
             <hostinfo prefix="host" />
-            <staf location="@{testhost}" service="FS"
+            <staf location="@{testhost},localhost" service="FS"
                   request="COPY DIRECTORY ${CI_WORK_DIR}/report TODIRECTORY ${WORKSPACE}/report TOMACHINE ${host.NAME} RECURSE"
                   throwBuildException="1"/>           
          </sequential>
