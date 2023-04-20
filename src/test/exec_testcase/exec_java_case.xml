@@ -18,6 +18,7 @@
    <target name="exec_java_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <mkdir dir="${report_dir}"/>
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
@@ -91,7 +92,7 @@
                   <property name="reportdir" value="${report_dir}"/>
                   <property name="sdbdriver" value="${tmpversion}" />
                   <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
-                  <property name="hostname" value="localhost"/>
+                  <property name="hostname" value="${firsthost}"/>
                   <property name="svcname" value="${SVCNAME}"/>
                   <property name="eshostname" value="${ES_IP}"/>
                   <property name="essvcname" value="${ES_PORT}"/>
@@ -105,13 +106,14 @@
             </then>
          </elseif>
          <else>
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>
                <property name="reportdir" value="${report_dir}"/>
                <property name="sdbdriver" value="${tmpversion}" />
                <property name="sdbdriverDir" value="${INSTALL_DIR}/java" />
-               <property name="hostname" value="localhost"/>
+               <property name="hostname" value="${firsthost}"/>
                <property name="svcname" value="${SVCNAME}"/>
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT}"/>

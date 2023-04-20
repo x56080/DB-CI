@@ -29,6 +29,8 @@
       
       <property file="${basedir}/src/conf/test.conf" />
       <property name="backup_reltdir" value="${TEST_TYPE}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       
       <antcall target="backup_remote_log" />
       <antcall target="collect_remote_log" />
@@ -95,7 +97,7 @@
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
       <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb('localhost',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
+            request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
             resultPrefix="rg"
             throwBuildException="1"/>
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true" />

@@ -101,7 +101,7 @@ this.ReplSize_one_group = function( db , CSname )
 {
    try
    {
-      var catadb = new Sdb('localhost', CATASVCNAME ) ;
+      var catadb = new Sdb('COORDHOSTNAME', CATASVCNAME ) ;
       var data = catadb.SYSCAT.SYSCOLLECTIONSPACES.find() ;
       for ( var i = 0 ; i < data.size() ; ++i  )
       {

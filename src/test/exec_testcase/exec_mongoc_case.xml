@@ -18,6 +18,7 @@
    <target name="exec_mongoc_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <mkdir dir="${report_dir}"/>
       <chmod dir="${testcase_dir}" perm="u+x" includes="*" />
       <var name="testcase_name" value="test-mongo"/>
@@ -54,7 +55,7 @@
                   failonerror="false">
                <arg line=" -f -F ${report_fullname}" />
                <env key="LD_LIBRARY_PATH" path="${LD_LIBRARY_PATH}:${testcase_dir}/lib" />       
-               <env key="MONGOC_TEST_HOST" value="localhost:11817" />
+               <env key="MONGOC_TEST_HOST" value="${firsthost}:11817" />
             </exec>
             <markinlog casename ="${testcase_dir}/test-mongo" marktype="end"/>
          </else>
@@ -185,7 +186,7 @@
                      failonerror="false">
                   <arg line=" -f -p -l @{testcasename} ${report_fullname}" />
                   <env key="LD_LIBRARY_PATH" path="@{ldlibrarypath}:@{testcasedir}/lib" />       
-                  <env key="MONGOC_TEST_HOST" value="localhost:11817" />
+                  <env key="MONGOC_TEST_HOST" value="${firsthost}:11817" />
                </exec>
                <markinlog casename ="@{testcasedir}/test-mongo" marktype="end"/>
             </else>

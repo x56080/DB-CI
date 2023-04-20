@@ -18,6 +18,7 @@
    <target name="exec_python_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
       <if>
          <isset property="BREAK_ON_FAILURE"/>
