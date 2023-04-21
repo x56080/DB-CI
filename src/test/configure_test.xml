@@ -307,8 +307,11 @@
             <var name="testcase_type" unset="true"/>
             <property name="testcase_type" value="@{casetype}"/>
             <var name="casesubtype" unset="true"/>
-            <propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />
-            
+            <var name="casetype_noline" unset="true"/>
+<!--            <propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />-->
+            <propertyregex property="casetype_noline" input="@{casetype}" regexp="_" replace="/" />
+            <property name="casesubtype" value="${CI_WORK_DIR}/testcase/${casetype_noline}"/>
+
             <switch value="@{casetype}">
             
                <case value="tdd_c">

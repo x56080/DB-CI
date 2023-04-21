@@ -161,13 +161,16 @@
       </first>
       <property name="package_fullname" location="${toString:package_fullname}" />
       <basename property="package_name_part" file="${package_fullname}" suffix=".run"/>
-      <property name="package_name" value="${package_name_part}.run" />     
-      
+      <property name="package_name" value="${package_name_part}.run" />
+      <staf location="localhost" service="FS"
+            request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
+            throwBuildException="1"/>
+
       <!--copy run package to remote host-->
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="FS"
-                  request="CREATE DIRECTORY ${CI_WORK_DIR}"
+                  request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
                   throwBuildException="1"/>
             <staf location="local" service="FS"
                   request="COPY FILE ${package_fullname} TODIRECTORY ${CI_WORK_DIR} TOMACHINE @{testhost}"
