@@ -60,7 +60,9 @@
             <mkdir dir="${report_dir}"/>
             <mkdir dir="${report_dir}/python2"/>
             <mkdir dir="${report_dir}/python3"/>
-
+            <replace file="${testcase_dir}/config.json" token='"localhost"' value='"${firsthost}"'/>
+            <replace file="${testcase_dir}/config.json" token='"/opt/sequoiadb/database/"' value='"/hdd/sequoiadb/database/"'/>
+            <replace file="${testcase_dir}/config.json" token='"/tmp/pythontest"' value='"/hdd/ci/pythontest"'/>
             <var name="processrc" value="0"/>
             <replace file="${testcase_dir}/run_all_case.py" token='"report"' value='"${report_dir}/python2"'/>
             <execallcase pyversion="python2" testcasedir="${testcase_dir}" reportdir="${report_dir}/python2"/>

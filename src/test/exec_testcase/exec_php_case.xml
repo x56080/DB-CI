@@ -240,7 +240,8 @@
                <property name="php_exec_file" value="php"/>
             </then>
             <else>
-               <property name="php_exec_file" value="php-bin"/>
+               <!--property name="php_exec_file" value="php-bin"/-->
+               <property name="php_exec_file" value="php"/>
             </else>
          </if>
          <if>
