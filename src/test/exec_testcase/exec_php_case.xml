@@ -30,6 +30,8 @@
                            flags="g" 
                            byline="true" 
                            encoding="utf-8"/>
+             <!--loadfile property="xml" srcfile="${testcase_dir}/phpunit.xml" /-->
+             <replace file="${testcase_dir}/phpunit.xml" token="localhost" value="${firsthost}"/>
          </then>
       </if>
       <if>
