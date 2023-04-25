@@ -25,6 +25,12 @@
       <propertyregex property="hostnameB" input="${testhost_list}" regexp="(.*)," replace="" defaultValue="${testhost_list}"/> 
       
       <replaceregexp file="${testcase_dir}/src/test/resources/mongodb.properties"
+                           match="localhost"
+                           replace="${hostnameA}"
+                           flags="g"
+                           byline="true"
+                           encoding="utf-8"/>
+      <replaceregexp file="${testcase_dir}/src/test/resources/mongodb.properties"
                            match="host1"
                            replace="${hostnameA}"
                            flags="g" 
