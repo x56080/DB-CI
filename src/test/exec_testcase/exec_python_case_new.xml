@@ -184,7 +184,18 @@
                </for> 
                </then>
             </elseif>
-
+            <else>
+              <var name="screen_output" unset="true"/>
+               <var name="rc" unset="true"/>
+               <exec executable="@{pyversion}"
+                     dir="@{testcasedir}"
+                     outputproperty="screen_output"
+                     resultproperty="rc"
+                     failonerror="true" >
+                  <arg line="run_all_case.py"/>
+               </exec>
+               <echo message="${screen_output}" />
+            </else>
          </if>      
       </sequential>
    </macrodef>
