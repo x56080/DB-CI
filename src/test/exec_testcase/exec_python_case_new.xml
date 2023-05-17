@@ -50,7 +50,7 @@
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"localhost"' value='"${firsthost}"'/>
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"/tmp/pymongo"' value='"/hdd/ci/pymongo"'/>
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/run_all_case.py" token='"report"' value='"${report_dir}"'/>
-               <execallcase pyversion="python3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
+               <execallcase pyversion="pymongo_py3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
                <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_fapmongo_python"/>
             </then>
          </elseif>
