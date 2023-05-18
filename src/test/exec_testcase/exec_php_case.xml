@@ -32,6 +32,8 @@
                            encoding="utf-8"/>
              <!--loadfile property="xml" srcfile="${testcase_dir}/phpunit.xml" /-->
              <replace file="${testcase_dir}/phpunit.xml" token="localhost" value="${firsthost}"/>
+             <replace file="${testcase_dir}/phpunit.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
+             <replace file="${testcase_dir}/global.php" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
          </then>
       </if>
       <if>

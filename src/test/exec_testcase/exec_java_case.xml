@@ -86,6 +86,8 @@
             <equals arg1="${TEST_TYPE}" arg2="SYNCTEST"/>
             <then>
                <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+               <replace file="${test_basedir}/tools/runtest_java.xml" token="-DDSHOSTNAME=@{dshostname}" value="-DRSRVNODEDIR=${INSTALL_DIR}/database"/>
+
                <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                   <property name="casedir" value="${testcase_dir}"/>
                   <property name="testcasetype" value="${testcase_type}"/>
