@@ -13,7 +13,10 @@
    </taskdef>
    <include file="${basedir}/src/solve_result/get_build_status.xml" as="status_file"/>
    <property file="${basedir}/src/conf/test.conf" />
-   
+   <exec executable="hostname" outputproperty="myhostname">
+      <arg line="-i" />
+   </exec>
+
    <target name="normal_test_build">
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
       
@@ -132,7 +135,7 @@
          <then>
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-               <property name="testhost_list" value="${testhost_list}"/>
+               <property name="testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -390,6 +393,7 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
+               <property name="testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -556,7 +560,7 @@
          <then>
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-               <property name="testhost_list" value="${testhost_list}"/>
+               <property name="testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -649,7 +653,7 @@
          <then>
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-               <property name="testhost_list" value="${testhost_list}"/>
+               <property name="testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
