@@ -250,14 +250,12 @@
             <equals arg1="@{phpver}" arg2="php5dot4" />
             <then>
                <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
-               <!--<var name="ini_cmd" value=""/>-->
-               <!--<var name="libxml2_dir" value=""/>-->
+               <var name="ini_cmd" value=""/>
+               <var name="libxml2_dir" value=""/>
 
-               <var name="ini_cmd" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
-               <var name="libxml2_dir" value="${INSTALL_DIR}/tools/server/php/libxml2/lib"/>
-
-               <replace file="${ini_cmd}" token="&lt;?php and ?&gt;"  value=""/>
-               <replace file="${ini_cmd}" token="extension=libsdbphp-5.4.6.so"  value="extension=${INSTALL_DIR}/lib/phplib/libsdbphp-5.4.6.so"/>
+               <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
+               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/"
+                        value="${INSTALL_DIR}/lib/phplib"/>
             </then>
          </if>
          <if>

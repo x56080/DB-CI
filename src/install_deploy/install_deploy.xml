@@ -106,7 +106,7 @@
    </target>
    
    <target name="uninstall" depends="">    
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
@@ -167,7 +167,7 @@
             throwBuildException="1"/>
 
       <!--copy run package to remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="FS"
                   request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
@@ -183,7 +183,7 @@
    </target>
    
    <target name="install" depends="">       
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="FS"
                   request="QUERY ENTRY ${INSTALL_DIR}"
@@ -297,6 +297,11 @@
             <equals arg1="${DEPLOY_MODE}" arg2="G3D3"/>
          </or>
          <then>
+            <!--执行机没有执行部署所以没有database/data目录，需要从第一个测试机上拷贝-->
+            <staf location="${firsthost}" service="FS"
+                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${INSTALL_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
+                  throwBuildException="1"/>
+
             <for param="dirtype">
                <path>
                   <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
