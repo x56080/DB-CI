@@ -250,8 +250,8 @@
             <equals arg1="@{phpver}" arg2="php5dot4" />
             <then>
                <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
-               <var name="ini_cmd" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
-               <var name="libxml2_dir" value="${INSTALL_DIR}/tools/server/php/libxml2/lib"/>
+               <var name="ini_cmd" value=""/>
+               <var name="libxml2_dir" value=""/>
             </then>
          </if>
          <if>

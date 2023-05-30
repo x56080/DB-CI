@@ -112,11 +112,6 @@
          </elseif>
          <else>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
-            <replace file="${test_basedir}/tools/runtest_java.xml" token="-DDSHOSTNAME=@{dshostname}" value="-DRSRVNODEDIR=${INSTALL_DIR}/database"/>
-            <replace file="${test_basedir}/driver/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
-            <replace file="${test_basedir}/sdv/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
-            <replace file="${test_basedir}/story/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
-
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>

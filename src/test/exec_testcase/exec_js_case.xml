@@ -104,7 +104,7 @@
          </if>          
                  
          <var name="cmd1" value="-f &quot;${func_option}@{detectfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var RSRVNODEDIR='/hdd/sequoiadb/database/';&quot;" />
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var COORDHOSTNAME='${firsthost}';var RSRVNODEDIR='/hdd/sequoiadb/database/';&quot;" />
          <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
          <var name="@{output}" unset="true"/>
          <var name="@{envisok}" unset="true"/>
@@ -315,7 +315,7 @@
          <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
          
          <var name="cmd1" value="-f &quot;${func_option}${commlib_option}@{jsfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var RSRVNODEDIR='/hdd/sequoiadb/database/' &quot;" />
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var COORDHOSTNAME='${firsthost}';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';var RSRVNODEDIR='/hdd/sequoiadb/database/' &quot;" />
          <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
          
          <var name="screen_output" unset="true"/>
