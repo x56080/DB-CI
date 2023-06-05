@@ -20,7 +20,10 @@
    
    <target name="main">     
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
-      
+
+      <exec executable="hostname" outputproperty="myhostname">
+         <arg line="-i" />
+      </exec>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
@@ -46,7 +49,7 @@
 
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost">
+      <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
@@ -82,10 +85,14 @@
       <copy todir="${case_basedir}">
          <fileset dir="${WORKSPACE}/sequoiadb/testcase"/>
       </copy>
-<!--      <move todir="${case_basedir}">
+      <!--
+      <move todir="${case_basedir}">
          <fileset dir="${case_basedir}/thirdparty" includes="**/*"/>
-      </move> -->
-      
+      </move>
+
+      <var name="clean_ci_ws" value="rm -rf ${CI_WORK_DIR}/testcase/*;rm -rf ${CI_WORK_DIR}/report/*;rm -rf ${CI_WORK_DIR}/script/*;rm -rf ${CI_WORK_DIR}/testcase_out/*"/>
+      <staf location="local" service="PROCESS" request="START SHELL COMMAND ${clean_ci_ws} WAIT 10m RETURNSTDERR" throwBuildException="1"/>
+      -->
       <if>
          <equals arg1="${plat_form}" arg2="PPC" />
          <then>
@@ -122,7 +129,7 @@
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
       <!-- untar -->
-      <untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>
+      <!--<untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
    </target>
    
    <target name="compile_testcase">      
@@ -194,7 +201,7 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -202,7 +209,7 @@
       </if>
       
       <!--copy tools-->
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
@@ -213,7 +220,7 @@
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -226,9 +233,9 @@
                   <delete file="${tar_desdir}/${tar_filename}" failonerror="false"/>
                   <tar destfile="${tar_desdir}/${tar_filename}" longfile="gnu"
                        basedir="${tar_srcdir}" compression="gzip" />
-                  <!--send-->                  
-                  <staf location="@{testhost}" service="FS"
-                        request="CREATE DIRECTORY ${remote_casedir} FULLPATH"
+                  <!--send-->
+                  <staf location="@{testhost}" service="PROCESS"
+                        request="START SHELL COMMAND mkdir -p ${remote_casedir}; rm -rf ${remote_casedir}/* WAIT 10m RETURNSTDERR"
                         throwBuildException="1"/>
                   <staf location="local" service="FS"
                         request="COPY FILE ${tar_desdir}/${tar_filename} TODIRECTORY ${remote_casedir} TOMACHINE @{testhost}"
@@ -251,7 +258,7 @@
       <var name="testscript_log" value="${testscript_dir}/configure_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
@@ -307,8 +314,11 @@
             <var name="testcase_type" unset="true"/>
             <property name="testcase_type" value="@{casetype}"/>
             <var name="casesubtype" unset="true"/>
-            <propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />
-            
+            <var name="casetype_noline" unset="true"/>
+            <!--<propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />-->
+            <propertyregex property="casetype_noline" input="@{casetype}" regexp="_" replace="/" />
+            <property name="casesubtype" value="${CI_WORK_DIR}/testcase/${casetype_noline}"/>
+
             <switch value="@{casetype}">
             
                <case value="tdd_c">

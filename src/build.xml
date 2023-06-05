@@ -17,8 +17,9 @@
    <!--日志备份机器信息-->
    <property name="logMachine" value="192.168.28.27" />
    <property name="user" value="root" />
-   <property name="logMachinePasswd" value="jenkins" /> 
-    
+   <property name="logMachinePasswd" value="jenkins" />
+   <exec executable="hostname" outputproperty="myhostname"/>
+
    <!--三组三节点测试工程和独立模式-->
    <target name="normal_test_build">
       <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, COVERAGE, TESTCASE_LISTS"/>
@@ -54,6 +55,7 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -159,6 +161,7 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -333,6 +336,7 @@
                <property name="plat_form" value="${plat_form}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -437,6 +441,7 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -608,6 +613,7 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -717,6 +723,7 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -854,6 +861,7 @@
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="testhost_list" value="${testhost_list}"/>
+         <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
       </ant>
       
       <ant antfile="smoke_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >

@@ -19,7 +19,7 @@
       </classpath>
    </taskdef>    
    <property name="user" value="root" />
-   <property name="passwd" value="jenkins" />
+   <property name="passwd" value="Sdb@123123" />
    
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
@@ -56,7 +56,7 @@
    
    <target name="clear_cluster">
       <var name="cmd_clear_cluster" 
-           value="${INSTALL_DIR}/bin/sdbcmtop;${INSTALL_DIR}/bin/sdbstop -t all;rm -rf ${INSTALL_DIR} "/>
+           value="${INSTALL_DIR}/bin/sdbcmtop;${INSTALL_DIR}/bin/sdbstop -t all;rm -rf ${INSTALL_DIR};rm -rf ${METADATA_DIR} "/>
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="PROCESS"
@@ -114,7 +114,7 @@
    </target>
    
    <target name="uninstall" depends="">    
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
@@ -125,6 +125,9 @@
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${INSTALL_DIR} RECURSE CONFIRM"
+                  throwBuildException=""/>
+            <staf location="@{testhost}" service="FS"
+                  request="DELETE ENTRY ${METADATA_DIR} RECURSE CONFIRM"
                   throwBuildException=""/>
             <if>
                <equals arg1="${TEST_TYPE}" arg2="PERFORMANCETEST_TPCC" />
@@ -166,13 +169,18 @@
       </first>
       <property name="package_fullname" location="${toString:package_fullname}" />
       <basename property="package_name_part" file="${package_fullname}" suffix=".run"/>
-      <property name="package_name" value="${package_name_part}.run" />     
-      
+      <property name="package_name" value="${package_name_part}.run" />
+      <staf location="localhost" service="FS"
+            request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
+            throwBuildException="1"/>
+
+
       <!--copy run package to remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential>
-            <staf location="@{testhost}" service="FS"
-                  request="CREATE DIRECTORY ${CI_WORK_DIR}"
+            <!--<staf location="@{testhost}" service="FS" request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH" throwBuildException="1"/>-->
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR};rm -rf ${CI_WORK_DIR}/* WAIT 1m"
                   throwBuildException="1"/>
             <staf location="local" service="FS"
                   request="COPY FILE ${package_fullname} TODIRECTORY ${CI_WORK_DIR} TOMACHINE @{testhost}"
@@ -185,7 +193,7 @@
    </target>
    
    <target name="install" depends="">       
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="FS"
                   request="QUERY ENTRY ${INSTALL_DIR}"
@@ -197,9 +205,13 @@
                   <fail message="exec: QUERY ENTRY ${INSTALL_DIR}, expect directory not exists. expect return code is 48, actual: ${check_dir.rc}"/>
                </else>
             </if>
-            
+            <var name="createvarcmd" value="mkdir -p /var/sequoiadb; chown -R sdbadmin:sdbadmin_group /var/sequoiadb"/>
+            <var name="createdatacmd" value="mkdir -p /ssd/sequoiadb; chown -R sdbadmin:sdbadmin_group /ssd/sequoiadb"/>
+            <staf location="@{testhost}" service="PROCESS" request="START SHELL COMMAND ${createvarcmd} WAIT 20m STDERRTOSTDOUT RETURNSTDOUT" throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS" request="START SHELL COMMAND ${createdatacmd} WAIT 20m STDERRTOSTDOUT RETURNSTDOUT" throwBuildException="1"/>
+
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ${CI_WORK_DIR}/${package_name} --mode unattended WAIT 20m STDERRTOSTDOUT RETURNSTDOUT"
+                  request="START SHELL COMMAND ${CI_WORK_DIR}/${package_name} --prefix ${INSTALL_DIR} --mode unattended WAIT 20m STDERRTOSTDOUT RETURNSTDOUT"
                   resultPrefix="install"
                   throwBuildException="1"/>
             <propertyregex property="install_rc" input="${install.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>
@@ -272,7 +284,7 @@
                   request="CREATE DIRECTORY ${INSTALL_DIR}/conf/sdbseadpter FULLPATH"
                   throwBuildException="1"/>
       <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND chown jenkins:jenkins ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
+            request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
             throwBuildException="1"/>
       <hostinfo prefix="host" />
       <if>
@@ -299,6 +311,11 @@
             <equals arg1="${DEPLOY_MODE}" arg2="G3D3"/>
          </or>
          <then>
+            <!--执行机没有执行部署所以没有database/data目录，需要从第一个测试机上拷贝-->
+            <staf location="${firsthost}" service="FS"
+                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${INSTALL_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
+                  throwBuildException="1"/>
+
             <for param="dirtype">
                <path>
                   <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
@@ -315,6 +332,9 @@
                   <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="optimeout=10000" value="optimeout=60000"/>
                   <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)idxprefix=" replace="idxprefix=${IDXPREFIX}" byline="true"/>
                   <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)datasvcname=" replace="datasvcname=${svcname}" byline="true"/>
+
+                  <math result="expect_cnt" operand1="${svcname}" operation="+" operand2="10" datatype="int"/>
+                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="# svcname=" value="svcname=${expect_cnt}"/>
                </sequential>
             </for>
             <!--copy to other host -->
@@ -565,20 +585,20 @@
                          trust="true"
                          command="chmod 777 ${sync_script_dir}/logsync.sh"/>
                 <!--创建备份目录-->
-                <sshexec host="192.168.28.27" 
-                         username="${user}" 
-                         password="${passwd}" 
+                <sshexec host="192.168.28.27"
+                         username="root"
+                         password="jenkins"
                          trust="true"
                          command="mkdir -p /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
                 <sshexec host="192.168.28.27" 
-                         username="${user}" 
-                         password="${passwd}" 
+                         username="root"
+                         password="jenkins"
                          trust="true"
                          command="chmod 777 /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
                 <!--执行日志归档脚本-->
                 <sshexec host="@{testhost}" 
-                         username="${user}" 
-                         password="${passwd}" 
+                         username="${user}"
+                         password="${passwd}"
                          trust="true"
                          command="${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} >>/dev/null &amp;"/>
            </sequential>

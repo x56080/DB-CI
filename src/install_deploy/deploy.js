@@ -66,12 +66,12 @@ function deployStandalone()
       
       var oma = new Oma( host, cmPort );
       
-      var serivce = 11810;
-      var dbPath = diskList[0] + "/database/standalone/" + serivce;
-      var config = nodeConf;
-      oma.createData( serivce, dbPath, config );
+      var service = 11810;
+      var dbPath = diskList[0] + "/database/standalone/" + service;
+      var config = updateDeployConfig( nodeConf, service );
+      oma.createData( service, dbPath, config );
                       
-      oma.startNode( serivce );     
+      oma.startNode( service );
    }
    
    println("------succed to deploy");
@@ -231,6 +231,7 @@ function createData( db )
 function updateDeployConfig( conf, service ) 
 {
    var config = JSON.stringify(conf).replace( "[svcname]", service );
+   var config = config.replace( "[svcname]", service );
    return JSON.parse(config);
 }
 

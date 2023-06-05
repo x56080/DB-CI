@@ -8,37 +8,44 @@
 @author:       Ting YU 2016-11-1
 ============================================================================= -->
 
-<project default="exec_js_testcase" basedir="../../../">     
+<project default="exec_js_testcase" basedir="../../../">
    <taskdef resource="net/sf/antcontrib/antlib.xml">
       <classpath>
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
    <import file="${basedir}/src/test/exec_testcase/common.xml" />
-   
-   <target name="exec_js_testcase">   
-      <property file="${basedir}/src/conf/test.conf" /> 
+
+   <target name="exec_js_testcase">
+      <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <if>
          <isset property="BREAK_ON_FAILURE"/>
          <else>
             <var name="BREAK_ON_FAILURE" value="false"/>
          </else>
       </if>
-	  
+
+
+<!--      <staf location="@{testhost}" service="PROCESS"-->
+<!--            request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR}/testcase/story/js WAIT 5m RETURNSTDERR"-->
+<!--            throwBuildException=""/>-->
+
+      <!--ant.chown文件过多导致报错参数列表过长-->
       <chown owner="sdbadmin">
-         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
+         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
          <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
       </chown>
       <chgrp group="sdbadmin_group">
          <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
          <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
       </chgrp>
-      
+
       <prefix resultproperty="prefix"/>
-      <detectenv detectfile="${testcase_dir}/lib/all_prepare.js" prefix="${prefix}" envisok="envrc"/>   
-      
-      <var name="processrc" value="0"/>    
+      <detectenv detectfile="${testcase_dir}/lib/all_prepare.js" prefix="${prefix}" envisok="envrc"/>
+
+      <var name="processrc" value="0"/>
       <for param="suitfullname">
          <path>
             <dirset dir="${testcase_dir}" includes="*" excludes="lib"/>
@@ -46,39 +53,39 @@
          <sequential>
             <var name="testsuit_name" unset="true" />
             <basename property="testsuit_name" file="@{suitfullname}"/>
-            
-            <changeconf mode="before" conffullname="@{suitfullname}/node.conf" 
-                        rc="conf_rc1" casetype="${testcase_type}" 
+
+            <changeconf mode="before" conffullname="@{suitfullname}/node.conf"
+                        rc="conf_rc1" casetype="${testcase_type}"
                         rptfullname="${report_dir}/configure_before_${testsuit_name}.xml" />
-            
+
             <if>
                <equals arg1="${conf_rc1}" arg2="0" />
-               <then>                                  
+               <then>
                   <processonesuit suitfullname="@{suitfullname}"
                                   prefix="${prefix}"
                                   reportdir="${report_dir}"/>
                </then>
             </if>
 
-            <changeconf mode="after" conffullname="@{suitfullname}/node.conf.ini" 
-                        rc="conf_rc2" casetype="${testcase_type}" 
+            <changeconf mode="after" conffullname="@{suitfullname}/node.conf.ini"
+                        rc="conf_rc2" casetype="${testcase_type}"
                         rptfullname="${report_dir}/configure_after_${testsuit_name}.xml"/>
-         
+
          </sequential>
       </for>
       <var name="fail_exist" unset="true"/>
-      <available property="fail_exist" file="${report_dir}/.TESTCASE_FAIL" /> 
+      <available property="fail_exist" file="${report_dir}/.TESTCASE_FAIL" />
       <if>
          <and>
             <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
             <isset property="fail_exist" />
          </and>
          <else>
-            <detectenv detectfile="${testcase_dir}/lib/all_clean.js" prefix="${prefix}" envisok="envrc"/> 
+            <detectenv detectfile="${testcase_dir}/lib/all_clean.js" prefix="${prefix}" envisok="envrc"/>
          </else>
       </if>
-        
-           
+
+
    </target>
 
    <macrodef name="detectenv">
@@ -89,33 +96,33 @@
       <sequential>
          <var name="jsdir" unset="true"/>
          <dirname property="jsdir" file="@{detectfile}" />
-         
-         <var name="func_exist" unset="true"/>                             
-         <available property="func_exist" file="${jsdir}/func.js" /> 
+
+         <var name="func_exist" unset="true"/>
+         <available property="func_exist" file="${jsdir}/func.js" />
          <if>
             <isset property="func_exist" />
-            <then>               
+            <then>
                <var name="func_option" value="${jsdir}/func.js," />
             </then>
             <else>
                <var name="func_option" value="" />
             </else>
-         </if>          
-                 
+         </if>
+
          <var name="cmd1" value="-f &quot;${func_option}@{detectfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var COORDHOSTNAME='localhost';&quot;" />
-         <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var RSRVNODEDIR='/hdd/sequoiadb/database/';&quot;" />
+         <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>
          <var name="@{output}" unset="true"/>
          <var name="@{envisok}" unset="true"/>
          <sshexec host="localhost"
                   trust="true"
                   username="sdbadmin"
                   password="Admin@1024"
-                  outputproperty="@{output}" 
+                  outputproperty="@{output}"
                   resultproperty="@{envisok}"
                   failonerror="false"
                   command="${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>
-         <echo message="${@{output}}" />       
+         <echo message="${@{output}}" />
       </sequential>
    </macrodef>
 
@@ -128,8 +135,8 @@
          <path>
             <fileset dir="@{suitfullname}" includes="*.js" excludes="commlib.js"/>
          </path>
-         <sequential> 
-         
+         <sequential>
+
          <var name="is_continue_exec" unset="true"/>
          <condition property="is_continue_exec" value="true" else="false">
             <or>
@@ -140,7 +147,7 @@
                </and>
             </or>
          </condition>
-         
+
          <available property="is_exist" file="${CI_WORK_DIR}/report/.TESTCASE_FAIL" type="file"/>
          <if>
             <and>
@@ -152,19 +159,19 @@
                <var name="is_continue_exec" value="false"/>
             </then>
          </if>
-            
+
          <if>
             <equals arg1="${is_continue_exec}" arg2="true"/>
             <then>
-               <processonecase reportdir="@{reportdir}" 
-                               pcsrc="processrc" 
+               <processonecase reportdir="@{reportdir}"
+                               pcsrc="processrc"
                                prefix="@{prefix}"
                                casefullname="@{casefullname}"/>
             </then>
          </if>
          </sequential>
       </for>
-      
+
       <if>
          <equals arg1="${is_continue_exec}" arg2="false"/>
          <then>
@@ -177,11 +184,11 @@
                      <equals arg1="${plat_form}" arg2="ARM" />
                      <then>
                          <property name="user" value="root" />
-                         <property name="passwd" value="Admin@2048" />
-                         <scp file="${report_dir}/.TESTCASE_FAIL" 
+                         <property name="passwd" value="Sdb@123123" />
+                         <scp file="${report_dir}/.TESTCASE_FAIL"
                               todir="${user}@@${host}:${CI_WORK_DIR}/report"
                               password="${passwd}"
-                              trust="true"/> 
+                              trust="true"/>
                      </then>
                      <else>
                          <staf location="local" service="FS"
@@ -190,27 +197,27 @@
                      </else>
                   </if>
                   <!--取消host变量之前设置的值-->
-                  <var name="host" unset="true"/>     
+                  <var name="host" unset="true"/>
                </sequential>
             </for>
          </then>
       </if>
-      
+
       </sequential>
    </macrodef>
-   
+
    <macrodef name="processonecase">
       <attribute name="pcsrc"/>
       <attribute name="reportdir"/>
       <attribute name="prefix"/>
-      <attribute name="casefullname" />   
+      <attribute name="casefullname" />
       <sequential>
          <var name="testcase_name" unset="true" />
          <basename property="testcase_name" file="@{casefullname}" suffix=".js"/>
-         
-         <detectenv detectfile="${testcase_dir}/lib/before_usecase.js" prefix="${prefix}" 
+
+         <detectenv detectfile="${testcase_dir}/lib/before_usecase.js" prefix="${prefix}"
                     output="before_output" envisok="envrc"/>
-                    
+
          <if>
             <and>
                <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
@@ -220,7 +227,7 @@
             </and>
             <else>
                <runonecase jsfile="@{casefullname}"
-                           prefix="${prefix}" 
+                           prefix="${prefix}"
                            beforeoutput="${before_output}"
                            report="@{reportdir}/${testcase_name}.xml"
                            rc="caserc" />
@@ -235,10 +242,10 @@
                      <detectenv detectfile="${testcase_dir}/lib/after_usecase.js" prefix="${prefix}" envisok="envrc"/>
                   </else>
                </if>
-                  
+
             </else>
          </if>
-         
+
          <var name="@{pcsrc}" unset="true"/>
          <condition property="@{pcsrc}" value="0" else="1">
             <and>
@@ -248,7 +255,7 @@
          </condition>
       </sequential>
    </macrodef>
-   
+
    <macrodef name="runonecase">
       <attribute name="jsfile" />
       <attribute name="prefix" />
@@ -263,75 +270,75 @@
          <dirname property="jsdir" file="@{jsfile}" />
          <basename property="casename" file="@{jsfile}" suffix=".js"/>
          <basename property="suitname" file="${jsdir}" />
-         
+
          <var name="begin_time" unset="true"/>
          <tstamp>
             <format property="begin_time" pattern="yyyy-MM-dd HH:mm:ss" />
-         </tstamp>       
+         </tstamp>
          <script language="javascript">
             project.setProperty('start_ms', new Date().getTime());
          </script>
 
          <markinlog casename="@{jsfile}" marktype="begin"/>
-         
+
          <!--execute-->
          <var name="func_exist" unset="true"/>
-         <available property="func_exist" file="${jsdir}/../lib/func.js" />       
+         <available property="func_exist" file="${jsdir}/../lib/func.js" />
          <if>
             <isset property="func_exist" />
             <then>
                <var name="func_option" value="${jsdir}/../lib/func.js," />
             </then>
-            <else>                             
-               <var name="func_option" value="" />             
+            <else>
+               <var name="func_option" value="" />
             </else>
          </if>
-         
+
          <var name="commlib_exist" unset="true"/>
          <available property="commlib_exist" file="${jsdir}/commlib.js" />
          <if>
             <isset property="commlib_exist" />
-            <then>               
+            <then>
                <var name="commlib_option" value="${jsdir}/commlib.js," />
             </then>
-            <else>              
+            <else>
                <var name="commlib_option" value="" />
             </else>
          </if>
-         
+
          <if>
             <equals arg1="${TEST_TYPE}" arg2="LARGEDATATEST" />
-            <then>               
+            <then>
                <var name="timelimit" value="28800000" />
             </then>
             <else>
                <var name="timelimit" value="1800000" />
             </else>
          </if>
-         
-         
+
+
          <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
          <var name="IDXPREFIX" unset="true"/>
-         <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
-         
+         <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/>
+
          <var name="cmd1" value="-f &quot;${func_option}${commlib_option}@{jsfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var COORDHOSTNAME='localhost';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}'; &quot;" />
-         <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
-         
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';var RSRVNODEDIR='/hdd/sequoiadb/database/'&quot;" />
+         <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>
+
          <var name="screen_output" unset="true"/>
          <var name="@{rc}" unset="true"/>
-         <exec executable="${INSTALL_DIR}/bin/sdb" 
-               dir="${jsdir}" 
-               outputproperty="screen_output" 
+         <exec executable="${INSTALL_DIR}/bin/sdb"
+               dir="${jsdir}"
+               outputproperty="screen_output"
                resultproperty="@{rc}"
                failonerror="false">
             <arg line="${cmd1} ${cmd2}" />
          </exec>
          <echo message="${screen_output}" />
-         
+
          <!--after-->
          <markinlog casename="@{jsfile}" marktype="end"/>
-         
+
          <var name="end_time" unset="true"/>
          <tstamp>
             <format property="end_time" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -340,7 +347,7 @@
             project.setProperty('total_time', ( new Date().getTime() - start_ms ) / 1000 );
          </script>
          <echo message="the result code is ${@{rc}}, begin at ${begin_time}, end at ${end_time}" />
-         
+
          <!--generate report-->
          <if>
             <equals arg1="${@{rc}}" arg2="0" />
@@ -348,16 +355,16 @@
                <copy file="${basedir}/src/test/exec_testcase/report_succ_temple.xml" tofile="@{report}"/>
             </then>
             <else>
-               <copy file="${basedir}/src/test/exec_testcase/report_fail_temple.xml" tofile="@{report}"/>            
+               <copy file="${basedir}/src/test/exec_testcase/report_fail_temple.xml" tofile="@{report}"/>
             </else>
          </if>
-         
+
          <replace file="@{report}" token='TESTCASE_TYPE' value='${testcase_type}'/>
          <replace file="@{report}" token='TESTSUIT_NAME' value='${suitname}'/>
          <replace file="@{report}" token='TESTCASE_NAME' value='${casename}'/>
          <replace file="@{report}" token='0000' value='${total_time}'/>
-         
-         
+
+
          <var name="cluster_host_info" value=""/>
          <for list="${testhost_list}" param="testhost">
             <sequential>
@@ -365,9 +372,9 @@
                <var name="cluster_host_info" value="${cluster_host_info} @{testhost}/${prefix@{testhost}.ADDR4}"/>
             </sequential>
          </for>
-         
+
          <if>
-            <equals arg1="${@{rc}}" arg2="0" />            
+            <equals arg1="${@{rc}}" arg2="0" />
             <else>
                <hostinfo prefix="host" />
                <var name="backup_reltdir" value="${TEST_TYPE}_${DEPLOY_MODE}_${BUILD_NUMBER}.tar.gz"/>

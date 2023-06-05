@@ -18,6 +18,8 @@
    <target name="exec_python_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
       <!--init-->
       <if>
          <isset property="BREAK_ON_FAILURE"/>
@@ -46,8 +48,10 @@
             <then>
                <delete dir="${report_dir}" failonerror="false"/>
                <mkdir dir="${report_dir}"/>
+               <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"localhost"' value='"${firsthost}"'/>
+               <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"/tmp/pymongo"' value='"/hdd/ci/pymongo"'/>
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/run_all_case.py" token='"report"' value='"${report_dir}"'/>
-               <execallcase pyversion="python3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
+               <execallcase pyversion="pymongo_py3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
                <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_fapmongo_python"/>
             </then>
          </elseif>
@@ -59,6 +63,10 @@
             <mkdir dir="${report_dir}"/>
             <mkdir dir="${report_dir}/python2"/>
             <mkdir dir="${report_dir}/python3"/>
+
+            <replace file="${testcase_dir}/config.json" token='"localhost"' value='"${firsthost}"'/>
+            <replace file="${testcase_dir}/config.json" token='"/opt/sequoiadb/database/"' value='"/hdd/sequoiadb/database/"'/>
+            <replace file="${testcase_dir}/config.json" token='"/tmp/pythontest"' value='"/hdd/ci/pythontest"'/>
 
             <var name="processrc" value="0"/>
             <replace file="${testcase_dir}/run_all_case.py" token='"report"' value='"${report_dir}/python2"'/>
@@ -130,12 +138,14 @@
 
                   <var name="screen_output" unset="true"/>
                   <var name="rc" unset="true"/>
+
+                  <echo message="@{pyversion} run_all_case.py in @{testcasedir}"/>
                   <exec executable="@{pyversion}"
                         dir="@{testcasedir}"
                         outputproperty="screen_output"
                         resultproperty="rc"
                         failonerror="true" >
-                  <arg line="run_all_case.py"/>
+                     <arg line="run_all_case.py"/>
                   </exec>
                   <echo message="${screen_output}" />
 

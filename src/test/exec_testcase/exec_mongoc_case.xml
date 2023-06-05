@@ -18,6 +18,8 @@
    <target name="exec_mongoc_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
       <mkdir dir="${report_dir}"/>
       <chmod dir="${testcase_dir}" perm="u+x" includes="*" />
       <var name="testcase_name" value="test-mongo"/>
@@ -31,7 +33,7 @@
       <!--excute-->      
       
       <echo>export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${testcase_dir}/lib</echo>
-      <echo>export MONGOC_TEST_HOST=localhost:11817</echo>
+      <echo>export MONGOC_TEST_HOST=${firsthost}:11817</echo>
 
       <if>
          <equals arg1="${TEST_TYPE}" arg2="SYNCTEST"/>
@@ -54,7 +56,7 @@
                   failonerror="false">
                <arg line=" -f -F ${report_fullname}" />
                <env key="LD_LIBRARY_PATH" path="${LD_LIBRARY_PATH}:${testcase_dir}/lib" />       
-               <env key="MONGOC_TEST_HOST" value="localhost:11817" />
+               <env key="MONGOC_TEST_HOST" value="${firsthost}:11817" />
             </exec>
             <markinlog casename ="${testcase_dir}/test-mongo" marktype="end"/>
          </else>
@@ -131,7 +133,7 @@
                         <equals arg1="${plat_form}" arg2="ARM" />
                         <then>
                            <property name="user" value="root" />
-                           <property name="passwd" value="Admin@2048" />
+                           <property name="passwd" value="Sdb@123123" />
                            <scp file="${report_dir}/.TESTCASE_FAIL" 
                                  todir="${user}@@@@@{testhost}:${CI_WORK_DIR}/report"
                                  password="${passwd}"
@@ -181,7 +183,7 @@
                      failonerror="false">
                   <arg line=" -f -p -l @{testcasename} ${report_fullname}" />
                   <env key="LD_LIBRARY_PATH" path="@{ldlibrarypath}:@{testcasedir}/lib" />       
-                  <env key="MONGOC_TEST_HOST" value="localhost:11817" />
+                  <env key="MONGOC_TEST_HOST" value="${firsthost}:11817" />
                </exec>
                <markinlog casename ="@{testcasedir}/test-mongo" marktype="end"/>
             </else>

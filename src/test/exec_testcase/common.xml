@@ -39,11 +39,11 @@
          <echo message="print()" file="${cmd_file_name}end.js"/>
          <switch value="@{marktype}">
             <case value="begin">
-               <var name="mark_cmd" value="-e &quot;db=new Sdb('localhost',${SVCNAME}); db.msg('Begin testcase[@{casename}]'); 
+               <var name="mark_cmd" value="-e &quot;db=new Sdb('${firsthost}',${SVCNAME}); db.msg('Begin testcase[@{casename}]');
                db.close();&quot; -f ${cmd_file_name}_begin.js" />
             </case>
             <case value="end">
-               <var name="mark_cmd" value="-e &quot;db=new Sdb('localhost',${SVCNAME}); db.msg('End testcase[@{casename}]'); 
+               <var name="mark_cmd" value="-e &quot;db=new Sdb('${firsthost}',${SVCNAME}); db.msg('End testcase[@{casename}]');
                db.close();&quot; -f ${cmd_file_name}_end.js" />
             </case>
          </switch>
@@ -74,7 +74,7 @@
             <property file="${basedir}/src/conf/test.conf" /> 
             <var name="sdbshell" value="${INSTALL_DIR}/bin/sdb"/>
             <var name="cmd1" value="-f &quot;${basedir}/src/test/exec_testcase/lib/func.js,${basedir}/src/test/exec_testcase/lib/detect_cluster.js&quot;" />
-            <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='localhost'&quot;" />
+            <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='${firsthost}'&quot;" />
             <echo message="exec cmd: ${sdbshell} ${cmd1} ${cmd2}"/>
             <var name="output" unset="true"/>
             <var name="@{envisok}" unset="true"/>
@@ -132,7 +132,7 @@
             
             <!--execute conf tool-->
             <var name="cmd1" value="-f &quot;@{conffullname},${CI_WORK_DIR}/testcase/tools/changeConf.js&quot;" />
-            <var name="cmd2" value="-e &quot;var hostname='localhost';var svcname=${SVCNAME};var mode='@{mode}'&quot;" />
+            <var name="cmd2" value="-e &quot;var hostname='${firsthost}';var svcname=${SVCNAME};var mode='@{mode}'&quot;" />
             <var name="output" unset="true"/>
             <var name="@{rc}" unset="true"/>
             <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}, in dir: ${exec_dir}"/>

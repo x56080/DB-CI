@@ -13,7 +13,7 @@ var coordnumPerhost = 1;
 var cataNum         = 3;                           //total catalog number
 var datagroupNum    = 3;
 var replSize        = 3;
-var diskList        = [ '/opt/sequoiadb' ];        //disks for dbPath
+var diskList        = [ '/hdd/sequoiadb' ];        //disks for dbPath
 
 if( typeof( diagLevel ) === "undefined" ) 
 {
@@ -56,5 +56,8 @@ var dataConf  = { diaglevel:diagLevel,
                   globtranson:true,
                   ftfusingtimeout:300,
                   mvccon:true,
-                  mvccrbsnum:4
+                  mvccrbsnum:4,
+                  indexpath:'/ssd/sequoiadb/database/[svcname]/',
+                  lobmetapath: '/ssd/sequoiadb/database/[svcname]/'
+
                 };
