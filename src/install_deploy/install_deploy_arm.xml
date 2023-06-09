@@ -195,7 +195,7 @@
                      username="${user}" 
                      password="${passwd}" 
                      trust="true"
-                     command="${CI_WORK_DIR}/${package_name} --mode unattended" />
+                     command="${CI_WORK_DIR}/${package_name} --prefix ${INSTALL_DIR} --mode unattended" />
          </sequential>         
       </for>
    </target>

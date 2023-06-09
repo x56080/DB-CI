@@ -18,6 +18,7 @@
    <target name="exec_mongo_js_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
       <if>
          <isset property="BREAK_ON_FAILURE"/>
@@ -239,7 +240,7 @@
          <!--execute-->
          <var name="fapport" unset="true" />
          <math result="fapport" operand1="${SVCNAME}" operation="+" operand2="7" datatype="int"/>
-         <var name="cmd" value="--host localhost --port ${fapport} @{jsfile}" />
+         <var name="cmd" value="--host ${firsthost} --port ${fapport} @{jsfile}" />
          <echo message="exec cmd: @{mongo} ${cmd}"/>      
          
          <var name="screen_output" unset="true"/>

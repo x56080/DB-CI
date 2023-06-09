@@ -20,7 +20,11 @@
    
    <target name="main">     
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
-      
+
+      <exec executable="hostname" outputproperty="myhostname">
+         <arg line="-i" />
+      </exec>
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
@@ -46,10 +50,10 @@
 
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost">
+      <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
+                  request="START SHELL COMMAND ntpdate ${NTP_HOST} WAIT"
                   throwBuildException=""/>
          </sequential>
       </for>
@@ -85,7 +89,7 @@
 <!--      <move todir="${case_basedir}">
          <fileset dir="${case_basedir}/thirdparty" includes="**/*"/>
       </move> -->
-      
+
       <if>
          <equals arg1="${plat_form}" arg2="PPC" />
          <then>
@@ -194,7 +198,7 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -202,7 +206,7 @@
       </if>
       
       <!--copy tools-->
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
@@ -213,7 +217,7 @@
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -251,7 +255,7 @@
       <var name="testscript_log" value="${testscript_dir}/configure_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
@@ -307,8 +311,11 @@
             <var name="testcase_type" unset="true"/>
             <property name="testcase_type" value="@{casetype}"/>
             <var name="casesubtype" unset="true"/>
-            <propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />
-            
+            <var name="casetype_noline" unset="true"/>
+            <!--<propertyregex property="casesubtype" input="${CI_WORK_DIR}/testcase/@{casetype}" regexp="_" replace="/" />-->
+            <propertyregex property="casetype_noline" input="@{casetype}" regexp="_" replace="/" />
+            <property name="casesubtype" value="${CI_WORK_DIR}/testcase/${casetype_noline}"/>
+
             <switch value="@{casetype}">
             
                <case value="tdd_c">

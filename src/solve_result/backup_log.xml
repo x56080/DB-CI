@@ -29,7 +29,9 @@
       
       <property file="${basedir}/src/conf/test.conf" />
       <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
-      
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
       <antcall target="backup_remote_log" />
       <antcall target="collect_remote_log" />
       <antcall target="backup_bin" />
@@ -41,7 +43,7 @@
    <target name="backup_remote_log">
       <echo>${line.separator}****begin to backup remote log</echo>
       <property name="remote_cmd1" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/backup_log.xml backup_log_in_remote -DTEST_TYPE=${TEST_TYPE}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/backup_log.xml backup_log_in_remote -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR}" />
    
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>         
@@ -100,7 +102,7 @@
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
       <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb('localhost',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
+            request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb(${firsthost},${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
             resultPrefix="rg"
             throwBuildException="1"/>
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true" />
@@ -112,7 +114,7 @@
       <move file="${CI_WORK_DIR}/diaglog" tofile="${CI_WORK_DIR}/${backup_reltdir}"/>
       <delete dir="${tar_fullname}" failonerror="false"/>
       <tar destfile="${tar_fullname}" longfile="gnu" compression="gzip" >
-           <tarfileset dir="${CI_WORK_DIR}" filemode="777" username="jenkins" group="jenkins">
+           <tarfileset dir="${CI_WORK_DIR}" filemode="777" username="sdbadmin" group="sdbadmin_group">
                 <include name="${backup_reltdir}/**/*"/>
            </tarfileset>
       </tar>
@@ -270,7 +272,7 @@
       
       <!--compress-->
       <tar destfile="${backup_fullname}" longfile="gnu" compression="gzip">
-           <tarfileset dir="${backup_basedir}" filemode="777" username="jenkins" group="jenkins">
+           <tarfileset dir="${backup_basedir}" filemode="777" username="sdbadmin" group="sdbadmin_group">
               <include name="${backup_reltdir}/**/*"/>
            </tarfileset>
       </tar>

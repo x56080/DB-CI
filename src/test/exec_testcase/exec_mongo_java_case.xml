@@ -18,11 +18,20 @@
    <target name="exec_mongo_java_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
       <mkdir dir="${report_dir}"/>
       
       <propertyregex property="hostnameA" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/> 
-      <propertyregex property="hostnameB" input="${testhost_list}" regexp="(.*)," replace="" defaultValue="${testhost_list}"/> 
-      
+      <propertyregex property="hostnameB" input="${testhost_list}" regexp="(.*)," replace="" defaultValue="${testhost_list}"/>
+
+      <replaceregexp file="${testcase_dir}/src/test/resources/mongodb.properties"
+                     match="localhost"
+                     replace="${hostnameA}"
+                     flags="g"
+                     byline="true"
+                     encoding="utf-8"/>
+
       <replaceregexp file="${testcase_dir}/src/test/resources/mongodb.properties"
                            match="host1"
                            replace="${hostnameA}"
@@ -60,7 +69,7 @@
                <property name="testcasetype" value="${testcase_type}"/>
                <property name="mongoversion" value="${mongoversion}"/>
                <property name="reportdir" value="${report_dir}"/>
-               <property name="hostname" value="localhost"/>
+               <property name="hostname" value="${firsthost}"/>
                <property name="testhost_list" value="${testhost_list}"/>
             </ant>       
             

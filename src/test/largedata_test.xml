@@ -49,7 +49,7 @@
       <for list="${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT 2m"
+                  request="START SHELL COMMAND ntpdate ${NTP_HOST} WAIT 2m"
                   throwBuildException=""/>
          </sequential>
       </for>
@@ -116,7 +116,7 @@
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
       <!-- untar -->
-      <untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>
+      <!--<untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
    </target>
    
    <target name="compile_testcase">      

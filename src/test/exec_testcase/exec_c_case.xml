@@ -19,6 +19,8 @@
       <property file="${basedir}/src/conf/test.conf" />
       <property name="sdbshell_fullname" value="${INSTALL_DIR}/bin/sdb" /> 
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
       <if>
          <isset property="BREAK_ON_FAILURE"/>
          <else>
@@ -168,7 +170,7 @@
          
          <hostinfo prefix="host" />
          <var name="report_fullname" value="@{reportdir}/@{casename}_${host.NAME}.xml"/>
-         <var name="cmd" value="--gtest_filter=* --gtest_output=xml:${report_fullname}"/>   
+         <var name="cmd" value="-n ${firsthost} -d ${INSTALL_DIR}/database --gtest_filter=* --gtest_output=xml:${report_fullname}"/>
          <echo message="${line.separator}exec cmd: @{casefullname} ${cmd}"/>
          
          <!--run testcase-->

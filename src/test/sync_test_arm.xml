@@ -44,7 +44,7 @@
                      username="${user}" 
                      password="${passwd}" 
                      trust="true"
-                     command="ntpdate 192.168.20.200" />
+                     command="ntpdate ${NTP_HOST}" />
          </sequential>
       </for>
    </target>
@@ -82,7 +82,7 @@
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
       <!-- untar -->
-<!--      <untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
+      <!--<untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
    </target>
 
    <target name="compile_testcase">      

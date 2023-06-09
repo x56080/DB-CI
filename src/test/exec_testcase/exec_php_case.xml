@@ -18,6 +18,7 @@
    <target name="exec_php_testcase">
       <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
       <if>
          <available file="${testcase_dir}/phpunit.xml"/>
@@ -29,6 +30,10 @@
                            flags="g" 
                            byline="true" 
                            encoding="utf-8"/>
+            <replace file="${testcase_dir}/phpunit.xml" token="localhost" value="${firsthost}"/>
+            <replace file="${testcase_dir}/phpunit.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
+            <replace file="${testcase_dir}/global.php" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
+
          </then>
       </if>
       <if>
@@ -128,7 +133,7 @@
                            <equals arg1="${plat_form}" arg2="ARM" />
                            <then>
                               <property name="user" value="root" />
-                              <property name="passwd" value="Admin@2048" />
+                              <property name="passwd" value="Sdb@123123" />
                               <scp file="${report_dir}/.TESTCASE_FAIL" 
                                     todir="${user}@@${host}:${CI_WORK_DIR}/report"
                                     password="${passwd}"
@@ -242,7 +247,7 @@
                <property name="php_exec_file" value="php"/>
             </then>
             <else>
-               <property name="php_exec_file" value="php-bin"/>
+               <property name="php_exec_file" value="php"/>
             </else>
          </if>
          <if>
@@ -251,6 +256,10 @@
                <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
                <var name="ini_cmd" value=""/>
                <var name="libxml2_dir" value=""/>
+
+               <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
+               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/"
+                        value="${INSTALL_DIR}/lib/phplib"/>
             </then>
          </if>
          <if>
