@@ -44,7 +44,7 @@
                      username="${user}" 
                      password="${passwd}" 
                      trust="true"
-                     command="ntpdate 192.168.20.200" />
+                     command="ntpdate ${NTP_HOST}" />
          </sequential>
       </for>
    </target>
