@@ -230,8 +230,8 @@ function createData( db )
 
 function updateDeployConfig( conf, service ) 
 {
-   var config = JSON.stringify(conf).replace( "[svcname]", service );
-   var config = config.replace( "[svcname]", service );
+   var config = JSON.stringify(conf);
+   var config = config.replace( /\[svcname\]/g, service );
    return JSON.parse(config);
 }
 
