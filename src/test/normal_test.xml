@@ -53,7 +53,7 @@
       <for list="${testhost_list}" param="testhost">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate 192.168.20.200 WAIT"
+                  request="START SHELL COMMAND ntpdate 192.168.29.80 WAIT"
                   throwBuildException=""/>
          </sequential>
       </for>
