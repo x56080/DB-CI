@@ -39,7 +39,7 @@ var dataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/hdd/sequoiadb/database/data/[svcname]/diaglog'
+                  diagpath:'/hdd/sequoiadb/database/data/[svcname]/diaglog',
                   ftmask:'NONE',
                   indexpath:'/ssd/sequoiadb/database/[svcname]/',
                   lobmetapath: '/ssd/sequoiadb/database/[svcname]/'

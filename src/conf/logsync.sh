@@ -24,8 +24,9 @@ EOF
 }
 
 main() {
-    local projName=""
-    local jobId=-1
+	export RSYNC_PASSWORD=Admin@1024
+  local projName=""
+  local jobId=-1
 	local curVersion="version 0.0.1"
 	
 	while getopts p:j:hv opt
@@ -51,7 +52,7 @@ main() {
 	hostName=`hostname`
 	syncDir=$projName\_$jobId
 	syncPath=$syncDir/$hostName\_diaglog
-	
+
 	checkEnv
 	init $syncDir
 	syncLog $syncPath
@@ -103,7 +104,7 @@ function init() {
 function initBackupDir() {
 	syncDir=$1
 	needCmd "rsync"
-	ensure source /etc/profile && rsync -a /tmp/diaglog.txt $REMOTE_SERVER::backup/$syncDir/
+	ensure rsync -a /tmp/diaglog.txt $REMOTE_SERVER::backup/$syncDir/
 }
 
 function syncLog() {
@@ -167,7 +168,7 @@ function fullSyncLog() {
     do
         local prefixDirName=`dirname $(dirname $(dirname $dir))`
 	    dir=`echo $dir | sed "s#$prefixDirName#$prefixDirName/.#g"`
-        ensure source /etc/profile && rsync -avR  --exclude={'*.trap','*.core','core.*'} $dir 192.168.28.27::backup/$syncPath
+        ensure rsync -avR  --exclude={'*.trap','*.core','core.*'} $dir 192.168.28.27::backup/$syncPath
     done
 }
 
@@ -186,7 +187,7 @@ function incrSyncLog() {
 	  if [[ $EVENT =~ "MOVE" ]] || [[ $EVENT =~ "CLOSE" ]];  then
 	            local prefixDirName=`dirname $(dirname $(dirname $DIRECTORY))`
 	            DIRECTORY=`echo $DIRECTORY | sed "s#$prefixDirName#$prefixDirName/.#g"`
-				ensure source /etc/profile && rsync -avR --exclude={'*.core','*.trap','core.*'} $DIRECTORY$FILE 192.168.28.27::backup/$syncPath/
+				ensure rsync -avR --exclude={'*.core','*.trap','core.*'} $DIRECTORY$FILE 192.168.28.27::backup/$syncPath/
 				if [ $isopen -eq 1 ];then
 					exec 3>&-
 					isopen=0
