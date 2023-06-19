@@ -13,7 +13,7 @@ var cataNum         = 3;                           //total catalog number
 var datagroupNum    = 3;
 var replSize        = 3;
 var diskList        = [                             //disks for dbPath
-                        '/hdd/sequoiadb'
+                        INSTALL_DIR
                       ];
                      
 if( typeof( diagLevel ) === "undefined" ) 
@@ -26,22 +26,22 @@ var cataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/hdd/sequoiadb/database/cata/[svcname]/diaglog'
+                  diagpath: INSTALL_DIR + '/database/cata/[svcname]/diaglog'
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/hdd/sequoiadb/database/coord/[svcname]/diaglog'
+                  diagpath: INSTALL_DIR + '/database/coord/[svcname]/diaglog'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath:'/hdd/sequoiadb/database/data/[svcname]/diaglog',
+                  diagpath: INSTALL_DIR + '/database/data/[svcname]/diaglog',
                   ftmask:'NONE',
-                  indexpath:'/ssd/sequoiadb/database/[svcname]/',
-                  lobmetapath: '/ssd/sequoiadb/database/[svcname]/'
+                  indexpath: METADATA_DIR + '/[svcname]/',
+                  lobmetapath: METADATA_DIR +  '/[svcname]/'
                 };
                 

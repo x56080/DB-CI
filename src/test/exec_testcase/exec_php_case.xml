@@ -258,39 +258,50 @@
                <var name="libxml2_dir" value=""/>
 
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
-               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/"
-                        value="${INSTALL_DIR}/lib/phplib"/>
+               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/" value="${INSTALL_DIR}/lib/phplib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot5" />
             <then>
+               <var name="ini_file" value="/opt/php_5.5.0/lib/php.ini"/>
+               <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+
+               <var name="ini_cmd" value="-c ${ini_file}"/>
                <var name="php_exe" value="/opt/php_5.5.0/bin/php"/>
-               <var name="ini_cmd" value="-c /opt/php_5.5.0/lib/php.ini"/>
                <var name="libxml2_dir" value="/opt/php_5.5.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot6" />
             <then>
+               <var name="ini_file" value="/opt/php_5.6.0/lib/php.ini"/>
+               <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+
+               <var name="ini_cmd" value="-c ${ini_file}"/>
                <var name="php_exe" value="/opt/php_5.6.0/bin/php"/>
-               <var name="ini_cmd" value="-c /opt/php_5.6.0/lib/php.ini"/>
                <var name="libxml2_dir" value="/opt/php_5.6.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot0" />
             <then>
+               <var name="ini_file" value="/opt/php_7.0.0/lib/php.ini"/>
+               <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+
+               <var name="ini_cmd" value="-c ${ini_file}"/>
                <var name="php_exe" value="/opt/php_7.0.0/bin/php"/>
-               <var name="ini_cmd" value="-c /opt/php_7.0.0/lib/php.ini"/>
                <var name="libxml2_dir" value="/opt/php_7.0.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot1" />
             <then>
+               <var name="ini_file" value="/opt/php_7.1.11/lib/php.ini"/>
+               <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+
+               <var name="ini_cmd" value="-c ${ini_file}"/>
                <var name="php_exe" value="/opt/php_7.1.11/bin/php"/>
-               <var name="ini_cmd" value="-c /opt/php_7.1.11/lib/php.ini"/>
                <var name="libxml2_dir" value="/opt/php_7.1.11/libxml2/lib"/>
             </then>
          </if>

@@ -67,10 +67,10 @@
       <hostinfo prefix="host" />
 
       <property name="remote_cmd1" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
          
       <property name="remote_cmd_lsof" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml detect_handle_number -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml detect_handle_number -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
    
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>         
@@ -101,7 +101,7 @@
       </for>
       
       <property name="remote_cmd2" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
         
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
