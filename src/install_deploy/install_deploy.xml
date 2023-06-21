@@ -554,7 +554,12 @@
    </target>
    
    <!--同步日志-->
-   <target name="sync_log"> 
+   <target name="sync_log">
+      <var name="backup_user" value="root"/>
+      <var name="backup_passwd" value="jenkins"/>
+      <var name="sdbadmin_user" value="sdbadmin"/>
+      <var name="sdbadmin_passwd" value="Admin@1024"/>
+
        <!--同步脚本存放位置-->
        <var name="sync_script_dir" value="/opt"/>
        <for list="${testhost_list}" param="testhost" parallel="false">
@@ -582,22 +587,22 @@
                          trust="true"
                          command="chmod 777 ${sync_script_dir}/logsync.sh"/>
                 <!--创建备份目录-->
-                <sshexec host="192.168.28.27" 
-                         username="${user}" 
-                         password="jenkins"
+                <sshexec host="192.168.28.27"
+                         username="${backup_user}"
+                         password="${backup_passwd}"
                          trust="true"
                          command="mkdir -p /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-                <sshexec host="192.168.28.27" 
-                         username="${user}" 
-                         password="jenkins"
+                <sshexec host="192.168.28.27"
+                         username="${backup_user}"
+                         password="${backup_passwd}"
                          trust="true"
                          command="chmod 777 /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
                 <!--执行日志归档脚本-->
-                <sshexec host="@{testhost}" 
-                         username="${user}" 
-                         password="${passwd}" 
+                <sshexec host="@{testhost}"
+                         username="${sdbadmin_user}"
+                         password="${sdbadmin_passwd}"
                          trust="true"
-                         command="${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} >>/dev/null &amp;"/>
+                         command="nohup ${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} &gt;/tmp/logsync.log 2&gt;&amp;1 &amp;"/>
            </sequential>
        </for>
    </target>

@@ -1052,7 +1052,7 @@
             <property name="password" value="Admin@2048" />
          </then>
          <else>
-            <property name="password" value="jenkins" />
+            <property name="password" value="Sdb@123123" />
          </else>
       </if>
       <!--停止inotify进程-->
