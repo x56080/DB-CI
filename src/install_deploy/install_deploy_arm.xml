@@ -288,7 +288,7 @@
                     <arg value="echo $(( ${svcname} + 5 ))" />
                   </exec>
 
-                  <echo file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" append="true">svcname=${essvcname}&#10;</echo>
+                  <!--echo file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" append="true">svcname=${essvcname}&#10;</echo-->
                   <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchenginehost=localhost" value="searchenginehost=${ES_IP}"/>
                   <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchengineport=9200" value="searchengineport=${esport}"/>
                   <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="diaglevel=3" value="diaglevel=5"/>
