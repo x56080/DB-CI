@@ -297,7 +297,7 @@
       </for>
       
       <!--execute testcase in remote host-->
-      <var name="test_remote_cmd" value="ant -f ${testscript_dir}/largedata_test.xml exec_remote_testcase -DCI_WORK_DIR=${CI_WORK_DIR} -DTEST_TYPE=${TEST_TYPE} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER} -DBREAK_ON_FAILURE=${BREAK_ON_FAILURE}" />
+      <var name="test_remote_cmd" value="ant -f ${testscript_dir}/largedata_test.xml exec_remote_testcase -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR} -DTEST_TYPE=${TEST_TYPE} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER} -DBREAK_ON_FAILURE=${BREAK_ON_FAILURE}" />
       <for list="${testhost_list},${myhostname}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"

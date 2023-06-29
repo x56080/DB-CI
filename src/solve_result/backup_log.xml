@@ -39,7 +39,7 @@
   </target>
   <target name="backup_remote_log">
     <echo>${line.separator}****begin to backup remote log</echo>
-    <property name="remote_cmd1" value="ant -f ${CI_WORK_DIR}/script/src/solve_result/backup_log.xml backup_log_in_remote -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR}"/>
+    <property name="remote_cmd1" value="ant -f ${CI_WORK_DIR}/script/src/solve_result/backup_log.xml backup_log_in_remote -DTEST_TYPE=${TEST_TYPE}  -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}"/>
     <for list="${testhost_list}" param="testhost" parallel="true">
       <sequential>
         <staf location="@{testhost}" service="PROCESS" resultPrefix="remote_exec1" request="START SHELL COMMAND ${remote_cmd1} WAIT STDERRTOSTDOUT RETURNSTDOUT" throwBuildException="1"/>
