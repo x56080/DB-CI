@@ -175,8 +175,9 @@
       <!--copy run package to remote host-->
       <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
          <sequential>
-            <staf location="@{testhost}" service="FS"
-                  request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH"
+            <!--<staf location="@{testhost}" service="FS" request="CREATE DIRECTORY ${CI_WORK_DIR} FULLPATH" throwBuildException="1"/>-->
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR};rm -rf ${CI_WORK_DIR}/* WAIT 1m"
                   throwBuildException="1"/>
             <staf location="local" service="FS"
                   request="COPY FILE ${package_fullname} TODIRECTORY ${CI_WORK_DIR} TOMACHINE @{testhost}"
@@ -201,7 +202,12 @@
                   <fail message="exec: QUERY ENTRY ${INSTALL_DIR}, expect directory not exists. expect return code is 48, actual: ${check_dir.rc}"/>
                </else>
             </if>
-            
+
+            <var name="createvarcmd" value="mkdir -p /var/sequoiadb; chown -R sdbadmin:sdbadmin_group /var/sequoiadb"/>
+            <var name="createdatacmd" value="mkdir -p ${METADATA_DIR}; chown -R sdbadmin:sdbadmin_group ${METADATA_DIR}"/>
+            <staf location="@{testhost}" service="PROCESS" request="START SHELL COMMAND ${createvarcmd} WAIT 20m STDERRTOSTDOUT RETURNSTDOUT" throwBuildException="1"/>
+            <staf location="@{testhost}" service="PROCESS" request="START SHELL COMMAND ${createdatacmd} WAIT 20m STDERRTOSTDOUT RETURNSTDOUT" throwBuildException="1"/>
+
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${CI_WORK_DIR}/${package_name} --prefix ${INSTALL_DIR} --mode unattended WAIT 20m STDERRTOSTDOUT RETURNSTDOUT"
                   resultPrefix="install"
@@ -537,7 +543,7 @@
       </if>
       <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
       <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
-      <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};&quot;" />
+      <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};var METADATA_DIR='${METADATA_DIR}';var INSTALL_DIR='${INSTALL_DIR}'&quot;" />
       <echo message="exec cmd: ${sdb_shell} ${deploy_cmd1} ${deploy_cmd2}"/>
       <exec executable="${sdb_shell}" timeout="1200000" outputproperty="deploy_out" failonerror="true" logError="true">                                   
          <arg line="${deploy_cmd1} ${deploy_cmd2}" />
