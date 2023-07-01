@@ -56,8 +56,9 @@
             </then>
          </elseif>
          <else>
-            <pythondriver type="install"/>
-      
+            <createvenv createdir="${CI_WORK_DIR}" modeldir="/hdd/package" venvname="venv_py"/>
+            <pythondriver type="install" py="${CI_WORK_DIR}/venv_py"/>
+
             <!--execute-->
             <delete dir="${report_dir}" failonerror="false"/>
             <mkdir dir="${report_dir}"/>
@@ -65,18 +66,18 @@
             <mkdir dir="${report_dir}/python3"/>
 
             <replace file="${testcase_dir}/config.json" token='"localhost"' value='"${firsthost}"'/>
-            <replace file="${testcase_dir}/config.json" token='"/opt/sequoiadb/database/"' value='"/hdd/sequoiadb/database/"'/>
-            <replace file="${testcase_dir}/config.json" token='"/tmp/pythontest"' value='"/hdd/ci/pythontest"'/>
+            <replace file="${testcase_dir}/config.json" token='"/opt/sequoiadb/database/"' value='"${INSTALL_DIR}/database/"'/>
+            <replace file="${testcase_dir}/config.json" token='"/tmp/pythontest"' value='"${CI_WORK_DIR}/pythontest"'/>
 
             <var name="processrc" value="0"/>
             <replace file="${testcase_dir}/run_all_case.py" token='"report"' value='"${report_dir}/python2"'/>
-            <execallcase pyversion="python2" testcasedir="${testcase_dir}" reportdir="${report_dir}/python2"/>
+            <execallcase pyversion="${CI_WORK_DIR}/venv_py2/bin/python" testcasedir="${testcase_dir}" reportdir="${report_dir}/python2"/>
             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="python2"/>
       
             <replace file="${testcase_dir}/run_all_case.py" token='"${report_dir}/python2"' value='"${report_dir}/python3"'/>
-            <execallcase pyversion="python3" testcasedir="${testcase_dir}" reportdir="${report_dir}/python3"/>
+            <execallcase pyversion="${CI_WORK_DIR}/venv_py3/bin/python" testcasedir="${testcase_dir}" reportdir="${report_dir}/python3"/>
             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="python3"/>
-            <pythondriver type="uninstall"/>
+            <pythondriver type="uninstall" py="${CI_WORK_DIR}/venv_py"/>
          </else>
       </if>
 
@@ -364,6 +365,7 @@
    </macrodef>
 
    <macrodef name="pythondriver">
+      <attribute name="py"/>
       <attribute name="type"/>
       <sequential>
          <var name="pythondir" value="${INSTALL_DIR}/python"/>         
@@ -381,7 +383,7 @@
                      <delete dir="${pythondir}/py${py_version}" failonerror="false"/>
                      <mkdir dir="${pythondir}/py${py_version}"/>
                      <untar src="@{pytarfullname}" dest="${pythondir}/py${py_version}" compression="gzip"/>
-                     <exec executable="python${py_version}" dir="${pythondir}/py${py_version}" failonerror="true" logError="true">
+                     <exec executable="@{py}${py_version}/bin/python" dir="${pythondir}/py${py_version}" failonerror="true" logError="true">
                         <arg line=" setup.py install --record files.txt" />
                      </exec>
                   </case>
@@ -458,5 +460,39 @@
 
       </sequential>
    </macrodef>
-   
+
+   <macrodef name="createvenv">
+      <attribute name="createdir"/>
+      <attribute name="modeldir"/>
+      <attribute name="venvname"/>
+
+      <sequential>
+         <!--1. 创建venv-->
+         <exec executable="virtualenv" dir="@{createdir}" failonerror="true" logError="true">
+            <arg line=" -p python2 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}2"/>
+         </exec>
+         <exec executable="virtualenv" dir="@{createdir}" failonerror="true" logError="true">
+            <arg line=" -p python3 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}3"/>
+         </exec>
+
+         <!--2. 安装model-->
+         <property name="py2" value="@{createdir}/@{venvname}2/bin/python"/>
+         <property name="py3" value="@{createdir}/@{venvname}3/bin/python"/>
+
+         <property name="setuptools_dir" value="@{modeldir}/setuptools-43.0.0"/>
+         <property name="xmlrunner_dir" value="@{modeldir}/xmlrunner-1.7.7"/>
+         <exec executable="${py2}" dir="${setuptools_dir}" failonerror="true" logError="true">
+            <arg line=" setup.py install"/>
+         </exec>
+         <exec executable="${py2}" dir="${xmlrunner_dir}" failonerror="true" logError="true">
+            <arg line=" setup.py install"/>
+         </exec>
+         <exec executable="${py3}" dir="${setuptools_dir}" failonerror="true" logError="true">
+            <arg line=" setup.py install"/>
+         </exec>
+         <exec executable="${py3}" dir="${xmlrunner_dir}" failonerror="true" logError="true">
+            <arg line=" setup.py install"/>
+         </exec>
+      </sequential>
+   </macrodef>
 </project>

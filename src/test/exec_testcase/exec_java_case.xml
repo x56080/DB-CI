@@ -111,6 +111,8 @@
             </then>
          </elseif>
          <else>
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <replace file="${test_basedir}/tools/runtest_java.xml" token="-DS3HOSTNAME=${host.ADDR4}" value="-DS3HOSTNAME=@{hostname}"/>
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>
