@@ -39,13 +39,29 @@
       <antcall target="execute_testcase"/>
       
    </target>
-   
+
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
+      <property name="user" value="root" />
+      <property name="passwd" value="Sdb@123123" />
       <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
+            <!--拷贝脚本到同步脚本存放位置-->
+            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}"
+                 password="${passwd}"
+                 trust="true">
+               <fileset dir="${basedir}/src/conf">
+                  <include name="utils.sh"/>
+               </fileset>
+            </scp>
+            <!--赋予脚本执行权限-->
+            <sshexec host="@{testhost}"
+                     username="${user}"
+                     password="${passwd}"
+                     trust="true"
+                     command="chmod 777 ${CI_WORK_DIR}/utils.sh"/>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND ntpdate ${NTP_HOST} WAIT"
+                  request="START SHELL COMMAND ${CI_WORK_DIR}/utils.sh -m synctime -v ${NTP_HOST} WAIT STDERRTOSTDOUT RETURNSTDOUT"
                   throwBuildException=""/>
          </sequential>
       </for>

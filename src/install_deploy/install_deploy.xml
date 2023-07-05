@@ -563,7 +563,7 @@
       <var name="sdbadmin_passwd" value="Admin@1024"/>
 
       <!--同步脚本存放位置-->
-      <var name="sync_script_dir" value="/opt"/>
+      <var name="sync_script_dir" value="${CI_WORK_DIR}"/>
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <!--拷贝脚本到同步脚本存放位置-->
