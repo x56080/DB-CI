@@ -126,7 +126,7 @@
             <var name="dbpath_list" value="${TPCC_DBPATH_LIST}"/>
          </then>
          <else>
-            <var name="dbpath_list" value="${INSTALL_DIR}"/>
+            <var name="dbpath_list" value="${INSTALL_DIR},${BACKUP_TMPNODE_LOGPATH}"/>
          </else>
       </if> 
       <for list="${dbpath_list}" param="dbpath" parallel="false">

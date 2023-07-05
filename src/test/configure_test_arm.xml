@@ -257,6 +257,11 @@
       <!--ready in remote host-->
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>            
+            <sshexec host="@{testhost}"
+                     username="${user}"
+                     password="${passwd}"
+                     trust="true"
+                     command="mkdir -p ${BACKUP_TMPNODE_LOGPATH}/database" />
             <sshexec host="@{testhost}" 
                      username="${user}" 
                      password="${passwd}" 

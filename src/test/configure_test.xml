@@ -260,6 +260,9 @@
       <!--ready in remote host-->
       <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>            
+            <staf location="@{testhost}" service="FS"
+                  request="CREATE DIRECTORY ${BACKUP_TMPNODE_LOGPATH}/database/ FULLPATH"
+                  throwBuildException="1"/>
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
                   throwBuildException="1"/>
