@@ -66,9 +66,9 @@
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
          <then>
             <replace file="${testcase_dir}/../../../testcase/tools/runtest_java.xml" token="-DDSHOSTNAME=@{dshostname} -DDSSVCNAME=@{dssvcname}" value=""/>
-            <replace file="${testcase_dir}/../../../testcase/testcase/reliability/java/testng_release.xml" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
-            <replace file="${testcase_dir}/../../../testcase/testcase/reliability/java/testng.xml" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
-            <replace file="${testcase_dir}/../../../testcase/testcase/reliability/java/s3testng.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+            <replace file="${testcase_dir}/../../../testcase/reliability/java/testng_release.xml" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
+            <replace file="${testcase_dir}/../../../testcase/reliability/java/testng.xml" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
+            <replace file="${testcase_dir}/../../../testcase/reliability/java/s3testng.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
 
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
             <ant antfile="${testcase_dir}/../../../testcase/tools/runtest_java.xml" target="exec_testcase">
