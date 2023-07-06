@@ -16,6 +16,7 @@ if( hostList.constructor !== Array )
 
 var hostNum = hostList.length;
 var tmpCoordHost = hostList[0];
+var host2remote={}
 
 main();
 
@@ -55,6 +56,39 @@ function deployCluster()
    println("------succed to deploy");
 }
 
+function clearDataDir(host,dbPath, config)
+{
+   try 
+   {
+      var remote ;
+      
+      if ( typeof(host2remote[host]) == "undefined" )
+      {
+         remote = new Remote(host, 11790) ;
+         host2remote[host] = remote ;
+      }
+      else
+      {
+         remote = host2remote[host]  
+      }
+      
+      cmd = remote.getCmd();
+      cmd.run("rm -rf " + dbPath );
+      if ( typeof(config.indexpath) != "undefined" )
+      {
+         cmd.run("rm -rf " + config.indexpath );
+      }
+
+      if ( typeof(config.lobmetapath) != "undefined" )
+      {
+         cmd.run("rm -rf " + config.lobmetapath );
+      }
+   }
+   catch(e){
+      throw new Error(e);
+   }
+}
+
 function deployStandalone()
 {
    println("------deploy mode: STANDALONE");
@@ -67,7 +101,9 @@ function deployStandalone()
       var oma = new Oma( host, cmPort );
       
       var service = 11810;
+      
       var dbPath = diskList[0] + "/database/standalone/" + service;
+      clearDataDir(host, dbPath, {}) ;
       var config = updateDeployConfig( nodeConf, service );
       oma.createData( service, dbPath, config );
                       
@@ -83,8 +119,10 @@ function createTmpCoord()
 
    var oma = new Oma( tmpCoordHost, cmPort );
    
-   var dbBasePath = diskList[0];   
-   oma.createCoord( tmpCoordPort, dbBasePath + "/database/coord/" + tmpCoordPort );
+   var dbBasePath = diskList[0];
+   var dbPath =  dbBasePath + "/database/coord/" + tmpCoordPort ;  
+   clearDataDir(tmpCoordHost, dbPath, {}) ; 
+   oma.createCoord( tmpCoordPort, dbPath );
    oma.startNode( tmpCoordPort );
    
    var db = new Sdb( tmpCoordHost, tmpCoordPort );
@@ -102,6 +140,7 @@ function createCata( db )
    var service = cataBasePort;
    var dbPath = diskList[0] + "/database/cata/" + service;
    var config = updateDeployConfig( cataConf, service );
+   clearDataDir( host, dbPath, config) ;
    var rg = db.createCataRG( host, service, dbPath, config );
    
    //wait for cata group to select primary node
@@ -133,6 +172,7 @@ function createCata( db )
       var service = cataBasePort + parseInt( i / hostNum ) * 20;
       var dbPath = diskList[0] + "/database/cata/" + service;
       var config = updateDeployConfig( cataConf, service );
+      clearDataDir( host, dbPath, config) ;
       rg.createNode( host, service, dbPath, config );
       
       i++;
@@ -173,6 +213,7 @@ function createCoord( db )
          var service = coordBasePort + j * 20;
          var dbPath = dbBasePath + "/database/coord/" + service;
          var config = updateDeployConfig( coordConf, service );
+         clearDataDir( host, dbPath, config) ;
          rg.createNode( host, service, dbPath, config );
       }
       
@@ -217,6 +258,7 @@ function createData( db )
             var dbPath = diskList[ n + 1 ] + "/database/data/" + service;
          }
          var config = updateDeployConfig( dataConf, service );
+         clearDataDir( host, dbPath, config) ;
          rg.createNode( host, service, dbPath, config );
 
          i++;
