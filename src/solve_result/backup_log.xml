@@ -28,9 +28,8 @@
     </if>
     <property file="${basedir}/src/conf/test.conf"/>
     <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
-    <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+    <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST"/>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
-
     <antcall target="backup_remote_log"/>
     <antcall target="collect_remote_log"/>
     <antcall target="backup_bin"/>
@@ -116,18 +115,34 @@
     </if>
     <for list="${dbpath_list}" param="dbpath" parallel="false">
       <sequential>
+        <available file="@{dbpath}/database" property="directory.exists"/>
+        <condition property="directory.exists" value="false">
+          <not>
+            <isset property="directory.exists"/>
+          </not>
+        </condition>
         <if>
           <equals arg1="${TEST_TYPE}" arg2="LARGEDATATEST"/>
           <then>
-            <copy todir="${backup_basedir}/${backup_reltdir}">
-              <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/>
-            </copy>
+            <if>
+              <equals arg1="${directory.exists}" arg2="true"/>
+              <then>
+                <copy todir="${backup_basedir}/${backup_reltdir}">
+                  <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/>
+                </copy>
+              </then>
+            </if>
           </then>
           <else>
-            <copy todir="${backup_basedir}/${backup_reltdir}">
-              <!-- fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/-->
-              <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/>
-            </copy>
+            <if>
+              <equals arg1="${directory.exists}" arg2="true"/>
+              <then>
+                <copy todir="${backup_basedir}/${backup_reltdir}">
+                  <!-- fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/-->
+                  <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/>
+                </copy>
+              </then>
+            </if>
           </else>
         </if>
       </sequential>
