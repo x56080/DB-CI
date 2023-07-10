@@ -119,12 +119,17 @@
          <else>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
             <replace file="${test_basedir}/tools/runtest_java.xml" token="-DS3HOSTNAME=${host.ADDR4}" value="-DS3HOSTNAME=@{hostname}"/>
-            <replace file="${test_basedir}/driver/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
-            <replace file="${test_basedir}/driver/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
-            <replace file="${test_basedir}/sdv/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
-            <replace file="${test_basedir}/sdv/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
-            <replace file="${test_basedir}/story/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
-            <replace file="${test_basedir}/story/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
+            <if>
+               <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST" />
+               <then>
+                  <replace file="${test_basedir}/driver/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+                  <replace file="${test_basedir}/driver/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
+                  <replace file="${test_basedir}/sdv/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+                  <replace file="${test_basedir}/sdv/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
+                  <replace file="${test_basedir}/story/java/configure.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+                  <replace file="${test_basedir}/story/java/configure.xml" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
+               </then>
+            </if>
 
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
