@@ -41,12 +41,12 @@
       <antcall target="deploy"/> 
       <antcall target="ready_es_environment"/>
       <!--调用日志归档-->
-      <if>
+      <!--if>
          <isset property="PROJECT_NAME"/>
          <then>
              <antcall target="sync_log"/>
          </then>
-      </if>
+      </if-->
    </target>
    
    <target name="clear_cluster">

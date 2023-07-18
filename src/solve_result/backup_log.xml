@@ -139,8 +139,8 @@
               <equals arg1="${directory.exists}" arg2="true"/>
               <then>
                 <copy todir="${backup_basedir}/${backup_reltdir}">
-                  <!-- fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/-->
-                  <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/>
+                  <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/>
+                  <!--fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/-->
                 </copy>
               </then>
             </if>
