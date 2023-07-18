@@ -149,8 +149,8 @@
       <for list="${dbpath_list}" param="dbpath" parallel="false">
          <sequential>   
             <copy todir="${backup_basedir}/${backup_reltdir}">
-               <!-- fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/-->
-			   <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/>
+               <fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*log*,*/*/diaglog/**/*trap*"/>
+               <!--fileset dir="@{dbpath}/database" includes="*/*/diaglog/**/*.log,*/*/diaglog/**/*trap*"/-->
             </copy>
          </sequential>
       </for>
