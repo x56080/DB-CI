@@ -318,7 +318,7 @@
             <path refid="divided_path" />
          </resourcecount>
          <var name="part_filenum" unset="true"/>
-         <echo>total_filenum:${total_filenum}, partnum:${part_num}, part_filenum:${part_filenum}</echo>
+         <!--<echo>total_filenum:${total_filenum}, partnum:${part_num}, part_filenum:${part_filenum}</echo>-->
          <math result="part_filenum" 
                operand1="${total_filenum}" 
                operation="/" 

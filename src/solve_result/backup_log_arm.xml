@@ -43,8 +43,8 @@
       <for list="${testhost_list}" param="testhost">
          <sequential>         
          <sshexec host="@{testhost}" 
-                           username="${user}" 
-                           password="${passwd}" 
+                           username="${ROOT_USER}" 
+                           password="${ROOT_PWD}" 
                            trust="true"
                            command="source /etc/profile; ${remote_cmd1}" />
          </sequential>
@@ -60,9 +60,9 @@
       <property name="remote_diagdir" location="${CI_WORK_DIR}/local_diaglog"/>      
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>         
-         <scp file="${user}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz"
+         <scp file="${ROOT_USER}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz"
               todir="${backup_dir}"
-              password="${passwd}"
+              password="${ROOT_PWD}"
               trust="true"/> 
          </sequential>
       </for>

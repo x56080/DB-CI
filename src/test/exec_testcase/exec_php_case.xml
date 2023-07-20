@@ -7,16 +7,18 @@
 @author:       Ting YU 2016-10-31
 ============================================================================= -->
 
-<project default="exec_php_testcase" basedir="../../../">     
+<project default="exec_php_testcase" basedir="../../../">
    <taskdef resource="net/sf/antcontrib/antlib.xml">
       <classpath>
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
    <import file="${basedir}/src/test/exec_testcase/common.xml" />
-   
+
    <target name="exec_php_testcase">
       <property file="${basedir}/src/conf/test.conf" />
+      <var name="php_tools_dir" value="${RESOURCE_PATH}/php"/>
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
@@ -25,15 +27,14 @@
          <then>
             <prefix resultproperty="prefix"/>
             <replaceregexp file="${testcase_dir}/phpunit.xml"
-                           match='"CHANGEDPREFIX" value="(.*)"' 
-                           replace='"CHANGEDPREFIX" value="${prefix}"' 
-                           flags="g" 
-                           byline="true" 
+                           match='"CHANGEDPREFIX" value="(.*)"'
+                           replace='"CHANGEDPREFIX" value="${prefix}"'
+                           flags="g"
+                           byline="true"
                            encoding="utf-8"/>
             <replace file="${testcase_dir}/phpunit.xml" token="localhost" value="${firsthost}"/>
             <replace file="${testcase_dir}/phpunit.xml" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
             <replace file="${testcase_dir}/global.php" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database"/>
-
          </then>
       </if>
       <if>
@@ -43,7 +44,22 @@
          </else>
       </if>
       <delemptysuit testcasedir="${testcase_dir}" />
-      
+
+      <!--ready env-->
+      <if>
+         <available file="${php_tools_dir}"/>
+         <else>
+            <var name="rsync_tools_php"
+                 value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v php -d ${php_tools_dir}"/>
+            <hostinfo prefix="host"/>
+            <sshexec host="${host.ADDR4}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="${rsync_tools_php}"/>
+         </else>
+      </if>
+
       <!--execute-->
       <var name="processrc" value="0"/>
       <execallcase phpversion="php5dot4" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
@@ -51,21 +67,21 @@
       <execallcase phpversion="php5dot6" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
       <execallcase phpversion="php7dot0" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
       <execallcase phpversion="php7dot1" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
-   </target>   
-   
-   <macrodef name="delemptysuit">       
+   </target>
+
+   <macrodef name="delemptysuit">
       <attribute name="testcasedir"/>
       <sequential>
          <for param="testsuit">
             <path>
                <dirset dir="@{testcasedir}" includes="*" excludes="tools"/>
             </path>
-            <sequential>  
+            <sequential>
                <var name="testcase_num" unset="true"/>
                <resourcecount property="testcase_num">
                   <fileset dir="@{testsuit}/" includes="*.php" />
                </resourcecount>
-               
+
                <if>
                   <equals arg1="${testcase_num}" arg2="0"/>
                   <then>
@@ -76,8 +92,8 @@
          </for>
       </sequential>
    </macrodef>
-   
-   <macrodef name="execallcase">       
+
+   <macrodef name="execallcase">
       <attribute name="phpversion"/>
       <attribute name="testcasedir"/>
       <attribute name="reportdir"/>
@@ -98,7 +114,7 @@
                   </and>
                </or>
             </condition>
-            
+
             <available property="is_exist" file="${CI_WORK_DIR}/report/.TESTCASE_FAIL" type="file"/>
             <if>
                <and>
@@ -110,13 +126,13 @@
                   <var name="is_continue_exec" value="false"/>
                </then>
             </if>
-            
+
             <if>
                <equals arg1="${is_continue_exec}" arg2="true"/>
                <then>
                   <echo>${line.separator}***********begin to execute php testcases by @{phpversion}***********</echo>
-                  <processonesuit reportdir="@{reportdir}" 
-                                  pcsrc="processrc" 
+                  <processonesuit reportdir="@{reportdir}"
+                                  pcsrc="processrc"
                                   testsuit="@{testsuit}"
                                   phpversion="@{phpversion}"/>
                </then>
@@ -126,18 +142,16 @@
                <then>
                   <touch file="@{reportdir}/.TESTCASE_FAIL"/>
                   <for list="${testhost_list}" param="testhost" parallel="true">
-                     <sequential>  
+                     <sequential>
                         <!--为testhost重新赋值-->
                         <property name="host" value="@{testhost}"/>
                         <if>
                            <equals arg1="${plat_form}" arg2="ARM" />
                            <then>
-                              <property name="user" value="root" />
-                              <property name="passwd" value="Sdb@123123" />
-                              <scp file="${report_dir}/.TESTCASE_FAIL" 
-                                    todir="${user}@@${host}:${CI_WORK_DIR}/report"
-                                    password="${passwd}"
-                                    trust="true"/> 
+                              <scp file="${report_dir}/.TESTCASE_FAIL"
+                                    todir="${ROOT_USER}@@${host}:${CI_WORK_DIR}/report"
+                                    password="${ROOT_PWD}"
+                                    trust="true"/>
                            </then>
                            <else>
                               <staf location="local" service="FS"
@@ -146,30 +160,30 @@
                            </else>
                         </if>
                         <!--取消host变量之前设置的值-->
-                        <var name="host" unset="true"/>  
+                        <var name="host" unset="true"/>
                      </sequential>
                   </for>
                </then>
             </if>
          </sequential>
       </for>
-      
+
       </sequential>
-   </macrodef>      
+   </macrodef>
 
    <macrodef name="processonesuit">
       <attribute name="pcsrc"/>
       <attribute name="reportdir"/>
-      <attribute name="testsuit" /> 
-      <attribute name="phpversion"/>      
+      <attribute name="testsuit" />
+      <attribute name="phpversion"/>
       <sequential>
          <var name="testsuit_name" unset="true" />
          <basename property="testsuit_name" file="@{testsuit}"/>
          <var name="testsuit_name" value="${testsuit_name}_@{phpversion}"/>
-         
+
          <detectenv envisok="envrc" casetype="${testcase_type}" casename="${testsuit_name}"
                     rptfullname="@{reportdir}/before_${testcase_type}_${testsuit_name}.xml" />
-         
+
          <if>
             <and>
                <equals arg1="${BREAK_ON_FAILURE}" arg2="true"/>
@@ -185,35 +199,35 @@
                    <then>
                          <!--取消配置参数之前的赋值-->
                          <var name="conf_rc1" unset="true"/>
-                         <changeconf mode="before" conffullname="@{testsuit}/node.conf" 
-                                     rc="conf_rc1" casetype="${testcase_type}" 
+                         <changeconf mode="before" conffullname="@{testsuit}/node.conf"
+                                     rc="conf_rc1" casetype="${testcase_type}"
                                      rptfullname="@{reportdir}/configure_before_${testsuit_name}.xml" />
                     </then>
                </if>
                <if>
                   <equals arg1="${conf_rc1}" arg2="0" />
-                  <then>                                  
+                  <then>
                      <hostinfo prefix="host" />
-                     <runonesuit  suitfullname="@{testsuit}" 
+                     <runonesuit  suitfullname="@{testsuit}"
                                   suitname="${testsuit_name}"
-                                  phpver="@{phpversion}" 
+                                  phpver="@{phpversion}"
                                   report="@{reportdir}/${testsuit_name}_${host.NAME}.xml"
-                                  casetype="${testcase_type}" 
+                                  casetype="${testcase_type}"
                                   rc="caserc"/>
                   </then>
                </if>
-               
+
                <if>
                   <available file="@{testsuit}/node.conf.ini" type="file"/>
                   <then>
-                        <changeconf mode="after" conffullname="@{testsuit}/node.conf.ini" 
-                                    rc="conf_rc2" casetype="${testcase_type}" 
+                        <changeconf mode="after" conffullname="@{testsuit}/node.conf.ini"
+                                    rc="conf_rc2" casetype="${testcase_type}"
                                     rptfullname="@{reportdir}/configure_after_${testsuit_name}.xml"/>
                   </then>
                </if>
             </else>
          </if>
-         
+
          <var name="@{pcsrc}" unset="true"/>
          <condition property="@{pcsrc}" value="0" else="1">
             <and>
@@ -223,7 +237,7 @@
          </condition>
       </sequential>
    </macrodef>
-   
+
    <macrodef name="runonesuit">
       <attribute name="phpver"/>
       <attribute name="suitfullname" />
@@ -236,10 +250,10 @@
          <var name="begin_time" unset="true"/>
          <tstamp>
             <format property="begin_time" pattern="yyyy-MM-dd_HH:mm:ss" />
-         </tstamp>       
+         </tstamp>
 
          <markinlog casename="@{suitfullname}_@{phpver}" marktype="begin"/>
-         
+
          <!--execute-->
          <if>
             <equals arg1="${plat_form}" arg2="ARM" />
@@ -257,72 +271,77 @@
                <var name="libxml2_dir" value=""/>
 
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
-               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/" value="${INSTALL_DIR}/lib/phplib"/>
-
                <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
-               <replace file="${php_exe}" token="$${INSTALL_DIR}" value="${INSTALL_DIR}"/>
-               <chmod perm="u+x" file="${php_exe}" />
-               <chown owner="sdbadmin">
-                  <dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/>
-               </chown>
-               <chgrp group="sdbadmin_group">
-                  <dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/>
-               </chgrp>
+               <if>
+                  <equals arg1="${plat_form}" arg2="ARM"/>
+                  <then>
+                     <replace file="${ini_file}" token="/opt/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+                     <var name="ini_cmd" value="-c ${ini_file}"/>
+                  </then>
+                  <else>
+                     <!--  x86 php5.4 bin目录下的执行文件为可执行脚本调用php-bin文件,脚本中已配置读取php.ini路径  -->
+                     <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/" value="${INSTALL_DIR}/lib/phplib"/>
+                     <replace file="${php_exe}" token="$${INSTALL_DIR}" value="${INSTALL_DIR}"/>
+                     <chmod perm="u+x" file="${php_exe}"/>
+                     <chown owner="sdbadmin"><dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/></chown>
+                     <chgrp group="sdbadmin_group"><dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/></chgrp>
+                  </else>
+               </if>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot5" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php5dot5.ini"/>
-               <var name="ini_file_src" value="/opt/php_5.5.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_5.5.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_5.5.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_5.5.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_5.5.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_5.5.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot6" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php5dot6.ini"/>
-               <var name="ini_file_src" value="/opt/php_5.6.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_5.6.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_5.6.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_5.6.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_5.6.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_5.6.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot0" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php7dot0.ini"/>
-               <var name="ini_file_src" value="/opt/php_7.0.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_7.0.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_7.0.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_7.0.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_7.0.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_7.0.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot1" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php7dot1.ini"/>
-               <var name="ini_file_src" value="/opt/php_7.1.11/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_7.1.11/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_7.1.11/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_7.1.11/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_7.1.11/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_7.1.11/libxml2/lib"/>
             </then>
          </if>
-         
+
          <if>
             <available file="@{suitfullname}/../phpunit.xml"/>
             <then>
@@ -332,34 +351,34 @@
                <var name="conf_cmd" value=""/>
             </else>
          </if>
-            
+
          <var name="phpunit" value="@{suitfullname}/../tools/phpunit.phar"/>
          <var name="cmd" value="${ini_cmd} ${phpunit} ${conf_cmd} --log-junit @{report} @{suitfullname}"/>
          <echo message="exec cmd: ${php_exe} ${cmd}"/>
          <echo message="exec dir: @{suitfullname}"/>
          <echo>export LD_LIBRARY_PATH=${libxml2_dir}:${LD_LIBRARY_PATH}</echo>
-         
-         <var name="screen_output" unset="true"/> 
-         <var name="@{rc}" unset="true"/> 
-         <exec executable="${php_exe}" 
-               dir="@{suitfullname}" 
+
+         <var name="screen_output" unset="true"/>
+         <var name="@{rc}" unset="true"/>
+         <exec executable="${php_exe}"
+               dir="@{suitfullname}"
                outputproperty="screen_output"
-               resultproperty="@{rc}" 
+               resultproperty="@{rc}"
                failonerror="false" >
             <arg line="${cmd}"/>
-            <env key="LD_LIBRARY_PATH" path="${libxml2_dir}:${LD_LIBRARY_PATH}" /> 
+            <env key="LD_LIBRARY_PATH" path="${libxml2_dir}:${LD_LIBRARY_PATH}" />
          </exec>
          <echo message="${screen_output}" />
-         
+
          <!--after-->
          <markinlog casename="@{suitfullname}_@{phpver}" marktype="end"/>
-         
+
          <var name="end_time" unset="true"/>
          <tstamp>
             <format property="end_time" pattern="yyyy-MM-dd_HH:mm:ss" />
          </tstamp>
          <echo message="begin at ${begin_time}, end at ${end_time}" />
-         
+
          <var name="cluster_host_info" value=""/>
          <for list="${testhost_list}" param="testhost">
             <sequential>
@@ -367,37 +386,37 @@
                <var name="cluster_host_info" value="${cluster_host_info} @{testhost}/${prefix@{testhost}.ADDR4}"/>
             </sequential>
          </for>
-         
+
          <!--modify report-->
          <hostinfo prefix="host" />
-         <var name="ms1" value="EXECUTE HOST: ${host.NAME}/${host.ADDR4}&#10;&#10;"/>   
-         <var name="ms2" value="CLUSTER HOST:${cluster_host_info}&#10;&#10;"/>          
-         <replaceregexp file="@{report}" 
-                        match='&lt;failure(.*)&gt;' 
-                        replace='&lt;failure\1&gt;&#10;${ms1}${ms2}' 
-                        flags="g" 
-                        byline="true" 
+         <var name="ms1" value="EXECUTE HOST: ${host.NAME}/${host.ADDR4}&#10;&#10;"/>
+         <var name="ms2" value="CLUSTER HOST:${cluster_host_info}&#10;&#10;"/>
+         <replaceregexp file="@{report}"
+                        match='&lt;failure(.*)&gt;'
+                        replace='&lt;failure\1&gt;&#10;${ms1}${ms2}'
+                        flags="g"
+                        byline="true"
                         encoding="utf-8"/>
-         
+
          <replaceregexp file="@{report}"
-                        match='&lt;testcase name="(.*)" class="(.*)" file' 
-                        replace='&lt;testcase name="\2.\1" class="\2" file' 
-                        flags="g" 
-                        byline="true" 
-                        encoding="utf-8"/>            
+                        match='&lt;testcase name="(.*)" class="(.*)" file'
+                        replace='&lt;testcase name="\2.\1" class="\2" file'
+                        flags="g"
+                        byline="true"
+                        encoding="utf-8"/>
          <replaceregexp file="@{report}"
-                        match='&lt;testcase n' 
-                        replace='&lt;testcase classname="@{casetype}.@{suitname}" n' 
-                        flags="g" 
-                        byline="true" 
+                        match='&lt;testcase n'
+                        replace='&lt;testcase classname="@{casetype}.@{suitname}" n'
+                        flags="g"
+                        byline="true"
                         encoding="utf-8"/>
          <var name="backup_reltdir" value="${TEST_TYPE}_${DEPLOY_MODE}_${BUILD_NUMBER}.tar.gz"/>
          <var name="download_url" value="&#10;DOWNLOAD DIAGLOG :&#10;http://192.168.28.27:8081/${backup_reltdir}&#10;" />
-         <replaceregexp file="@{report}" 
-                        match='&lt;\/failure&gt;' 
-                        replace='${download_url}&lt;\/failure&gt;'  
-                        flags="g" 
-                        byline="true" 
+         <replaceregexp file="@{report}"
+                        match='&lt;\/failure&gt;'
+                        replace='${download_url}&lt;\/failure&gt;'
+                        flags="g"
+                        byline="true"
                         encoding="utf-8"/>
       </sequential>
    </macrodef>

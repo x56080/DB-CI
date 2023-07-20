@@ -130,11 +130,9 @@
                         <if>
                            <equals arg1="${plat_form}" arg2="ARM" />
                            <then>
-                              <property name="user" value="root" />
-                              <property name="passwd" value="Admin@2048" />
-                              <scp file="${report_dir}/.TESTCASE_FAIL" 
-                                    todir="${user}@@@{testhost}:${CI_WORK_DIR}/report"
-                                    password="${passwd}"
+                              <scp file="${report_dir}/.TESTCASE_FAIL"
+                                    todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/report"
+                                    password="${ROOT_PWD}"
                                     trust="true"/> 
                            </then>
                            <else>

@@ -8,20 +8,19 @@
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
-   <property name="user" value="root" />
-   <property name="passwd" value="Admin@2048" />
    
    <import file="${basedir}/src/test/compile_testcase.xml" />
    <import file="${basedir}/src/test/distribute_testcase.xml" />
    <property file="${basedir}/src/conf/test.conf" /> 
    <target name="main">
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
-      
+      <exec executable="hostname" outputproperty="myhostname">
+         <arg line="-i" />
+      </exec>
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />          
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_sync" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
 
       <antcall target="ready_lib"/>
@@ -31,6 +30,8 @@
       <antcall target="filter_testcase" />
       
       <antcall target="distribute_testcase"/>
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase"/>
       
@@ -38,13 +39,26 @@
    
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <for list="${testhost_list}" param="testhost">
+
+      <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
-            <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+            <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}"
+                 password="${ROOT_PWD}"
+                 trust="true">
+               <fileset dir="${basedir}/src/conf">
+                  <include name="utils.sh"/>
+               </fileset>
+            </scp>
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
                      trust="true"
-                     command="ntpdate ${NTP_HOST}" />
+                     command="chmod 777 ${CI_WORK_DIR}/utils.sh"/>
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="${CI_WORK_DIR}/utils.sh -m synctime -v ${NTP_HOST}" />
          </sequential>
       </for>
    </target>
@@ -62,6 +76,21 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
+
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="rm -rf ${CI_WORK_DIR}" />
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="mkdir -p ${CI_WORK_DIR}; chmod -R 777 ${CI_WORK_DIR}" />
+         </sequential>
+      </for>
    </target>
 
    <target name="ready_lib">
@@ -132,21 +161,21 @@
    <target name="distribute_testcase">
       <delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />
       
-      <for list="${testhost_list}" param="tmphost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="tmphost" parallel="false">
          <sequential> 
             <sshexec host="@{tmphost}" 
-                           username="${user}" 
-                           password="${passwd}" 
+                           username="${ROOT_USER}" 
+                           password="${ROOT_PWD}" 
                            trust="true"
                            command="mkdir -p ${CI_WORK_DIR}/testcase" />
-            <scp todir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
-                 password="${passwd}" 
+            <scp todir="${ROOT_USER}@@@{tmphost}:${CI_WORK_DIR}/testcase"
+                 password="${ROOT_PWD}" 
                  trust="true">
                  <fileset dir="${case_basedir}"/>
             </scp>
             <sshexec host="@{tmphost}" 
-                           username="${user}" 
-                           password="${passwd}" 
+                           username="${ROOT_USER}" 
+                           password="${ROOT_PWD}" 
                            trust="true"
                            command="chmod -R 777 ${CI_WORK_DIR}/testcase" />
          </sequential> 
@@ -158,48 +187,57 @@
       <var name="testscript_log" value="${testscript_dir}/sync_test.log" />
       <hostinfo prefix="host" />
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script" />
-            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${passwd}" 
+            <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/script"
+                 password="${ROOT_PWD}" 
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>
             <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="rm -rf ${testscript_log}" />
          </sequential>
       </for>
       
       <delete dir="${WORKSPACE}/report"/>
-      
+      <var name="rsync_tools_java"
+           value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v java -d ${RESOURCE_PATH}/java"/>
+      <var name="rsync_tools_ant"
+           value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v ant -d ${RESOURCE_PATH}/java"/>
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/sync_test_arm.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
                                         -DBREAK_ON_FAILURE=${BREAK_ON_FAILURE} -DWORKSPACE=${WORKSPACE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}
                                         -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER}" />
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="${rsync_tools_java};${rsync_tools_ant};"/>
+
             <if>
                <equals arg1="@{testhost}" arg2="${host.NAME}"/>
                <then>
                   <echo message="exec: ${test_remote_cmd}, in host: @{testhost}"/>      
                   <sshexec host="@{testhost}" 
-                           username="${user}" 
-                           password="${passwd}" 
+                           username="${ROOT_USER}" 
+                           password="${ROOT_PWD}" 
                            trust="true"
                            command="source /etc/profile; rm -rf ${testscript_log}; echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}; ${test_remote_cmd}" />
                </then>
                <else>
                   <sshexec host="@{testhost}" 
-                            username="${user}" 
-                            password="${passwd}" 
+                            username="${ROOT_USER}" 
+                            password="${ROOT_PWD}" 
                             trust="true"
                             command="rm -rf ${CI_WORK_DIR}/report; mkdir -p ${CI_WORK_DIR}/report; chmod -R 777 ${CI_WORK_DIR}/report" />
                </else>
@@ -213,8 +251,8 @@
       <property name="test_basedir" value="${CI_WORK_DIR}/testcase" />
       <hostinfo prefix="host" />
       <sshexec host="${host.NAME}" 
-               username="${user}" 
-               password="${passwd}" 
+               username="${ROOT_USER}" 
+               password="${ROOT_PWD}" 
                trust="true"
                command="rm -rf ${report_basedir}; mkdir -p ${report_basedir}; chmod -R 777 ${report_basedir}" />
    
@@ -338,8 +376,8 @@
       </copy>  
       <hostinfo prefix="host" />
       <sshexec host="${host.NAME}" 
-               username="${user}" 
-               password="${passwd}" 
+               username="${ROOT_USER}" 
+               password="${ROOT_PWD}" 
                trust="true"
                command="chmod -R 777 ${WORKSPACE}/report" />
 

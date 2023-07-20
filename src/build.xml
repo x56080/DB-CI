@@ -97,9 +97,7 @@
          </then>
       </if>
 
-      <!--antcall target="stopInotify"/-->
-
-      <!--备份日志-->      
+      <!--备份日志-->
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -367,8 +365,6 @@
          </then>
       </if>
 
-      <!--antcall target="stopInotify"/-->
-      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -637,9 +633,6 @@
          </then>
       </if>
 
-
-      <!--antcall target="stopInotify"/-->
-      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -1015,6 +1008,38 @@
    <target name="stopnode">
       <property name="SDBADMIN_USER" value="sdbadmin" />
       <property name="SDBADMIN_PWD" value="Admin@1024" />
+      <for list="${testhost_list}" param="testhost">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbcmtop"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbstop -a"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+         </sequential>
+      </for>
+   </target>
+
+
+   <target name="stopnode">
       <for list="${testhost_list}" param="testhost">
          <sequential>
             <sshexec host="@{testhost}"

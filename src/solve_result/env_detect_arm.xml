@@ -13,8 +13,8 @@
       
       <hostinfo prefix="host" />
       <sshexec host="${host.NAME}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="rm -rf ${report_dir}; mkdir -p ${report_dir}; chmod -R 777 ${report_dir}" />
 
@@ -75,13 +75,13 @@
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="source /etc/profile; ${remote_cmd1}" />
             <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="source /etc/profile; ${remote_cmd_lsof}" />
          </sequential>
@@ -93,8 +93,8 @@
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" 
-                     username="${user}" 
-                     password="${passwd}" 
+                     username="${ROOT_USER}" 
+                     password="${ROOT_PWD}" 
                      trust="true"
                      command="source /etc/profile; ${remote_cmd2}" />
          </sequential>
@@ -216,8 +216,8 @@
                <available file="${backup_fullname}" type="file"/>
                <then>
                   <scp file="${backup_fullname}"
-                       todir="${user}@${control_host}:${backup_dir}"
-                       password="${passwd}" 
+                       todir="${ROOT_USER}@${control_host}:${backup_dir}"
+                       password="${ROOT_PWD}" 
                        trust="true">
                   </scp>
                </then>
@@ -226,8 +226,8 @@
                <available file="${backup_fullname2}" type="file"/>
                <then>
                   <scp file="${backup_fullname2}"
-                       todir="${user}@${control_host}:${backup_dir}"
-                       password="${passwd}" 
+                       todir="${ROOT_USER}@${control_host}:${backup_dir}"
+                       password="${ROOT_PWD}" 
                        trust="true">
                   </scp>
                </then>
@@ -246,8 +246,8 @@
          <equals arg1="${control_host}" arg2="${host.NAME}" />
          <else>
             <scp file="${backup_fullname}"
-                 todir="${user}@${control_host}:${backup_dir}"
-                 password="${passwd}" 
+                 todir="${ROOT_USER}@${control_host}:${backup_dir}"
+                 password="${ROOT_PWD}" 
                  trust="true">
             </scp>
          </else>
@@ -468,8 +468,8 @@
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTSUIT_NAME" value="detect_node"/>
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTCASE_NAME" value="node_lsof"/>
             <scp file="${report_dir}/${host.NAME}_node_lsof_report.xml"
-                 todir="${user}@${control_host}:${CI_WORK_DIR}/report/env_detect"
-                 password="${passwd}" 
+                 todir="${ROOT_USER}@${control_host}:${CI_WORK_DIR}/report/env_detect"
+                 password="${ROOT_PWD}" 
                  trust="true">
             </scp>
          </then>
@@ -491,7 +491,7 @@
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <var name="sdbshell" value="${INSTALL_DIR}/bin/sdb"/>
       <var name="cmd1" value="-f &quot;${basedir}/src/solve_result/detect_db_datagroup.js&quot;" />
-      <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='localhost'&quot;" />
+      <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='${firsthost}'&quot;" />
       <echo message="exec cmd: ${sdbshell} ${cmd1} ${cmd2}"/>
       <var name="output" unset="true"/>
       <var name="@{envisok}" unset="true"/>

@@ -29,14 +29,14 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
+
       <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
       
-      <antcall target="compile_testcase" />
+<!--      <antcall target="compile_testcase" />-->
 
       <antcall target="filter_testcase" />
 
