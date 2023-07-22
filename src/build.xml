@@ -95,7 +95,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <!--备份日志-->      
       <if>
@@ -110,23 +110,10 @@
                      <property name="SDBBRANCH" value="${SDBBRANCH}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" 
-                         username="${user}" 
-                         password="${logMachinePasswd}" 
-                         trust="true"
-                         command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" 
-               username="${user}" 
-               password="${logMachinePasswd}" 
-               trust="true"
-               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="normal_mvcc_test_build">
@@ -376,7 +363,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
       
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -390,22 +377,10 @@
                      <property name="SDBBRANCH" value="${SDBBRANCH}"/>
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" 
-                         username="${user}" 
-                         password="${logMachinePasswd}" 
-                         trust="true"
-                         command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" 
-               username="${user}" 
-               password="${logMachinePasswd}" 
-               trust="true"
-               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="sync_mvcc_test_build">
@@ -657,7 +632,7 @@
       </if>
 
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
       
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -671,22 +646,10 @@
                      <property name="SDBBRANCH" value="${SDBBRANCH}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" 
-                         username="${user}" 
-                         password="${logMachinePasswd}" 
-                         trust="true"
-                         command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" 
-               username="${user}" 
-               password="${logMachinePasswd}" 
-               trust="true"
-               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="mvcc_test_build">
