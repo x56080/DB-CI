@@ -87,7 +87,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -100,14 +100,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="normal_mvcc_test_build">
@@ -181,7 +177,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -194,14 +190,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="largedata_test_build">
@@ -268,100 +260,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
-
-      <if>
-         <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
-         <then>
-            <if>
-               <equals arg1="${build_status}" arg2="unstable" />
-               <then>
-                  <ant antfile="${backup_log_file}" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
-                     <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-                     <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
-                     <property name="testhost_list" value="${testhost_list}"/>
-                  </ant>
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
-               </then>
-            </if>
-         </then>
-      </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-   </target>
-   
-   <target name="sync_test_build">
-      <antcallback target="check_parameter" return="NEED_INSTALL_DEPLOY, DEPLOY_MODE, BREAK_ON_FAILURE, COVERAGE, TESTCASE_LISTS"/>
-      
-      <var name="TEST_TYPE" value="SYNCTEST"/>
-      <getplatform resultProperty="plat_form"/>
-      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-             <property name="deploy_file_name" value="install_deploy_arm.xml"/>
-             <property name="normal_test_file" value="normal_test_arm.xml"/>
-             <property name="configure_test_file" value="configure_test_arm.xml"/>
-             <property name="sync_test_file" value="sync_test_arm.xml"/>
-             <property name="env_detect_name" value="env_detect_arm.xml"/>
-             <property name="backup_log_file" value="backup_log_arm.xml"/>
-         </then>
-         <else>
-             <property name="deploy_file_name" value="install_deploy.xml"/>
-             <property name="normal_test_file" value="normal_test.xml"/>
-             <property name="configure_test_file" value="configure_test.xml"/>
-             <property name="sync_test_file" value="sync_test.xml"/>
-             <property name="env_detect_name" value="env_detect.xml"/>
-             <property name="backup_log_file" value="backup_log.xml"/>
-         </else>
-      </if> 
-      <if>
-         <equals arg1="${NEED_INSTALL_DEPLOY}" arg2="true" />
-         <then>
-            <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
-               <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-               <property name="plat_form" value="${plat_form}"/>
-            </ant>
-            <if>
-               <equals arg1="${COVERAGE}" arg2="true" />
-               <then>
-                  <ant antfile="get_coverage.xml" target="ready_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
-                     <property name="testhost_list" value="${testhost_list}"/>
-                  </ant>
-               </then>
-            </if>
-         </then>
-      </if>
-     
-      <ant antfile="${sync_test_file}" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
-         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-         <property name="plat_form" value="${plat_form}"/>
-         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
-         <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
-         <property name="BREAK_ON_FAILURE" value="${BREAK_ON_FAILURE}"/>
-      </ant>
-      
-      <ant antfile="${env_detect_name}" dir="${basedir}/src/solve_result" useNativeBaseDir="true">
-         <property name="TEST_TYPE" value="${TEST_TYPE}"/>
-         <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
-         <property name="plat_form" value="${plat_form}"/>
-      </ant>
-   
-      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
-   
-      <antcallback target="status_file.get_build_status" return="build_status"/>
-
-      <if>
-         <equals arg1="${COVERAGE}" arg2="true" />
-         <then>
-            <ant antfile="get_coverage.xml" target="get_coverage" dir="src/solve_result" inheritAll="true" useNativeBaseDir="true" >
-               <property name="testhost_list" value="${testhost_list}"/>
-            </ant>
-         </then>
-      </if>
-
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -374,14 +273,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="sync_mvcc_test_build">
@@ -454,7 +349,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -467,8 +362,6 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="plat_form" value="${plat_form}"/>
                   </ant>
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
@@ -539,7 +432,7 @@
       </ant>
       
       <antcallback target="status_file.get_build_status" return="build_status"/>
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -551,15 +444,10 @@
                      <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="configure_test_build">
@@ -638,7 +526,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -651,15 +539,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="mvcc_test_build">
@@ -733,7 +616,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
 
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -746,15 +629,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${testhost_list}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true"
-                  command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}" username="${user}" password="${logMachinePasswd}" trust="true" command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="reliability_test_build">
@@ -924,7 +802,7 @@
          </then>
       </if>
 
-      <antcall target="stopInotify"/>
+      <!--antcall target="stopInotify"/-->
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -937,22 +815,10 @@
                      <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
                      <property name="testhost_list" value="${firsthost}"/>
                   </ant>
-                  <!--压缩打包远程日志文件-->
-                  <sshexec host="${logMachine}"
-                           username="${user}"
-                           password="${logMachinePasswd}"
-                           trust="true"
-                           command="tar --warning=no-file-changed -czvf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}.tar.gz -C   /opt/ci/bak_log/ ${PROJECT_NAME}_${BUILD_NUMBER}"/>
                </then>
             </if>
          </then>
       </if>
-      <!--删除日志文件夹-->
-      <sshexec host="${logMachine}"
-               username="${user}"
-               password="${logMachinePasswd}"
-               trust="true"
-               command="rm -rf /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
    </target>
    
    <target name="commit_compile_build">
