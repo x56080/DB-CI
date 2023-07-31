@@ -20,7 +20,7 @@
    </taskdef>    
    <property name="user" value="root" />
    <property name="passwd" value="Sdb@123123" />
-   
+
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <if>

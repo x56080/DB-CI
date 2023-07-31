@@ -13,8 +13,11 @@
       <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar"/>
     </classpath>
   </taskdef>
-  <property name="user" value="root"/>
-  <property name="passwd" value="Admin@2048"/>
+
+  <property file="${basedir}/src/conf/test.conf"/>
+  <var name="user" value="${ROOT_USER}" />
+  <var name="passwd" value="${ROOT_PWD}" />
+
   <target name="main">
     <if>
       <isset property="DEPLOY_MODE"/>
@@ -23,7 +26,7 @@
         <var name="DEPLOY_MODE" value=""/>
       </else>
     </if>
-    <property file="${basedir}/src/conf/test.conf"/>
+
     <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
     <antcall target="backup_remote_log"/>
     <antcall target="collect_remote_log"/>

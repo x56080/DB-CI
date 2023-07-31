@@ -17,6 +17,11 @@
    
    <target name="exec_php_testcase">
       <property file="${basedir}/src/conf/test.conf" />
+      <var name="php_tools_dir" value="${RESOURCE_PATH}/php"/>
+
+      <property name="user" value="${ROOT_USER}" />
+      <property name="passwd" value="${ROOT_PWD}" />
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
@@ -43,7 +48,23 @@
          </else>
       </if>
       <delemptysuit testcasedir="${testcase_dir}" />
-      
+
+      <!--ready env-->
+      <if>
+         <available file="${php_tools_dir}"/>
+         <else>
+            <var name="rsync_tools_php"
+                 value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v php -d ${php_tools_dir}"/>
+            <hostinfo prefix="host"/>
+            <sshexec host="${host.ADDR4}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="${rsync_tools_php}"/>
+         </else>
+      </if>
+
+
       <!--execute-->
       <var name="processrc" value="0"/>
       <execallcase phpversion="php5dot4" testcasedir="${testcase_dir}" reportdir="${report_dir}"/>
@@ -132,8 +153,6 @@
                         <if>
                            <equals arg1="${plat_form}" arg2="ARM" />
                            <then>
-                              <property name="user" value="root" />
-                              <property name="passwd" value="Sdb@123123" />
                               <scp file="${report_dir}/.TESTCASE_FAIL" 
                                     todir="${user}@@${host}:${CI_WORK_DIR}/report"
                                     password="${passwd}"
@@ -258,69 +277,74 @@
                <var name="libxml2_dir" value=""/>
 
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php.ini"/>
-               <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/" value="${INSTALL_DIR}/lib/phplib"/>
-
                <var name="php_exe" value="${INSTALL_DIR}/tools/server/php/bin/${php_exec_file}"/>
-               <replace file="${php_exe}" token="$${INSTALL_DIR}" value="${INSTALL_DIR}"/>
-               <chmod perm="u+x" file="${php_exe}" />
-               <chown owner="sdbadmin">
-                  <dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/>
-               </chown>
-               <chgrp group="sdbadmin_group">
-                  <dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/>
-               </chgrp>
+               <if>
+                  <equals arg1="${plat_form}" arg2="ARM"/>
+                  <then>
+                     <replace file="${ini_file}" token="/opt/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
+                     <var name="ini_cmd" value="-c ${ini_file}"/>
+                  </then>
+                  <else>
+                     <!--  x86 php5.4 bin目录下的执行文件为可执行脚本调用php-bin文件,脚本中已配置读取php.ini路径  -->
+                     <replace file="${ini_file}" token="/home/sequoiadb/trunk/driver/php5/build/dd/" value="${INSTALL_DIR}/lib/phplib"/>
+                     <replace file="${php_exe}" token="$${INSTALL_DIR}" value="${INSTALL_DIR}"/>
+                     <chmod perm="u+x" file="${php_exe}"/>
+                     <chown owner="sdbadmin"><dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/></chown>
+                     <chgrp group="sdbadmin_group"><dirset dir="${INSTALL_DIR}/tools/server/php/bin" includes="**/*"/></chgrp>
+                  </else>
+               </if>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot5" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php5dot5.ini"/>
-               <var name="ini_file_src" value="/opt/php_5.5.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_5.5.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_5.5.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_5.5.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_5.5.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_5.5.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php5dot6" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php5dot6.ini"/>
-               <var name="ini_file_src" value="/opt/php_5.6.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_5.6.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_5.6.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_5.6.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_5.6.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_5.6.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot0" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php7dot0.ini"/>
-               <var name="ini_file_src" value="/opt/php_7.0.0/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_7.0.0/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_7.0.0/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_7.0.0/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_7.0.0/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_7.0.0/libxml2/lib"/>
             </then>
          </if>
          <if>
             <equals arg1="@{phpver}" arg2="php7dot1" />
             <then>
                <var name="ini_file" value="${INSTALL_DIR}/tools/server/php/lib/php7dot1.ini"/>
-               <var name="ini_file_src" value="/opt/php_7.1.11/lib/php.ini"/>
+               <var name="ini_file_src" value="${php_tools_dir}/php_7.1.11/lib/php.ini"/>
                <copy file="${ini_file_src}" tofile="${ini_file}"/>
                <replace file="${ini_file}" token="/hdd/sequoiadb/lib/phplib/" value="${INSTALL_DIR}/lib/phplib"/>
 
                <var name="ini_cmd" value="-c ${ini_file}"/>
-               <var name="php_exe" value="/opt/php_7.1.11/bin/php"/>
-               <var name="libxml2_dir" value="/opt/php_7.1.11/libxml2/lib"/>
+               <var name="php_exe" value="${php_tools_dir}/php_7.1.11/bin/php"/>
+               <var name="libxml2_dir" value="${php_tools_dir}/php_7.1.11/libxml2/lib"/>
             </then>
          </if>
          
