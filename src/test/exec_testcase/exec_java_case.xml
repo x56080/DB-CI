@@ -17,21 +17,21 @@
    
    <target name="exec_java_testcase">
       <property file="${basedir}/src/conf/test.conf" />
+      <property name="user" value="${ROOT_USER}" />
+      <property name="passwd" value="${ROOT_PWD}" />
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
 
+      <hostinfo prefix="host"/>
+      <var name="rsync_tools_mvn" value="source ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v mvn -d ${RESOURCE_PATH}/java"/>
+      <sshexec host="${host.ADDR4}"
+               username="${user}"
+               password="${passwd}"
+               trust="true"
+               command="${rsync_tools_mvn}"/>
+
       <mkdir dir="${report_dir}"/>
-	  <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-            <then>
-               <property name="user" value="root" />
-               <property name="passwd" value="Admin@2048" />
-            </then>
-         <else>
-            <property name="user" value="root" />
-            <property name="passwd" value="Sdb@123123" />
-         </else>
-	  </if>
       <for param="fullfilename">
          <path>
             <fileset dir="${INSTALL_DIR}/java" includes="sequoiadb-driver-*.jar"/>
@@ -66,6 +66,8 @@
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
          <then>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <replaceStrOfCfg testBasedir="${testcase_dir}/../../../testcase"/>
+
             <ant antfile="${testcase_dir}/../../../testcase/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="reportdir" value="${report_dir}"/>
@@ -88,9 +90,7 @@
             <then>
                <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
                <replace file="${test_basedir}/tools/runtest_java.xml" token="-DDSHOSTNAME=@{dshostname}" value="-DRSRVNODEDIR=${INSTALL_DIR}/database"/>
-               <replace file="${test_basedir}/driver/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
-               <replace file="${test_basedir}/sdv/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
-               <replace file="${test_basedir}/story/java/sync.xml" token="/opt/sequoiadb/database/"  value="${INSTALL_DIR}/database"/>
+               <replaceStrOfCfg testBasedir="${test_basedir}"/>
 
                <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                   <property name="casedir" value="${testcase_dir}"/>
@@ -104,8 +104,8 @@
                   <property name="essvcname" value="${ES_PORT}"/>
                   <property name="s3svcname" value="${S3SVCNAME}"/>
                   <property name="s3client" value="${s3tmpversion}" />
-		  <property name="remoteuser" value="${user}" />
-		  <property name="remotepwd" value="${passwd}" />
+		          <property name="remoteuser" value="${user}" />
+		          <property name="remotepwd" value="${passwd}" />
                   <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                   <property name="testhost_list" value="${testhost_list}"/>
                   <property name="rootpwd" value="${passwd}" />
@@ -116,6 +116,8 @@
          <else>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
             <replace file="${test_basedir}/tools/runtest_java.xml" token="-DS3HOSTNAME=${host.ADDR4}" value="-DS3HOSTNAME=@{hostname}"/>
+            <replaceStrOfCfg testBasedir="${test_basedir}"/>
+
             <ant antfile="${test_basedir}/tools/runtest_java.xml" target="exec_testcase">
                <property name="casedir" value="${testcase_dir}"/>
                <property name="testcasetype" value="${testcase_type}"/>
@@ -128,8 +130,8 @@
                <property name="essvcname" value="${ES_PORT}"/>
                <property name="s3svcname" value="${S3SVCNAME}"/>
                <property name="s3client" value="${s3tmpversion}" />
-	       <property name="remoteuser" value="${user}" />
-	       <property name="remotepwd" value="${passwd}" />
+	           <property name="remoteuser" value="${user}" />
+	           <property name="remotepwd" value="${passwd}" />
                <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="rootpwd" value="${passwd}" />
@@ -212,7 +214,74 @@
          </then>
       </if>   
    </target>
- 
+
+   <macrodef name="replaceStrOfCfg">
+      <attribute name="testBasedir"/>
+      <sequential>
+         <echo message="testcase dir: @{testBasedir}"/>
+         <property name="cfg_file_list"
+                   value="testng,largedata,configure,smoke,sync,testng_release,s3testng"/>
+
+         <for list="${cfg_file_list}" param="cfgPrefix" delimiter=",">
+            <sequential>
+               <var name="find_ret" unset="true"/>
+               <exec executable="find" outputproperty="find_ret">
+                  <arg line="@{testBasedir}"/>
+                  <arg line="-name"/>
+                  <arg line="@{cfgPrefix}.xml"/>
+               </exec>
+
+               <var name="find_ret.length" unset="true"/>
+               <length string="${find_ret}" property="find_ret.length"/>
+
+               <if>
+                  <not>
+                     <equals arg1="${find_ret.length}" arg2="0"/>
+                  </not>
+                  <then>
+                     <echo message="@{cfgPrefix}.xml"/>
+
+                     <var name="find_ret_split" unset="true"/>
+                     <propertyregex property="find_ret_split" input="${find_ret}" regexp="\n"
+                                    replace="," global="true"/>
+                     <!-- 不存在换行符时${find_ret_split}会直接等于${find_ret_split} -->
+                     <if>
+                        <contains string="${find_ret_split}" substring="find_ret_split"/>
+                        <then>
+                           <property name="find_ret_split" value="${find_ret}"/>
+                        </then>
+                     </if>
+
+                     <for list="${find_ret_split}" param="fileItem" delimiter=",">
+                        <sequential>
+                           <if>
+                              <available file="@{fileItem}"/>
+                              <then>
+                                 <var name="fileItem" unset="true"/>
+                                 <echo message="replace cfg path in @{fileItem}"/>
+                                 <!-- 替换配置文件中的路径 -->
+                                 <replace file="@{fileItem}" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+                                 <replace file="@{fileItem}" token="/tmp/javatest" value="${CI_WORK_DIR}/javatest/"/>
+                                 <replace file="@{fileItem}" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
+                                 <replace file="@{fileItem}" token="/data/sequoiadb/cidatabase" value="${METADATA_DIR}/cidatabase"/>
+                                 <replace file="@{fileItem}" token="/opt/sequoiadb/database/" value="${INSTALL_DIR}/database/"/>
+                              </then>
+                              <else>
+                                 <echo message="@{fileItem} file is unavailable"/>
+                              </else>
+                           </if>
+                        </sequential>
+                     </for>
+                  </then>
+                  <else>
+                     <echo message="@{cfgPrefix}.xml not found in dir: @{testBasedir}"/>
+                  </else>
+               </if>
+            </sequential>
+         </for>
+      </sequential>
+   </macrodef>
+
    <macrodef name="modifytestngreport">
       <attribute name="reportdir"/>
       <attribute name="layer" />

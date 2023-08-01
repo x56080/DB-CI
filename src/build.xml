@@ -28,7 +28,6 @@
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <antcall target="stopnode"/>
-
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -298,7 +297,6 @@
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <antcall target="stopnode"/>
-
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -563,7 +561,6 @@
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <antcall target="stopnode"/>
-
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -1049,15 +1046,15 @@
    <target name="stopInotify">
       <!--获取操作系统类型-->
       <getplatform resultProperty="plat_form"/>
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-             <property name="password" value="Admin@2048" />    
-         </then>
-         <else>
-             <property name="password" value="Sdb@123123" />
-         </else>
-      </if>
+<!--      <if>-->
+<!--         <equals arg1="${plat_form}" arg2="ARM" />-->
+<!--         <then>-->
+<!--             <property name="password" value="Admin@2048" />    -->
+<!--         </then>-->
+<!--         <else>-->
+<!--             <property name="password" value="Sdb@123123" />-->
+<!--         </else>-->
+<!--      </if>-->
       <!--停止inotify进程-->
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential> 
@@ -1123,7 +1120,7 @@
          <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
       </sequential>
    </macrodef>
-   
+
 </project>
 
 

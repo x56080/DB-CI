@@ -14,9 +14,11 @@
       </classpath>
    </taskdef>
    <import file="${basedir}/src/test/exec_testcase/common.xml" />
-   
+   <property file="${basedir}/src/conf/test.conf" />
+   <property name="user" value="${ROOT_USER}" />
+   <property name="passwd" value="${ROOT_PWD}" />
+
    <target name="exec_mongoc_testcase">
-      <property file="${basedir}/src/conf/test.conf" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
 
@@ -132,8 +134,6 @@
                      <if>
                         <equals arg1="${plat_form}" arg2="ARM" />
                         <then>
-                           <property name="user" value="root" />
-                           <property name="passwd" value="Sdb@123123" />
                            <scp file="${report_dir}/.TESTCASE_FAIL" 
                                  todir="${user}@@@@@{testhost}:${CI_WORK_DIR}/report"
                                  password="${passwd}"

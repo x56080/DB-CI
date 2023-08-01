@@ -17,19 +17,15 @@
    <import file="${basedir}/src/test/compile_testcase.xml" />
    <import file="${basedir}/src/test/distribute_testcase.xml" />
    <property file="${basedir}/src/conf/test.conf" />
-
-   <property name="user" value="root" />
-   <property name="passwd" value="Sdb@123123" />
-
    <target name="main">
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
 
       <exec executable="hostname" outputproperty="myhostname"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_sync" />
-      
+
       <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
 
       <antcall target="ready_lib"/>
