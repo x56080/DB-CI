@@ -17,6 +17,10 @@
    
    <target name="exec_python_testcase">
       <property file="${basedir}/src/conf/test.conf" />
+      <property name="pymodeldir" value="${RESOURCE_PATH}/virtualenv"/>
+      <property name="user" value="${ROOT_USER}" />
+      <property name="passwd" value="${ROOT_PWD}" />
+
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <!--init-->
@@ -30,32 +34,36 @@
       <if>
          <equals arg1="${testcase_type}" arg2="thirdparty_s3_python"/>
          <then>
+            <createvenv createdir="${CI_WORK_DIR}" modeldir="${pymodeldir}" venvname="venv_s3_py3"/>
             <delete dir="${report_dir}" failonerror="false"/>
             <mkdir dir="${report_dir}"/>
             <replace file="${testcase_dir}/s3-tests-master/run_all_case.py" token='"report"' value='"${report_dir}"'/>
             <if>
                <equals arg1="${plat_form}" arg2="ARM" />
                <then>
-                   <replace file="${testcase_dir}/s3-tests-master/s3tests.json" token='"jenkins"' value='"jenkins@123"'/>
+                  <replace file="${testcase_dir}/s3-tests-master/s3tests.json" token='"${user}"' value='"${passwd}"'/>
                </then>
             </if>
-            <execallcase pyversion="s3virtualenv_python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
+            <execallcase pyversion="${CI_WORK_DIR}/venv_s3_py3/bin/python" testcasedir="${testcase_dir}/s3-tests-master" reportdir="${report_dir}"/>
             <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_s3_python"/>
          </then>
          <elseif>
             <equals arg1="${testcase_type}" arg2="thirdparty_fapmongo_python"/>
             <then>
+               <createvenv createdir="${CI_WORK_DIR}" modeldir="${pymodeldir}" venvname="venv_pymongo_py3"/>
                <delete dir="${report_dir}" failonerror="false"/>
                <mkdir dir="${report_dir}"/>
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"localhost"' value='"${firsthost}"'/>
-               <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"/tmp/pymongo"' value='"/hdd/ci/pymongo"'/>
+               <replace file="${testcase_dir}/fap3-pymongo3.10.1/config.json" token='"/tmp/pymongo"' value='"${CI_WORK_DIR}/pymongo"'/>
                <replace file="${testcase_dir}/fap3-pymongo3.10.1/run_all_case.py" token='"report"' value='"${report_dir}"'/>
-               <execallcase pyversion="pymongo_py3" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
+               <execallcase pyversion="${CI_WORK_DIR}/venv_pymongo_py3/bin/python" testcasedir="${testcase_dir}/fap3-pymongo3.10.1" reportdir="${report_dir}"/>
                <modifyreport reportdir="${report_dir}" layer="${testcase_type}" pyversion="thirdparty_fapmongo_python"/>
             </then>
          </elseif>
          <else>
-            <createvenv createdir="${CI_WORK_DIR}" modeldir="/hdd/package" venvname="venv_py"/>
+            <createvenv createdir="${CI_WORK_DIR}" modeldir="${pymodeldir}" venvname="venv_py2"/>
+            <createvenv createdir="${CI_WORK_DIR}" modeldir="${pymodeldir}" venvname="venv_py3"/>
+
             <pythondriver type="install" py="${CI_WORK_DIR}/venv_py"/>
       
             <!--execute-->
@@ -107,7 +115,7 @@
                   <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
                </and>
                <then>
-                  <exec executable="s3virtualenv_pip" 
+                  <exec executable="${CI_WORK_DIR}/venv_s3_py3/bin/pip"
                         dir="@{testcasedir}" 
                         failonerror="false" >
                      <arg line=" install --no-index  --find-links=./tools/s3-requirements/requirements-py3.5 -r requirements.txt "/>
@@ -251,8 +259,6 @@
                   <if>
                      <equals arg1="${plat_form}" arg2="ARM" />
                      <then>
-                         <property name="user" value="root" />
-                         <property name="passwd" value="jenkins@123" />
                          <scp file="${report_dir}/.TESTCASE_FAIL" 
                               todir="${user}@@@@@{testhost}:${CI_WORK_DIR}/report"
                               password="${passwd}"
@@ -451,26 +457,83 @@
       <attribute name="venvname"/>
 
       <sequential>
+         <!--1. 准备环境-->
+         <if>
+            <available file="@{modeldir}"/>
+            <else>
+               <var name="rsync_tools_py"
+                    value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v virtualenv -d @{modeldir}"/>
+               <var name="check_cmd_virtualenv"
+                    value="which virtualenv || (cd @{modeldir}/virtualenv-15.0.1/; python setup.py install)"/>
+
+               <hostinfo prefix="host"/>
+               <sshexec host="${host.ADDR4}"
+                        username="${ROOT_USER}"
+                        password="${ROOT_PWD}"
+                        trust="true"
+                        command="${rsync_tools_py};${check_cmd_virtualenv}"/>
+            </else>
+         </if>
+
+         <property name="py" value="@{createdir}/@{venvname}/bin/python"/>
+         <property name="setuptools_dir" value="@{modeldir}/setuptools-43.0.0"/>
+         <property name="xmlrunner_dir" value="@{modeldir}/xmlrunner-1.7.7"/>
+
+         <switch value="@{venvname}">
+            <!-- 测试驱动环境 -->
+            <case value="venv_py3">
+               <createvenvpy3 createdir="@{createdir}" modeldir="@{modeldir}" venvname="@{venvname}"/>
+            </case>
+            <case value="venv_py2">
+               <exec executable="virtualenv" dir="@{createdir}" failonerror="true" logError="true">
+                  <arg line=" -p python2 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}"/>
+               </exec>
+
+               <exec executable="${py}" dir="${setuptools_dir}" failonerror="true" logError="true">
+                  <arg line=" setup.py install"/>
+               </exec>
+               <exec executable="${py}" dir="${xmlrunner_dir}" failonerror="true" logError="true">
+                  <arg line=" setup.py install"/>
+               </exec>
+            </case>
+            <!-- 测试s3环境 -->
+            <case value="venv_s3_py3">
+               <createvenvpy3 createdir="@{createdir}" modeldir="@{modeldir}" venvname="@{venvname}"/>
+               <property name="pip_dir" value="@{modeldir}/pip-20.3.1"/>
+               <exec executable="${py}" dir="${pip_dir}" failonerror="true" logError="true">
+                  <arg line=" setup.py install"/>
+               </exec>
+            </case>
+            <!-- 测试pymongo环境 -->
+            <case value="venv_pymongo_py3">
+               <createvenvpy3 createdir="@{createdir}" modeldir="@{modeldir}" venvname="@{venvname}"/>
+               <property name="pymongo_dir" value="@{modeldir}/pymongo-3.12.3"/>
+               <exec executable="${py}" dir="${pymongo_dir}" failonerror="true" logError="true">
+                  <arg line=" setup.py install"/>
+               </exec>
+            </case>
+            <default/>
+         </switch>
+      </sequential>
+   </macrodef>
+
+   <macrodef name="createvenvpy3">
+      <attribute name="createdir"/>
+      <attribute name="modeldir"/>
+      <attribute name="venvname"/>
+
+      <sequential>
          <!--1. 创建venv-->
          <exec executable="virtualenv" dir="@{createdir}" failonerror="true" logError="true">
-            <arg line=" -p python2 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}2"/>
-         </exec>
-         <exec executable="virtualenv" dir="@{createdir}" failonerror="true" logError="true">
-            <arg line=" -p python3 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}3"/>
+             <arg line=" -p python3 --no-site-package --distribute --no-wheel --no-setuptools --no-pip @{venvname}"/>
          </exec>
 
          <!--2. 安装model-->
-         <property name="py2" value="@{createdir}/@{venvname}2/bin/python"/>
-         <property name="py3" value="@{createdir}/@{venvname}3/bin/python"/>
+         <property name="py3" value="@{createdir}/@{venvname}/bin/python"/>
 
          <property name="setuptools_dir" value="@{modeldir}/setuptools-43.0.0"/>
          <property name="xmlrunner_dir" value="@{modeldir}/xmlrunner-1.7.7"/>
-         <exec executable="${py2}" dir="${setuptools_dir}" failonerror="true" logError="true">
-            <arg line=" setup.py install"/>
-         </exec>
-         <exec executable="${py2}" dir="${xmlrunner_dir}" failonerror="true" logError="true">
-            <arg line=" setup.py install"/>
-         </exec>
+
          <exec executable="${py3}" dir="${setuptools_dir}" failonerror="true" logError="true">
             <arg line=" setup.py install"/>
          </exec>

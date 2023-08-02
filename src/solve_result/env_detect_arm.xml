@@ -4,11 +4,12 @@
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
-   <property name="user" value="root" />
-   <property name="passwd" value="jenkins@123" />
+   <property file="${basedir}/src/conf/test.conf" />
+   <var name="user" value="${ROOT_USER}" />
+   <var name="passwd" value="${ROOT_PWD}" />
+
 
    <target name="main_target">
-      <property file="${basedir}/src/conf/test.conf" />
       <property name="report_dir" value="${CI_WORK_DIR}/report/env_detect"/>
       
       <hostinfo prefix="host" />
@@ -67,10 +68,10 @@
       <hostinfo prefix="host" />
 
       <property name="remote_cmd1" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${detect_target_name} -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
          
       <property name="remote_cmd_lsof" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml detect_handle_number -Dcontrol_host=${host.NAME}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml detect_handle_number -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
    
       <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
@@ -88,7 +89,7 @@
       </for>
       
       <property name="remote_cmd2" 
-         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME}" />
+         value="ant -f ${CI_WORK_DIR}/script/src/solve_result/env_detect_arm.xml ${collect_remote_log_target_name} -Dcontrol_host=${host.NAME} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}" />
         
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
@@ -491,7 +492,7 @@
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <var name="sdbshell" value="${INSTALL_DIR}/bin/sdb"/>
       <var name="cmd1" value="-f &quot;${basedir}/src/solve_result/detect_db_datagroup.js&quot;" />
-      <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='localhost'&quot;" />
+      <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='${firsthost}'&quot;" />
       <echo message="exec cmd: ${sdbshell} ${cmd1} ${cmd2}"/>
       <var name="output" unset="true"/>
       <var name="@{envisok}" unset="true"/>
