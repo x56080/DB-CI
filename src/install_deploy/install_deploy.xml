@@ -311,23 +311,24 @@
             <equals arg1="${DEPLOY_MODE}" arg2="G3D3"/>
          </or>
          <then>
-            <!--执行机没有执行部署所以没有database/data目录，需要从第一个测试机上拷贝-->
-            <staf location="${firsthost}" service="FS"
-                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${INSTALL_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
-                  throwBuildException="1"/>
+            <property name="SDBADMIN_USER" value="sdbadmin" />
+            <property name="SDBADMIN_PWD" value="Admin@1024" />
+            <property name="getdatalist" value="ls -l ${INSTALL_DIR}/database/data |awk 'NR>1{ret=$NF&quot;,&quot;ret}END{print ret}'"/>
+            <sshexec host="${firsthost}" outputproperty="datalist1" username="${SDBADMIN_USER}" password="${SDBADMIN_PWD}" trust="true" command="${getdatalist}"/>
+            <propertyregex property="datalist" input="${datalist1}" regexp="\n" replace="" global="true"/>
 
-            <for param="dirtype">
-               <path>
-                  <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
-               </path>
+            <for list="${datalist}" param="dataidx" delimiter=",">
                <sequential>
+                  <echo message="@{dataidx}"/>
                   <var name="svcname" unset="true"/>
-                  <basename property="svcname" file="@{dirtype}"/>
+                  <var name="svcname" value="@{dataidx}"/>
+
                   <mkdir dir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
-                  <copy file="${INSTALL_DIR}/conf/samples/sdbseadapter.conf" todir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
+                  <copy file="${INSTALL_DIR}/conf/samples/sdbseadapter.conf"
+                        todir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
                   <exec executable="sh" outputproperty="essvcname">
-                    <arg value="-c" />
-                    <arg value="echo $(( ${svcname} + 5 ))" />
+                     <arg value="-c"/>
+                     <arg value="echo $(( ${svcname} + 5 ))"/>
                   </exec>
 
                   <!--echo file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" append="true">svcname=${essvcname}&#10;</echo-->
@@ -343,7 +344,7 @@
                </sequential>
             </for>
             <!--copy to other host -->
-            
+
             <for list="${testhost_list}" param="testhost">
                <sequential>
                   <if>
@@ -360,14 +361,12 @@
                   <staf location="@{testhost}" service="PROCESS"
                         request="START SHELL COMMAND chmod 755 ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
                         throwBuildException="1"/>
-                  
-                  <for param="dirtype">
-                     <path>
-                        <dirset dir="${INSTALL_DIR}/database/data" includes="*" />
-                     </path>
+
+                  <for list="${datalist}" param="dataidx" delimiter=",">
                      <sequential>
+                        <echo message="@{dataidx}"/>
                         <var name="svcname" unset="true"/>
-                        <basename property="svcname" file="@{dirtype}"/>
+                        <var name="svcname" value="@{dataidx}"/>
 
                         <staf location="@{testhost}" service="PROCESS"
                               request="START SHELL COMMAND su - sdbadmin -c '${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} &amp;' WAIT 10m RETURNSTDERR"
@@ -477,15 +476,15 @@
          </elseif>
       </if>
       
-      <!--copy sdb shell to localhost-->
-      <delete file="${CI_WORK_DIR}/sdb" failonerror="false"/>
-      <!--mkdir dir="${CI_WORK_DIR}"/-->
-      <staf location="${firsthost}" service="FS"
-            request="COPY FILE ${INSTALL_DIR}/bin/sdb TODIRECTORY ${CI_WORK_DIR}"
-            throwBuildException="1"/>
-      <staf location="local" service="PROCESS"
-            request="START SHELL COMMAND chmod a+x ${CI_WORK_DIR}/sdb WAIT 1m"
-            throwBuildException="1"/> 
+<!--      &lt;!&ndash;copy sdb shell to localhost&ndash;&gt;-->
+<!--      <delete file="${CI_WORK_DIR}/sdb" failonerror="false"/>-->
+<!--      &lt;!&ndash;mkdir dir="${CI_WORK_DIR}"/&ndash;&gt;-->
+<!--      <staf location="${firsthost}" service="FS"-->
+<!--            request="COPY FILE ${INSTALL_DIR}/bin/sdb TODIRECTORY ${CI_WORK_DIR}"-->
+<!--            throwBuildException="1"/>-->
+<!--      <staf location="local" service="PROCESS"-->
+<!--            request="START SHELL COMMAND chmod a+x ${CI_WORK_DIR}/sdb WAIT 1m"-->
+<!--            throwBuildException="1"/> -->
 
       <!--exec deploy.js-->
       <if>
@@ -551,14 +550,17 @@
             <var name="DEPLOY_MODE" value="CONFIGURE"/>
          </then>
       </if>
-      <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
+      <property name="sdb_shell" value="${INSTALL_DIR}/bin/sdb"/>
       <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
       <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};var METADATA_DIR='${METADATA_DIR}';var INSTALL_DIR='${INSTALL_DIR}'&quot;" />
       <echo message="exec cmd: ${sdb_shell} ${deploy_cmd1} ${deploy_cmd2}"/>
-      <exec executable="${sdb_shell}" timeout="1200000" outputproperty="deploy_out" failonerror="true" logError="true">                                   
-         <arg line="${deploy_cmd1} ${deploy_cmd2}" />
-      </exec>
-      <echo message="${deploy_out}"/>
+
+      <hostinfo prefix="host" />
+      <sshexec host="${host.NAME}"
+               username="${user}"
+               password="${passwd}"
+               trust="true"
+               command="${sdb_shell} ${deploy_cmd1} ${deploy_cmd2} > ${CI_WORK_DIR}/deploy_outlog; cat ${CI_WORK_DIR}/deploy_outlog" />
    </target>
    
    <!--同步日志-->

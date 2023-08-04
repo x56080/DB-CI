@@ -26,7 +26,9 @@
       
       <var name="TEST_TYPE" value="NORMALTEST"/>
       <getplatform resultProperty="plat_form"/>
-      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <antcall target="stopnode"/>
+
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -296,6 +298,8 @@
       <var name="TEST_TYPE" value="SYNCTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <antcall target="stopnode"/>
+
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -558,7 +562,9 @@
       <var name="TEST_TYPE" value="CONFIGURETEST"/>
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
-      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" /> 
+      <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
+      <antcall target="stopnode"/>
+
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -1003,7 +1009,40 @@
          </else>
       </if>
    </target>
-   
+
+   <target name="stopnode">
+      <property name="SDBADMIN_USER" value="sdbadmin" />
+      <property name="SDBADMIN_PWD" value="Admin@1024" />
+      <for list="${testhost_list}" param="testhost">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbcmtop"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbstop -a"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+         </sequential>
+      </for>
+   </target>
+
    <target name="stopInotify">
       <!--获取操作系统类型-->
       <getplatform resultProperty="plat_form"/>
@@ -1082,7 +1121,7 @@
          <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
       </sequential>
    </macrodef>
-   
+
 </project>
 
 
