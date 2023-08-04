@@ -16,7 +16,11 @@
    
    <import file="${basedir}/src/test/compile_testcase.xml" />
    <import file="${basedir}/src/test/distribute_testcase.xml" />
-   <property file="${basedir}/src/conf/test.conf" /> 
+   <property file="${basedir}/src/conf/test.conf" />
+
+   <property name="user" value="root" />
+   <property name="passwd" value="Sdb@123123" />
+
    <target name="main">
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
 
@@ -42,8 +46,6 @@
 
    <target name="ntpdate_time">
       <hostinfo prefix="host" />
-      <property name="user" value="root" />
-      <property name="passwd" value="Sdb@123123" />
       <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <!--拷贝脚本到同步脚本存放位置-->
@@ -149,13 +151,24 @@
       
    <target name="distribute_testcase">
       <delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />
-      
       <for list="${myhostname},${testhost_list}" param="tmphost" parallel="false">
-         <sequential> 
-            <staf location="local" service="FS"
-                  request="COPY DIRECTORY ${case_basedir} TODIRECTORY ${CI_WORK_DIR}/testcase TOMACHINE @{tmphost} RECURSE"
-                  throwBuildException="1"/>
-         </sequential> 
+         <sequential>
+            <sshexec host="@{tmphost}"
+                     username="${user}"
+                     password="${passwd}"
+                     trust="true"
+                     command="rm -rf ${CI_WORK_DIR}/testcase"/>
+            <sshexec host="@{tmphost}"
+                     username="${user}"
+                     password="${passwd}"
+                     trust="true"
+                     command="mkdir -p ${CI_WORK_DIR}/testcase"/>
+            <scp todir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
+                 password="${passwd}"
+                 trust="true">
+               <fileset dir="${case_basedir}"/>
+            </scp>
+         </sequential>
       </for>
    </target>
    
