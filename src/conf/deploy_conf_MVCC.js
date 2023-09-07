@@ -23,7 +23,7 @@ if( typeof( diagLevel ) === "undefined" )
 var osArch = new Cmd().run('arch');
 if ( osArch === "x86_64\n" ) 
 { 
-   var fapValue = "fapmongo2";
+   var fapValue = "fapmongo3";
 }
 else
 {
