@@ -91,13 +91,23 @@
       <delete dir="${client_dir}/lib" failonerror="false" />
       <mkdir dir="${client_dir}/include"/>
       <mkdir dir="${client_dir}/lib"/>
-      
-      <copy todir="${client_dir}/include">
-         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>
-      </copy>
-      <copy todir="${client_dir}/lib">
-         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>
-      </copy>
+
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/include"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/lib"/>
+
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
@@ -152,91 +162,91 @@
    <target name="distribute_testcase">
       <delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />
       
-      <for list="${myhostname},${testhost_list}" param="tmphost" parallel="false">
-         <sequential>
-            <sshexec host="@{tmphost}"
-                     username="${user}"
-                     password="${passwd}"
-                     trust="true"
-                     command="rm -rf ${CI_WORK_DIR}/testcase"/>
-            <sshexec host="@{tmphost}"
-                     username="${user}"
-                     password="${passwd}"
-                     trust="true"
-                     command="mkdir -p ${CI_WORK_DIR}/testcase"/>
-            <scp todir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
-                 password="${passwd}"
-                 trust="true">
-               <fileset dir="${case_basedir}"/>
-            </scp>
-         </sequential>
+      <for list="${testhost_list}" param="tmphost" parallel="false">
+         <sequential> 
+            <staf location="local" service="FS"
+                  request="COPY DIRECTORY ${case_basedir} TODIRECTORY ${CI_WORK_DIR}/testcase TOMACHINE @{tmphost} RECURSE"
+                  throwBuildException="1"/>
+         </sequential> 
       </for>
    </target>
    
    <target name="execute_testcase">
       <var name="testscript_dir" value="${CI_WORK_DIR}/script/src/test" />     
       <var name="testscript_log" value="${testscript_dir}/sync_test.log" />
+      <var name="rsync_tools_java"
+           value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v java -d ${RESOURCE_PATH}/java"/>
+      <var name="rsync_tools_ant"
+           value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v ant -d ${RESOURCE_PATH}/java"/>
+
       <hostinfo prefix="host" />
       <!--ready in remote host-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${testscript_log} CONFIRM"/>
+
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND rm -rf ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
+                  throwBuildException=""/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
+                  throwBuildException=""/>
          </sequential>
       </for>
-      
+
       <delete dir="${WORKSPACE}/report"/>
       
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/sync_test.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
                                         -DBREAK_ON_FAILURE=${BREAK_ON_FAILURE} -DWORKSPACE=${WORKSPACE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}
                                         -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER}" />
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
-         <sequential>
-         
-            <if>
-               <equals arg1="@{testhost}" arg2="${host.NAME}"/>
-               <then>
-                  <staf location="@{testhost}" service="PROCESS"                  
-                        request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}  WAIT 10m"
-                        throwBuildException="1"/>
-                              
-                  <staf location="@{testhost}" service="PROCESS"
-                        resultPrefix="remote_exec"
-                        request="START SHELL COMMAND ${test_remote_cmd} STDOUTAPPEND ${testscript_log} STDERRTOSTDOUT WAIT"
-                        throwBuildException="1"/>
-                  <propertyregex property="remote_exec_rc" input="${remote_exec.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>      
-                  <staf location="@{testhost}" service="FS"
-                        request="GET FILE ${testscript_log} TEXT"
-                        throwBuildException="1"/>
-                        
-                  <if>
-                     <equals arg1="${remote_exec_rc}" arg2="0" />
-                     <else>
-                        <fail message="exec: ${test_remote_cmd}, in host: @{testhost}, return code: ${remote_exec_rc}"/>
-                     </else>
-                  </if>
 
-               </then>
-               <else>
-                   <staf location="@{testhost}" service="PROCESS"
-                      request="START SHELL COMMAND rm -rf ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
-                      throwBuildException=""/>
-                   <staf location="@{testhost}" service="PROCESS"
-                      request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
-                      throwBuildException=""/>
-               </else>
-            </if>            
-         </sequential>
-      </for>
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <staf location="${firsthost}" service="PROCESS"
+            request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: ${firsthost}' >> ${testscript_log}  WAIT 10m"
+            throwBuildException="1"/>
+
+      <staf location="${firsthost}" service="PROCESS"
+            resultPrefix="remote_exec"
+            request="START SHELL COMMAND ${test_remote_cmd} STDOUTAPPEND ${testscript_log} STDERRTOSTDOUT WAIT"
+            throwBuildException="1"/>
+      <propertyregex property="remote_exec_rc" input="${remote_exec.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>
+      <staf location="${firsthost}" service="FS"
+            request="GET FILE ${testscript_log} TEXT"
+            throwBuildException="1"/>
+
+      <if>
+         <equals arg1="${remote_exec_rc}" arg2="0" />
+         <else>
+            <fail message="exec: ${test_remote_cmd}, in host: @{testhost}, return code: ${remote_exec_rc}"/>
+         </else>
+      </if>
+
+      <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
+           todir="${WORKSPACE}/report"
+           password="${ROOT_PWD}"
+           trust="true"
+           failonerror="false">
+      </scp>
+      <sshexec host="${host.NAME}"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
+               trust="true"
+               command="chmod -R 777 ${WORKSPACE}/report" />
+
    </target>
    
    <target name="exec_remote_testcase">
 
-      
       <property name="report_basedir" value="${CI_WORK_DIR}/report" />
       <property name="test_basedir" value="${CI_WORK_DIR}/testcase" />
       <delete dir="${report_basedir}"/>

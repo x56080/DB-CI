@@ -29,15 +29,15 @@
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
 
       <antcall target="ready_testcase"/>
-      
+
       <antcall target="ready_lib"/>
-      
+
       <antcall target="compile_testcase" />
 
       <antcall target="filter_testcase" />
 
       <antcall target="divide_testcase" />
-      
+
       <antcall target="distribute_testcase" />
 
       <antcall target="ntpdate_time"/>
@@ -115,7 +115,12 @@
                            username="${ROOT_USER}" 
                            password="${ROOT_PWD}" 
                            trust="true"
-                           command="mkdir -p ${CI_WORK_DIR}; chmod -R 777 ${CI_WORK_DIR}" />
+                           command="mkdir -p ${CI_WORK_DIR};" />
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR}" />
          </sequential>
       </for>
    </target>
@@ -127,13 +132,30 @@
       <delete dir="${client_dir}/lib" failonerror="false" />
       <mkdir dir="${client_dir}/include"/>
       <mkdir dir="${client_dir}/lib"/>
-      
-      <copy todir="${client_dir}/include">
-         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>
-      </copy>
-      <copy todir="${client_dir}/lib">
-         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>
-      </copy>
+
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/include"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/lib"/>
+
+<!--      <copy todir="${client_dir}/include">-->
+<!--         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>-->
+<!--      </copy>-->
+<!--      <copy todir="${client_dir}/lib">-->
+<!--         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>-->
+<!--      </copy>-->
+
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
@@ -196,6 +218,7 @@
          <var name="case_reltdir" unset="true"/>
          <propertyregex property="case_reltdir" input="@{casetype}" regexp="_" replace="/"/>
          <var name="case_dir" value="${case_basedir}/${case_reltdir}"/>
+            <echo>case_dir=${case_dir}</echo>
 
          <switch value="@{casetype}">
 
@@ -234,7 +257,12 @@
                </dividecase>
             </case>
             
-            <default>              
+            <default>
+               <echo/>
+               <echo>to testcase_serial dir of file with no config assign rule</echo>
+               <echo>src: ${case_reltdir}/**/*</echo>
+               <echo>dest: ${testcase_outdir}/testcase_serial</echo>
+
                <move todir="${testcase_outdir}/testcase_serial">
                   <fileset dir="${case_basedir}" includes="${case_reltdir}/**/*"/>
                </move>
@@ -247,22 +275,40 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <!--<propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>-->
-            <move todir="${testcase_outdir}/testcase_${myhostname}">
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
+            <echo/>
+            <echo>to testcase_outdir of testcase_serial dir files with no assign in ${firsthost}</echo>
+            <echo>src: ${testcase_outdir}/testcase_serial</echo>
+            <echo>dest: ${testcase_outdir}</echo>
+
+            <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
          </then>
       </if>
-      
+
+      <echo/>
+      <echo>copy tools step</echo>
       <!--copy tools-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
             </copy>
+            <echo>src=${case_basedir}  todir=${testcase_outdir}/testcase_@{testhost}</echo>
          </sequential>
       </for>
-      
+
+      <exec executable="bash" dir="${testcase_outdir}" outputproperty="assign_list" >
+         <!-- Shell命令，使用find查找子目录并计算文件数量 -->
+         <arg value="-c"/>
+         <arg value="find ${testcase_outdir} -maxdepth 1 -type d -exec echo {} \; -exec sh -c 'find &quot;$1&quot; -type f | wc -l' sh {} \; "/>
+      </exec>
+      <echo/>
+      <echo>assign list</echo>
+      <echo>${assign_list}</echo>
+
    </target>
    
    <target name="distribute_testcase">     
@@ -317,7 +363,7 @@
                      username="${ROOT_USER}" 
                      password="${ROOT_PWD}" 
                      trust="true"
-                     command="mkdir -p ${CI_WORK_DIR}/script;rm -rf ${CI_WORK_DIR}/report; mkdir -p ${CI_WORK_DIR}/report; chmod -R 777 ${CI_WORK_DIR}" />
+                     command="mkdir -p ${CI_WORK_DIR}/script;rm -rf ${CI_WORK_DIR}/report;mkdir -p ${CI_WORK_DIR}/report;" />
             <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/script"
                  password="${ROOT_PWD}" 
                  trust="true">
@@ -336,14 +382,13 @@
            value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v java -d ${RESOURCE_PATH}/java"/>
       <var name="rsync_tools_ant"
            value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v ant -d ${RESOURCE_PATH}/java"/>
-      <var name="echo_remote_cmd"
-           value="echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}"/>
       <var name="test_remote_cmd"
            value="ant -f ${testscript_dir}/normal_test_arm.xml exec_remote_testcase -DTESTCASE_TYPE=${TESTCASE_TYPE} -DTEST_TYPE=${TEST_TYPE} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}"/>
 
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <echo message="exec: ${test_remote_cmd}, in host: @{testhost}"/>
+            <var name="echo_remote_cmd" value="echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}"/>
             <sshexec host="@{testhost}"
                      username="${ROOT_USER}"
                      password="${ROOT_PWD}"
@@ -358,7 +403,7 @@
       </for>
 
       <!--send report to control host-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>                        
             <scp file="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/report/*"
                  todir="${WORKSPACE}/report"

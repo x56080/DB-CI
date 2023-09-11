@@ -45,13 +45,7 @@
       </if>
       <antcall target="deploy"/> 
       <antcall target="ready_es_environment"/>
-      <!--调用日志归档-->
-      <!--if>
-         <isset property="PROJECT_NAME"/>
-         <then>
-             <antcall target="sync_log"/>
-         </then>
-      </if-->
+
    </target>
    
    <target name="clear_cluster">
@@ -173,7 +167,7 @@
 
 
       <!--copy run package to remote host-->
-      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND mkdir -p ${CI_WORK_DIR};rm -rf ${CI_WORK_DIR}/* WAIT 10m"
@@ -189,7 +183,7 @@
    </target>
    
    <target name="install" depends="">       
-      <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential> 
             <staf location="@{testhost}" service="FS"
                   request="QUERY ENTRY ${INSTALL_DIR}"
@@ -271,49 +265,50 @@
          </then>
       </if>
       <var name="cmd" value="echo 'http://${ES_IP}:${esport}/${IDXPREFIX}*' | tr A-Z a-z | xargs curl -XDELETE"/>
-      
-      <staf location="${ES_IP}" service="PROCESS"
-            request="START SHELL COMMAND ${cmd} WAIT 10m RETURNSTDERR"
-            throwBuildException="1"/>
-      <staf location="${firsthost}" service="FS"
-                  request="DELETE ENTRY ${INSTALL_DIR}/conf/sdbseadpter RECURSE CONFIRM"
-                  throwBuildException=""/>
-      <staf location="${firsthost}" service="FS"
-                  request="CREATE DIRECTORY ${INSTALL_DIR}/conf/sdbseadpter FULLPATH"
-                  throwBuildException="1"/>
-      <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
-            throwBuildException="1"/>
+      <sshexec host="${ES_IP}"
+               username="root"
+               password="jenkins"
+               trust="true"
+               command="${cmd}" />
+
+
+      <property name="getdatalist" value="ls -l ${INSTALL_DIR}/database/data |awk 'NR>1{ret=$NF&quot;,&quot;ret}END{print ret}'"/>
+      <sshexec host="${firsthost}" outputproperty="datalist1" username="${SDBADMIN_USER}" password="${SDBADMIN_PWD}" trust="true" command="${getdatalist}" />
+      <propertyregex property="datalist" input="${datalist1}" regexp="\n" replace="" global="true"/>
+
+
       <hostinfo prefix="host" />
       <if>
          <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
          <then>
-            <mkdir dir="${INSTALL_DIR}"/>
-            <mkdir dir="${INSTALL_DIR}/database"/>
-            <mkdir dir="${INSTALL_DIR}/conf"/>
-            <delete dir="${INSTALL_DIR}/database/data" failonerror="false"/>
-            <mkdir dir="${INSTALL_DIR}/database/data"/>
+            <mkdir dir="${CI_WORK_DIR}"/>
+            <mkdir dir="${CI_WORK_DIR}/database"/>
+            <mkdir dir="${CI_WORK_DIR}/conf"/>
+            <delete dir="${CI_WORK_DIR}/database/data" failonerror="false"/>
+            <mkdir dir="${CI_WORK_DIR}/database/data"/>
+
             <staf location="${firsthost}" service="FS"
-                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${INSTALL_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
+                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${CI_WORK_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
                   throwBuildException="1"/>
-            <delete dir="${INSTALL_DIR}/conf/samples" failonerror="false"/>
-            <mkdir dir="${INSTALL_DIR}/conf/samples"/>
+
+            <delete dir="${CI_WORK_DIR}/conf/samples" failonerror="false"/>
+            <mkdir dir="${CI_WORK_DIR}/conf/samples"/>
             <staf location="${firsthost}" service="FS"
-                  request="COPY FILE ${INSTALL_DIR}/conf/samples/sdbseadapter.conf TODIRECTORY ${INSTALL_DIR}/conf/samples TOMACHINE ${host.NAME}"
+                  request="COPY FILE ${INSTALL_DIR}/conf/samples/sdbseadapter.conf TODIRECTORY ${CI_WORK_DIR}/conf/samples TOMACHINE ${host.NAME}"
                   throwBuildException="1"/>
          </then>
       </if>
+
       <if>
          <or>
             <equals arg1="${DEPLOY_MODE}" arg2="G1D3"/>
             <equals arg1="${DEPLOY_MODE}" arg2="G3D3"/>
          </or>
          <then>
-            <property name="SDBADMIN_USER" value="sdbadmin" />
-            <property name="SDBADMIN_PWD" value="Admin@1024" />
-            <property name="getdatalist" value="ls -l ${INSTALL_DIR}/database/data |awk 'NR>1{ret=$NF&quot;,&quot;ret}END{print ret}'"/>
-            <sshexec host="${firsthost}" outputproperty="datalist1" username="${SDBADMIN_USER}" password="${SDBADMIN_PWD}" trust="true" command="${getdatalist}"/>
-            <propertyregex property="datalist" input="${datalist1}" regexp="\n" replace="" global="true"/>
+            <mkdir dir="${CI_WORK_DIR}/conf/samples/"/>
+            <mkdir dir="${CI_WORK_DIR}/conf/sdbseadpter/"/>
+            <scp file="${user}@${firsthost}:${INSTALL_DIR}/conf/samples/*" password="${passwd}" trust="true"
+                 todir="${CI_WORK_DIR}/conf/samples"/>
 
             <for list="${datalist}" param="dataidx" delimiter=",">
                <sequential>
@@ -321,38 +316,51 @@
                   <var name="svcname" unset="true"/>
                   <var name="svcname" value="@{dataidx}"/>
 
-                  <mkdir dir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
-                  <copy file="${INSTALL_DIR}/conf/samples/sdbseadapter.conf" todir="${INSTALL_DIR}/conf/sdbseadpter/${svcname}"/>
-                  
-                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchenginehost=localhost" value="searchenginehost=${ES_IP}"/>
-                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchengineport=9200" value="searchengineport=${esport}"/>
-                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="diaglevel=3" value="diaglevel=5"/>
-                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="optimeout=10000" value="optimeout=60000"/>
-                  <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)idxprefix=" replace="idxprefix=${IDXPREFIX}" byline="true"/>
-                  <replaceregexp file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)datasvcname=" replace="datasvcname=${svcname}" byline="true"/>
+                  <mkdir dir="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}"/>
+                  <copy file="${CI_WORK_DIR}/conf/samples/sdbseadapter.conf" todir="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}"/>
+
+                  <replace file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchenginehost=localhost" value="searchenginehost=${ES_IP}"/>
+                  <replace file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="searchengineport=9200" value="searchengineport=${esport}"/>
+                  <replace file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="diaglevel=3" value="diaglevel=5"/>
+                  <replace file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="optimeout=10000" value="optimeout=60000"/>
+                  <replaceregexp file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)idxprefix=" replace="idxprefix=${IDXPREFIX}" byline="true"/>
+                  <replaceregexp file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" match="(.*)datasvcname=" replace="datasvcname=${svcname}" byline="true"/>
 
                   <math result="expect_cnt" operand1="${svcname}" operation="+" operand2="10" datatype="int"/>
-                  <replace file="${INSTALL_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="# svcname=" value="svcname=${expect_cnt}"/>
+                  <replace file="${CI_WORK_DIR}/conf/sdbseadpter/${svcname}/sdbseadapter.conf" token="# svcname=" value="svcname=${expect_cnt}"/>
                </sequential>
             </for>
+
+
             <!--copy to other host -->
-            
             <for list="${testhost_list}" param="testhost">
                <sequential>
                   <if>
                      <equals arg1="@{testhost}" arg2="${host.NAME}" />
                      <else>
-                        <staf location="local" service="FS"
-                              request="COPY DIRECTORY ${INSTALL_DIR}/conf/sdbseadpter TODIRECTORY ${INSTALL_DIR}/conf/sdbseadpter TOMACHINE @{testhost} RECURSE"
-                              throwBuildException="1"/>
+                        <echo message="${user}@@@{testhost}:${CI_WORK_DIR}/conf/sdbseadpter"/>
+                        <sshexec host="@{testhost}"
+                                 username="${user}"
+                                 password="${passwd}"
+                                 trust="true"
+                                 command="mkdir -p ${INSTALL_DIR}/conf/sdbseadpter" />
+                        <scp todir="${user}@@@{testhost}:${INSTALL_DIR}/conf/sdbseadpter"
+                             password="${passwd}"
+                             trust="true">
+                           <fileset dir="${CI_WORK_DIR}/conf/sdbseadpter"/>
+                        </scp>
                      </else>
                   </if>
-                  <staf location="@{testhost}" service="PROCESS"
-                        request="START SHELL COMMAND chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
-                        throwBuildException="1"/>
-                  <staf location="@{testhost}" service="PROCESS"
-                        request="START SHELL COMMAND chmod 755 ${INSTALL_DIR}/conf/sdbseadpter -R WAIT 10m RETURNSTDERR"
-                        throwBuildException="1"/>
+                  <sshexec host="@{testhost}"
+                           username="${user}"
+                           password="${passwd}"
+                           trust="true"
+                           command="chown sdbadmin:sdbadmin_group ${INSTALL_DIR}/conf/sdbseadpter -R" />
+                  <sshexec host="@{testhost}"
+                           username="${user}"
+                           password="${passwd}"
+                           trust="true"
+                           command="chmod 755 ${INSTALL_DIR}/conf/sdbseadpter -R" />
 
                   <for list="${datalist}" param="dataidx" delimiter=",">
                      <sequential>
@@ -360,13 +368,16 @@
                         <var name="svcname" unset="true"/>
                         <var name="svcname" value="@{dataidx}"/>
 
-                        <staf location="@{testhost}" service="PROCESS"
-                              request="START SHELL COMMAND su - sdbadmin -c '${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} &amp;' WAIT 10m RETURNSTDERR"
-                              throwBuildException="1"/>
+                        <sshexec host="@{testhost}"
+                                 username="${user}"
+                                 password="${passwd}"
+                                 trust="true"
+                                 command="nohup ${INSTALL_DIR}/bin/sdbseadapter -c ${INSTALL_DIR}/conf/sdbseadpter/${svcname} -p ${IDXPREFIX} >/dev/null 2>&amp;1 &amp;"/>
                      </sequential>
                   </for>
                </sequential>
             </for>
+
 
          </then>
       </if>
@@ -542,7 +553,7 @@
             <var name="DEPLOY_MODE" value="CONFIGURE"/>
          </then>
       </if>
-      <property name="sdb_shell" value="${INSTALL_DIR}/bin/sdb"/>
+      <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
       <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
       <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};var METADATA_DIR='${METADATA_DIR}';var INSTALL_DIR='${INSTALL_DIR}'&quot;" />
       <echo message="exec cmd: ${sdb_shell} ${deploy_cmd1} ${deploy_cmd2}"/>
@@ -555,60 +566,7 @@
                command="${sdb_shell} ${deploy_cmd1} ${deploy_cmd2} > ${CI_WORK_DIR}/deploy_outlog; cat ${CI_WORK_DIR}/deploy_outlog" />
 
    </target>
-   
-   <!--同步日志-->
-   <target name="sync_log">
-      <var name="backup_user" value="root"/>
-      <var name="backup_passwd" value="jenkins"/>
-      <var name="sdbadmin_user" value="sdbadmin"/>
-      <var name="sdbadmin_passwd" value="Admin@1024"/>
 
-       <!--同步脚本存放位置-->
-       <var name="sync_script_dir" value="${CI_WORK_DIR}"/>
-       <for list="${testhost_list}" param="testhost" parallel="false">
-           <sequential>
-                <!--拷贝脚本到同步脚本存放位置-->    
-                <scp todir="${user}@@@{testhost}:${sync_script_dir}"
-                             password="${passwd}" 
-                             trust="true">
-                             <fileset dir="${basedir}/src/conf">
-                                <include name="logsync.sh"/>
-                             </fileset>
-                </scp>
-                <!--拷贝日志远程备份地址配置-->
-                <scp todir="${user}@@@{testhost}:${sync_script_dir}"
-                             password="${passwd}" 
-                             trust="true">
-                             <fileset dir="${basedir}/src/conf">
-                                <include name="logAddrConfig"/>
-                             </fileset>
-                </scp>
-                <!--赋予脚本执行权限-->
-                <sshexec host="@{testhost}" 
-                         username="${user}" 
-                         password="${passwd}" 
-                         trust="true"
-                         command="chmod 777 ${sync_script_dir}/logsync.sh"/>
-                <!--创建备份目录-->
-                <sshexec host="192.168.28.27"
-                         username="${backup_user}"
-                         password="${backup_passwd}"
-                         trust="true"
-                         command="mkdir -p /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-                <sshexec host="192.168.28.27"
-                         username="${backup_user}"
-                         password="${backup_passwd}"
-                         trust="true"
-                         command="chmod 777 /opt/ci/bak_log/${PROJECT_NAME}_${BUILD_NUMBER}"/>
-                <!--执行日志归档脚本-->
-                <sshexec host="@{testhost}"
-                         username="${sdbadmin_user}"
-                         password="${sdbadmin_passwd}"
-                         trust="true"
-                         command="nohup ${sync_script_dir}/logsync.sh -p ${PROJECT_NAME} -j ${BUILD_NUMBER} &gt;/tmp/logsync.log 2&gt;&amp;1 &amp;"/>
-           </sequential>
-       </for>
-   </target>
 
 
 </project>

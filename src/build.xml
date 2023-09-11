@@ -58,7 +58,6 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -83,11 +82,11 @@
          <property name="DEPLOY_MODE" value="${DEPLOY_MODE}"/>
          <property name="plat_form" value="${plat_form}"/>
       </ant>
-   
-      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/> 
-   
+
+      <ant antfile="count_skiped_case.xml" dir="src/solve_result" target="detect_testcase_skip" inheritAll="true" useNativeBaseDir="true"/>
+
       <antcallback target="status_file.get_build_status" return="build_status"/>
-      
+
       <if>
          <equals arg1="${COVERAGE}" arg2="true" />
          <then>
@@ -325,7 +324,6 @@
                <property name="plat_form" value="${plat_form}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -589,7 +587,6 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />

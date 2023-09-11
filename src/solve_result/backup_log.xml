@@ -82,10 +82,10 @@
       <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
       <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
       <if>  
-	   <available file="${INSTALL_DIR}/bin/" type="dir"/>
+	   <available file="${LOCAL_INSTALL_DIR}/bin/" type="dir"/>
 	   <then>
            <staf location="local" service="FS"
-                 request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin"
+                 request="COPY DIRECTORY ${LOCAL_INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin"
 	             throwBuildException="1"/>
 	       <staf location="local" service="PROCESS"
                  request="START SHELL COMMAND chmod -R 777 ${CI_WORK_DIR}/${backup_reltdir}/bin"
@@ -102,7 +102,7 @@
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
       <staf location="${firsthost}" service="PROCESS"
-            request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb(${firsthost},${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
+            request="START SHELL COMMAND &quot;${LOCAL_INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb(${firsthost},${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT"
             resultPrefix="rg"
             throwBuildException="1"/>
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true" />
