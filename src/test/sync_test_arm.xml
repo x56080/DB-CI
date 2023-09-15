@@ -77,7 +77,7 @@
          </then>
       </if>
 
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}"
                      username="${ROOT_USER}"
@@ -234,8 +234,7 @@
                      command="rm -rf ${CI_WORK_DIR}/report; mkdir -p ${CI_WORK_DIR}/report; chmod -R 777 ${CI_WORK_DIR}/report" />
          </sequential>
       </for>
-      
-      <delete dir="${WORKSPACE}/report"/>
+
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/sync_test_arm.xml exec_remote_testcase
       -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE}
@@ -261,6 +260,9 @@
                command="source /etc/profile; rm -rf ${testscript_log}; echo 'exec: ${test_remote_cmd}, in host: ${firsthost}' >> ${testscript_log}; ${test_remote_cmd}" />
 
 
+      <hostinfo prefix="host" />
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
       <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
            todir="${WORKSPACE}/report"
            password="${ROOT_PWD}"

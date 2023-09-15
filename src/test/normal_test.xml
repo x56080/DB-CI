@@ -32,9 +32,7 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_normaltest" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
@@ -46,6 +44,8 @@
       <antcall target="divide_testcase" />
 
       <antcall target="distribute_testcase" />
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase" />
       
@@ -112,7 +112,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -215,19 +215,19 @@
 
             <case value="driver_php">               
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.php" excludes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </dividedfileele>
                   <commonfileele>
-                     <fileset dir="${case_dir}" includes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
+                     <fileset dir="${case_dir}" includes="commlib/**/*,tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </commonfileele>
                </dividecase>
             </case>
             
             <case value="sdv_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js"/>
                   </dividedfileele>
@@ -238,12 +238,12 @@
             </case>
             <case value="story_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
-                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
                   </dividedfileele>
                   <commonfileele>
-                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
                   </commonfileele>
                </dividecase>
             </case>
@@ -261,7 +261,8 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -302,20 +303,27 @@
                   <delete file="${tar_desdir}/${tar_filename}" failonerror="false"/>
                   <tar destfile="${tar_desdir}/${tar_filename}" longfile="gnu"
                        basedir="${tar_srcdir}" compression="gzip" />
-                  <!--send-->                  
-                  <staf location="@{testhost}" service="FS"
-                        request="CREATE DIRECTORY ${remote_casedir} FULLPATH"
-                        throwBuildException="1"/>
-                  <staf location="local" service="FS"
-                        request="COPY FILE ${tar_desdir}/${tar_filename} TODIRECTORY ${remote_casedir} TOMACHINE @{testhost}"
-                        throwBuildException="1"/>
+                  <!--send-->
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
+                           trust="true"
+                           command="rm -rf  ${remote_casedir}/*;mkdir -p ${remote_casedir}" />
+                  <scp file="${tar_desdir}/${tar_filename}"
+                       todir="${ROOT_USER}@@@{testhost}:${remote_casedir}"
+                       password="${ROOT_PWD}"
+                       trust="true"/>
                   <!--untar-->
-                  <staf location="@{testhost}" service="PROCESS"
-                        request="START SHELL COMMAND tar zxvf ${remote_casedir}/${tar_filename} -C ${remote_casedir} WAIT 10m RETURNSTDERR"
-                        throwBuildException="1"/>
-                  <staf location="@{testhost}" service="FS"
-                        request="DELETE ENTRY  ${remote_casedir}/${tar_filename} RECURSE CONFIRM"
-                        throwBuildException=""/>
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
+                           trust="true"
+                           command="tar zxf ${remote_casedir}/${tar_filename} -C ${remote_casedir};rm -rf ${remote_casedir}/${tar_filename};" />
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
+                           trust="true"
+                           command="find ${remote_casedir} -type f | wc -l" />
                </then>
             </if>           
          </sequential>
@@ -334,6 +342,9 @@
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${testscript_log} CONFIRM"/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
+                  throwBuildException="1"/>
          </sequential>
       </for>
       
@@ -363,9 +374,11 @@
 
          </sequential>
       </for>
-      
+
+      <hostinfo prefix="host" />
       <!--send report to control host-->
       <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>                        
             <hostinfo prefix="host" />

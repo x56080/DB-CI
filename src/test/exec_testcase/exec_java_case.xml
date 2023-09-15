@@ -92,6 +92,8 @@
                <property name="remoteuser" value=""/>
                <property name="remotepwd" value=""/>
                <property name="rootpwd" value="${passwd}"/>
+               <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
+               <property name="branch" value="v3.4" />
             </ant>
          </then>
          <elseif>
@@ -117,6 +119,8 @@
 		          <property name="remotepwd" value="${passwd}" />
                   <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                   <property name="testhost_list" value="${testhost_list}"/>
+                  <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
+                  <property name="branch" value="v3.4" />
                </ant>
             </then>
          </elseif>
@@ -139,6 +143,8 @@
                   <property name="remotepwd" value="${passwd}" />
                   <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                   <property name="testhost_list" value="${testhost_list}"/>
+                  <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
+                  <property name="branch" value="v3.4" />
                </ant>
             </then>
          </elseif>
@@ -163,6 +169,9 @@
 	           <property name="remotepwd" value="${passwd}" />
                <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
+               <property name="branch" value="v3.4" />
+
             </ant>
          </else>
       </if>

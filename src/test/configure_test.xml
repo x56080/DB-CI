@@ -30,8 +30,6 @@
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
 
-      <antcall target="ntpdate_time"/>
-
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
@@ -43,6 +41,8 @@
       <antcall target="divide_testcase" />
       
       <antcall target="distribute_testcase" />
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase" />
       
@@ -112,7 +112,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -224,8 +224,9 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
-            <move todir="${testcase_outdir}/testcase_${firsthost}">
+            <propertyregex property="lasthost" input="${testhost_list}" regexp="(.*),([^,]+)$" select="\2" />
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
+            <move todir="${testcase_outdir}/testcase_${lasthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
          </then>
@@ -298,33 +299,31 @@
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${testscript_log} CONFIRM"/>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND chown -R ${user.name} ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
+                  request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND chmod -R 777 ${INSTALL_DIR}/python WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
          </sequential>
       </for>
-      
-      <!--execute testcase in local host-->
-      <delete dir="${WORKSPACE}/report"/>
+
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/configure_test.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
                                          -DWORKSPACE=${WORKSPACE} -DCI_WORK_DIR=${CI_WORK_DIR}  -DINSTALL_DIR=${INSTALL_DIR}
                                         -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER}" />
 
-
-
+      <!--  当前配置的 firsthost 为suse系统，存在部分用例找不到libopenssl1_0_0库的问题   -->
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+      <propertyregex property="lasthost" input="${testhost_list}" regexp="(.*),([^,]+)$" select="\2" />
       <staf location="local" service="PROCESS"
-            request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: ${firsthost}' >> ${testscript_log}  WAIT 10m"
+            request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: ${lasthost}' >> ${testscript_log}  WAIT 10m"
             throwBuildException="1"/>
-      <staf location="${firsthost}" service="PROCESS"
+      <staf location="${lasthost}" service="PROCESS"
             resultPrefix="remote_exec"
             request="START SHELL COMMAND ${test_remote_cmd} STDOUTAPPEND ${testscript_log} STDERRTOSTDOUT WAIT"
             throwBuildException="1"/>
       <propertyregex property="remote_exec_rc" input="${remote_exec.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>      
-      <staf location="local" service="FS"
+      <staf location="${lasthost}" service="FS"
             request="GET FILE ${testscript_log} TEXT"
             throwBuildException="1"/>
             
@@ -335,7 +334,11 @@
          </else>
       </if>
 
-      <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
+      <hostinfo prefix="host" />
+      <!--execute testcase in local host-->
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
+      <scp file="${ROOT_USER}@${lasthost}:${CI_WORK_DIR}/report/*"
            todir="${WORKSPACE}/report"
            password="${ROOT_PWD}"
            trust="true"
@@ -454,9 +457,9 @@
          </sequential>
       </for>
       
-      <copy todir="${WORKSPACE}/report">
-         <fileset dir="${CI_WORK_DIR}/report"/>
-      </copy>
+<!--      <copy todir="${WORKSPACE}/report">-->
+<!--         <fileset dir="${CI_WORK_DIR}/report"/>-->
+<!--      </copy>-->
    </target>
 
 </project>

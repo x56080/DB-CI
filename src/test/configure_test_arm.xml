@@ -105,7 +105,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" username="${ROOT_USER}" password="${ROOT_PWD}" trust="true"
             command="rm -rf ${CI_WORK_DIR};mkdir -p ${CI_WORK_DIR};chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR};" />
@@ -322,9 +322,7 @@
                      command="${rsync_tools_java};${rsync_tools_ant};source /etc/profile"/>
          </sequential>
       </for>
-      
-      <!--execute testcase in local host-->
-      <delete dir="${WORKSPACE}/report"/>
+
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/configure_test_arm.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
                                          -DWORKSPACE=${WORKSPACE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}
@@ -339,6 +337,10 @@
                command="source /etc/profile; rm -rf ${testscript_log}; echo 'exec: ${test_remote_cmd}, in host: ${host.NAME}' >> ${testscript_log}; ${test_remote_cmd}" />
 
 
+      <hostinfo prefix="host" />
+      <!--execute testcase in local host-->
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
       <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
            todir="${WORKSPACE}/report"
            password="${ROOT_PWD}"

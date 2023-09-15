@@ -206,15 +206,15 @@
          </sequential>
       </for>
    </target>
-   
+
    <target name="divide_testcase">
       <delete dir="${testcase_outdir}" failonerror="false" />
       <mkdir dir="${testcase_outdir}"/>
-      
+
       <for list="${TESTCASE_TYPE}" param="casetype" trim="true" parallel="false">
-         <sequential>    
+         <sequential>
          <echo>******begin to divide @{casetype} testcase******</echo>
-         
+
          <var name="case_reltdir" unset="true"/>
          <propertyregex property="case_reltdir" input="@{casetype}" regexp="_" replace="/"/>
          <var name="case_dir" value="${case_basedir}/${case_reltdir}"/>
@@ -222,18 +222,18 @@
 
          <switch value="@{casetype}">
 
-            <case value="driver_php">               
+            <case value="driver_php">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
                            outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.php" excludes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </dividedfileele>
                   <commonfileele>
-                     <fileset dir="${case_dir}" includes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
+                     <fileset dir="${case_dir}" includes="commlib/**/*,tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </commonfileele>
                </dividecase>
             </case>
-            
+
             <case value="sdv_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
                            outputdir="${testcase_outdir}" hostlist="${testhost_list}">
@@ -249,14 +249,14 @@
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
                            outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
-                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
                   </dividedfileele>
                   <commonfileele>
-                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
                   </commonfileele>
                </dividecase>
             </case>
-            
+
             <default>
                <echo/>
                <echo>to testcase_serial dir of file with no config assign rule</echo>
@@ -267,7 +267,7 @@
                   <fileset dir="${case_basedir}" includes="${case_reltdir}/**/*"/>
                </move>
             </default>
-            
+
          </switch>
          </sequential>
       </for>
@@ -310,14 +310,14 @@
       <echo>${assign_list}</echo>
 
    </target>
-   
-   <target name="distribute_testcase">     
+
+   <target name="distribute_testcase">
       <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
-         <sequential>            
+         <sequential>
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
             <var name="tar_filename" value="testcase_@{testhost}.tar.gz" />
-                        
+
             <if>
                <available file="${tar_srcdir}" type="dir" property="srcdir_exist" />
                <then>
@@ -326,57 +326,55 @@
                   <delete file="${tar_desdir}/${tar_filename}" failonerror="false"/>
                   <tar destfile="${tar_desdir}/${tar_filename}" longfile="gnu"
                        basedir="${tar_srcdir}" compression="gzip" />
-                  <!--send-->         
-                  <sshexec host="@{testhost}" 
-                           username="${ROOT_USER}" 
-                           password="${ROOT_PWD}" 
+                  <!--send-->
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
                            trust="true"
-                           command="mkdir -p ${remote_casedir}" />
-                  <scp file="${tar_desdir}/${tar_filename}" 
+                           command="rm -rf  ${remote_casedir}/*;mkdir -p ${remote_casedir}" />
+                  <scp file="${tar_desdir}/${tar_filename}"
                        todir="${ROOT_USER}@@@{testhost}:${remote_casedir}"
                        password="${ROOT_PWD}"
-                       trust="true"/> 
+                       trust="true"/>
                   <!--untar-->
-                  <sshexec host="@{testhost}" 
-                           username="${ROOT_USER}" 
-                           password="${ROOT_PWD}" 
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
                            trust="true"
                            command="tar zxf ${remote_casedir}/${tar_filename} -C ${remote_casedir};rm -rf ${remote_casedir}/${tar_filename};" />
                </then>
-            </if>           
+            </if>
          </sequential>
       </for>
    </target>
 
    <target name="execute_testcase">
-      <delete dir="${WORKSPACE}/report"/>
-      <mkdir dir="${WORKSPACE}/report"/>
 
-      <var name="testscript_dir" value="${CI_WORK_DIR}/script/src/test" />     
+      <var name="testscript_dir" value="${CI_WORK_DIR}/script/src/test" />
       <var name="testscript_log" value="${testscript_dir}/normal_test.log" />
       <hostinfo prefix="host" />
-      
+
       <!--ready in remote host-->
       <for list="${testhost_list},${myhostname}" param="testhost" parallel="true">
          <sequential>
-            <sshexec host="@{testhost}" 
-                     username="${ROOT_USER}" 
-                     password="${ROOT_PWD}" 
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script;rm -rf ${CI_WORK_DIR}/report;mkdir -p ${CI_WORK_DIR}/report;" />
             <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${ROOT_PWD}" 
+                 password="${ROOT_PWD}"
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>
-            <sshexec host="@{testhost}" 
-                     username="${ROOT_USER}" 
-                     password="${ROOT_PWD}" 
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
                      trust="true"
                      command="rm -rf ${testscript_log}" />
          </sequential>
       </for>
-      
+
       <!--execute testcase in remote host-->
       <var name="rsync_tools_java"
            value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v java -d ${RESOURCE_PATH}/java"/>
@@ -402,24 +400,27 @@
          </sequential>
       </for>
 
+      <hostinfo prefix="host" />
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
       <!--send report to control host-->
       <for list="${testhost_list}" param="testhost" parallel="false">
-         <sequential>                        
+         <sequential>
             <scp file="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/report/*"
                  todir="${WORKSPACE}/report"
-                 password="${ROOT_PWD}" 
+                 password="${ROOT_PWD}"
                  trust="true"
                  failonerror="false">
             </scp>
          </sequential>
       </for>
-      <sshexec host="${host.NAME}" 
-               username="${ROOT_USER}" 
-               password="${ROOT_PWD}" 
+      <sshexec host="${host.NAME}"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
                trust="true"
                command="chmod -R 777 ${WORKSPACE}/report" />
    </target>
-   
+
    <target name="exec_remote_testcase">
       <property name="report_basedir" value="${CI_WORK_DIR}/report" />
       <property name="test_basedir" value="${CI_WORK_DIR}/testcase" />

@@ -19,8 +19,6 @@
    <var name="passwd" value="${ROOT_PWD}" />
    <var name="sdbadmin_user" value="${SDBADMIN_USER}"/>
    <var name="sdbadmin_passwd" value="${SDBADMIN_PWD}"/>
-   <var name="backup_user" value="root"/>
-   <var name="backup_passwd" value="jenkins"/>
    
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>

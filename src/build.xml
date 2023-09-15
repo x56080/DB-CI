@@ -1035,63 +1035,6 @@
       </for>
    </target>
 
-
-   <target name="stopnode">
-      <for list="${testhost_list}" param="testhost">
-         <sequential>
-            <sshexec host="@{testhost}"
-                     username="${SDBADMIN_USER}"
-                     password="${SDBADMIN_PWD}"
-                     trust="true"
-                     command="sdbcmtop"
-                     failonerror="false"/>
-            <sshexec host="@{testhost}"
-                     username="${SDBADMIN_USER}"
-                     password="${SDBADMIN_PWD}"
-                     trust="true"
-                     command="sdblist -l"
-                     failonerror="false"/>
-            <sshexec host="@{testhost}"
-                     username="${SDBADMIN_USER}"
-                     password="${SDBADMIN_PWD}"
-                     trust="true"
-                     command="sdbstop -a"
-                     failonerror="false"/>
-            <sshexec host="@{testhost}"
-                     username="${SDBADMIN_USER}"
-                     password="${SDBADMIN_PWD}"
-                     trust="true"
-                     command="sdblist -l"
-                     failonerror="false"/>
-         </sequential>
-      </for>
-   </target>
-
-   <target name="stopInotify">
-      <!--获取操作系统类型-->
-      <getplatform resultProperty="plat_form"/>
-      <if>
-         <equals arg1="${plat_form}" arg2="ARM" />
-         <then>
-            <property name="password" value="Admin@2048" />
-         </then>
-         <else>
-            <property name="password" value="Sdb@123123" />
-         </else>
-      </if>
-      <!--停止inotify进程-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential>
-            <sshexec host="@{testhost}"
-                     username="${user}"
-                     password="${password}"
-                     trust="true"
-                     command="killall -r inotify*"
-                     failonerror="false" />
-         </sequential>
-      </for>
-   </target>
-   
    <macrodef name="getplatform">
       <attribute name="resultProperty"/>
       <sequential>

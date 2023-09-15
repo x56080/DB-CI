@@ -24,12 +24,9 @@
       <exec executable="hostname" outputproperty="myhostname"/>
       <antcallback target="check_parameter" return="TESTCASE_TYPE, DEPLOY_MODE"/>
 
-      <exec executable="hostname" outputproperty="myhostname"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_sync" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
 
       <antcall target="ready_lib"/>
@@ -39,6 +36,8 @@
       <antcall target="filter_testcase" />
       
       <antcall target="distribute_testcase"/>
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase"/>
       
@@ -82,6 +81,26 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
+
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="rm -rf ${CI_WORK_DIR}" />
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="mkdir -p ${CI_WORK_DIR};" />
+            <sshexec host="@{testhost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR}" />
+         </sequential>
+      </for>
    </target>
 
    <target name="ready_lib">
@@ -188,6 +207,9 @@
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${testscript_log} CONFIRM"/>
+            <staf location="@{testhost}" service="PROCESS"
+                  request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
+                  throwBuildException="1"/>
 
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND rm -rf ${CI_WORK_DIR}/report WAIT 5m RETURNSTDERR"
@@ -198,7 +220,6 @@
          </sequential>
       </for>
 
-      <delete dir="${WORKSPACE}/report"/>
       
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/sync_test.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
@@ -231,6 +252,9 @@
          </else>
       </if>
 
+      <hostinfo prefix="host" />
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
       <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
            todir="${WORKSPACE}/report"
            password="${ROOT_PWD}"
@@ -353,9 +377,9 @@
                                  </and>
                               </condition>
 
-                              <copy todir="${WORKSPACE}/report/${testcase_type}">
-                                 <fileset dir="${report_basedir}/${testcase_type}" includes="**/*"/>
-                              </copy>
+<!--                              <copy todir="${WORKSPACE}/report/${testcase_type}">-->
+<!--                                 <fileset dir="${report_basedir}/${testcase_type}" includes="**/*"/>-->
+<!--                              </copy>-->
 
                            </then>
                         </if>
@@ -366,9 +390,9 @@
          </sequential>
       </for>
 
-      <copy todir="${WORKSPACE}/report">
-         <fileset dir="${report_basedir}" includes="**/*"/>
-      </copy>  
+<!--      <copy todir="${WORKSPACE}/report">-->
+<!--         <fileset dir="${report_basedir}" includes="**/*"/>-->
+<!--      </copy>  -->
 
    </target>
    
