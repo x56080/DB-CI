@@ -14,7 +14,7 @@ pipeline {
         git_dir = 'm2s'
         git_branch = 'main'
         compile_label = 'compile_x86_1'
-        compile_archive = 'build/m2s_1.0.0_linux_aarch64.tar.gz,build/m2s_1.0.0_linux_x86_64.tar.gz'
+        compile_archive = 'build/m2s_*_linux_aarch64.tar.gz,build/m2s_*_linux_x86_64.tar.gz'
     }
 
     options {
@@ -47,6 +47,16 @@ pipeline {
         always {
             script {
                 properties([pipelineTriggers([cron(env.cron)])])
+            }
+        }
+        failure {
+            script {
+                emailext(
+                    body: '$DEFAULT_CONTENT',
+                    subject: '$DEFAULT_SUBJECT',
+                    to: '$DEFAULT_RECIPIENTS',
+                    recipientProviders: [buildUser()]
+                )
             }
         }
     }

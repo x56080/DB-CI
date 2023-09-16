@@ -49,5 +49,15 @@ pipeline {
                 properties([pipelineTriggers([cron(env.cron)])])
             }
         }
+        failure {
+            script {
+                emailext(
+                    body: '$DEFAULT_CONTENT',
+                    subject: '$DEFAULT_SUBJECT',
+                    to: '$DEFAULT_RECIPIENTS',
+                    recipientProviders: [buildUser()]
+                )
+            }
+        }
     }
 }
