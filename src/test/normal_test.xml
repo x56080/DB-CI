@@ -32,9 +32,7 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_normaltest" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
@@ -46,6 +44,8 @@
       <antcall target="divide_testcase" />
       
       <antcall target="distribute_testcase" />
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase" />
       
@@ -112,7 +112,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -131,13 +131,23 @@
       <delete dir="${client_dir}/lib" failonerror="false" />
       <mkdir dir="${client_dir}/include"/>
       <mkdir dir="${client_dir}/lib"/>
-      
-      <copy todir="${client_dir}/include">
-         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>
-      </copy>
-      <copy todir="${client_dir}/lib">
-         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>
-      </copy>
+
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/include"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/lib"/>
+
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
@@ -205,7 +215,7 @@
 
             <case value="driver_php">               
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.php" excludes="tools/**/*,phpunit.xml,func.php,global.php,*/lib/*.php"/>
                   </dividedfileele>
@@ -217,7 +227,7 @@
             
             <case value="sdv_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js"/>
                   </dividedfileele>
@@ -228,7 +238,7 @@
             </case>
             <case value="story_js">
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
-                           outputdir="${testcase_outdir}" hostlist="${myhostname},${testhost_list}">
+                           outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
                      <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*"/>
                   </dividedfileele>
@@ -251,7 +261,7 @@
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
             <move todir="${testcase_outdir}/testcase_${firsthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
@@ -259,18 +269,26 @@
       </if>
       
       <!--copy tools-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
             </copy>
          </sequential>
       </for>
-      
+
+      <exec executable="bash" dir="${testcase_outdir}" outputproperty="assign_list" >
+         <!-- Shell命令，使用find查找子目录并计算文件数量 -->
+         <arg value="-c"/>
+         <arg value="find ${testcase_outdir} -maxdepth 1 -type d -exec echo {} \; -exec sh -c 'find &quot;$1&quot; -type f | wc -l' sh {} \; "/>
+      </exec>
+      <echo/>
+      <echo>assign list</echo>
+      <echo>${assign_list}</echo>
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -288,16 +306,16 @@
                   <staf location="@{testhost}" service="FS"
                         request="CREATE DIRECTORY ${remote_casedir} FULLPATH"
                         throwBuildException="1"/>
-                  <staf location="local" service="FS"
-                        request="COPY FILE ${tar_desdir}/${tar_filename} TODIRECTORY ${remote_casedir} TOMACHINE @{testhost}"
-                        throwBuildException="1"/>
+                  <scp file="${tar_desdir}/${tar_filename}"
+                       todir="${ROOT_USER}@@@{testhost}:${remote_casedir}"
+                       password="${ROOT_PWD}"
+                       trust="true"/>
                   <!--untar-->
-                  <staf location="@{testhost}" service="PROCESS"
-                        request="START SHELL COMMAND tar zxvf ${remote_casedir}/${tar_filename} -C ${remote_casedir} WAIT 10m RETURNSTDERR"
-                        throwBuildException="1"/>
-                  <staf location="@{testhost}" service="FS"
-                        request="DELETE ENTRY  ${remote_casedir}/${tar_filename} RECURSE CONFIRM"
-                        throwBuildException=""/>
+                  <sshexec host="@{testhost}"
+                           username="${ROOT_USER}"
+                           password="${ROOT_PWD}"
+                           trust="true"
+                           command="tar zxf ${remote_casedir}/${tar_filename} -C ${remote_casedir};rm -rf ${remote_casedir}/${tar_filename};" />
                </then>
             </if>           
          </sequential>
@@ -309,7 +327,7 @@
       <var name="testscript_log" value="${testscript_dir}/normal_test.log" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="local" service="FS"
                   request="COPY DIRECTORY ${basedir} TODIRECTORY ${CI_WORK_DIR}/script TOMACHINE @{testhost} RECURSE"
@@ -321,7 +339,7 @@
       
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/normal_test.xml exec_remote_testcase -DTESTCASE_TYPE=${TESTCASE_TYPE} -DTEST_TYPE=${TEST_TYPE} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR} " />
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>
             <staf location="@{testhost}" service="PROCESS"                  
                   request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: @{testhost}' >> ${testscript_log}  WAIT 10m"
@@ -342,13 +360,13 @@
                   <fail message="exec: ${test_remote_cmd}, in host: @{testhost}, return code: ${remote_exec_rc}"/>
                </else>
             </if>
-
          </sequential>
       </for>
       
       <!--send report to control host-->
       <delete dir="${WORKSPACE}/report"/>
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <mkdir dir="${WORKSPACE}/report"/>
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>                        
             <hostinfo prefix="host" />
             <staf location="@{testhost}" service="FS"

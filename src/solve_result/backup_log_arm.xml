@@ -39,7 +39,7 @@
     <property name="remote_cmd1" value="ant -f ${CI_WORK_DIR}/script/src/solve_result/backup_log_arm.xml backup_log_in_remote -DTEST_TYPE=${TEST_TYPE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR}"/>
     <for list="${testhost_list}" param="testhost">
       <sequential>
-        <sshexec host="@{testhost}" username="${user}" password="${passwd}" trust="true" command="source /etc/profile; ${remote_cmd1}"/>
+        <sshexec host="@{testhost}" username="${ROOT_USER}" password="${ROOT_PWD}" trust="true" command="source /etc/profile; ${remote_cmd1}"/>
       </sequential>
     </for>
   </target>
@@ -51,23 +51,28 @@
     <property name="remote_diagdir" location="${CI_WORK_DIR}/local_diaglog"/>
     <for list="${testhost_list}" param="testhost" parallel="false">
       <sequential>
-        <scp file="${user}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz" todir="${backup_dir}" password="${passwd}" trust="true"/>
+        <scp file="${ROOT_USER}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz" todir="${backup_dir}" password="${ROOT_PWD}" trust="true"/>
       </sequential>
     </for>
   </target>
   <target name="backup_bin">
     <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
-    <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
-      <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
-    </copy>
+    <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)"
+                   replace="" defaultValue="${testhost_list}"/>
+
+    <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
+    <scp file="${ROOT_USER}@${firsthost}:${INSTALL_DIR}/bin/*"
+         todir="${CI_WORK_DIR}/${backup_reltdir}/bin"
+         password="${ROOT_PWD}"
+         trust="true"/>
     <chmod dir="${CI_WORK_DIR}/${backup_reltdir}/bin" perm="ugo+rx" includes="*"/>
   </target>
   <target name="bacup_rg_info">
     <echo>${line.separator}****begin to backup rg info</echo>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="execute db.list(7):&#10;" append="false"/>
-    <exec executable="${INSTALL_DIR}/bin/sdb" output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
-      <arg line=" -s &quot;var db = new Sdb('localhost',${SVCNAME});db.list(7);&quot;"/>
+    <exec executable="${LOCAL_INSTALL_DIR}/bin/sdb" output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
+      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
     </exec>
   </target>
   <target name="archive">

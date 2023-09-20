@@ -28,9 +28,7 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_configure" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
@@ -42,6 +40,8 @@
       <antcall target="divide_testcase" />
       
       <antcall target="distribute_testcase" />
+
+      <antcall target="ntpdate_time"/>
       
       <antcall target="execute_testcase" />
       
@@ -115,7 +115,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list}" param="testhost" parallel="false">
+      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"
@@ -134,13 +134,23 @@
       <delete dir="${client_dir}/lib" failonerror="false" />
       <mkdir dir="${client_dir}/include"/>
       <mkdir dir="${client_dir}/lib"/>
-      
-      <copy todir="${client_dir}/include">
-         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>
-      </copy>
-      <copy todir="${client_dir}/lib">
-         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>
-      </copy>
+
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/include"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/lib"/>
+
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
@@ -214,29 +224,39 @@
          </sequential>
       </for>
 
+      <propertyregex property="lasthost" input="${testhost_list}" regexp="(.*),([^,]+)$" select="\2" />
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <if>
          <available file="${testcase_outdir}/testcase_serial" type="dir" property="serial_exist" />
          <then>
-            <propertyregex property="firsthost" input="${myhostname},${testhost_list}" regexp=",(.*)" replace="" defaultValue="${myhostname}"/>
-            <move todir="${testcase_outdir}/testcase_${firsthost}">
+            <move todir="${testcase_outdir}/testcase_${lasthost}">
                <fileset dir="${testcase_outdir}/testcase_serial" />
             </move>
          </then>
       </if>
       
       <!--copy tools-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <copy todir="${testcase_outdir}/testcase_@{testhost}">
                <fileset dir="${case_basedir}" includes="tools/**/*,testcase-base/**/*"/>
             </copy>
          </sequential>
       </for>
-      
+
+      <exec executable="bash" dir="${testcase_outdir}" outputproperty="assign_list" >
+         <!-- Shell命令，使用find查找子目录并计算文件数量 -->
+         <arg value="-c"/>
+         <arg value="find ${testcase_outdir} -maxdepth 1 -type d -exec echo {} \; -exec sh -c 'find &quot;$1&quot; -type f | wc -l' sh {} \; "/>
+      </exec>
+      <echo/>
+      <echo>assign list</echo>
+      <echo>${assign_list}</echo>
+
    </target>
    
    <target name="distribute_testcase">     
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>            
             <var name="tar_srcdir" value="${testcase_outdir}/testcase_@{testhost}" />
             <var name="tar_desdir" value="${testcase_outdir}" />
@@ -274,7 +294,7 @@
       <var name="testscript_log" value="${testscript_dir}/configure_test.log" />
       
       <!--ready in remote host-->
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="true">
          <sequential>            
             <staf location="@{testhost}" service="FS"
                   request="CREATE DIRECTORY ${BACKUP_TMPNODE_LOGPATH}/database/ FULLPATH"
@@ -285,29 +305,30 @@
             <staf location="@{testhost}" service="FS"
                   request="DELETE ENTRY ${testscript_log} CONFIRM"/>
             <staf location="@{testhost}" service="PROCESS"
-                  request="START SHELL COMMAND chown -R ${user.name} ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
+                  request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR} WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND chmod -R 777 ${INSTALL_DIR}/python WAIT 10m RETURNSTDERR"
                   throwBuildException="1"/>
          </sequential>
       </for>
-      
-      <!--execute testcase in local host-->
-      <delete dir="${WORKSPACE}/report"/>
+
       <!--execute testcase in remote host-->
       <var name="test_remote_cmd" value="ant -f ${testscript_dir}/configure_test.xml exec_remote_testcase -DTEST_TYPE=${TEST_TYPE} -DTESTCASE_TYPE=${TESTCASE_TYPE} 
       -DWORKSPACE=${WORKSPACE} -DCI_WORK_DIR=${CI_WORK_DIR} -DINSTALL_DIR=${INSTALL_DIR} -Dplat_form=${plat_form} -DDEPLOY_MODE=${DEPLOY_MODE} -DBUILD_NUMBER=${BUILD_NUMBER}" />
-      <staf location="local" service="PROCESS"                  
-            request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: local' >> ${testscript_log}  WAIT 10m"
+
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+      <propertyregex property="lasthost" input="${testhost_list}" regexp="(.*),([^,]+)$" select="\2" />
+      <staf location="local" service="PROCESS"
+            request="START SHELL COMMAND echo 'exec: ${test_remote_cmd}, in host: ${lasthost}' >> ${testscript_log}  WAIT 10m"
             throwBuildException="1"/>
                   
-      <staf location="local" service="PROCESS"
+      <staf location="${lasthost}" service="PROCESS"
             resultPrefix="remote_exec"
             request="START SHELL COMMAND ${test_remote_cmd} STDOUTAPPEND ${testscript_log} STDERRTOSTDOUT WAIT"
             throwBuildException="1"/>
       <propertyregex property="remote_exec_rc" input="${remote_exec.result}" regexp="Return\ Code:\ (.*)\n" select="\1"/>      
-      <staf location="local" service="FS"
+      <staf location="${lasthost}" service="FS"
             request="GET FILE ${testscript_log} TEXT"
             throwBuildException="1"/>
             
@@ -317,6 +338,23 @@
             <fail message="exec: ${test_remote_cmd}, in host: local, return code: ${remote_exec_rc}"/>
          </else>
       </if>
+
+
+      <hostinfo prefix="host" />
+      <!--execute testcase in local host-->
+      <delete dir="${WORKSPACE}/report"/>
+      <mkdir dir="${WORKSPACE}/report"/>
+      <scp file="${ROOT_USER}@${lasthost}:${CI_WORK_DIR}/report/*"
+           todir="${WORKSPACE}/report"
+           password="${ROOT_PWD}"
+           trust="true"
+           failonerror="false">
+      </scp>
+      <sshexec host="${host.NAME}"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
+               trust="true"
+               command="chmod -R 777 ${WORKSPACE}/report" />
    </target>
    
    <target name="exec_remote_testcase">
@@ -424,9 +462,9 @@
          </sequential>
       </for>
       
-      <copy todir="${WORKSPACE}/report">
-         <fileset dir="${CI_WORK_DIR}/report"/>
-      </copy>
+<!--      <copy todir="${WORKSPACE}/report">-->
+<!--         <fileset dir="${CI_WORK_DIR}/report"/>-->
+<!--      </copy>-->
    </target>
 
 </project>

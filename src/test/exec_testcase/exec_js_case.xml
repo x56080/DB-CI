@@ -34,16 +34,19 @@
 <!--      <staf location="@{testhost}" service="PROCESS"-->
 <!--            request="START SHELL COMMAND chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR}/testcase/story/js WAIT 5m RETURNSTDERR"-->
 <!--            throwBuildException=""/>-->
-
-      <!--ant.chown文件过多导致报错参数列表过长-->
-      <chown owner="sdbadmin">
-         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-      </chown>
-      <chgrp group="sdbadmin_group">
-         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-      </chgrp>
+      <if>
+         <available file="${CI_WORK_DIR}/testcase/story/js" />
+         <then>
+            <chown owner="sdbadmin">
+               <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+               <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+            </chown>
+            <chgrp group="sdbadmin_group">
+               <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+               <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+            </chgrp>
+         </then>
+      </if>
 
       <prefix resultproperty="prefix"/>
       <detectenv detectfile="${testcase_dir}/lib/all_prepare.js" prefix="${prefix}" envisok="envrc"/>

@@ -319,11 +319,11 @@
          </resourcecount>
          <var name="part_filenum" unset="true"/>
          <echo>total_filenum:${total_filenum}, partnum:${part_num}</echo>
-         <math result="part_filenum" 
-               operand1="${total_filenum}" 
-               operation="/" 
-               operand2="${part_num}" 
-               datatype="int"/>
+
+         <exec executable="bash" outputproperty="part_filenum" >
+            <arg value="-c"/>
+            <arg value="result=$((${total_filenum} / ${part_num})); echo $result"/>
+         </exec>
          <echo>total_filenum:${total_filenum}, partnum:${part_num}, part_filenum:${part_filenum}</echo>
          
          <!--2.divide a set of files into parts-->        
