@@ -82,7 +82,7 @@
     <echo>${line.separator}****begin to backup rg info</echo>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="execute db.list(7):&#10;" append="false"/>
-    <staf location="${firsthost}" service="PROCESS" request="START SHELL COMMAND &quot;${LOCAL_INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT" resultPrefix="rg" throwBuildException="1"/>
+    <staf location="${firsthost}" service="PROCESS" request="START SHELL COMMAND &quot;${CI_WORK_DIR}/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT" resultPrefix="rg" throwBuildException="1"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true"/>
   </target>
   <target name="archive">

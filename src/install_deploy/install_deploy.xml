@@ -479,16 +479,33 @@
             </then>
          </elseif>
       </if>
-      
-<!--      &lt;!&ndash;copy sdb shell to localhost&ndash;&gt;-->
-<!--      <delete file="${CI_WORK_DIR}/sdb" failonerror="false"/>-->
-<!--      &lt;!&ndash;mkdir dir="${CI_WORK_DIR}"/&ndash;&gt;-->
-<!--      <staf location="${firsthost}" service="FS"-->
-<!--            request="COPY FILE ${INSTALL_DIR}/bin/sdb TODIRECTORY ${CI_WORK_DIR}"-->
-<!--            throwBuildException="1"/>-->
-<!--      <staf location="local" service="PROCESS"-->
-<!--            request="START SHELL COMMAND chmod a+x ${CI_WORK_DIR}/sdb WAIT 1m"-->
-<!--            throwBuildException="1"/> -->
+
+      <!--copy sdb shell to localhost-->
+      <sshexec host="localhost"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
+               trust="true"
+               command="rm -rf ${CI_WORK_DIR}/*" />
+      <sshexec host="localhost"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
+               trust="true"
+               command="mkdir -p ${CI_WORK_DIR};" />
+      <sshexec host="localhost"
+               username="${ROOT_USER}"
+               password="${ROOT_PWD}"
+               trust="true"
+               command="chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR}" />
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${CI_WORK_DIR}"/>
+      <sshexec host="localhost"
+               username="${user}"
+               password="${passwd}"
+               trust="true"
+               command="chmod a+x ${CI_WORK_DIR}/sdb" />
+
 
       <!--exec deploy.js-->
       <if>
@@ -554,7 +571,7 @@
             <var name="DEPLOY_MODE" value="CONFIGURE"/>
          </then>
       </if>
-      <property name="sdb_shell" value="${LOCAL_INSTALL_DIR}/bin/sdb"/>
+      <property name="sdb_shell" value="${CI_WORK_DIR}/sdb"/>
       <property name="deploy_cmd1" value="-f '${basedir}/src/conf/deploy_conf_${DEPLOY_MODE}.js,${basedir}/src/install_deploy/deploy.js'" />
       <property name="deploy_cmd2" value="-e &quot;var hostList=${testhost_jsarr};var diagLevel=${diagLevel};var METADATA_DIR='${METADATA_DIR}';var INSTALL_DIR='${INSTALL_DIR}'&quot;" />
       <echo message="exec cmd: ${sdb_shell} ${deploy_cmd1} ${deploy_cmd2}"/>

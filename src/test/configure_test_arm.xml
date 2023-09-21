@@ -105,7 +105,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${myhostname},${testhost_list}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" 
                            username="${user}" 
