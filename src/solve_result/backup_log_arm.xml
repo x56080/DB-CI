@@ -90,7 +90,7 @@
                      
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
-      <exec executable="${LOCAL_INSTALL_DIR}/bin/sdb"
+      <exec executable="${CI_WORK_DIR}/sdb"
             output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
       <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
       </exec>

@@ -112,7 +112,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <staf location="@{testhost}" service="FS"
                         request="DELETE ENTRY ${CI_WORK_DIR} RECURSE CONFIRM"

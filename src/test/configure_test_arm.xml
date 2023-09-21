@@ -105,7 +105,7 @@
             <delete dir="${case_basedir}/tdd/mongoc" />
          </then>
       </if>
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" username="${ROOT_USER}" password="${ROOT_PWD}" trust="true"
             command="rm -rf ${CI_WORK_DIR};mkdir -p ${CI_WORK_DIR};chown -R sdbadmin:sdbadmin_group ${CI_WORK_DIR};" />
