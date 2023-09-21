@@ -555,7 +555,21 @@
                username="${user}"
                password="${passwd}"
                trust="true"
-               command="${sdb_shell} ${deploy_cmd1} ${deploy_cmd2} > ${CI_WORK_DIR}/deploy_outlog; cat ${CI_WORK_DIR}/deploy_outlog" />
+               failonerror="false"
+               resultproperty="deploy_status"
+               command="${sdb_shell} ${deploy_cmd1} ${deploy_cmd2} > ${CI_WORK_DIR}/deploy_outlog;" />
+
+      <sshexec host="${host.NAME}"
+               username="${SDBADMIN_USER}"
+               password="${SDBADMIN_PWD}"
+               trust="true"
+               command="cat ${CI_WORK_DIR}/deploy_outlog" />
+      <if>
+         <equals arg1="${deploy_status}" arg2="0" />
+         <else>
+            <fail message="exec: deploy failure ret=${deploy_status}"/>
+         </else>
+      </if>
    </target>
    
    <!--同步日志-->
