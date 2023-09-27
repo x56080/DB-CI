@@ -152,6 +152,10 @@
                      <patternset refid="files"/>
                      <contains text="Start sequoiadb"/>
                   </fileset>
+                  <fileset id="matches_normal" dir="@{dirname}">
+                     <patternset refid="files"/>
+                     <contains text="Start up from normal"/>
+                  </fileset>
                   <echo message="${host.NAME}   ${host.ADDR4}   @{dirname}   " file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
                  
                   <countstr str="Start sequoiadb" resultproperty="str_count">
@@ -159,19 +163,29 @@
                         <fileset refid="matches"/>
                       </path-elements>
                   </countstr>
+                  <countstr str="Start up from normal" resultproperty="str_normal_count">
+                     <path-elements>
+                        <fileset refid="matches_normal"/>
+                     </path-elements>
+                  </countstr>
                   <countstr str="restart by tool" resultproperty="start_cnt_by_tool">
                      <path-elements>
                         <fileset dir="@{dirname}" includes=".RESTART_BY_CHANGECONF"/>
                      </path-elements>
                   </countstr>
+
+                  <echo>restart_count=${str_count}</echo>
+                  <echo>restart_normal_count=${str_normal_count}</echo>
+                  <echo>changeconf_count=${start_cnt_by_tool}</echo>
                   <math result="expect_cnt" operand1="${start_cnt_by_tool}" operation="+" operand2="2" datatype="int"/>
                   <if>
-                     <isgreaterthan arg1="${str_count}" arg2="${expect_cnt}"/>
+                     <equals arg1="${str_count}" arg2="${str_normal_count}" />
+                     <!--<isgreaterthan arg1="${str_count}" arg2="${expect_cnt}"/>-->
                      <then>
-                        <echo message="${str_count} times, node start exception" file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
+                        <echo message="${str_count} " file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
                      </then>
                      <else>
-                        <echo message="${str_count} " file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
+                        <echo message="${str_count} times, node start exception" file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
                      </else>
                   </if>
                   <echo message="&#10;" file="${report_dir}/${host.NAME}_node_start.log" append="true"/>
