@@ -1,8 +1,13 @@
-import com.sequoiadb.ci.SelfScript
-import com.sequoiadb.ci.util.CommonUtil
-import com.sequoiadb.ci.util.StatusUtil
+@Library("global_ci@main")
+import com.sequoiadb.ci.utils.CommonUtil
+import com.sequoiadb.ci.utils.StatusUtil
+import hudson.AbortException
 
-@Library("compile_db@global") _
+
+CommonUtil commonUtil = null
+StatusUtil statusUtil = null
+
+
 pipeline {
     agent {
         label 'master'
@@ -23,20 +28,34 @@ pipeline {
     }
 
     stages {
-        stage("Build Sequoia-Shake") {
+        stage("Init Config") {
             steps {
                 script {
-                    SelfScript.init(this)
+                    try {
+                        commonUtil = new CommonUtil(this);
+                        statusUtil = new StatusUtil(this);
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
+                    }
+                }
+            }
+        }
+        stage("Build SequoiaShake") {
+            steps {
+                script {
                     node("${env.compile_label}") {
                         try {
-                            CommonUtil.gitClone("${env.git_dir}", "${env.git_url}", "${env.git_branch}", true)
-                            dir("${WORKSPACE}/${env.git_dir}") {
+                            def targetDir="${WORKSPACE}/${env.git_dir}"
+                            commonUtil.gitClone(targetDir, "${env.git_url}", "${env.git_branch}", true)
+                            dir(targetDir) {
                                 def status = sh(script: 'bash -x build.sh linux', returnStatus: true) == 0
                                 if (!status) throw new Exception('pipeline build failure')
                                 archiveArtifacts(artifacts: "${env.compile_archive}", onlyIfSuccessful: true)
                             }
                         } catch (Exception e) {
-                            StatusUtil.status(StatusUtil.Status.FAILURE, e.message)
+                            statusUtil.failure(e)
                         }
                     }
                 }

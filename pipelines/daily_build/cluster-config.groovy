@@ -55,7 +55,7 @@ pipeline {
                                 archiveArtifacts(artifacts: "${env.compile_archive}", onlyIfSuccessful: true)
                             }
                         } catch (Exception e) {
-                            statusUtil.status(StatusUtil.Status.FAILURE, e.message)
+                            statusUtil.failure(e)
                         }
                     }
                 }
