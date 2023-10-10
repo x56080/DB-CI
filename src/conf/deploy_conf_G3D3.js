@@ -31,7 +31,7 @@ else
 }
 
 var cataConf  = { diaglevel:diagLevel,
-                  sharingbreak:30000,
+                  sharingbreak:20000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40
@@ -43,7 +43,7 @@ var coordConf = { diaglevel:diagLevel,
                   fap:fapValue
                 };
 var dataConf  = { diaglevel:diagLevel,
-                  sharingbreak:30000,
+                  sharingbreak:20000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
