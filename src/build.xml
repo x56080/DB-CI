@@ -56,7 +56,6 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -95,8 +94,7 @@
          </then>
       </if>
       
-      <!--antcall target="stopInotify"/-->
-      
+
       <!--备份日志-->      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -148,7 +146,6 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -324,7 +321,6 @@
                <property name="plat_form" value="${plat_form}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -364,8 +360,7 @@
          </then>
       </if>
       
-      <!--antcall target="stopInotify"/-->
-      
+
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -415,7 +410,6 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="plat_form" value="${plat_form}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -588,7 +582,6 @@
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="BUILD_NUMBER" value="${BUILD_NUMBER}"/>
                <property name="PROJECT_NAME" value="${PROJECT_NAME}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -632,8 +625,7 @@
          </then>
       </if>
       
-      <!--antcall target="stopInotify"/-->
-      
+
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -686,7 +678,6 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
-               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
@@ -826,7 +817,6 @@
          <property name="TEST_TYPE" value="${TEST_TYPE}"/>
          <property name="plat_form" value="${plat_form}"/>
          <property name="testhost_list" value="${testhost_list}"/>
-         <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
       </ant>
       
       <ant antfile="smoke_test.xml" dir="src/test" inheritAll="true" useNativeBaseDir="true" >
@@ -1043,31 +1033,6 @@
       </for>
    </target>
 
-   <target name="stopInotify">
-      <!--获取操作系统类型-->
-      <getplatform resultProperty="plat_form"/>
-<!--      <if>-->
-<!--         <equals arg1="${plat_form}" arg2="ARM" />-->
-<!--         <then>-->
-<!--             <property name="password" value="Admin@2048" />    -->
-<!--         </then>-->
-<!--         <else>-->
-<!--             <property name="password" value="Sdb@123123" />-->
-<!--         </else>-->
-<!--      </if>-->
-      <!--停止inotify进程-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential> 
-           <sshexec host="@{testhost}" 
-                    username="${user}" 
-                    password="${password}" 
-                    trust="true"
-                    command="killall -r inotify*"
-                    failonerror="false" />
-         </sequential>
-      </for>
-   </target>
-   
    <macrodef name="getplatform">
       <attribute name="resultProperty"/>
       <sequential>

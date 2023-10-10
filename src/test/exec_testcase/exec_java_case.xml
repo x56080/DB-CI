@@ -82,7 +82,7 @@
                <property name="remoteuser" value="${user}" />
                <property name="remotepwd" value="${passwd}" />
                <property name="rootpwd" value="${passwd}" />
-               <property name="rsrvnodedir" value="/hdd/ci/sequoiadb" />
+               <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
             </ant>
          </then>
          <elseif>
@@ -109,7 +109,7 @@
                   <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                   <property name="testhost_list" value="${testhost_list}"/>
                   <property name="rootpwd" value="${passwd}" />
-                  <property name="rsrvnodedir" value="/hdd/ci/sequoiadb" />
+                  <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
                </ant>
             </then>
          </elseif>
@@ -135,7 +135,7 @@
                <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="rootpwd" value="${passwd}" />
-               <property name="rsrvnodedir" value="/hdd/ci/sequoiadb" />
+               <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
             </ant>
          </else>
       </if>

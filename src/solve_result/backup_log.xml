@@ -18,6 +18,10 @@
       <pathelement location="${basedir}/lib/STAFAnt.jar"/>
     </classpath>
   </taskdef>
+  <property file="${basedir}/src/conf/test.conf"/>
+  <var name="user" value="${ROOT_USER}" />
+  <var name="passwd" value="${ROOT_PWD}" />
+
   <target name="main">
     <if>
       <isset property="DEPLOY_MODE"/>
@@ -68,20 +72,25 @@
   <target name="backup_bin">
     <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
     <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
-    <if>
-      <available file="${INSTALL_DIR}/bin/" type="dir"/>
-      <then>
-        <staf location="local" service="FS" request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin" throwBuildException="1"/>
-        <staf location="local" service="PROCESS" request="START SHELL COMMAND chmod -R 777 ${CI_WORK_DIR}/${backup_reltdir}/bin" throwBuildException="0"/>
-      </then>
-    </if>
+
+    <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)"
+                   replace="" defaultValue="${testhost_list}"/>
+    <hostinfo prefix="host"/>
+    <staf location="${firsthost}" service="FS"
+          request="COPY DIRECTORY ${INSTALL_DIR}/bin/ TODIRECTORY ${CI_WORK_DIR}/${backup_reltdir}/bin TOMACHINE ${host.NAME} RECURSE"
+          throwBuildException="1"/>
+    <staf location="local" service="PROCESS"
+          request="START SHELL COMMAND chmod -R 777 ${CI_WORK_DIR}/${backup_reltdir}/bin"
+          throwBuildException="0"/>
   </target>
   <target name="bacup_rg_info">
     <echo>${line.separator}****begin to backup rg info</echo>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="execute db.list(7):&#10;" append="false"/>
-    <staf location="${firsthost}" service="PROCESS" request="START SHELL COMMAND &quot;${INSTALL_DIR}/bin/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT" resultPrefix="rg" throwBuildException="1"/>
-    <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true"/>
+    <exec executable="${CI_WORK_DIR}/sdb"
+          output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
+      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
+    </exec>
   </target>
   <target name="archive">
     <echo>${line.separator}****begin to compress, then generate tar</echo>
@@ -95,7 +104,12 @@
     </tar>
     <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
     <echo>${line.separator}****begin to send diaglog to backup host</echo>
-    <staf location="local" service="FS" request="COPY FILE ${tar_fullname} TODIRECTORY ${BACKLOG_DIR} TOMACHINE ${JENKINS_HOST}" throwBuildException="1"/>
+    <!--<staf location="local" service="FS" request="COPY FILE ${tar_fullname} TODIRECTORY ${BACKLOG_DIR} TOMACHINE ${JENKINS_HOST}" throwBuildException="1"/>-->
+    <scp file="${tar_fullname}"
+         todir="${user}@${JENKINS_HOST}:${BACKLOG_DIR}"
+         password="${passwd}"
+         trust="true"/>
+
   </target>
   <target name="backup_log_in_remote">
     <property file="${basedir}/src/conf/test.conf"/>

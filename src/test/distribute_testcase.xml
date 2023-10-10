@@ -319,11 +319,10 @@
          </resourcecount>
          <var name="part_filenum" unset="true"/>
          <echo>total_filenum:${total_filenum}, partnum:${part_num}, part_filenum:${part_filenum}</echo>
-         <math result="part_filenum" 
-               operand1="${total_filenum}" 
-               operation="/" 
-               operand2="${part_num}" 
-               datatype="int"/>
+         <exec executable="bash" outputproperty="part_filenum" >
+            <arg value="-c"/>
+            <arg value="result=$((${total_filenum} / ${part_num})); echo $result"/>
+         </exec>
          <echo>total_filenum:${total_filenum}, partnum:${part_num}, part_filenum:${part_filenum}</echo>
          
          <!--2.divide a set of files into parts-->        
@@ -336,10 +335,16 @@
                   <sequential>            
                      <math result="i" operand1="${i}" operation="+" operand2="1" datatype="int"/>
                      <var name="outputdir" value="@{outputdir}/testcase_@{testhost}" />          
-                     <mkdir dir="${outputdir}/"/>           
+                     <mkdir dir="${outputdir}/"/>
+                     <echo/>
+                     <echo>idx=${i} len=${part_num}</echo>
                      <if>
                         <equals arg1="${i}" arg2="${part_num}" />
                         <then><!--in last part, just move directory-->
+                           <echo>last part, just move directory</echo>
+                           <echo>src: @{basedir}/@{reltdir}/**/*</echo>
+                           <echo>dest: ${outputdir}</echo>
+
                            <move todir="${outputdir}">
                               <fileset dir="@{basedir}">
                                  <include name="@{reltdir}/**/*" />
@@ -351,15 +356,22 @@
                               <path refid="divided_path" />
                            </timestampselector>                     
                            <var name="tmp_dir" value="${outputdir}_tmp" />
-                           <mkdir dir="${tmp_dir}/"/>                  
+                           <mkdir dir="${tmp_dir}/"/>
+
+                           <echo>to tmp_dir of divided testcase</echo>
                            <move todir="${tmp_dir}" overwrite="true" flatten="false" >
                               <path refid="part_path" />
                            </move>
+
+                           <echo>copy tmp_dir of common lib</echo>
                            <copy todir="${tmp_dir}/${testcase_dir}" overwrite="true" >
                               <commonfileele/>
                            </copy>
-                           <echo>${outputdir}</echo>
-                           <echo>${tmp_dir}/@{basedir}</echo>
+
+                           <echo>move tmp dir file to outputdir</echo>
+                           <echo>src: ${tmp_dir}/@{basedir}</echo>
+                           <echo>dest: ${outputdir}</echo>
+
                            <move todir="${outputdir}">
                               <fileset dir="${tmp_dir}/@{basedir}"/>
                            </move>

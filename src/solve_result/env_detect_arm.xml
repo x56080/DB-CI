@@ -504,7 +504,7 @@
       <sequential>
       <property file="${basedir}/src/conf/test.conf" /> 
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
-      <var name="sdbshell" value="${INSTALL_DIR}/bin/sdb"/>
+      <var name="sdbshell" value="${CI_WORK_DIR}/sdb"/>
       <var name="cmd1" value="-f &quot;${basedir}/src/solve_result/detect_db_datagroup.js&quot;" />
       <var name="cmd2" value="-e &quot;var COORDSVCNAME='${SVCNAME}';var COORDHOSTNAME='${firsthost}'&quot;" />
       <echo message="exec cmd: ${sdbshell} ${cmd1} ${cmd2}"/>

@@ -70,10 +70,15 @@
    </target>
    
    <target name="backup_bin">
-      <echo>${line.separator}****begin to backup bin/sequoiadb</echo>             
-      <copy todir="${CI_WORK_DIR}/${backup_reltdir}">
-         <fileset dir="${INSTALL_DIR}" includes="bin/**/*"/>
-      </copy>
+      <echo>${line.separator}****begin to backup bin/sequoiadb</echo>
+      <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)"
+                     replace="" defaultValue="${testhost_list}"/>
+
+      <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
+      <scp file="${ROOT_USER}@${firsthost}:${INSTALL_DIR}/bin/*"
+           todir="${CI_WORK_DIR}/${backup_reltdir}/bin"
+           password="${ROOT_PWD}"
+           trust="true"/>
       <chmod dir="${CI_WORK_DIR}/${backup_reltdir}/bin" perm="ugo+rx"
              includes="*"/>
    </target>
@@ -85,9 +90,9 @@
                      
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
-      <exec executable="${INSTALL_DIR}/bin/sdb"
+      <exec executable="${CI_WORK_DIR}/sdb"
             output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
-            <arg line=" -s &quot;var db = new Sdb('localhost',${SVCNAME});db.list(7);&quot;"/>
+            <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
       </exec>
    </target>
    
@@ -105,8 +110,8 @@
       
       <echo>${line.separator}****begin to send diaglog to backup host</echo>
       <scp file="${tar_fullname}"
-           todir="root@${JENKINS_HOST}:${BACKLOG_DIR}"
-           password="jenkins"
+           todir="${user}@${JENKINS_HOST}:${BACKLOG_DIR}"
+           password="${passwd}"
            trust="true"/> 
    </target>
 
