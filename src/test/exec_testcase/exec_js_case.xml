@@ -19,6 +19,7 @@
    <property name="passwd" value="${ROOT_PWD}" />
 
    <target name="exec_js_testcase">
+      <property name="jsworkdir" value="${CI_WORK_DIR}/jstest" />
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
       <if>
@@ -27,16 +28,25 @@
             <var name="BREAK_ON_FAILURE" value="false"/>
          </else>
       </if>
-	  
-      <chown owner="sdbadmin">
-         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>	
-         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-      </chown>
-      <chgrp group="sdbadmin_group">
-         <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-         <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
-      </chgrp>
 
+
+      <hostinfo prefix="host" />
+      <sshexec host="${host.NAME}" username="${user}" password="${passwd}"
+               failonerror="false" trust="true"
+               command="mkdir -p ${jsworkdir};chown -R sdbadmin:sdbadmin_group ${jsworkdir}"/>
+      <if>
+         <available file="${CI_WORK_DIR}/testcase/story/js" />
+         <then>
+            <chown owner="sdbadmin">
+               <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+               <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+            </chown>
+            <chgrp group="sdbadmin_group">
+               <dirset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+               <fileset dir="${CI_WORK_DIR}/testcase/story/js" includes="**/*"/>
+            </chgrp>
+         </then>
+      </if>
       
       <prefix resultproperty="prefix"/>
       <detectenv detectfile="${testcase_dir}/lib/all_prepare.js" prefix="${prefix}" envisok="envrc"/>   
@@ -106,7 +116,7 @@
          </if>          
                  
          <var name="cmd1" value="-f &quot;${func_option}@{detectfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var RSRVNODEDIR='${INSTALL_DIR}/database/';&quot;" />
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='@{prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var WORKDIR='${jsworkdir}';var RSRVNODEDIR='${INSTALL_DIR}/database/';&quot;" />
          <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
          <var name="@{output}" unset="true"/>
          <var name="@{envisok}" unset="true"/>
@@ -315,7 +325,7 @@
          <propertyregex property="IDXPREFIX" input="${firsthost}" regexp="-" replace="_"/> 
          
          <var name="cmd1" value="-f &quot;${func_option}${commlib_option}@{jsfile}&quot;" />
-         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var RSRVNODEDIR='${INSTALL_DIR}/database/' &quot;" />
+         <var name="cmd2" value="-e &quot;var CHANGEDPREFIX='${prefix}';var COORDSVCNAME='${SVCNAME}';var ESHOSTNAME='${ES_IP}';var ESSVCNAME='${ES_PORT}';var TESTCASEDIR='${jsdir}';var FULLTEXTPREFIX='${IDXPREFIX}';var DSHOSTNAME='${firsthost}';var COORDHOSTNAME='${firsthost}';var STPHOSTNAME='${firsthost}';var WORKDIR='${jsworkdir}';var RSRVNODEDIR='${INSTALL_DIR}/database/' &quot;" />
          <echo message="exec cmd: ${INSTALL_DIR}/bin/sdb ${cmd1} ${cmd2}"/>      
          
          <var name="screen_output" unset="true"/>
