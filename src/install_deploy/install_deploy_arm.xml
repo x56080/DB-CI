@@ -256,8 +256,8 @@
       <var name="cmd" value="echo 'http://${ES_IP}:${esport}/${IDXPREFIX}*' | tr A-Z a-z | xargs curl -XDELETE"/>
 
       <sshexec host="${ES_IP}"
-                           username="root"
-                           password="jenkins"
+                           username="${user}"
+                           password="${passwd}"
                            trust="true"
                            command="${cmd}"/>
       <sshexec host="${firsthost}" 
