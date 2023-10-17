@@ -51,6 +51,7 @@
             <ant antfile="${deploy_file_name}" dir="src/install_deploy" inheritAll="true" useNativeBaseDir="true" >
                <property name="TEST_TYPE" value="${TEST_TYPE}"/>
                <property name="testhost_list" value="${testhost_list}"/>
+               <property name="reinstall_testhost_list" value="${myhostname},${testhost_list}"/>
             </ant>
             <if>
                <equals arg1="${COVERAGE}" arg2="true" />
