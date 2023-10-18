@@ -108,13 +108,45 @@
       </for>
    </target>
    
-   <target name="uninstall" depends="">    
+   <target name="uninstall" depends="">
+      <var name="getinstalldircmd" value="[ -e /etc/default/sequoiadb ] &amp;&amp; awk -F= '$1==&quot;INSTALL_DIR&quot;{print $2}' /etc/default/sequoiadb"/>
       <for list="${testhost_list}" param="testhost" parallel="true">
-         <sequential> 
+         <sequential>
+            <var name="DEFAULT_INSTALL_DIR_RET" unset="true"/>
+            <var name="DEFAULT_INSTALL_DIR" unset="true"/>
+            <sshexec host="@{testhost}"
+                     outputproperty="DEFAULT_INSTALL_DIR_RET"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     failonerror="false"
+                     trust="true"
+                     command="${getinstalldircmd}" />
+            <propertyregex property="DEFAULT_INSTALL_DIR" input="${DEFAULT_INSTALL_DIR_RET}" regexp="\n" replace="" global="true"/>
+            <echo message="@{testhost} DEFAULT_INSTALL_DIR=${DEFAULT_INSTALL_DIR}"/>
+            <echo message="@{testhost} DEFAULT_INSTALL_DIR=${INSTALL_DIR}"/>
+            <if>
+               <equals arg1="${INSTALL_DIR}" arg2="${DEFAULT_INSTALL_DIR}"/>
+               <else>
+                  <if>
+                     <available file="${DEFAULT_INSTALL_DIR}"/>
+                     <then>
+                        <staf location="@{testhost}" service="PROCESS"
+                              request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
+                              throwBuildException=""/>
+                        <staf location="@{testhost}" service="PROCESS"
+                              request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/uninstall --mode unattended WAIT 10m RETURNSTDOUT RETURNSTDERR"
+                              throwBuildException="1"/>
+                        <staf location="@{testhost}" service="FS"
+                              request="DELETE ENTRY ${DEFAULT_INSTALL_DIR} RECURSE CONFIRM"
+                              throwBuildException=""/>
+                     </then>
+                  </if>
+               </else>
+            </if>
+
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
                   throwBuildException=""/>
-
             <staf location="@{testhost}" service="PROCESS"
                   request="START SHELL COMMAND ${INSTALL_DIR}/uninstall --mode unattended WAIT 10m RETURNSTDOUT RETURNSTDERR"
                   throwBuildException="1"/>
