@@ -106,10 +106,34 @@
       </for>
    </target>
    
-   <target name="uninstall" depends="">    
+   <target name="uninstall" depends="">
+      <var name="getinstalldircmd" value="awk -F= '$1==&quot;INSTALL_DIR&quot;{print $2}' /etc/default/sequoiadb"/>
       <for list="${reinstall_testhost_list}" param="testhost" parallel="true">
-         <sequential> 
-            <sshexec host="@{testhost}" 
+         <sequential>
+            <var name="DEFAULT_INSTALL_DIR_RET" unset="true"/>
+            <var name="DEFAULT_INSTALL_DIR" unset="true"/>
+            <sshexec host="@{testhost}"
+                     outputproperty="DEFAULT_INSTALL_DIR_RET"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="${getinstalldircmd}" />
+            <propertyregex property="DEFAULT_INSTALL_DIR" input="${DEFAULT_INSTALL_DIR_RET}" regexp="\n" replace="" global="true"/>
+            <echo message="@{testhost} DEFAULT_INSTALL_DIR=${DEFAULT_INSTALL_DIR}"/>
+            <echo message="@{testhost} DEFAULT_INSTALL_DIR=${INSTALL_DIR}"/>
+            <if>
+               <equals arg1="${INSTALL_DIR}" arg2="${DEFAULT_INSTALL_DIR}"/>
+               <else>
+                  <sshexec host="@{testhost}"
+                           username="${user}"
+                           password="${passwd}"
+                           failonerror="true"
+                           trust="true"
+                           command="${DEFAULT_INSTALL_DIR}/bin/stpstop; ${DEFAULT_INSTALL_DIR}/uninstall --mode unattended; rm -rf ${DEFAULT_INSTALL_DIR};" />
+               </else>
+            </if>
+
+            <sshexec host="@{testhost}"
                      username="${user}" 
                      password="${passwd}" 
                      failonerror="false"
