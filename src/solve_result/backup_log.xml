@@ -120,9 +120,10 @@
       <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
       
       <echo>${line.separator}****begin to send diaglog to backup host</echo>
-      <staf location="local" service="FS"
-            request="COPY FILE ${tar_fullname} TODIRECTORY ${BACKLOG_DIR} TOMACHINE ${JENKINS_HOST}"
-            throwBuildException="1"/>
+      <scp file="${tar_fullname}"
+           todir="${ROOT_USER}@${JENKINS_HOST}:${BACKLOG_DIR}"
+           password="${ROOT_PWD}"
+           trust="true"/>
    </target>
 
       
