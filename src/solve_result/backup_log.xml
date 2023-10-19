@@ -18,6 +18,11 @@
       <pathelement location="${basedir}/lib/STAFAnt.jar"/>
     </classpath>
   </taskdef>
+
+  <property file="${basedir}/src/conf/test.conf"/>
+  <var name="user" value="${ROOT_USER}" />
+  <var name="passwd" value="${ROOT_PWD}" />
+
   <target name="main">
     <if>
       <isset property="DEPLOY_MODE"/>
@@ -26,7 +31,7 @@
         <var name="DEPLOY_MODE" value=""/>
       </else>
     </if>
-    <property file="${basedir}/src/conf/test.conf"/>
+
     <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
     <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST"/>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
@@ -82,8 +87,15 @@
     <echo>${line.separator}****begin to backup rg info</echo>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="execute db.list(7):&#10;" append="false"/>
-    <staf location="${firsthost}" service="PROCESS" request="START SHELL COMMAND &quot;${CI_WORK_DIR}/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT" resultPrefix="rg" throwBuildException="1"/>
-    <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true"/>
+    <!--<staf location="${firsthost}" service="PROCESS" request="START SHELL COMMAND &quot;${CI_WORK_DIR}/sdb -s \&quot;db=new Sdb('${firsthost}',${SVCNAME});db.list(7);\&quot;&quot; WAIT 1m STDERRTOSTDOUT RETURNSTDOUT" resultPrefix="rg" throwBuildException="1"/>-->
+    <!--<echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="${rg.result}" append="true"/>-->
+
+    <sshexec host="${firsthost}"
+             username="${user}"
+             password="${passwd}"
+             trust="true"
+             output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info"
+             command="${INSTALL_DIR}/bin/sdb -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;" />
   </target>
   <target name="archive">
     <echo>${line.separator}****begin to compress, then generate tar</echo>
@@ -97,7 +109,12 @@
     </tar>
     <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
     <echo>${line.separator}****begin to send diaglog to backup host</echo>
-    <staf location="local" service="FS" request="COPY FILE ${tar_fullname} TODIRECTORY ${BACKLOG_DIR} TOMACHINE ${JENKINS_HOST}" throwBuildException="1"/>
+    <scp file="${tar_fullname}"
+         todir="${ROOT_USER}@${JENKINS_HOST}:${BACKLOG_DIR}"
+         password="${ROOT_PWD}"
+         trust="true"/>
+
+
   </target>
   <target name="backup_log_in_remote">
     <property file="${basedir}/src/conf/test.conf"/>

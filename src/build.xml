@@ -27,7 +27,7 @@
       <var name="TEST_TYPE" value="NORMALTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+      <!--<antcall target="stopnode"/>-->
 
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
@@ -95,8 +95,7 @@
          </then>
       </if>
       
-      <!--antcall target="stopInotify"/-->
-      
+
       <!--备份日志-->      
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
@@ -297,7 +296,7 @@
       <var name="TEST_TYPE" value="SYNCTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+      <!--<antcall target="stopnode"/>-->
 
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
@@ -365,8 +364,7 @@
          </then>
       </if>
       
-      <!--antcall target="stopInotify"/-->
-      
+
       <if>
          <equals arg1="${BACKUP_LOG_WHEN_FAIL}" arg2="true" />
          <then>
@@ -561,7 +559,7 @@
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+      <!--<antcall target="stopnode"/>-->
 
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />

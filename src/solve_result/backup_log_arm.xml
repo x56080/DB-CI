@@ -71,9 +71,16 @@
     <echo>${line.separator}****begin to backup rg info</echo>
     <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
     <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" message="execute db.list(7):&#10;" append="false"/>
-    <exec executable="${CI_WORK_DIR}/sdb" output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
-      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
-    </exec>
+<!--    <exec executable="${CI_WORK_DIR}/sdb" output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">-->
+<!--      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>-->
+<!--    </exec>-->
+
+    <sshexec host="${firsthost}"
+             username="${user}"
+             password="${passwd}"
+             trust="true"
+             output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info"
+             command="${INSTALL_DIR}/bin/sdb -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;" />
   </target>
   <target name="archive">
     <echo>${line.separator}****begin to compress, then generate tar</echo>
@@ -87,7 +94,11 @@
     </tar>
     <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
     <echo>${line.separator}****begin to send diaglog to backup host</echo>
-    <scp file="${tar_fullname}" todir="root@${JENKINS_HOST}:${BACKLOG_DIR}" password="jenkins" trust="true"/>
+    <scp file="${tar_fullname}"
+         todir="${ROOT_USER}@${JENKINS_HOST}:${BACKLOG_DIR}"
+         password="${ROOT_PWD}"
+         trust="true"/>
+
   </target>
   <target name="backup_log_in_remote">
     <property file="${basedir}/src/conf/test.conf"/>

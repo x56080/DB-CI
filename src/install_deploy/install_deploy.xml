@@ -27,6 +27,8 @@
 
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+      <antcall target="stopnode"/>
+
       <if>
          <equals arg1="${TEST_TYPE}" arg2="SMOKETEST"/>
          <then>
@@ -608,5 +610,37 @@
       </if>
    </target>
 
+   <target name="stopnode">
+      <property name="SDBADMIN_USER" value="sdbadmin" />
+      <property name="SDBADMIN_PWD" value="Admin@1024" />
+      <for list="${testhost_list}" param="testhost">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbcmtop"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbstop -a"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+         </sequential>
+      </for>
+   </target>
 
 </project>
