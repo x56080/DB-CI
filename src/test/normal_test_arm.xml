@@ -332,7 +332,7 @@
       <hostinfo prefix="host" />
       
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" 
                      username="${user}" 
@@ -340,7 +340,7 @@
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script;rm -rf ${CI_WORK_DIR}/report; mkdir -p ${CI_WORK_DIR}/report; chmod -R 777 ${CI_WORK_DIR}" />
             <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${passwd}" 
+                 password="${passwd}" serverAliveIntervalSeconds="60" serverAliveCountMax="10"
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>

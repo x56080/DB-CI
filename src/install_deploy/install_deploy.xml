@@ -24,6 +24,7 @@
    
    <target name="main">  
       <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+      <antcall target="stopnode"/>
       <if>
          <equals arg1="${TEST_TYPE}" arg2="SMOKETEST"/>
          <then>
@@ -123,24 +124,20 @@
                      command="${getinstalldircmd}" />
             <propertyregex property="DEFAULT_INSTALL_DIR" input="${DEFAULT_INSTALL_DIR_RET}" regexp="\n" replace="" global="true"/>
             <echo message="@{testhost} DEFAULT_INSTALL_DIR=${DEFAULT_INSTALL_DIR}"/>
-            <echo message="@{testhost} DEFAULT_INSTALL_DIR=${INSTALL_DIR}"/>
+            <echo message="@{testhost} INSTALL_DIR=${INSTALL_DIR}"/>
             <if>
                <equals arg1="${INSTALL_DIR}" arg2="${DEFAULT_INSTALL_DIR}"/>
                <else>
-                  <if>
-                     <available file="${DEFAULT_INSTALL_DIR}"/>
-                     <then>
-                        <staf location="@{testhost}" service="PROCESS"
-                              request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
-                              throwBuildException=""/>
-                        <staf location="@{testhost}" service="PROCESS"
-                              request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/uninstall --mode unattended WAIT 10m RETURNSTDOUT RETURNSTDERR"
-                              throwBuildException="1"/>
-                        <staf location="@{testhost}" service="FS"
-                              request="DELETE ENTRY ${DEFAULT_INSTALL_DIR} RECURSE CONFIRM"
-                              throwBuildException=""/>
-                     </then>
-                  </if>
+                  <echo message="@{testhost}: ${DEFAULT_INSTALL_DIR}!=${INSTALL_DIR}"/>
+                  <staf location="@{testhost}" service="PROCESS"
+                        request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/bin/stpstop WAIT 10m RETURNSTDERR"
+                        throwBuildException=""/>
+                  <staf location="@{testhost}" service="PROCESS"
+                        request="START SHELL COMMAND ${DEFAULT_INSTALL_DIR}/uninstall --mode unattended WAIT 10m RETURNSTDOUT RETURNSTDERR"
+                        throwBuildException="1"/>
+                  <staf location="@{testhost}" service="FS"
+                        request="DELETE ENTRY ${DEFAULT_INSTALL_DIR} RECURSE CONFIRM"
+                        throwBuildException=""/>
                </else>
             </if>
 
@@ -307,25 +304,17 @@
       <propertyregex property="datalist" input="${datalist1}" regexp="\n" replace="" global="true"/>
 
       <hostinfo prefix="host" />
-      <if>
-         <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>
-         <then>
-            <mkdir dir="${INSTALL_DIR}"/>
-            <mkdir dir="${INSTALL_DIR}/database"/>
-            <delete dir="${INSTALL_DIR}/database/data" failonerror="false"/>
-            <mkdir dir="${INSTALL_DIR}/database/data"/>
-            <staf location="${firsthost}" service="FS"
-                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${CI_WORK_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"
-                  throwBuildException="1"/>
-
-            <mkdir dir="${INSTALL_DIR}/conf"/>
-            <delete dir="${INSTALL_DIR}/conf/samples" failonerror="false"/>
-            <mkdir dir="${INSTALL_DIR}/conf/samples"/>
-            <staf location="${firsthost}" service="FS"
-                  request="COPY FILE ${INSTALL_DIR}/conf/samples/sdbseadapter.conf TODIRECTORY ${CI_WORK_DIR}/conf/samples TOMACHINE ${host.NAME}"
-                  throwBuildException="1"/>
-         </then>
-      </if>
+<!--      <if>-->
+<!--         <equals arg1="${TEST_TYPE}" arg2="RELIABILITYTEST"/>-->
+<!--         <then>-->
+<!--            <staf location="${firsthost}" service="FS"-->
+<!--                  request="COPY DIRECTORY ${INSTALL_DIR}/database/data TODIRECTORY ${CI_WORK_DIR}/database/data TOMACHINE ${host.NAME} RECURSE"-->
+<!--                  throwBuildException="1"/>-->
+<!--            <staf location="${firsthost}" service="FS"-->
+<!--                  request="COPY FILE ${INSTALL_DIR}/conf/samples/sdbseadapter.conf TODIRECTORY ${CI_WORK_DIR}/conf/samples TOMACHINE ${host.NAME}"-->
+<!--                  throwBuildException="1"/>-->
+<!--         </then>-->
+<!--      </if>-->
       <if>
          <or>
             <equals arg1="${DEPLOY_MODE}" arg2="G1D3"/>
@@ -629,6 +618,39 @@
          </else>
       </if>
 
+   </target>
+
+   <target name="stopnode">
+      <property name="SDBADMIN_USER" value="sdbadmin" />
+      <property name="SDBADMIN_PWD" value="Admin@1024" />
+      <for list="${testhost_list}" param="testhost">
+         <sequential>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbcmtop"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdbstop -a"
+                     failonerror="false"/>
+            <sshexec host="@{testhost}"
+                     username="${SDBADMIN_USER}"
+                     password="${SDBADMIN_PWD}"
+                     trust="true"
+                     command="sdblist -l"
+                     failonerror="false"/>
+         </sequential>
+      </for>
    </target>
 
 </project>

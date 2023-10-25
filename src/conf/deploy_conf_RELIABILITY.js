@@ -26,22 +26,22 @@ var cataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath: INSTALL_DIR + '/database/cata/[svcname]/diaglog'
+                  diagpath: INSTALL_DIR + '/database/cata/[svcname]/diaglog',
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath: INSTALL_DIR + '/database/coord/[svcname]/diaglog'
+                  diagpath: INSTALL_DIR + '/database/coord/[svcname]/diaglog',
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  diagpath: INSTALL_DIR + '/database/data/[svcname]/diaglog'
+                  diagpath: INSTALL_DIR + '/database/data/[svcname]/diaglog',
                   ftmask:'NONE',
                   indexpath: METADATA_DIR + '/[svcname]/',
-                  lobmetapath:  METADATA_DIR + '/[svcname]/'
+                  lobmetapath:  METADATA_DIR + '/[svcname]/',
                 };
                 

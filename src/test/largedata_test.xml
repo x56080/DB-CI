@@ -25,9 +25,7 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_largedata" />
       <property name="testcase_outdir" location="${CI_WORK_DIR}/testcase_out" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <antcall target="ready_testcase"/>
       
       <antcall target="ready_lib"/>
@@ -39,7 +37,9 @@
       <antcall target="divide_testcase" />
       
       <antcall target="distribute_testcase" />
-      
+
+      <antcall target="ntpdate_time"/>
+
       <antcall target="execute_testcase" />
       
    </target>
@@ -121,18 +121,28 @@
       <delete dir="${client_dir}/lib" failonerror="false" />
       <mkdir dir="${client_dir}/include"/>
       <mkdir dir="${client_dir}/lib"/>
-      
-      <copy todir="${client_dir}/include">
-         <fileset dir="${INSTALL_DIR}/include" includes="**/*"/>
-      </copy>
-      <copy todir="${client_dir}/lib">
-         <fileset dir="${INSTALL_DIR}/lib" includes="*.so,*.a"/>
-      </copy>
+
+      <propertyregex property="firsthost"
+                     input="${testhost_list}"
+                     regexp=",(.*)"
+                     replace=""
+                     defaultValue="${testhost_list}"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/include"/>
+
+      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+           password="${SDBADMIN_PWD}"
+           trust="true"
+           todir="${client_dir}/lib"/>
+
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
       <!-- untar -->
-<!--      <untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
+      <!--<untar compression="gzip" src="${WORKSPACE}/archive/current/boost.tar.gz" dest="${WORKSPACE}/sequoiadb/thirdparty"/>-->
    </target>
    
    <target name="compile_testcase">      

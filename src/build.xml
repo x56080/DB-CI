@@ -27,7 +27,7 @@
       <var name="TEST_TYPE" value="NORMALTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+<!--      <antcall target="stopnode"/>-->
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -93,7 +93,6 @@
             </ant>
          </then>
       </if>
-      
 
       <!--备份日志-->      
       <if>
@@ -293,7 +292,7 @@
       <var name="TEST_TYPE" value="SYNCTEST"/>
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+<!--      <antcall target="stopnode"/>-->
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -554,7 +553,7 @@
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+<!--      <antcall target="stopnode"/>-->
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
          <then>
@@ -651,7 +650,7 @@
       <getplatform resultProperty="plat_form"/>
       <var name="DEPLOY_MODE" value="G3D3"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
+<!--      <antcall target="stopnode"/>-->
 
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />
@@ -740,7 +739,6 @@
       <antcallback target="check_parameter" return="DEPLOY_MODE, TESTCASE_LISTS"/> 
       <getplatform resultProperty="plat_form"/>
       <propertycopy name="testhost_list" from="${plat_form}_${TEST_TYPE}_${DEPLOY_MODE}_HOST" />
-      <antcall target="stopnode"/>
 
       <if>
          <equals arg1="${plat_form}" arg2="ARM" />

@@ -215,7 +215,7 @@
       <var name="rsync_tools_ant"
            value="bash -x ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v ant -d ${RESOURCE_PATH}/java"/>
 
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" 
                      username="${user}" 
@@ -223,7 +223,7 @@
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script" />
             <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${passwd}" 
+                 password="${passwd}" serverAliveIntervalSeconds="60" serverAliveCountMax="10"
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>

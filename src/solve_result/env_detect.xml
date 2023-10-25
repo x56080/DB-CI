@@ -13,7 +13,23 @@
    <target name="main_target">
       <property file="${basedir}/src/conf/test.conf" />
       <property name="report_dir" value="${CI_WORK_DIR}/report/env_detect"/>
-      
+
+      <if>
+         <available file="${CI_WORK_DIR}/sdb" type="file"/>
+         <else>
+            <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
+            <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
+                 password="${SDBADMIN_PWD}"
+                 trust="true"
+                 todir="${CI_WORK_DIR}"/>
+            <sshexec host="localhost"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="chmod a+x ${CI_WORK_DIR}/sdb"/>
+         </else>
+      </if>
+
       <delete dir="${report_dir}" failonerror="false"/> 
       <mkdir dir="${report_dir}"/>
 
@@ -522,14 +538,14 @@
       <echo message="exec cmd: ${sdbshell} ${cmd1} ${cmd2}"/>
       <var name="output" unset="true"/>
       <var name="@{envisok}" unset="true"/>
-      <exec executable="${sdbshell}" 
-            timeout="1800000" 
-            outputproperty="output" 
+      <exec executable="${sdbshell}"
+            timeout="1800000"
+            outputproperty="output"
             resultproperty="@{envisok}"
             failonerror="false">
          <arg line="${cmd1} ${cmd2}" />
       </exec>
-      <echo message="${output}"/>
+         <echo message="${output}"/>
       <if>
          <not>
             <equals arg1="${@{envisok}}" arg2="0"/>

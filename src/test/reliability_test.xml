@@ -24,9 +24,7 @@
       <property name="case_basedir" location="${WORKSPACE}/sequoiadb/testcase_reliability" />
       <property name="testcase_outdir" location="${WORKSPACE}/tmp" />
       <property name="remote_casedir" location="${CI_WORK_DIR}/testcase" />
-      
-      <antcall target="ntpdate_time"/>
-      
+
       <if>
          <or>
             <equals arg1="${serial_number}" arg2="1"/>
@@ -40,7 +38,9 @@
             <antcall target="prepare_before_testcase"/>
          </then>
       </if>
-      
+
+      <antcall target="ntpdate_time"/>
+
       <antcall target="exec_testcase" />
       
    </target>
