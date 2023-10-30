@@ -13,9 +13,10 @@
          <pathelement location="${basedir}/lib/ant-contrib-1.0b2.jar" />
       </classpath>
    </taskdef>
-   <property name="user" value="root" />
-   <property name="passwd" value="Admin@2048" />
-   
+   <property file="${basedir}/src/conf/test.conf"/>
+   <var name="user" value="${ROOT_USER}" />
+   <var name="passwd" value="${ROOT_PWD}" />
+
    <target name="main">
       <if>
          <isset property="DEPLOY_MODE"/>
@@ -24,7 +25,6 @@
          </else>
       </if>
       
-      <property file="${basedir}/src/conf/test.conf" />
       <property name="backup_reltdir" value="${TEST_TYPE}_${SDBBRANCH}_${DEPLOY_MODE}_${BUILD_NUMBER}"/>
       
       <antcall target="backup_remote_log" />
@@ -90,10 +90,17 @@
                      
       <echo file="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info" 
             message="execute db.list(7):&#10;" append="false" />
-      <exec executable="${CI_WORK_DIR}/sdb"
-            output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">
-      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>
-      </exec>
+<!--      <exec executable="${CI_WORK_DIR}/sdb"-->
+<!--            output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info">-->
+<!--      <arg line=" -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;"/>-->
+<!--      </exec>-->
+
+      <sshexec host="${firsthost}"
+               username="${user}"
+               password="${passwd}"
+               trust="true"
+               output="${CI_WORK_DIR}/${backup_reltdir}/ReplicaGroup.info"
+               command="${INSTALL_DIR}/bin/sdb -s &quot;var db = new Sdb('${firsthost}',${SVCNAME});db.list(7);&quot;" />
    </target>
    
    <target name="archive">

@@ -204,7 +204,7 @@
            value="bash ${CI_WORK_DIR}/utils.sh -m sync_test_tools -v ant -d ${RESOURCE_PATH}/java"/>
       <hostinfo prefix="host" />
       <!--ready in remote host-->
-      <for list="${testhost_list}" param="testhost" parallel="true">
+      <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}" 
                      username="${ROOT_USER}" 
@@ -212,7 +212,7 @@
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script" />
             <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${ROOT_PWD}" 
+                 password="${ROOT_PWD}" serverAliveIntervalSeconds="60" serverAliveCountMax="10"
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>

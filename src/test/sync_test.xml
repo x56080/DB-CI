@@ -177,16 +177,27 @@
          </sequential>
       </for>
    </target>
-      
+
    <target name="distribute_testcase">
       <delete dir="${CI_WORK_DIR}/testcase" failonerror="false" />
-      
       <for list="${testhost_list}" param="tmphost" parallel="false">
-         <sequential> 
-            <staf location="local" service="FS"
-                  request="COPY DIRECTORY ${case_basedir} TODIRECTORY ${CI_WORK_DIR}/testcase TOMACHINE @{tmphost} RECURSE"
-                  throwBuildException="1"/>
-         </sequential> 
+         <sequential>
+            <sshexec host="@{tmphost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="mkdir -p ${CI_WORK_DIR}/testcase" />
+            <scp todir="${ROOT_USER}@@@{tmphost}:${CI_WORK_DIR}/testcase"
+                 password="${ROOT_PWD}"
+                 trust="true">
+               <fileset dir="${case_basedir}"/>
+            </scp>
+            <sshexec host="@{tmphost}"
+                     username="${ROOT_USER}"
+                     password="${ROOT_PWD}"
+                     trust="true"
+                     command="chmod -R 777 ${CI_WORK_DIR}/testcase" />
+         </sequential>
       </for>
    </target>
    

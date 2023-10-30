@@ -355,7 +355,7 @@
       <hostinfo prefix="host" />
 
       <!--ready in remote host-->
-      <for list="${testhost_list},${myhostname}" param="testhost" parallel="true">
+      <for list="${testhost_list},${myhostname}" param="testhost" parallel="false">
          <sequential>
             <sshexec host="@{testhost}"
                      username="${ROOT_USER}"
@@ -364,7 +364,7 @@
                      command="mkdir -p ${CI_WORK_DIR}/script;rm -rf ${CI_WORK_DIR}/report;mkdir -p ${CI_WORK_DIR}/report;" />
 
             <scp todir="${ROOT_USER}@@@{testhost}:${CI_WORK_DIR}/script"
-                 password="${ROOT_PWD}"
+                 password="${ROOT_PWD}" serverAliveIntervalSeconds="60" serverAliveCountMax="10"
                  trust="true">
                  <fileset dir="${basedir}"/>
             </scp>
