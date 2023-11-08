@@ -48,7 +48,8 @@ pipeline {
                     node("${env.compile_label}") {
                         try {
                             def targetDir="${WORKSPACE}/${env.git_dir}"
-                            commonUtil.gitClone(targetDir, "${env.git_url}", "${env.git_branch}", true)
+                            def branch = commonUtil.getEnv("git_sha", env.git_branch as String)
+                            commonUtil.gitClone(targetDir, "${env.git_url}", branch, true)
                             dir(targetDir) {
                                 def status = sh(script: 'python3 build.py', returnStatus: true) == 0
                                 if (!status) throw new Exception('pipeline build failure')
@@ -65,7 +66,11 @@ pipeline {
     post {
         always {
             script {
-                properties([pipelineTriggers([cron(env.cron)])])
+                def propertyMap = [
+                    parameters([string(name: 'git_sha')]),
+                    pipelineTriggers([cron(env.cron)]),
+                ]
+                properties(propertyMap)
             }
         }
         failure {
