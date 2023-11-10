@@ -1,0 +1,35 @@
+# exec format:
+#   ansible-play genhostfile.yml -e k/v
+# request args:
+#   oputput
+#   host_list
+#
+---
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars/common.yml
+  vars:
+    template_path:
+      - { src: "template/hosts.j2",dest: "{{ output }}/hosts" }
+
+  tasks:
+    - name: generate config by template
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop: "{{ template_path }}"
+      when: output | length > 0
+
+    - name: display generate content
+      shell: "cat {{ item.dest }}"
+      loop: "{{ template_path }}"
+      register: scmhost_content
+      when: output | length > 0
+
+    - debug:
+        msg: "{{ item.stdout_lines }}"
+      loop: "{{ scmhost_content.results }}"
+      when: output | length > 0
+
+       

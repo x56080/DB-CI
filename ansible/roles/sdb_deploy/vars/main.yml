@@ -1,0 +1,9 @@
+# deploy path
+deploy_script_path: "{{ ansible_base_dir }}/roles/sdb_deploy/files"
+
+# deploy cmd & args
+deploy_bin: "{{ sdb_install_path }}/bin/sdb"
+deploy_hostlist: '[localhost]'
+deploy_conf_script: "{{ deploy_script_path }}/deploy_conf/{{ branch }}/{{ conf_file }}"
+deploy_args: "var hostList={{ deploy_hostlist }};var diagLevel=5;var INSTALL_DIR='{{ data_dir }}';var METADATA_DIR='{{ meta_dir }}';var ansibleDir='{{ ansible_base_dir }}';"
+deploy_cmd: "{{ deploy_bin }} -f '{{ deploy_conf_script }},{{ deploy_script_path }}/deploy.js' -e \"{{ deploy_args }}\""

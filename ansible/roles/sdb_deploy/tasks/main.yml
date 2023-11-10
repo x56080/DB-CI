@@ -1,0 +1,15 @@
+# request args:
+#   test_project
+#   sdb_install_path
+#   deploy_metadata_dir
+#
+---
+
+- name: deploy node
+  shell: "{{ deploy_cmd }}"
+  register: deploy_ret
+  delegate_to: localhost
+  run_once: yes
+
+- debug: { msg: "{{ deploy_ret.stdout_lines }}" }
+  run_once: yes

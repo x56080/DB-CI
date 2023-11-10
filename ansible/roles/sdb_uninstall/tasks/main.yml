@@ -1,0 +1,46 @@
+# request: 
+#   - sdb_uninstall_path
+---
+
+- name: "check install path {{ sdb_uninstall_path }}"
+  stat: "path={{ sdb_uninstall_path }}/uninstall"
+  register: sdb_uninstall_path_stat
+
+- name: "stop sdb cm node"
+  shell: "{{ sdb_uninstall_path }}/bin/sdbcmtop"
+  ignore_errors: yes
+  register: stopcm_ret
+  when: sdb_uninstall_path_stat.stat.exists
+- debug: { msg: "{{ stopcm_ret.stdout_lines }}" }
+  when: sdb_uninstall_path_stat.stat.exists
+
+- name: "stop sdb all node"
+  shell: "{{ sdb_uninstall_path }}/bin/sdbstop -a"
+  ignore_errors: yes
+  register: stopnode_ret
+  when: sdb_uninstall_path_stat.stat.exists
+- debug: { msg: "{{ stopnode_ret.stdout_lines }}" }
+  when: sdb_uninstall_path_stat.stat.exists
+
+- name: "uninstall sdb"
+  shell: "{{ sdb_uninstall_path }}/uninstall --mode unattended"
+  become: yes
+  ignore_errors: yes
+  register: uninstall_ret
+  when: sdb_uninstall_path_stat.stat.exists
+- debug: { msg: "{{ uninstall_ret.stdout_lines }}" }
+  when: sdb_uninstall_path_stat.stat.exists
+
+- name: "ps sdbseadapter"
+  shell: "ps -ef |grep sdbseadapter |grep -v grep |wc -l"
+  register: ps_adapter_ret
+
+- name: "kill sdbseadapter"
+  shell: "ps -ef |grep sdbseadapter |grep -v grep | awk '{print $2}' | xargs kill -9"
+  register: kill_sdbseadapter_ret
+  become: yes
+  ignore_errors: yes
+  when:  ps_adapter_ret.stdout | int  > 0
+
+
+

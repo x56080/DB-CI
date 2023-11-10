@@ -1,0 +1,126 @@
+---
+# 命令格式 ansible-playbook resetenv.yml
+#  -e sdb_install_path=/hdd/ci/sequoiadb/test_sequoiadb/sequoiadb
+#  -e install_package_name=sequoiadb-5.8-linux_x86_64-enterprise-installer.run
+#  -e local_install_package_path=/hdd/jenkins/workspace/test_sequoiadb/./archive/current
+#  -e remote_install_package_path=/hdd/ci/workspace/test_sequoiadb
+#  -e deploy_metadata_dir=/ssd/ci/workspace/test_sequoiadb
+#  -e test_project=standalone
+#  -e branch=v5.6
+#  -e hostlist="['CI-A-24','CI-B-24','CI-C-24']"
+
+- hosts: sdb
+  gather_facts: no
+  vars:
+    default_sequoiadb: '/etc/default/sequoiadb'
+  pre_tasks:
+    - name: 'check remote ws path'
+      stat: "path={{ remote_install_package_path }}"
+      register: path_stat
+
+    - name: 'clean remote ws dir'
+      file: "path={{ remote_install_package_path }} state=absent"
+      become: yes
+      when: path_stat.stat.exists
+
+    - name: 'create remote ws dir'
+      file: "state=directory recurse=yes owner=sdbadmin group=sdbadmin_group path={{ remote_install_package_path }}"
+      become: yes
+
+    - name: 'check meta path'
+      stat: "path={{ deploy_metadata_dir }}"
+      register: path_stat
+
+    - name: 'clean meta dir'
+      file: "path={{ deploy_metadata_dir }} state=absent"
+      become: yes
+      when: path_stat.stat.exists
+
+    - name: 'create meta dir'
+      file: "state=directory recurse=yes owner=sdbadmin group=sdbadmin_group path={{ deploy_metadata_dir }}"
+      become: yes
+    #  when: not path_stat.stat.exists
+
+    - name: 'check exist default sequoiadb'
+      stat: "path={{ default_sequoiadb }}"
+      register: default_sdb_stat
+
+    - name: 'get default sdb path'
+      shell: "awk -F= '$1==\"INSTALL_DIR\"{print $2}' {{ default_sequoiadb }}"
+      register: default_sdb_path
+      when: default_sdb_stat.stat.exists
+
+    - name: 'set default sdb variable'
+      set_fact:
+        default_sdb_path: "{{ default_sdb_path.stdout }}"
+      when: default_sdb_stat.stat.exists
+
+    - debug: { msg: "{default:{{ default_sdb_path }},input:{{ sdb_install_path }}}" }
+      when: default_sdb_stat.stat.exists
+
+  post_tasks:
+    - name: 'check sdbcm proc'
+      shell: 'ps -aux | grep sdbcmd|grep -v grep'
+      ignore_errors: yes
+      register: sdbcm_stat_ret
+
+    - name: 'restart sdbcm proc'
+      shell: 'sdbcmtop;sdbcmart;'
+      register: sdbcm_stat_ret
+      when: sdbcm_stat_ret.rc != 0
+
+    - debug: { msg: "{{ sdbcm_stat_ret }}" }
+
+  roles:
+    - {
+        role: 'sdb_uninstall',
+        sdb_uninstall_path: "{{ sdb_install_path }}",
+      }
+    - {
+        role: 'sdb_uninstall',
+        sdb_uninstall_path: "{{ default_sdb_path }}",
+        when: path1 != path2 and path2 != "" ,
+        path1: "{{ sdb_install_path }}" ,
+        path2: "{{ default_sdb_path }}",
+      }
+    # sdb_install_path|remote_install_package_path|local_install_package_path|install_package_name
+    - sdb_install
+
+
+
+- hosts: first
+  gather_facts: no
+  tasks:
+    - name: 'check local ws path'
+      stat: "path={{ remote_install_package_path }}"
+      register: path_stat
+      delegate_to: localhost
+
+    - name: 'clean local ws dir'
+      file: "path={{ remote_install_package_path }} state=absent"
+      become: yes
+      delegate_to: localhost
+      when: path_stat.stat.exists
+
+    - name: 'create local ws dir'
+      file: "state=directory recurse=yes owner=sdbadmin group=sdbadmin_group path={{ remote_install_package_path }}"
+      become: yes
+      delegate_to: localhost
+
+    - name: 'fetch sdb bin'
+      fetch: "src={{ sdb_install_path }}/bin/sdb dest={{ remote_install_package_path }}/ flat=yes"
+
+
+- hosts: localhost
+  roles:
+    # branch|conf_file|hostlist|remote_install_package_path|sdb_install_path|deploy_metadata_dir
+    - {
+        role: 'sdb_deploy',
+        ansible_base_dir: "{{ lookup('env','PWD') }}",
+        deploy_bin: "{{ remote_install_package_path }}/sdb",
+        data_dir: "{{ sdb_install_path }}",
+        meta_dir: "{{ deploy_metadata_dir }}",
+        deploy_hostlist: "{{ hostlist }}" ,
+        conf_file: "{{ conf_file }}" ,
+        branch: "{{ branch }}" ,
+      }

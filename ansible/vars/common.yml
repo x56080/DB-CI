@@ -1,0 +1,7 @@
+# uninstall variable
+default_sdb_install_path_cmd: "awk -F= '$1==\"INSTALL_DIR\"{print $2}' /etc/default/sequoiadb"
+default_sdb_install_path: "$({{ default_sdb_install_path_cmd }})"
+
+# sdbadmin user info
+SSH_USER: 'sdbadmin'
+SSH_PASS: 'Admin@1024'

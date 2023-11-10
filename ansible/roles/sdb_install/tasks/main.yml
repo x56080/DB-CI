@@ -1,0 +1,30 @@
+# request: 
+#   - remote_install_package_path
+#   - local_install_package_path
+#   - install_package_name
+#   - sdb_install_path
+---
+
+- name: 'check remote path'
+  stat: "path={{ remote_install_package_path }}"
+  register: path_stat
+
+# TODO第一次运行时没有sdbadmin用户
+- name: 'create remote dest dir'
+  file: "state=directory recurse=yes owner=sdbadmin group=sdbadmin_group path={{ remote_install_package_path }}"
+  become: yes
+  when: not path_stat.stat.exists
+
+- name: "sync run package"
+  synchronize: "src={{ local_install_package_path }}/{{ install_package_name }} dest={{ remote_install_package_path }} mode=push"
+
+- name: 'clean install dir'
+  file: "path={{ sdb_install_path }} state=absent"
+  become: yes
+
+- name: 'install sdb'
+  shell: "{{ remote_install_package_path }}/{{ install_package_name }} --prefix {{ sdb_install_path }} --mode unattended "
+  become: yes
+  register: install_ret
+
+- debug: { msg: "{{ install_ret.stdout_lines }}" }

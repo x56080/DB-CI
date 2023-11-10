@@ -1,0 +1,2 @@
+default_env_file: '/etc/default/sequoiadb'
+tmp_remote_archive_path: '/tmp/sdblog'

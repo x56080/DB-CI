@@ -1,0 +1,15 @@
+[all:vars]
+ansible_connection=ssh
+ansible_user={{ SSH_USER }}
+ansible_ssh_pass={{ SSH_PASS }}
+ansible_become_pass={{ SSH_PASS }}
+
+[sdb]
+{% set hostlist=host_list.split(',') %}
+{% for item in hostlist %}
+{{ item }} 
+{% endfor %}
+
+[first]
+{{ hostlist[0] }}
+
