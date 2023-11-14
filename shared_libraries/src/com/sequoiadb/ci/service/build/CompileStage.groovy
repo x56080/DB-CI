@@ -47,7 +47,7 @@ class CompileStage {
         if (isCompileDoc) {
             def item = compileTypeList.get(0)
             stageMap.put('compile_doc', {
-                util.stage2("Compile Doc", { compileDoc(item) })
+                util.stage2("CompileDoc", { compileDoc(item) })
             })
         }
 
@@ -65,54 +65,54 @@ class CompileStage {
 
 
     private def compileDoc(CompileType compileType) {
-//        def compile = new CompileSdb(util, mgr)
-//
-//        def label1 = mgr.get("machine/docs/${compileType.arch}")
-//        def label2 = mgr.get("machine/calldocs/${compileType.arch}")
-//        util.node(label1, {
-//            compile.initDoc()
-//            compile.cloneDoc()
-//            util.node(label2, {
-//                try {
-//                    compile.init()
-//                    compile.compileDoc(compileType.type, compileType.arch)
-//                } catch (Exception e) {
-//                    throw e
-//                } finally {
-//                    compile.archive()
-//                }
-//            })
-//        })
+        def compile = new CompileSdb(util, mgr)
+
+        def label1 = mgr.get("machine/docs/${compileType.arch}")
+        def label2 = mgr.get("machine/calldocs/${compileType.arch}")
+        util.node(label1, {
+            compile.initDoc()
+            compile.cloneDoc()
+            util.node(label2, {
+                try {
+                    compile.init()
+                    compile.compileDoc(compileType.type, compileType.arch)
+                } catch (Exception e) {
+                    throw e
+                } finally {
+                    compile.archive()
+                }
+            })
+        })
         util.println("complete compile doc")
     }
 
 
     private def compileSdb(CompileType compileType) {
-//        def compile = new CompileSdb(util, mgr)
-//
-//        def label = mgr.get("machine/compilesdb/${compileType.arch}")
-//        util.node(label, {
-//            try {
-//                compile.init()
-//                compile.compileTar(compileType.type, compileType.arch)
-//            } catch (Exception e) {
-//                throw e
-//            } finally {
-//                compile.archive()
-//            }
-//        })
+        def compile = new CompileSdb(util, mgr)
+
+        def label = mgr.get("machine/compilesdb/${compileType.arch}")
+        util.node(label, {
+            try {
+                compile.init()
+                compile.compileTar(compileType.type, compileType.arch)
+            } catch (Exception e) {
+                throw e
+            } finally {
+                compile.archive()
+            }
+        })
         util.println("complete compile sdb")
     }
 
 
     private def buildRun(CompileType compileType) {
-//        def pkg = new BuildRunPkg(util, mgr)
-//        def label = mgr.get("machine/buildrun/${compileType.arch}")
-//
-//        util.node(label, {
-//            pkg.build(compileType.type, compileType.arch)
-//            pkg.archive()
-//        })
+        def pkg = new BuildRunPkg(util, mgr)
+        def label = mgr.get("machine/buildrun/${compileType.arch}")
+
+        util.node(label, {
+            pkg.build(compileType.type, compileType.arch)
+            pkg.archive()
+        })
         util.println("complete build run")
     }
 

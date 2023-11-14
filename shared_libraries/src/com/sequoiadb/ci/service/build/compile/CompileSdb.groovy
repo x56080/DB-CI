@@ -100,11 +100,11 @@ class CompileSdb extends SelfScript {
         boolean ret = false
         util.clearDir(releaseDir)
         util.mkdir(releaseDir)
-        this.gitClone(wsDirPrefix, 'db_compile', false)
-//        this.gitClone(wsDirPrefix, 'db_compile', true)
+        //this.gitClone(wsDirPrefix, 'db_compile', false)
+        this.gitClone(wsDirPrefix, 'db_compile', true)
         util.dir(wsDir, {
             ret = util.sh(cmd)
-//            ret = ret ? util.sh("git clean -fxd") : false
+            ret = ret ? util.sh("git clean -fxd") : false
         })
         if (!ret) throw new Exception('compile failure')
 

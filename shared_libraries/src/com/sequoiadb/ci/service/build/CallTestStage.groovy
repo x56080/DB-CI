@@ -38,8 +38,7 @@ class CallTestStage {
             final def stageName = name.replace("_", " ").replace("test", "").replace(arch, "")
             ret.put(item, {
                 util.stage2(stageName, {
-//                    util.build(name, params)
-                    util.println(stageName)
+                    util.build(name, params)
                 })
             })
         }

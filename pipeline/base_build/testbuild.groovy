@@ -1,9 +1,5 @@
-import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.page.impl.testbuild.BaseBuildImpl
-import com.sequoiadb.ci.utils.impl.TestBuildConfigMgr
-import hudson.AbortException
-
 @Library("global_ci@main")
+import hudson.AbortException
 import com.sequoiadb.ci.common.RunMode
 import com.sequoiadb.ci.page.PageOption
 import com.sequoiadb.ci.page.IPageOption
@@ -16,31 +12,21 @@ import com.sequoiadb.ci.service.build.test.ReadyEnv
 import com.sequoiadb.ci.service.build.test.BuildEnv
 import com.sequoiadb.ci.service.build.test.BuildAnt
 import com.sequoiadb.ci.page.impl.testbuild.BaseBuildImpl
+import com.sequoiadb.ci.utils.impl.TestBuildConfigMgr
 
 CommonUtil commonUtil = null
 StatusUtil statusUtil = null
 ConfigMgr configMgr = null
 ReadyEnv readyEnv = null
 
-pipeline {
-    agent {
-        label "master"
-    }
+node('master') {
 
-    environment {
-        RUN_MODE = "${RunMode.base_build}"
-        BUILD_MODE = "testbuild"
-    }
+    timestamps {
 
-    options {
-        disableConcurrentBuilds()
-        timestamps()
-    }
+        withEnv(["RUN_MODE=${RunMode.base_build.toString()}", "BUILD_MODE=testbuild"]) {
 
-    stages {
-        stage("Init Stage") {
-            steps {
-                script {
+            try {
+                stage("Init Stage") {
                     try {
                         commonUtil = new CommonUtil(this);
                         statusUtil = new StatusUtil(this);
@@ -52,49 +38,41 @@ pipeline {
                         statusUtil.failure(e)
                     }
                 }
-            }
-        }
 
-        stage('Test Stage') {
-            steps {
-                script {
-                    readyEnv = new ReadyEnv(commonUtil, configMgr)
-                    readyEnv.node({
-                        cleanWs()
+                stage('Test Stage') {
+                    try {
+                        readyEnv = new ReadyEnv(commonUtil, configMgr)
+                        readyEnv.node({
+                            cleanWs()
 
-                        stage('CheckBuildEnv') {
-                            readyEnv.readyScript()
-                            readyEnv.copyArchive()
-                            readyEnv.lock()
-                        }
+                            stage('CheckBuildEnv') {
+                                readyEnv.readyScript()
+                                readyEnv.copyArchive()
+                                readyEnv.lock()
+                            }
 
-                        stage('ResetBuildEnv') {
-                            BuildEnv buildEnv = new BuildEnv(commonUtil, configMgr)
-                            buildEnv.reset(readyEnv)
-                        }
+                            stage('ResetBuildEnv') {
+                                BuildEnv buildEnv = new BuildEnv(commonUtil, configMgr)
+                                buildEnv.reset(readyEnv)
+                            }
 
-                        stage('InvokeAnt') {
-                            BuildAnt buildAnt = new BuildAnt(commonUtil, configMgr)
-                            buildAnt.call(readyEnv)
-                            buildAnt.junit()
-                        }
-                    })
+                            stage('InvokeAnt') {
+                                BuildAnt buildAnt = new BuildAnt(commonUtil, configMgr)
+                                buildAnt.call(readyEnv)
+                                buildAnt.junit()
+                            }
+                        })
+                    } finally {
+                        readyEnv.node({ readyEnv.unlock() })
+                    }
                 }
-            }
-            post {
-                always {
-                    script { readyEnv.node({ readyEnv.unlock() }) }
-                }
-            }
-        }
-    }
 
-    post {
-        always {
-            script {
-                IPageOption pageOption = new PageOption(commonUtil, configMgr)
-                IPageOption baseBuildImpl = new BaseBuildImpl(pageOption)
-                properties(baseBuildImpl.getPageArgs())
+            } finally {
+                stage('Post Stage') {
+                    IPageOption pageOption = new PageOption(commonUtil, configMgr)
+                    IPageOption buildImpl = new BaseBuildImpl(pageOption)
+                    properties(buildImpl.getPageArgs())
+                }
             }
         }
     }

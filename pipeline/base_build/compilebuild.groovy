@@ -1,8 +1,7 @@
-import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.utils.impl.CompileBuildConfigMgr
 import hudson.AbortException
 
 @Library("global_ci@main")
+import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.common.RunMode
 import com.sequoiadb.ci.page.PageOption
 import com.sequoiadb.ci.page.IPageOption
@@ -12,31 +11,21 @@ import com.sequoiadb.ci.utils.StatusUtil
 
 @Library("db_ci@global")
 import com.sequoiadb.ci.service.build.CompileStage
-import com.sequoiadb.ci.page.impl.compilebuild.BaseBuildImpl
+import com.sequoiadb.ci.page.impl.compilebuild.*
+import com.sequoiadb.ci.utils.impl.CompileBuildConfigMgr
 
 CommonUtil commonUtil = null
 StatusUtil statusUtil = null
 ConfigMgr configMgr = null
 
-pipeline {
-    agent {
-        label "master"
-    }
+node('master') {
 
-    environment {
-        RUN_MODE = "${RunMode.base_build}"
-        BUILD_MODE = "compilebuild"
-    }
+    timestamps {
 
-    options {
-        disableConcurrentBuilds()
-        timestamps()
-    }
+        withEnv(["RUN_MODE=${RunMode.base_build.toString()}", "BUILD_MODE=compilebuild"]) {
 
-    stages {
-        stage("Init Stage") {
-            steps {
-                script {
+            try {
+                stage("Init Stage") {
                     try {
                         commonUtil = new CommonUtil(this);
                         statusUtil = new StatusUtil(this);
@@ -48,39 +37,29 @@ pipeline {
                         statusUtil.failure(e)
                     }
                 }
-            }
-        }
 
-        stage('Build Stage') {
-            when {
-                expression {
-                    statusUtil.isStatusNormal() &&
-                        !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")
-                }
-            }
-            steps {
-                script {
-                    try {
-                        CompileStage compileStage = new CompileStage(commonUtil, configMgr)
-                        compileStage.init()
-                        compileStage.compile()
-                    } catch (AbortException e) {
-                        statusUtil.abort(e)
-                    } catch (Exception e) {
-                        statusUtil.failure(e)
+                stage('Build Stage') {
+                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
+                        try {
+                            CompileStage compileStage = new CompileStage(commonUtil, configMgr)
+                            compileStage.init()
+                            compileStage.compile()
+                        } catch (AbortException e) {
+                            statusUtil.abort(e)
+                        } catch (Exception e) {
+                            statusUtil.failure(e)
+                        }
                     }
                 }
-            }
-        }
-    }
 
-    post {
-        always {
-            script {
-                IPageOption pageOption = new PageOption(commonUtil, configMgr)
-                IPageOption baseBuildImpl = new BaseBuildImpl(pageOption)
-                properties(baseBuildImpl.getPageArgs())
+            } finally {
+                stage('Post Stage') {
+                    IPageOption pageOption = new PageOption(commonUtil, configMgr)
+                    IPageOption buildImpl = new BaseBuildImpl(pageOption)
+                    properties(buildImpl.getPageArgs())
+                }
             }
         }
     }
 }
+

@@ -49,7 +49,6 @@ properties.base_build.outsideEnv = [testbuild: [required: ['BRANCH', 'TEST_PROJE
 properties.base_build.ciworkspace = '/hdd/ci/workspace'
 
 
-
 //--------------------------------------------------------------------------------------------------
 //- 测试配置部分
 
@@ -75,7 +74,6 @@ properties.base_build.TypeDeployConfMap = [
     NORMAL_G3D3      : "deploy_conf_g3d3.js",
     SYNC             : "deploy_conf_g3d3.js",
 ]
-
 
 
 //--------------------------------------------------------------------------------------------------
@@ -170,9 +168,9 @@ properties.release_build.collectTarget = [
     'SequoiaDB_usermanuals_$VERSION.pdf'                              : '',
     'SequoiaDB_usermanuals_$VERSION.tar.gz'                           : '',
 
-    "SequoiaDB_usermanuals_${BRANCH}.chm"                         : '',
-    "SequoiaDB_usermanuals_${BRANCH}.pdf"                         : '',
-    "SequoiaDB_usermanuals_${BRANCH}.tar.gz"                      : '',
+    "SequoiaDB_usermanuals_${BRANCH}.chm"                             : '',
+    "SequoiaDB_usermanuals_${BRANCH}.pdf"                             : '',
+    "SequoiaDB_usermanuals_${BRANCH}.tar.gz"                          : '',
 ]
 return this
 

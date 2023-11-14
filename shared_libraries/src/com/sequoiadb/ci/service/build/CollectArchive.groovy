@@ -44,7 +44,7 @@ class CollectArchive {
 
     def save() {
         util.clearDir(saveDir)
-        util.copy(collectDir, saveDir)
+        util.copy2(collectDir, saveDir)
 
         if (util.getEnvToBoolean("${SubExtArgs.ARCHIVE}")) {
             util.dir(scriptDir, {
@@ -66,12 +66,12 @@ class CollectArchive {
             def src = "$archivePath/$key"
             def dst = "$collectDir/$version/$val"
             if (util.fileExists(src)) {
-                def ret = util.copy(src, dst)
+                def ret = util.copy2(src, dst)
                 if (key.contains('.run') && ret) tarRun(src, dst)
                 flag.add(key)
             }
         }
-        def unCopyStr = 'skip copy,cause no exist file [\n'
+        def unCopyStr = 'skip copy, cause no exist file [\n'
         map.each { key, val ->
             key = key.toString().replace('$VERSION', version)
 

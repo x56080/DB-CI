@@ -58,6 +58,7 @@ class BaseBuildImpl implements IPageOption {
         def pageOptionList = []
         pageOptionList.add(pageOption.util.parameters(params))
         pageOptionList.add(pageOption.getBuildDiscarderOfOption())
+        pageOptionList.add(pageOption.util.disableConcurrentBuilds())
 
         return pageOptionList
     }

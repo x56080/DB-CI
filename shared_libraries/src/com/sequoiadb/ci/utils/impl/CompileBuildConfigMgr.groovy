@@ -33,7 +33,8 @@ class CompileBuildConfigMgr extends ConfigMgr {
         }
 
         //1. 判断arch是否支持,若设置COMPILE_ARCH后需判断传入编译类型中架构是否相符
-        if (!util.isEnvAttrEmpty(ExtArgs.COMPILE_ARCH.toString())) {
+        if (!util.isEnvAttrEmpty(ExtArgs.COMPILE_TYPE.toString())
+            && !util.isEnvAttrEmpty(ExtArgs.COMPILE_ARCH.toString())) {
             this.checkContains(ExtArgs.COMPILE_ARCH, "supportArch")
 
             def type = util.getEnv(ExtArgs.COMPILE_TYPE.toString())
