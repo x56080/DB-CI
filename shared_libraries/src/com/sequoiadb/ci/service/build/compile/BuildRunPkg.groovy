@@ -55,7 +55,7 @@ class BuildRunPkg extends SelfScript {
     def archive() {
         String archiveRule = ''
         List<String> list = configMgr.get('archive/buildrunArchives') as List
-        for (final def item in list) archiveRule += "$wsDir/$item,"
-        util.archiveArtifacts(archiveRule)
+        for (final def item in list) archiveRule += "$item,"
+        util.dir(wsDir, { util.archiveArtifacts(archiveRule) })
     }
 }

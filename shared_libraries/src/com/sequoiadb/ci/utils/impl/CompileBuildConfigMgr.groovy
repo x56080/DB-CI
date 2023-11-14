@@ -12,6 +12,11 @@ class CompileBuildConfigMgr extends ConfigMgr {
         super(common)
     }
 
+    def checkoutScm(){
+        util.cleanWs()
+        util.checkoutScm()
+    }
+
     @Override
     def checkOutsideConf() {
         //0. 检查必填
@@ -39,7 +44,9 @@ class CompileBuildConfigMgr extends ConfigMgr {
 
             def type = util.getEnv(ExtArgs.COMPILE_TYPE.toString())
             def arch = util.getEnv(ExtArgs.COMPILE_ARCH.toString())
-            if (!type.contains(arch)) throw new ExtArgsException(ExtArgsException.Type.NO_SUPPORT_OF_ARCH.getMessage())
+            if (!type.contains(arch)) {
+                throw new ExtArgsException(ExtArgsException.Type.NO_SUPPORT_OF_ARCH.getMessage(arch))
+            }
         }
     }
 }

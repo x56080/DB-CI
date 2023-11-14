@@ -1,6 +1,7 @@
 package com.sequoiadb.ci.service.build
 
 import com.sequoiadb.ci.common.ExtArgs
+import com.sequoiadb.ci.common.Impl.SubExtArgs
 import com.sequoiadb.ci.service.entry.CompileType
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
@@ -26,7 +27,8 @@ class CallTestStage {
 
     private def call(String arch) {
         def ret = [:]
-        def params = [util.stringVal("${ExtArgs.BUILD_NUMBER}", util.getEnv("${ExtArgs.BUILD_NUMBER}"))]
+        def params = [util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", util.getEnv("${ExtArgs.BUILD_NUMBER}"))]
+//        def params = [util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", "161")]
 
         if (!util.isEnvAttrEmpty("${ExtArgs.GIT_SHA}")) {
             params.add(util.stringVal("${ExtArgs.GIT_SHA}", util.getEnv("${ExtArgs.GIT_SHA}")))
@@ -35,7 +37,7 @@ class CallTestStage {
         def list = mgr.get('testproject') as List<String>
         for (final def item in list) {
             final String name = "${item}_${arch}"
-            final def stageName = name.replace("_", " ").replace("test", "").replace(arch, "")
+            final def stageName = name.replace("_", " ").replace(arch, "")
             ret.put(item, {
                 util.stage2(stageName, {
                     util.build(name, params)

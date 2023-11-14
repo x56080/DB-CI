@@ -12,6 +12,11 @@ class TestBuildConfigMgr extends  ConfigMgr{
         super(common)
     }
 
+    def checkoutScm(){
+        util.cleanWs()
+        util.checkoutScm()
+    }
+
     @Override
     def checkOutsideConf() {
         //0.检查必填

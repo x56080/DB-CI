@@ -15,6 +15,9 @@ class BaseBuildImpl implements IPageOption {
 
     def getChoiceOptionOfParam(ExtArgs optionEnum, String key, String defaultVal = null) {
         def branchList = pageOption.configMgr.get(key) as List<String>
+        def option = []
+
+        if (defaultVal != null) option.add(defaultVal)
 
         //过滤页面编译类型的选项通过架构
         String empty = 'null'
@@ -24,15 +27,11 @@ class BaseBuildImpl implements IPageOption {
             for (final def item in branchList) {
                 def split = item.split("\\.")
                 if (split.length < 2) continue
-                if (arch != split[1]) branchList.remove(item)
+                if (arch == split[1] && !option.contains(item)) option.add(item)
             }
         }
 
-        if (defaultVal != null) {
-            branchList.remove(defaultVal)
-            branchList.add(0, defaultVal)
-        }
-        return pageOption.util.choice("${optionEnum}", branchList)
+        return pageOption.util.choice("${optionEnum}", option)
     }
 
     @Override
@@ -43,9 +42,9 @@ class BaseBuildImpl implements IPageOption {
             "$ExtArgs.COMPILE_TYPE": "supportCompileTypes"
         ]
 
+        params.add(getChoiceOptionOfParam(ExtArgs.COMPILE_TYPE, supportMap.get("$ExtArgs.COMPILE_TYPE"), pageOption.util.getEnv("${ExtArgs.COMPILE_TYPE}")))
         params.add(pageOption.util.stringDefaultVal("${ExtArgs.BRANCH}", pageOption.util.getEnv("${ExtArgs.BRANCH}")))
         params.add(pageOption.util.string("${ExtArgs.GIT_SHA}"))
-        params.add(getChoiceOptionOfParam(ExtArgs.COMPILE_TYPE, supportMap.get("$ExtArgs.COMPILE_TYPE"), pageOption.util.getEnv("${ExtArgs.COMPILE_TYPE}")))
         params.add(pageOption.util.stringDefaultVal("${ExtArgs.JOB_NUMBER}", pageOption.util.getEnv("${ExtArgs.JOB_NUMBER}")))
         params.add(pageOption.util.booleanParamDefaultVal("${ExtArgs.COMPILE_DOC}", pageOption.util.getEnvToBoolean("${ExtArgs.COMPILE_DOC}")))
 

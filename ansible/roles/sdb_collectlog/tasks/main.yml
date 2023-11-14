@@ -1,5 +1,6 @@
 ---
-# tmp_local_archive_path 本地暂存目录
+# description:    备份sdb(diaglog/conf.local/conf.log/bin.sdb/rg/)
+# request_args:   tmp_local_archive_path 本地暂存目录
 #
 
 - name: 'check exist default sequoiadb'
@@ -45,6 +46,9 @@
 
 - name: archive sdb bin
   shell: "rsync -avp {{ sdb_bin }}/sdb {{ tmp_remote_archive_path }}"
+
+- name: archive rg info
+  shell: "{{ sdb_bin }}/sdb -s \"\" "
 
 - name: create local receive directory
   file: "path={{ tmp_local_archive_path }}/{{ inventory_hostname }} state=directory"

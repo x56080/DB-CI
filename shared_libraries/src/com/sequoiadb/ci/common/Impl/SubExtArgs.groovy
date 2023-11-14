@@ -5,4 +5,5 @@ enum SubExtArgs {
     BUILD_MODE,
     COMPILE_SDB,
     ARCHIVE,
+    SDB_BUILD_NUMBER,
 }

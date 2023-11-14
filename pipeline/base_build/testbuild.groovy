@@ -7,7 +7,7 @@ import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.StatusUtil
 
-@Library("db_ci@meger_ct")
+@Library("db_ci@global")
 import com.sequoiadb.ci.service.build.test.ReadyEnv
 import com.sequoiadb.ci.service.build.test.BuildEnv
 import com.sequoiadb.ci.service.build.test.BuildAnt
@@ -28,10 +28,11 @@ node('master') {
             try {
                 stage("Init Stage") {
                     try {
-                        commonUtil = new CommonUtil(this);
-                        statusUtil = new StatusUtil(this);
-                        configMgr = new TestBuildConfigMgr(commonUtil);
-                        configMgr.loadConf();
+                        commonUtil = new CommonUtil(this)
+                        statusUtil = new StatusUtil(this)
+                        configMgr = new TestBuildConfigMgr(commonUtil)
+                        configMgr.checkoutScm()
+                        configMgr.loadConf()
                     } catch (AbortException e) {
                         statusUtil.abort(e)
                     } catch (Exception e) {

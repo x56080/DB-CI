@@ -34,10 +34,11 @@ node('master') {
             try {
                 stage("Init Stage") {
                     try {
-                        commonUtil = new CommonUtil(this);
-                        statusUtil = new StatusUtil(this);
-                        configMgr = new CompileBuildConfigMgr(commonUtil);
-                        configMgr.loadConf();
+                        commonUtil = new CommonUtil(this)
+                        statusUtil = new StatusUtil(this)
+                        configMgr = new CompileBuildConfigMgr(commonUtil)
+                        configMgr.checkoutScm()
+                        configMgr.loadConf()
                     } catch (AbortException e) {
                         statusUtil.abort(e)
                     } catch (Exception e) {
