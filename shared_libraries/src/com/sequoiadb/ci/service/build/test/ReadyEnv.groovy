@@ -71,14 +71,13 @@ class ReadyEnv extends SelfScript {
         sdbCloneDir = "${super.getJkWorkspace()}/sequoiadb"
         ciCloneDir = "${super.getJkWorkspace()}/sequoiadb/misc/ci"
 
-        String pipelineBranch = "test_pipeline"
         String dbCiUrl = mgr.get("url/db_ci")
         String ciBranch = commonUtil.isEnvAttrEmpty(ExtArgs.CI_BRANCH.toString()) ?
             testPjtCfg.get(ExtArgs.CI_BRANCH.toString()) :
             commonUtil.getEnv(ExtArgs.CI_BRANCH.toString())
         this.gitClone("sequoiadb", "db_testcase")
-        util.gitClone(pipCloneDir, dbCiUrl, pipelineBranch, true)
         util.gitClone(ciCloneDir, dbCiUrl, ciBranch, true)
+        util.dir(pipCloneDir, { util.checkoutScm() })
 
         String src = "$sdbCloneDir/testcase_new/*"
         String dest = "$sdbCloneDir/testcase"

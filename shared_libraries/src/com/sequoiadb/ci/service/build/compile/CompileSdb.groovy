@@ -23,6 +23,7 @@ class CompileSdb extends SelfScript {
     def init() {
         releaseDir = "${this.getJkWorkspace()}/$releasePrefix"
         wsDir = "${this.getJkWorkspace()}/$wsDirPrefix"
+        util.println("NODE=${util.getEnv('NODE_NAME')}")
     }
 
     def initDoc() {
