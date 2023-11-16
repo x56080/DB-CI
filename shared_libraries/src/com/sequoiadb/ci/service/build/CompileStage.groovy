@@ -54,9 +54,10 @@ class CompileStage {
         if (isCompileSdb) {
             for (final def item in compileTypeList) {
                 final def stageName = item.getName().replace("_", " ")
+                final def currentItem = item
                 stageMap.put(item.getName(), {
-                    util.stage2("CompileSdb $stageName", { compileSdb(item) })
-                    util.stage2("BuildRun $stageName", { buildRun(item) })
+                    util.stage2("CompileSdb $stageName", { compileSdb(currentItem) })
+                    util.stage2("BuildRun $stageName", { buildRun(currentItem) })
                 })
             }
         }

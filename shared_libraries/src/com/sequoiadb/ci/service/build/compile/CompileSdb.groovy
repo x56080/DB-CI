@@ -5,6 +5,7 @@ import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.SelfScript
+import hudson.AbortException
 
 class CompileSdb extends SelfScript {
 
@@ -23,7 +24,7 @@ class CompileSdb extends SelfScript {
     def init() {
         releaseDir = "${this.getJkWorkspace()}/$releasePrefix"
         wsDir = "${this.getJkWorkspace()}/$wsDirPrefix"
-        util.println("NODE=${util.getEnv('NODE_NAME')}")
+        util.println("CURRENT_NODE=${util.getEnv('NODE_NAME')}")
     }
 
     def initDoc() {
@@ -112,16 +113,20 @@ class CompileSdb extends SelfScript {
         String src = "$releaseDir/sequoiadb.tar.gz"
         String releaseDirByType = util.isEnvAttrEmpty("$ExtArgs.COMPILE_TYPE") ?
             "$releaseDir/${compileType}_${arch}" :
-            "$releaseDir/${util.getEnv("$ExtArgs.COMPILE_TYPE").replace(".","_")}"
+            "$releaseDir/${util.getEnv("$ExtArgs.COMPILE_TYPE").replace(".", "_")}"
 
         util.move(src, releaseDirByType)
     }
 
 
     def archive() {
-        String archiveRule = ''
-        List<String> list = configMgr.get('archive/compileArchive') as List
-        for (final def item in list) archiveRule += "$item,"
-        util.archiveArtifacts(archiveRule)
+        try {
+            String archiveRule = ''
+            List<String> list = configMgr.get('archive/compileArchive') as List
+            for (final def item in list) archiveRule += "$item,"
+            util.archiveArtifacts(archiveRule)
+        } catch (e) {
+            throw new AbortException(e.message)
+        }
     }
 }
