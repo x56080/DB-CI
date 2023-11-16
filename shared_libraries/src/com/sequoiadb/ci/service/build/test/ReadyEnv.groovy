@@ -10,6 +10,7 @@ class ReadyEnv extends SelfScript {
 
     protected Map testPjtCfg = [:]
     protected String pipCloneDir = null
+    protected String ansibleDir = null
     protected String copyRunDir = null
     protected String ciCloneDir = null
 
@@ -30,6 +31,10 @@ class ReadyEnv extends SelfScript {
 
     String getCiCloneDir() {
         return ciCloneDir
+    }
+
+    String getAnsibleDir() {
+        return ansibleDir
     }
 
     ReadyEnv(CommonUtil commonUtil, ConfigMgr configMgr) {
@@ -66,11 +71,14 @@ class ReadyEnv extends SelfScript {
         util.copyArtifacts(filter, dependent, target, dependentBuildNum)
     }
 
-    def readyScript() {
+    def init(){
         pipCloneDir = "${super.getJkWorkspace()}/pipeline"
         sdbCloneDir = "${super.getJkWorkspace()}/sequoiadb"
         ciCloneDir = "${super.getJkWorkspace()}/sequoiadb/misc/ci"
+        ansibleDir = "$pipCloneDir/ansible"
+    }
 
+    def readyScript() {
         String dbCiUrl = mgr.get("url/db_ci")
         String ciBranch = commonUtil.isEnvAttrEmpty(ExtArgs.CI_BRANCH.toString()) ?
             testPjtCfg.get(ExtArgs.CI_BRANCH.toString()) :
@@ -89,7 +97,7 @@ class ReadyEnv extends SelfScript {
         this.testPjt = testProject == null ? util.getEnv("$ExtArgs.TEST_PROJECT") : testProject.toString()
         if (testPjtCfg.isEmpty()) initCfg()
         def label = testPjtCfg.get("EXEC_NODE") as String
-        util.node(label, closure)
+        util.node2(label, closure)
     }
 
     private def initCfg() {

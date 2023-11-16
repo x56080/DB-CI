@@ -1,3 +1,4 @@
+import com.sequoiadb.ci.service.build.test.CollectLogs
 @Library("global_ci@main")
 import hudson.AbortException
 import com.sequoiadb.ci.common.RunMode
@@ -40,36 +41,37 @@ node('master') {
                     }
                 }
 
-                stage('Test Stage') {
-                    try {
-                        readyEnv = new ReadyEnv(commonUtil, configMgr)
-                        readyEnv.node({
-                            cleanWs()
+                readyEnv = new ReadyEnv(commonUtil, configMgr)
+                readyEnv.node({
+                    cleanWs()
+                    readyEnv.init()
 
-                            stage('CheckBuildEnv') {
-                                readyEnv.readyScript()
-                                readyEnv.copyArchive()
-                                readyEnv.lock()
-                            }
-
-                            stage('ResetBuildEnv') {
-                                BuildEnv buildEnv = new BuildEnv(commonUtil, configMgr)
-                                buildEnv.reset(readyEnv)
-                            }
-
-                            stage('InvokeAnt') {
-                                BuildAnt buildAnt = new BuildAnt(commonUtil, configMgr)
-                                buildAnt.call(readyEnv)
-                                buildAnt.junit()
-                            }
-                        })
-                    } finally {
-                        readyEnv.node({ readyEnv.unlock() })
+                    stage('CheckBuildEnv') {
+                        readyEnv.readyScript()
+                        readyEnv.copyArchive()
+                        readyEnv.lock()
                     }
-                }
 
+                    stage('ResetBuildEnv') {
+                        BuildEnv buildEnv = new BuildEnv(commonUtil, configMgr)
+                        buildEnv.reset(readyEnv)
+                    }
+
+                    stage('InvokeAnt') {
+                        BuildAnt buildAnt = new BuildAnt(commonUtil, configMgr)
+                        buildAnt.call(readyEnv)
+                        buildAnt.junit()
+                    }
+
+                    CollectLogs collectLogs = new CollectLogs(commonUtil, configMgr)
+                    commonUtil.stage('CollectLog', {
+                        collectLogs.call(readyEnv)
+                    }, !collectLogs.getStateByReport())
+
+                })
             } finally {
                 stage('Post Stage') {
+                    if (readyEnv != null) readyEnv.node({ readyEnv.unlock() })
                     IPageOption pageOption = new PageOption(commonUtil, configMgr)
                     IPageOption buildImpl = new BaseBuildImpl(pageOption)
                     properties(buildImpl.getPageArgs())

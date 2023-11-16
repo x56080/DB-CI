@@ -8,7 +8,6 @@ import com.sequoiadb.ci.utils.SelfScript
 class BuildEnv extends SelfScript {
 
     private ReadyEnv readyEnv = null
-    private String ansibleDir = null
     private int retryCount = 3
 
     BuildEnv(CommonUtil commonUtil, ConfigMgr configMgr) {
@@ -17,12 +16,11 @@ class BuildEnv extends SelfScript {
 
     def reset(ReadyEnv readyEnv) {
         this.readyEnv = readyEnv
-        this.ansibleDir = "${readyEnv.getPipCloneDir()}/ansible"
-        genHostFile(ansibleDir)
-        installDeploy(ansibleDir)
+        genHostFile()
+        installDeploy()
     }
 
-    private def installDeploy(String ansibleDir) {
+    private def installDeploy() {
         boolean ret = false
         StringBuilder cmd = new StringBuilder("ansible-playbook resetenv.yml")
         String runpkg = util.shWithReturnStdout("basename ${readyEnv.getCopyRunDir()}/${readyEnv.getTestPjtCfg().get('RUNNAME')}")
@@ -48,7 +46,7 @@ class BuildEnv extends SelfScript {
             hostlist                   : hostListStr.toString(),
         ]
         args.each { key, val -> cmd.append(" -e $key=$val") }
-        util.dir(ansibleDir, {
+        util.dir(readyEnv.ansibleDir, {
             util.retry(retryCount, {
                 ret = util.sh(cmd.toString())
                 if (ret) return ret
@@ -58,12 +56,12 @@ class BuildEnv extends SelfScript {
         return ret
     }
 
-    private def genHostFile(String ansibleDir) {
+    private def genHostFile() {
         StringBuilder hostListStr = new StringBuilder()
         List<String> hostList = readyEnv.getTestPjtCfg().get("DEPLOY_NODE") as List
         for (final def item in hostList) hostListStr.append("$item,")
         hostListStr.setLength(hostListStr.length() - 1)
-        return util.sh("ansible-playbook $ansibleDir/genhostfile.yml -e output=$ansibleDir -e host_list=${hostListStr.toString()}")
+        return util.sh("ansible-playbook ${readyEnv.ansibleDir}/genhostfile.yml -e output=${readyEnv.ansibleDir} -e host_list=${hostListStr.toString()}")
     }
 
 }

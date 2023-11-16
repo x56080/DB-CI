@@ -53,11 +53,16 @@ class CompileStage {
 
         if (isCompileSdb) {
             for (final def item in compileTypeList) {
-                final def stageName = item.getName().replace("_", " ")
                 final def currentItem = item
+                final def stageName = new StringBuilder()
+                for (final def snItem in item.getName().split("_")) {
+                    stageName.append(snItem.getChars()[0]).append(".")
+                }
+                stageName.setLength(stageName.length() - 1)
+
                 stageMap.put(item.getName(), {
-                    util.stage2("CompileSdb $stageName", { compileSdb(currentItem) })
-                    util.stage2("BuildRun $stageName", { buildRun(currentItem) })
+                    util.stage2("CompileSdb ${stageName.toString()}", { compileSdb(currentItem) })
+                    util.stage2("BuildRun ${stageName.toString()}", { buildRun(currentItem) })
                 })
             }
         }

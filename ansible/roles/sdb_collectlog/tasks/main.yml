@@ -14,49 +14,68 @@
 
 - name: 'set default sdb variable'
   set_fact:
+    sdb_s3_log: "{{ default_sdb_path.stdout }}/tools/sequoias3/log"
     sdb_conf_local: "{{ default_sdb_path.stdout }}/conf/local"
     sdb_conf_log: "{{ default_sdb_path.stdout }}/conf/log"
+    sdb_stp_log: "{{ default_sdb_path.stdout }}/conf/stp"
     sdb_bin: "{{ default_sdb_path.stdout }}/bin"
   when: default_sdb_stat.stat.exists
 
 - name: create remote archive directory
   file: "path={{ tmp_remote_archive_path }} state=directory"
 
+- name: get node count
+  shell: "{{ sdb_bin }}/sdblist |grep -i total|awk -F: '{print $2}'|awk '$1=$1'"
+  register: node_count
+
 - name: archive sdb node diaglog
   shell: "tar -zcvf {{ tmp_remote_archive_path }}/diaglog.tar.gz $(grep 'dbpath*' {{ sdb_conf_local }}/*/sdb.conf |awk -F: '{print $2}'|awk -F= '{print $2\"/diaglog\"}')"
   ignore_errors: yes
+  when: node_count.stdout | int != 1
 
-- name: archive sdb conf local
-  archive:
-    path: "{{ sdb_conf_local }}"
-    dest: "{{ tmp_remote_archive_path }}/sdb_conf.tar.gz"
-    owner: sdbadmin
-    group: sdbadmin_group
-    format: gz
-    force_archive: true
-
-- name: archive sdb conf log
-  archive:
-    path: "{{ sdb_conf_log }}"
-    dest: "{{ tmp_remote_archive_path }}/sdb_conf_log.tar.gz"
-    owner: sdbadmin
-    group: sdbadmin_group
-    format: gz
-    force_archive: true
+- name: archive sdb node diaglog
+  shell: "tar -zcvf {{ tmp_remote_archive_path }}/diaglog.tar.gz $(grep 'dbpath*' {{ sdb_conf_local }}/*/sdb.conf |awk -F= '{print $2\"/diaglog\"}')"
+  ignore_errors: yes
+  when: node_count.stdout | int == 1
 
 - name: archive sdb bin
-  shell: "rsync -avp {{ sdb_bin }}/sdb {{ tmp_remote_archive_path }}"
+  shell: "cp -r {{ sdb_bin }} {{ tmp_remote_archive_path }}"
+  run_once: yes
 
 - name: archive rg info
-  shell: "{{ sdb_bin }}/sdb -s \"\" "
+  shell: "{{ sdb_bin }}/sdb -s \"new Sdb('localhost',11810).list(7)\" > {{ tmp_remote_archive_path }}/rg.info"
+  ignore_errors: yes
+  when: node_count.stdout | int != 1
+
+- name: archive sdb conf local
+  shell: "mkdir -p {{ tmp_remote_archive_path }}/conf; cp -r {{ sdb_conf_local }} {{ tmp_remote_archive_path }}/conf"
+
+- name: archive sdb conf log
+  shell: "mkdir -p {{ tmp_remote_archive_path }}/conf; cp -r {{ sdb_conf_log }} {{ tmp_remote_archive_path }}/conf"
+
+- name: check s3 log
+  stat: "path={{ sdb_s3_log }}"
+  register: s3log_stats
+
+- name: archive s3 log
+  shell: "mkdir -p {{ tmp_remote_archive_path }}/tools/sequoias3/log; cp -r {{ sdb_s3_log }}/*.log*  {{ tmp_remote_archive_path }}/tools/sequoias3/log"
+  when: s3log_stats.stat.exists
+
+- name: check stp log
+  stat: "path={{ sdb_stp_log }}"
+  register: stplog_stats
+
+- name: archive stp log
+  shell: "mkdir -p {{ tmp_remote_archive_path }}/conf/stp; cp -r {{ sdb_stp_log }}/*.log* mkdir -p {{ tmp_remote_archive_path }}/conf/stp"
+  when: stplog_stats.stat.exists
 
 - name: create local receive directory
-  file: "path={{ tmp_local_archive_path }}/{{ inventory_hostname }} state=directory"
+  file: "path={{ tmp_local_archive_path }}/{{ inventory_hostname }} state=directory recurse=yes"
   delegate_to: localhost
 
 - name: sync remote to local
   synchronize:
-    src: "{{ tmp_remote_archive_path }}"
+    src: "{{ tmp_remote_archive_path }}/*"
     dest: "{{ tmp_local_archive_path }}/{{ inventory_hostname }}"
     mode: pull
 

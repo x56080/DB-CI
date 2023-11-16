@@ -6,7 +6,7 @@ import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import hudson.AbortException
 
-class CollectArchive {
+class CollectArchiveStage {
 
     private CommonUtil util = null
     private ConfigMgr mgr = null
@@ -18,7 +18,7 @@ class CollectArchive {
     private String archivePath
     private String version
 
-    CollectArchive(CommonUtil commonUtil, ConfigMgr configMgr) {
+    CollectArchiveStage(CommonUtil commonUtil, ConfigMgr configMgr) {
         this.util = commonUtil
         this.mgr = configMgr
     }

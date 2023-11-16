@@ -28,7 +28,6 @@ class CallTestStage {
     private def call(String arch) {
         def ret = [:]
         def params = [util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", util.getEnv("${ExtArgs.BUILD_NUMBER}"))]
-//        def params = [util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", "161")]
 
         if (!util.isEnvAttrEmpty("${ExtArgs.GIT_SHA}")) {
             params.add(util.stringVal("${ExtArgs.GIT_SHA}", util.getEnv("${ExtArgs.GIT_SHA}")))

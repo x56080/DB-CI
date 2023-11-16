@@ -46,8 +46,8 @@ properties.x86.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_0'
 properties.x86.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-A-22']
 properties.x86.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.x86.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
-//properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php', ]
-properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php', ]
+//properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.x86.NORMAL_G3D3.EXEC_NODE = 'test_sequoiadb_2'

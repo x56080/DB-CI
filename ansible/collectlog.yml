@@ -1,0 +1,56 @@
+---
+# request                 必填项
+# tmp_local_path          本地归档目录
+# job_name                工程名称
+# build_number            构建号
+
+- hosts: sdb
+  gather_facts: no
+  vars_files:
+    - vars/common.yml
+  vars:
+    backup_name: "{{ job_name }}_{{ build_number }}"
+    tmp_local_archive_path: "{{ tmp_local_path }}/{{ backup_name }}"
+
+  roles:
+    - sdb_collectlog
+
+- hosts: localhost
+  vars:
+    backup_name: "{{ job_name }}_{{ build_number }}"
+    tmp_local_archive_path: "{{ tmp_local_path }}/{{ backup_name }}"
+
+  tasks:
+    - name: archive local directory
+      archive:
+        path: "{{ tmp_local_archive_path }}"
+        dest: "{{ tmp_local_path }}/{{ backup_name }}.tar.gz"
+        owner: sdbadmin
+        group: sdbadmin_group
+        format: gz
+        force_archive: true
+
+    - name: clean local directory
+      file: "path={{ tmp_local_archive_path }} state=absent"
+      become: yes
+
+
+# 发生收集日志到远程备份机器
+- hosts: backup_log
+  vars_files:
+    - vars/common.yml
+  tasks:
+
+    - name: check backup directory
+      stat: "path={{ BACKUP_LOG_PATH }}"
+      register: dir_stats
+
+    - name: create backup directory
+      file: "path={{ BACKUP_LOG_PATH }} state=directory recurse=yes"
+      when: not dir_stats.stat.exists
+
+    - name: send backuplog to backup machine
+      synchronize:
+        src: "{{ tmp_local_path }}/{{ job_name }}_{{ build_number }}.tar.gz"
+        dest: "{{ BACKUP_LOG_PATH }}"
+        mode: push

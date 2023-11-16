@@ -14,13 +14,13 @@ import com.sequoiadb.ci.utils.StatusUtil
 import com.sequoiadb.ci.service.build.CompileStage
 import com.sequoiadb.ci.page.impl.compilebuild.*
 import com.sequoiadb.ci.service.build.CallTestStage
-import com.sequoiadb.ci.service.build.CollectArchive
+import com.sequoiadb.ci.service.build.CollectArchiveStage
 import com.sequoiadb.ci.utils.impl.CompileBuildConfigMgr
 
 CommonUtil commonUtil = null
 StatusUtil statusUtil = null
 ConfigMgr configMgr = null
-CollectArchive collectArchive = null
+CollectArchiveStage collectArchive = null
 List envList = [
     "RUN_MODE=${RunMode.release_build.toString()}",
     "BUILD_MODE=compilebuild",
@@ -65,7 +65,7 @@ node('master') {
                 stage('Collect Artifacts') {
                     if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
                         try {
-                            collectArchive = new CollectArchive(commonUtil, configMgr)
+                            collectArchive = new CollectArchiveStage(commonUtil, configMgr)
                             collectArchive.init()
                             collectArchive.call()
                         } catch (AbortException e) {
