@@ -38,15 +38,16 @@ properties.x86.CONFIGURE.EXEC_NODE = 'test_sequoiadb_0'
 properties.x86.CONFIGURE.DEPLOY_NODE = ['CI-A-24', 'CI-B-24', 'CI-C-24',]
 properties.x86.CONFIGURE.ANT_ARGS = [ISMVCC: true,]
 properties.x86.CONFIGURE.ANT_TARGET = 'configure_test_build'
-//properties.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_c,driver_cpp,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo,thirdparty_fapmongo_python,story_java',]
-properties.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_c,driver_cpp,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo,thirdparty_fapmongo_python,story_java',]
+
 
 
 properties.x86.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_0'
 properties.x86.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-A-22']
 properties.x86.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.x86.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
-properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php', ]
+//properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php', ]
+properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.x86.NORMAL_G3D3.EXEC_NODE = 'test_sequoiadb_2'
@@ -77,8 +78,7 @@ properties.arm64.CONFIGURE.EXEC_NODE = 'test_sequoiadb_arm_1'
 properties.arm64.CONFIGURE.DEPLOY_NODE = ['CI-X-26', 'CI-Y-26', 'CI-Z-26',]
 properties.arm64.CONFIGURE.ANT_ARGS = [ISMVCC: true,]
 properties.arm64.CONFIGURE.ANT_TARGET = 'configure_test_build'
-//properties.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo_python,story_java,driver_c,driver_cpp',]
-properties.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo_python,story_java,driver_c,driver_cpp',]
 
 properties.arm64.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_arm_0'
 properties.arm64.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-Y-27']

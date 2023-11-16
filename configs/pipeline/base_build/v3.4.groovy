@@ -50,14 +50,12 @@ properties.x86.CONFIGURE.DEPLOY_NODE = ['CI-A-27', 'CI-B-27', 'CI-C-27',]
 properties.x86.CONFIGURE.ANT_TARGET = 'configure_test_build'
 properties.x86.CONFIGURE.ANT_ARGS = [ISMVCC: true,]
 properties.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,thirdparty_s3_java,thirdparty_s3_python,sdv_java,driver_c,driver_cpp,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo,thirdparty_fapmongo_python,story_java',]
-//properties.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 properties.x86.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_0'
 properties.x86.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-A-28']
 properties.x86.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.x86.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
 properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
-//properties.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.x86.NORMAL_G3D3.EXEC_NODE = 'test_sequoiadb_2'
@@ -65,7 +63,6 @@ properties.x86.NORMAL_G3D3.DEPLOY_NODE = ['CI-A-25', 'CI-B-25', 'CI-C-25',]
 properties.x86.NORMAL_G3D3.ANT_TARGET = 'normal_test_build'
 properties.x86.NORMAL_G3D3.ANT_ARGS = [:]
 properties.x86.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_c,driver_cpp,driver_java,driver_python,story_java',]
-//properties.x86.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.x86.SYNC.EXEC_NODE = 'test_sequoiadb_3'
@@ -73,7 +70,6 @@ properties.x86.SYNC.DEPLOY_NODE = ['CI-A-26', 'CI-B-26', 'CI-C-26',]
 properties.x86.SYNC.ANT_TARGET = 'sync_test_build'
 properties.x86.SYNC.ANT_ARGS = [BREAK_ON_FAILURE: true]
 properties.x86.SYNC.TESTCASE_TYPE = [defVal: 'tdd_mongoc,story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
-//properties.x86.SYNC.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 /**
@@ -91,21 +87,18 @@ properties.arm64.CONFIGURE.DEPLOY_NODE = ['CI-X-23', 'CI-Y-23', 'CI-Z-23',]
 properties.arm64.CONFIGURE.ANT_TARGET = 'configure_test_build'
 properties.arm64.CONFIGURE.ANT_ARGS = [ISMVCC: true,]
 properties.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo_python,story_java,driver_c,driver_cpp',]
-//properties.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 properties.arm64.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_arm_1'
 properties.arm64.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-X-27']
 properties.arm64.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.arm64.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
 properties.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_java,driver_python,driver_php,driver_c,driver_cpp',]
-//properties.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 properties.arm64.NORMAL_G3D3.EXEC_NODE = 'test_sequoiadb_arm_0'
 properties.arm64.NORMAL_G3D3.DEPLOY_NODE = ['CI-X-21', 'CI-Y-21', 'CI-Z-21',]
 properties.arm64.NORMAL_G3D3.ANT_TARGET = 'normal_test_build'
 properties.arm64.NORMAL_G3D3.ANT_ARGS = [:]
 properties.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,story_java,driver_c,driver_cpp',]
-//properties.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.arm64.SYNC.EXEC_NODE = 'test_sequoiadb_arm_1'
@@ -113,6 +106,5 @@ properties.arm64.SYNC.DEPLOY_NODE = ['CI-X-22', 'CI-Y-22', 'CI-Z-22',]
 properties.arm64.SYNC.ANT_TARGET = 'sync_test_build'
 properties.arm64.SYNC.ANT_ARGS = [BREAK_ON_FAILURE: true]
 properties.arm64.SYNC.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
-//properties.arm64.SYNC.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 return this

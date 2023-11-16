@@ -9,6 +9,7 @@ class BuildEnv extends SelfScript {
 
     private ReadyEnv readyEnv = null
     private String ansibleDir = null
+    private int retryCount = 3
 
     BuildEnv(CommonUtil commonUtil, ConfigMgr configMgr) {
         super(commonUtil, configMgr)
@@ -47,8 +48,13 @@ class BuildEnv extends SelfScript {
             hostlist                   : hostListStr.toString(),
         ]
         args.each { key, val -> cmd.append(" -e $key=$val") }
-        util.dir(ansibleDir, { ret = util.sh(cmd.toString()) })
-        if (!ret) throw new Exception('install deploy failure')
+        util.dir(ansibleDir, {
+            util.retry(retryCount, {
+                ret = util.sh(cmd.toString())
+                if (ret) return ret
+                throw new Exception('install deploy failure')
+            })
+        })
         return ret
     }
 

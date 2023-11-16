@@ -7,7 +7,8 @@ import com.sequoiadb.ci.utils.SelfScript
 
 class BuildAnt extends SelfScript {
 
-    private int retryNum = 3
+    private int retryCount = 3
+    private int intervalSecond = 600
 
     BuildAnt(CommonUtil commonUtil, ConfigMgr configMgr) {
         super(commonUtil, configMgr)
@@ -31,20 +32,14 @@ class BuildAnt extends SelfScript {
 
         String antDir = "${readyEnv.getCiCloneDir()}/src"
         util.dir(antDir, {
-            for (int i = 0; i < retryNum; i++) {
-                int j = i + 1
+            util.retry(retryCount, {
                 ret = util.sh(cmd.toString())
-                if (!ret) {
-                    util.println("== retry call $j ,because call ant build failure ==")
-                    util.sh('list=$(ss -tunp |grep 22);echo "raw num: $(echo "$list"|wc -l)"')
-                    if (j < retryNum) util.sh("sleep 1600; ss -tun;")
-                    continue
-                }
-                break
-            }
+                if (ret) return ret
+                util.sh("ss -tunp |grep 22; sleep $intervalSecond; ss -tunp |grep 22")
+                throw new Exception('ant build failure')
+            })
         })
 
-        if (!ret) throw new Exception('ant build failure')
         return ret
     }
 
