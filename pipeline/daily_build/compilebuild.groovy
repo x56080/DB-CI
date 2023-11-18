@@ -27,7 +27,7 @@ node('master') {
         withEnv(["RUN_MODE=${RunMode.daily_build.toString()}", "BUILD_MODE=compilebuild"]) {
             try {
 
-                stage("Init Stage") {
+                stage('Init Stage', {
                     try {
                         commonUtil = new CommonUtil(this)
                         statusUtil = new StatusUtil(this)
@@ -39,40 +39,38 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }
+                })
 
-                stage('Build Stage') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        try {
-                            CompileStage compileStage = new CompileStage(commonUtil, configMgr)
-                            compileStage.init()
-                            compileStage.compile()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
+
+                commonUtil.stage('Build Stage', {
+                    try {
+                        CompileStage compileStage = new CompileStage(commonUtil, configMgr)
+                        compileStage.init()
+                        compileStage.compile()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
                     }
-                }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
 
-                stage('Test Stage') {
-                    if (!commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") && commonUtil.getEnvToBoolean("$ExtArgs.EXECUTE_TEST")) {
-                        try {
-                            CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
-                            callTestStage.callTest()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (FlowInterruptedException e) {
-                            statusUtil.status(e.getResult().toString(), e.message)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
+
+                commonUtil.stage('Test Stage', {
+                    try {
+                        CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
+                        callTestStage.callTest()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (FlowInterruptedException e) {
+                        statusUtil.status(e.getResult().toString(), e.message)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
                     }
-
-                }
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") && commonUtil.getEnvToBoolean("$ExtArgs.EXECUTE_TEST"))
 
             } finally {
                 stage('Post Stage') {
+                    if (statusUtil.isStatusFailure()) commonUtil.emailext(true)
                     IPageOption pageOption = new PageOption(commonUtil, configMgr)
                     IPageOption buildImpl = new DailyBuildImpl(pageOption)
                     properties(buildImpl.getPageArgs())

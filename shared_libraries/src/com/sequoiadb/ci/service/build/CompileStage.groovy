@@ -47,7 +47,7 @@ class CompileStage {
         if (isCompileDoc) {
             def item = compileTypeList.get(0)
             stageMap.put('compile_doc', {
-                util.stage2("CompileDoc", { compileDoc(item) })
+                util.stage("CompileDoc", { compileDoc(item) })
             })
         }
 
@@ -61,8 +61,8 @@ class CompileStage {
                 stageName.setLength(stageName.length() - 1)
 
                 stageMap.put(item.getName(), {
-                    util.stage2("CompileSdb ${stageName.toString()}", { compileSdb(currentItem) })
-                    util.stage2("BuildRun ${stageName.toString()}", { buildRun(currentItem) })
+                    util.stage("CompileSdb ${stageName.toString()}", { compileSdb(currentItem) })
+                    util.stage("BuildRun ${stageName.toString()}", { buildRun(currentItem) })
                 })
             }
         }

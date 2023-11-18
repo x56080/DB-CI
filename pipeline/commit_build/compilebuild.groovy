@@ -32,7 +32,7 @@ node('master') {
         withEnv(envList) {
 
             try {
-                stage("Init Stage") {
+                stage('Init Stage', {
                     try {
                         commonUtil = new CommonUtil(this)
                         statusUtil = new StatusUtil(this)
@@ -44,41 +44,40 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }
+                })
 
-                stage('Build Stage') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        try {
-                            CompileStage compileStage = new CompileStage(commonUtil, configMgr)
-                            compileStage.init()
-                            compileStage.compile()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
+
+                commonUtil.stage('Build Stage', {
+                    try {
+                        CompileStage compileStage = new CompileStage(commonUtil, configMgr)
+                        compileStage.init()
+                        compileStage.compile()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
+                    }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+
+
+                commonUtil.stage('Compile Testcase', {
+                    def typeStr = commonUtil.getEnv("$ExtArgs.COMPILE_TYPE")
+                    def arch = new CompileType(typeStr).getArch()
+                    def label = configMgr.get("machine/compilesdb/${arch}")
+
+                    node(label) {
+                        dir('script') {
+                            checkout scm
+                            println("test run node: $env.COMPILE_SDB_NODE\ntest script: $env.TEST_SH_PATH\ntarget dir: $WORKSPACE")
+                            def isSuccess = sh(script: "bash $env.TEST_SH_PATH $WORKSPACE", returnStatus: true) == 0
+                            if (!isSuccess) statusUtil.status(StatusUtil.Status.FAILURE, "exec test status：$isSuccess")
                         }
                     }
-                }
-
-                stage('Compile Testcase') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        def typeStr = commonUtil.getEnv("$ExtArgs.COMPILE_TYPE")
-                        def arch = new CompileType(typeStr).getArch()
-                        def label = configMgr.get("machine/compilesdb/${arch}")
-
-                        node(label) {
-                            dir('script') {
-                                checkout scm
-                                println("test run node: $env.COMPILE_SDB_NODE\ntest script: $env.TEST_SH_PATH\ntarget dir: $WORKSPACE")
-                                def isSuccess = sh(script: "bash $env.TEST_SH_PATH $WORKSPACE", returnStatus: true) == 0
-                                if (!isSuccess) statusUtil.status(StatusUtil.Status.ABORTED, "exec test status：$isSuccess")
-                            }
-                        }
-                    }
-                }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
 
             } finally {
                 stage('Post Stage') {
+                    if (statusUtil.isStatusFailure()) commonUtil.emailext(true)
                     IPageOption pageOption = new PageOption(commonUtil, configMgr)
                     IPageOption buildImpl = new CommitBuildImpl(pageOption)
                     properties(buildImpl.getPageArgs())

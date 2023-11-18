@@ -38,7 +38,7 @@ class CallTestStage {
             final String name = "${item}_${arch}"
             final def stageName = name.replace("_", " ").replace(arch, "")
             ret.put(item, {
-                util.stage2(stageName, {
+                util.stage(stageName, {
                     util.build(name, params)
                 })
             })

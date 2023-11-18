@@ -25,7 +25,7 @@ node('master') {
         withEnv(["RUN_MODE=${RunMode.base_build.toString()}", "BUILD_MODE=compilebuild"]) {
 
             try {
-                stage("Init Stage") {
+                stage("Init Stage", {
                     try {
                         commonUtil = new CommonUtil(this)
                         statusUtil = new StatusUtil(this)
@@ -37,21 +37,20 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }
+                })
 
-                stage('Build Stage') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        try {
-                            CompileStage compileStage = new CompileStage(commonUtil, configMgr)
-                            compileStage.init()
-                            compileStage.compile()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
+
+                commonUtil.stage('Build Stage', {
+                    try {
+                        CompileStage compileStage = new CompileStage(commonUtil, configMgr)
+                        compileStage.init()
+                        compileStage.compile()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
                     }
-                }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
 
             } finally {
                 stage('Post Stage') {

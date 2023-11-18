@@ -1,4 +1,4 @@
-package com.sequoiadb.ci.service.build
+package com.sequoiadb.ci.service.build.compile
 
 import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.common.Impl.SubExtArgs
@@ -6,7 +6,7 @@ import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import hudson.AbortException
 
-class CollectArchiveStage {
+class CollectArchive {
 
     private CommonUtil util = null
     private ConfigMgr mgr = null
@@ -18,7 +18,7 @@ class CollectArchiveStage {
     private String archivePath
     private String version
 
-    CollectArchiveStage(CommonUtil commonUtil, ConfigMgr configMgr) {
+    CollectArchive(CommonUtil commonUtil, ConfigMgr configMgr) {
         this.util = commonUtil
         this.mgr = configMgr
     }
@@ -39,22 +39,20 @@ class CollectArchiveStage {
 
         util.println("build version: $version")
         util.clearDir(collectDir)
-        archive()
-    }
+        filterCollect()
 
-    def save() {
         util.clearDir(saveDir)
         util.copy2(collectDir, saveDir)
-
-        if (util.getEnvToBoolean("${SubExtArgs.ARCHIVE}")) {
-            util.dir(scriptDir, {
-                util.sh("chmod 744 *.sh")
-                util.sh("expect chroot.sh $collectDir $archiveDir")
-            })
-        }
     }
 
     def archive() {
+        util.dir(scriptDir, {
+            util.sh("chmod 744 *.sh")
+            util.sh("expect chroot.sh $collectDir $archiveDir")
+        })
+    }
+
+    def filterCollect() {
         String branch = util.getEnv("$ExtArgs.BRANCH")
 
         def flag = []

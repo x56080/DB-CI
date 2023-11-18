@@ -1,3 +1,4 @@
+import com.sequoiadb.ci.common.Impl.SubExtArgs
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 import hudson.AbortException
 
@@ -14,13 +15,13 @@ import com.sequoiadb.ci.utils.StatusUtil
 import com.sequoiadb.ci.service.build.CompileStage
 import com.sequoiadb.ci.page.impl.compilebuild.*
 import com.sequoiadb.ci.service.build.CallTestStage
-import com.sequoiadb.ci.service.build.CollectArchiveStage
+import com.sequoiadb.ci.service.build.compile.CollectArchive
 import com.sequoiadb.ci.utils.impl.CompileBuildConfigMgr
 
 CommonUtil commonUtil = null
 StatusUtil statusUtil = null
 ConfigMgr configMgr = null
-CollectArchiveStage collectArchive = null
+CollectArchive collectArchive = null
 List envList = [
     "RUN_MODE=${RunMode.release_build.toString()}",
     "BUILD_MODE=compilebuild",
@@ -34,7 +35,8 @@ node('master') {
         withEnv(envList) {
 
             try {
-                stage("Init Stage") {
+
+                stage('Init Stage', {
                     try {
                         commonUtil = new CommonUtil(this)
                         statusUtil = new StatusUtil(this)
@@ -46,60 +48,58 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }
+                })
 
-                stage('Build Stage') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        try {
-                            CompileStage compileStage = new CompileStage(commonUtil, configMgr)
-                            compileStage.init()
-                            compileStage.compile()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
-                    }
-                }
 
-                stage('Collect Artifacts') {
-                    if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                        try {
-                            collectArchive = new CollectArchiveStage(commonUtil, configMgr)
-                            collectArchive.init()
-                            collectArchive.call()
-                        } catch (AbortException e) {
-                            statusUtil.unstable(e)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
-                    }
-                }
-
-                stage('Test Stage') {
-                    if (!commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") && commonUtil.getEnvToBoolean("$ExtArgs.EXECUTE_TEST")) {
-                        try {
-                            CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
-                            callTestStage.callTest()
-                        } catch (AbortException e) {
-                            statusUtil.abort(e)
-                        } catch (FlowInterruptedException e) {
-                            statusUtil.status(e.getResult().toString(), e.message)
-                        } catch (Exception e) {
-                            statusUtil.failure(e)
-                        }
-                    }
-                }
-
-                stage('Archive') {
+                commonUtil.stage('Build Stage', {
                     try {
-                        if (statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG")) {
-                            collectArchive.save()
-                        }
+                        CompileStage compileStage = new CompileStage(commonUtil, configMgr)
+                        compileStage.init()
+                        compileStage.compile()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
+                    }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+
+
+                commonUtil.stage('Collect Artifacts', {
+                    try {
+                        collectArchive = new CollectArchive(commonUtil, configMgr)
+                        collectArchive.init()
+                        collectArchive.call()
+                    } catch (AbortException e) {
+                        statusUtil.unstable(e)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
+                    }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+
+
+                commonUtil.stage('Test Stage', {
+                    try {
+                        CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
+                        callTestStage.callTest()
+                    } catch (AbortException e) {
+                        statusUtil.abort(e)
+                    } catch (FlowInterruptedException e) {
+                        statusUtil.status(e.getResult().toString(), e.message)
+                    } catch (Exception e) {
+                        statusUtil.failure(e)
+                    }
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    statusUtil.isStatusNormal() &&
+                    commonUtil.getEnvToBoolean("$SubExtArgs.ARCHIVE"))
+
+
+                commonUtil.stage('Archive Stage', {
+                    try {
+                        collectArchive.archive()
                     } catch (Exception e) {
                         statusUtil.unstable(e)
                     }
-                }
+                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
 
             } finally {
                 stage('Post Stage') {
