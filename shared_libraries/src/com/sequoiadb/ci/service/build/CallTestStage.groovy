@@ -2,6 +2,10 @@ package com.sequoiadb.ci.service.build
 
 import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.service.build.test.BuildAnt
+import com.sequoiadb.ci.service.build.test.BuildEnv
+import com.sequoiadb.ci.service.build.test.CollectInfo
+import com.sequoiadb.ci.service.build.test.ReadyEnv
 import com.sequoiadb.ci.service.entry.CompileType
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
@@ -18,16 +22,19 @@ class CallTestStage {
     }
 
 
-    def callTest() {
+    def callTestJob() {
         def item = util.getEnv("${ExtArgs.COMPILE_TYPE}", 'abc.x86')
         def compileType = new CompileType(item)
-        call(compileType.arch)
+        callJob(compileType.arch)
     }
 
 
-    private def call(String arch) {
+    private def callJob(String arch) {
         def ret = [:]
-        def params = [util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", util.getEnv("${ExtArgs.BUILD_NUMBER}"))]
+        def params = [
+            util.stringVal("${ExtArgs.DEPNAME}", util.getEnv("${ExtArgs.JOB_NAME}")),
+            util.stringVal("${SubExtArgs.SDB_BUILD_NUMBER}", util.getEnv("${ExtArgs.BUILD_NUMBER}")),
+        ]
 
         if (!util.isEnvAttrEmpty("${ExtArgs.GIT_SHA}")) {
             params.add(util.stringVal("${ExtArgs.GIT_SHA}", util.getEnv("${ExtArgs.GIT_SHA}")))
@@ -44,5 +51,70 @@ class CallTestStage {
             })
         }
         util.parallel(ret)
+    }
+
+
+    def callTest() {
+        def stageMap = [:]
+        String compileTypeStr = util.getEnv("${ExtArgs.COMPILE_TYPE}")
+        String arch = new CompileType(compileTypeStr).getArch()
+        List typeList = (!util.isEnvAttrEmpty("${SubExtArgs.TEST_PROJECT_LIST}") ?
+            util.getEnv("${SubExtArgs.TEST_PROJECT_LIST}").split(",") :
+            mgr.get("supportTestType")) as List<String>
+
+        for (final def item in typeList) {
+            final def stageName = "test sdb ${item.toLowerCase()}"
+            final def currentItem = item
+            // 没有同其他并行任务中每一个任务都使用stage闭包,因为该调用方法中存在其他stage声明,所以此处声明则会出现冗余
+            stageMap.put(stageName.toString(), { buildTest(currentItem, arch) })
+        }
+        util.parallel(stageMap)
+    }
+
+
+    def buildTest(String testType, String arch) {
+        ReadyEnv readyEnv = new ReadyEnv(util, mgr)
+        readyEnv.initCfg(testType, arch)
+
+        String buildNum = util.getEnv("$ExtArgs.BUILD_NUMBER")
+        String jobName = util.getEnv("$ExtArgs.JOB_NAME")
+
+        BuildAnt buildAnt = null
+        CollectInfo info = null
+        String stageName = testType.toLowerCase().replace("_", ".")
+        readyEnv.node({
+            try {
+
+                util.stage("CheEnv $stageName") {
+                    util.cleanWs()
+                    readyEnv.init()
+                    readyEnv.readyScript()
+                    //readyEnv.copyArchive(jobName, buildNum)
+                    readyEnv.copyArchive()
+                    readyEnv.lock()
+                }
+
+                util.stage("ReEnv $stageName") {
+                    BuildEnv buildEnv = new BuildEnv(util, mgr)
+                    buildEnv.reset(readyEnv)
+                }
+
+                util.stage("InvAnt $stageName") {
+                    buildAnt = new BuildAnt(util, mgr)
+                    buildAnt.call(readyEnv)
+
+                    info = new CollectInfo(util, mgr)
+                    info.init(readyEnv)
+                    buildAnt.junit()
+                }
+
+                util.stage("ColLog $stageName", {
+                    info.collectLogs(testType)
+                }, !buildAnt.getState())
+
+            } finally {
+                readyEnv.unlock()
+            }
+        })
     }
 }

@@ -6,15 +6,22 @@ import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.SelfScript
 import hudson.AbortException
 
-class CollectLogs extends SelfScript {
+class CollectInfo extends SelfScript {
 
+    private ReadyEnv readyEnv = null
 
-    CollectLogs(CommonUtil commonUtil, ConfigMgr configMgr) {
+    CollectInfo(CommonUtil commonUtil, ConfigMgr configMgr) {
         super(commonUtil, configMgr)
     }
 
-    def call(ReadyEnv readyEnv) {
+    def init(ReadyEnv readyEnv) {
+        this.readyEnv = readyEnv
+    }
+
+    def collectLogs(String jobNameFlag = null) {
         String name = util.getEnv("${ExtArgs.JOB_NAME}")
+        name += jobNameFlag == null ? "" : "_${jobNameFlag.toLowerCase()}"
+
         String number = util.getEnv("${ExtArgs.BUILD_NUMBER}")
         String ws = "${this.getCiWorkspace()}/$name"
 

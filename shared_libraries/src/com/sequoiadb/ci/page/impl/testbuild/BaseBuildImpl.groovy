@@ -19,7 +19,7 @@ class BaseBuildImpl implements IPageOption{
         def supportMap = [
             "$ExtArgs.BRANCH"      : "supportBranch",
             "$ExtArgs.TEST_ARCH"   : "supportArch",
-            "$ExtArgs.TEST_PROJECT": "supportType",
+            "$ExtArgs.TEST_PROJECT": "supportTestType",
         ]
 
         params.add(pageOption.getChoiceOptionOfParam(ExtArgs.BRANCH, supportMap.get("$ExtArgs.BRANCH"), pageOption.util.getEnv("${ExtArgs.BRANCH}")))

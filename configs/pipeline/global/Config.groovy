@@ -13,7 +13,7 @@ properties.release_build = [:]
  */
 properties.base_build.supportBranch = ['master', 'v3.4',]
 properties.base_build.supportArch = ['x86', 'arm64']
-properties.base_build.supportType = ['CONFIGURE', 'NORMAL_STANDALONE', 'NORMAL_G3D3', 'SYNC']
+properties.base_build.supportTestType = ['CONFIGURE', 'NORMAL_STANDALONE', 'NORMAL_G3D3', 'SYNC']
 
 
 /**
@@ -58,7 +58,7 @@ properties.base_build.ciworkspace = '/hdd/ci/workspace'
 properties.base_build.ANT_ARGS = [:]
 properties.base_build.ANT_ARGS.DEPLOY_MODE = 'G3D3'
 properties.base_build.ANT_ARGS.NEED_INSTALL_DEPLOY = false
-properties.base_build.ANT_ARGS.BACKUP_LOG_WHEN_FAIL = true
+properties.base_build.ANT_ARGS.BACKUP_LOG_WHEN_FAIL = false
 properties.base_build.ANT_ARGS.BREAK_ON_FAILURE = false
 properties.base_build.ANT_ARGS.COVERAGE = false
 properties.base_build.ANT_ARGS.ISMVCC = false
@@ -68,11 +68,19 @@ properties.base_build.ANT_ARGS.CI_WORK_DIR = "/hdd/ci/workspace/${JOB_NAME}"
 properties.base_build.ANT_ARGS.INSTALL_DIR = "/hdd/ci/sequoiadb/${JOB_NAME}/sequoiadb"
 properties.base_build.ANT_ARGS.METADATA_DIR = "/ssd/ci/workspace/${JOB_NAME}/sequoiadb/database"
 
-properties.base_build.TypeDeployConfMap = [
-    CONFIGURE        : "deploy_conf_config.js",
-    NORMAL_STANDALONE: "deploy_conf_standalone.js",
-    NORMAL_G3D3      : "deploy_conf_g3d3.js",
-    SYNC             : "deploy_conf_g3d3.js",
+
+properties.base_build.x86 = [
+    CONFIGURE        : [DEPLOY_FILE: "deploy_conf_config.js"],
+    NORMAL_STANDALONE: [DEPLOY_FILE: "deploy_conf_standalone.js"],
+    NORMAL_G3D3      : [DEPLOY_FILE: "deploy_conf_g3d3.js"],
+    SYNC             : [DEPLOY_FILE: "deploy_conf_g3d3.js"],
+]
+
+properties.base_build.arm64 = [
+    CONFIGURE        : [DEPLOY_FILE: "deploy_conf_config.js"],
+    NORMAL_STANDALONE: [DEPLOY_FILE: "deploy_conf_standalone.js"],
+    NORMAL_G3D3      : [DEPLOY_FILE: "deploy_conf_g3d3.js"],
+    SYNC             : [DEPLOY_FILE: "deploy_conf_g3d3.js"],
 ]
 
 

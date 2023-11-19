@@ -1,5 +1,6 @@
 package com.sequoiadb.ci.service.build.test
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
@@ -13,12 +14,18 @@ class ReadyEnv extends SelfScript {
     protected String ansibleDir = null
     protected String copyRunDir = null
     protected String ciCloneDir = null
+    protected String controlHost = null
+    protected String controlWs = null
 
-    private String testPjt = null
     private String sdbCloneDir = null
 
     Map getTestPjtCfg() {
-        return testPjtCfg
+        if (testPjtCfg.isEmpty()) initCfg()
+        return this.testPjtCfg
+    }
+
+    void setTestPjtCfg(Map testPjtCfg) {
+        this.testPjtCfg = testPjtCfg
     }
 
     String getPipCloneDir() {
@@ -33,16 +40,21 @@ class ReadyEnv extends SelfScript {
         return ciCloneDir
     }
 
+    String getControlHost() {
+        return controlHost
+    }
+
     String getAnsibleDir() {
         return ansibleDir
     }
+
 
     ReadyEnv(CommonUtil commonUtil, ConfigMgr configMgr) {
         super(commonUtil, configMgr)
     }
 
     def unlock() {
-        String flag = (testPjtCfg.get("DEPLOY_NODE") as List<String>)[0].toLowerCase()
+        String flag = (this.getTestPjtCfg().get("DEPLOY_NODE") as List<String>)[0].toLowerCase()
         boolean ret = util.sh("cd $pipCloneDir/script/; bash -x checkBuildEnv.sh -m unlock -f $flag")
         //boolean ret=util.sh("rm -rf /tmp/${flag}; rm -rf /tmp/${flag}.lock")
         if (!ret) throw new Exception('unlock failure')
@@ -51,19 +63,21 @@ class ReadyEnv extends SelfScript {
     def lock() {
         String buildNum = util.getEnv("$ExtArgs.BUILD_NUMBER")
         String jobName = util.getEnv("$ExtArgs.JOB_NAME")
-        String flag = (testPjtCfg.get("DEPLOY_NODE") as List<String>)[0].toLowerCase()
+        String flag = (this.getTestPjtCfg().get("DEPLOY_NODE") as List<String>)[0].toLowerCase()
         boolean ret = util.sh("bash -x $pipCloneDir/script/checkBuildEnv.sh -m lock -f $flag -b $buildNum -j $jobName")
         if (!ret) throw new Exception('lock failure')
     }
 
-    def copyArchive() {
+    def copyArchive(String depName = null, String buildNum = null) {
         String filter = mgr.get("DEPNANE_COPY")
-        String dependent = commonUtil.isEnvAttrEmpty(ExtArgs.DEPNAME.toString()) ?
-            testPjtCfg.get(ExtArgs.DEPNAME.toString()) :
-            commonUtil.getEnv(ExtArgs.DEPNAME.toString())
-        String dependentBuildNum = commonUtil.isEnvAttrEmpty("SDB_BUILD_NUMBER") ?
-            null :
-            commonUtil.getEnv("SDB_BUILD_NUMBER")
+
+        // 外部传入变量优先于配置
+        String dependent = commonUtil.getEnv(ExtArgs.DEPNAME.toString(), this.getTestPjtCfg().get(ExtArgs.DEPNAME.toString()) as String)
+        String dependentBuildNum = commonUtil.isEnvAttrEmpty("SDB_BUILD_NUMBER") ? null : commonUtil.getEnv("SDB_BUILD_NUMBER")
+
+        // 方法参数优先于外部传入变量
+        if (depName != null) dependent = depName
+        if (buildNum != null) dependentBuildNum = buildNum
 
         String target = "./archive/current"
         copyRunDir = "${super.getJkWorkspace()}/$target"
@@ -71,17 +85,19 @@ class ReadyEnv extends SelfScript {
         util.copyArtifacts(filter, dependent, target, dependentBuildNum)
     }
 
-    def init(){
+    def init() {
         pipCloneDir = "${super.getJkWorkspace()}/pipeline"
         sdbCloneDir = "${super.getJkWorkspace()}/sequoiadb"
         ciCloneDir = "${super.getJkWorkspace()}/sequoiadb/misc/ci"
         ansibleDir = "$pipCloneDir/ansible"
+        controlWs = super.getJkWorkspace()
+        controlHost = util.shWithReturnStdout("echo \$HOSTNAME")
     }
 
     def readyScript() {
         String dbCiUrl = mgr.get("url/db_ci")
         String ciBranch = commonUtil.isEnvAttrEmpty(ExtArgs.CI_BRANCH.toString()) ?
-            testPjtCfg.get(ExtArgs.CI_BRANCH.toString()) :
+            this.getTestPjtCfg().get(ExtArgs.CI_BRANCH.toString()) :
             commonUtil.getEnv(ExtArgs.CI_BRANCH.toString())
         this.gitClone("sequoiadb", "db_testcase")
         util.gitClone(ciCloneDir, dbCiUrl, ciBranch, true)
@@ -93,33 +109,34 @@ class ReadyEnv extends SelfScript {
         util.dir(dest, { util.sh("cp -r $src $dest") })
     }
 
-    def node(def closure, TEST_PROJECT testProject = null) {
-        this.testPjt = testProject == null ? util.getEnv("$ExtArgs.TEST_PROJECT") : testProject.toString()
-        if (testPjtCfg.isEmpty()) initCfg()
-        def label = testPjtCfg.get("EXEC_NODE") as String
+    def node(def closure) {
+        def label = this.getTestPjtCfg().get("EXEC_NODE") as String
         util.node2(label, closure)
     }
 
-    private def initCfg() {
-        def arch = util.getEnv("$ExtArgs.TEST_ARCH")
+    def initCfg(String testProject = null, String testArch = null) {
+        def testPjt = util.getEnv("$ExtArgs.TEST_PROJECT", testProject)
+        def arch = util.getEnv("$ExtArgs.TEST_ARCH", testArch)
         def typePjt = "$arch/$testPjt"
+
         def testBaseProjectCfg = mgr.get("$arch/BASE") as Map
         def testProjectCfg = mgr.get(typePjt) as Map
         testProjectCfg = ConfigMgr.mergeMap(testBaseProjectCfg, testProjectCfg)
         if (testProjectCfg == null) {
             throw new AbortException("TEST_PROJECT is null of branch config file")
         }
+
         // 合并公共的ant_args
         def testAntPubCfg = mgr.get("ANT_ARGS") as Map
         def testAntBraCfg = (testProjectCfg as Map).get("ANT_ARGS") as Map
         def testAntCfg = ConfigMgr.mergeMap(testAntPubCfg, testAntBraCfg)
         (testProjectCfg as Map).put("ANT_ARGS", testAntCfg)
 
-        testPjtCfg.putAll(testProjectCfg as Map)
-        util.println("$typePjt CFG: $testPjtCfg")
+        this.setTestPjtCfg(testProjectCfg)
+        def typePjtStr = new ObjectMapper().
+            writerWithDefaultPrettyPrinter().writeValueAsString(this.testPjtCfg)
+        util.println("$typePjt CFG: $typePjtStr")
     }
 
-    enum TEST_PROJECT {
-        CONFIGURE, NORMAL_STANDALONE, NORMAL_G3D3, SYNC
-    }
+
 }

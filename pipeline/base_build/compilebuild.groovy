@@ -50,7 +50,8 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    statusUtil.isStatusNormal())
 
             } finally {
                 stage('Post Stage') {

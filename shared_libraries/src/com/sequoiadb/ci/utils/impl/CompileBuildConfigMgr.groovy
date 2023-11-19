@@ -1,10 +1,14 @@
 package com.sequoiadb.ci.utils.impl
 
+import com.sequoiadb.ci.common.CommonConst
 import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.LogLevel
+import com.sequoiadb.ci.common.RunMode
 import com.sequoiadb.ci.exception.ExtArgsException
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
+import hudson.AbortException
 
 class CompileBuildConfigMgr extends ConfigMgr {
 
@@ -12,7 +16,7 @@ class CompileBuildConfigMgr extends ConfigMgr {
         super(common)
     }
 
-    def checkoutScm(){
+    def checkoutScm() {
         util.cleanWs()
         util.checkoutScm()
     }
@@ -49,4 +53,5 @@ class CompileBuildConfigMgr extends ConfigMgr {
             }
         }
     }
+
 }

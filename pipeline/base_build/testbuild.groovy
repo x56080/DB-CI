@@ -1,4 +1,3 @@
-import com.sequoiadb.ci.service.build.test.CollectLogs
 @Library("global_ci@main")
 import hudson.AbortException
 import com.sequoiadb.ci.common.RunMode
@@ -12,6 +11,7 @@ import com.sequoiadb.ci.utils.StatusUtil
 import com.sequoiadb.ci.service.build.test.ReadyEnv
 import com.sequoiadb.ci.service.build.test.BuildEnv
 import com.sequoiadb.ci.service.build.test.BuildAnt
+import com.sequoiadb.ci.service.build.test.CollectInfo
 import com.sequoiadb.ci.page.impl.testbuild.BaseBuildImpl
 import com.sequoiadb.ci.utils.impl.TestBuildConfigMgr
 
@@ -42,6 +42,7 @@ node('master') {
                 }
 
                 readyEnv = new ReadyEnv(commonUtil, configMgr)
+                readyEnv.initCfg()
                 readyEnv.node({
                     cleanWs()
                     readyEnv.init()
@@ -63,10 +64,11 @@ node('master') {
                         buildAnt.junit()
                     }
 
-                    CollectLogs collectLogs = new CollectLogs(commonUtil, configMgr)
+                    CollectInfo collect = new CollectInfo(commonUtil, configMgr)
+                    collect.init(readyEnv)
                     commonUtil.stage('CollectLog', {
-                        collectLogs.call(readyEnv)
-                    }, !collectLogs.getStateByReport())
+                        collect.collectLogs()
+                    }, !collect.getStateByReport())
 
                 })
             } finally {

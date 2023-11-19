@@ -33,7 +33,7 @@ class TestBuildConfigMgr extends  ConfigMgr{
                     this.checkContains(ExtArgs.BRANCH, "supportBranch")
                     break
                 case ExtArgs.TEST_PROJECT.toString():
-                    this.checkContains(ExtArgs.TEST_PROJECT, "supportType")
+                    this.checkContains(ExtArgs.TEST_PROJECT, "supportTestType")
                     break
                 case ExtArgs.TEST_ARCH.toString():
                     this.checkContains(ExtArgs.TEST_ARCH, "supportArch")

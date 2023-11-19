@@ -6,4 +6,5 @@ enum SubExtArgs {
     COMPILE_SDB,
     ARCHIVE,
     SDB_BUILD_NUMBER,
+    TEST_PROJECT_LIST
 }

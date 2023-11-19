@@ -31,9 +31,7 @@ class BuildEnv extends SelfScript {
         hostListStr.setLength(hostListStr.length() - 1)
         hostListStr.append("]\"")
 
-        def testType = util.getEnv("${ExtArgs.TEST_PROJECT}")
-        def confFile = mgr.get("TypeDeployConfMap/$testType")
-
+        String confFile = readyEnv.getTestPjtCfg().get("DEPLOY_FILE")
         Map argsValMap = readyEnv.getTestPjtCfg().get("ANT_ARGS") as Map
         Map<String, String> args = [
             sdb_install_path           : argsValMap.get("INSTALL_DIR"),
@@ -61,7 +59,9 @@ class BuildEnv extends SelfScript {
         List<String> hostList = readyEnv.getTestPjtCfg().get("DEPLOY_NODE") as List
         for (final def item in hostList) hostListStr.append("$item,")
         hostListStr.setLength(hostListStr.length() - 1)
-        return util.sh("ansible-playbook ${readyEnv.ansibleDir}/genhostfile.yml -e output=${readyEnv.ansibleDir} -e host_list=${hostListStr.toString()}")
+
+        String cmd = "ansible-playbook ${readyEnv.ansibleDir}/genhostfile.yml -e output=${readyEnv.ansibleDir} -e host_list=${hostListStr.toString()}"
+        return util.sh(cmd)
     }
 
 }

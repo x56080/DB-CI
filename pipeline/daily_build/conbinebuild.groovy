@@ -12,7 +12,7 @@ import com.sequoiadb.ci.utils.StatusUtil
 
 @Library("db_ci@global-1")
 import com.sequoiadb.ci.service.build.CompileStage
-import com.sequoiadb.ci.page.impl.compilebuild.DailyBuildImpl
+import com.sequoiadb.ci.page.impl.conbinebuild.DailyBuildImpl
 import com.sequoiadb.ci.service.build.CallTestStage
 import com.sequoiadb.ci.utils.impl.CompileBuildConfigMgr
 
@@ -60,7 +60,7 @@ node('master') {
                 commonUtil.stage('Test Stage', {
                     try {
                         CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
-                        callTestStage.callTestJob()
+                        callTestStage.callTest()
                     } catch (AbortException e) {
                         statusUtil.abort(e)
                     } catch (FlowInterruptedException e) {

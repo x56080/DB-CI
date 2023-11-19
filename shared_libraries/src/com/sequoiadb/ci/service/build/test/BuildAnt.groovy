@@ -4,11 +4,16 @@ import com.sequoiadb.ci.common.ExtArgs
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.SelfScript
+import hudson.AbortException
 
 class BuildAnt extends SelfScript {
 
     private int retryCount = 3
     private int intervalSecond = 600
+    public int failCount = 0
+    public int passCount = 0
+    public int skipCount = 0
+    public int totalCount = 0
 
     BuildAnt(CommonUtil commonUtil, ConfigMgr configMgr) {
         super(commonUtil, configMgr)
@@ -35,7 +40,7 @@ class BuildAnt extends SelfScript {
             util.retry(retryCount, {
                 ret = util.sh(cmd.toString())
                 if (ret) return ret
-                util.sh("ss -tunp |grep 22; sleep $intervalSecond; ss -tunp |grep 22")
+                util.sh("sleep $intervalSecond;")
                 throw new Exception('ant build failure')
             })
         })
@@ -44,6 +49,16 @@ class BuildAnt extends SelfScript {
     }
 
     def junit() {
-        util.junit("report/**/*.xml")
+        def junit = util.junit("report/**/*.xml")
+
+        this.failCount = junit.getFailCount()
+        this.passCount = junit.getPassCount()
+        this.skipCount = junit.getSkipCount()
+        this.totalCount = junit.getTotalCount()
+    }
+
+
+    def getState() {
+        return this.failCount == 0
     }
 }

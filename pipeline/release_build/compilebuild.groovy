@@ -61,7 +61,8 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    statusUtil.isStatusNormal())
 
 
                 commonUtil.stage('Collect Artifacts', {
@@ -74,13 +75,14 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.failure(e)
                     }
-                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    statusUtil.isStatusNormal())
 
 
                 commonUtil.stage('Test Stage', {
                     try {
                         CallTestStage callTestStage = new CallTestStage(commonUtil, configMgr)
-                        callTestStage.callTest()
+                        callTestStage.callTestJob()
                     } catch (AbortException e) {
                         statusUtil.abort(e)
                     } catch (FlowInterruptedException e) {
@@ -89,8 +91,7 @@ node('master') {
                         statusUtil.failure(e)
                     }
                 }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
-                    statusUtil.isStatusNormal() &&
-                    commonUtil.getEnvToBoolean("$SubExtArgs.ARCHIVE"))
+                    statusUtil.isStatusNormal())
 
 
                 commonUtil.stage('Archive Stage', {
@@ -99,7 +100,9 @@ node('master') {
                     } catch (Exception e) {
                         statusUtil.unstable(e)
                     }
-                }, statusUtil.isStatusNormal() && !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG"))
+                }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    commonUtil.getEnvToBoolean("$SubExtArgs.ARCHIVE") &&
+                    statusUtil.isStatusNormal())
 
             } finally {
                 stage('Post Stage') {
