@@ -23,7 +23,7 @@ class CollectInfo extends SelfScript {
         name += jobNameFlag == null ? "" : "_${jobNameFlag.toLowerCase()}"
 
         String number = util.getEnv("${ExtArgs.BUILD_NUMBER}")
-        String ws = "${this.getCiWorkspace()}/$name"
+        String ws = "${this.getCiWorkspace()}/log"
 
         String cmd = "ansible-playbook collectlog.yml -e tmp_local_path=$ws -e job_name=$name -e build_number=$number "
         util.dir(readyEnv.ansibleDir, { util.sh(cmd) })
