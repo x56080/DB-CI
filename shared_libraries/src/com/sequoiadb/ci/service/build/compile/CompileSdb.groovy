@@ -111,10 +111,7 @@ class CompileSdb extends SelfScript {
         if (!ret) throw new Exception('compile failure')
 
         String src = "$releaseDir/sequoiadb.tar.gz"
-        String releaseDirByType = util.isEnvAttrEmpty("$ExtArgs.COMPILE_TYPE") ?
-            "$releaseDir/${compileType}_${arch}" :
-            "$releaseDir/${util.getEnv("$ExtArgs.COMPILE_TYPE").replace(".", "_")}"
-
+        String releaseDirByType = "$releaseDir/${compileType}_${arch}"
         util.move(src, releaseDirByType)
     }
 

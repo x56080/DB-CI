@@ -34,15 +34,10 @@ class BuildRunPkg extends SelfScript {
         argsMap.each { key, val -> cmd += "--$key $val " }
         cmd += util.getEnvToBoolean("$SubExtArgs.SKIP_CHECK_DIRTREE") ? '-s' : ''
 
-
-        // release build　默认配置编译类型所以环境变量中获取不到单个编译类型
-        String targetArtifacts = util.isEnvAttrEmpty("$ExtArgs.COMPILE_TYPE") ?
-            "release/${compileType}_${arch}/sequoiadb.tar.gz" :
-            "release/${util.getEnv("$ExtArgs.COMPILE_TYPE").replace(".", "_")}/sequoiadb.tar.gz"
-
         boolean ret = false
         util.gitClone("${super.getJkWorkspace()}/$wsDir", mgr.get("url/buildrun") as String, 'master', true)
 
+        String targetArtifacts = "release/${compileType}_${arch}/sequoiadb.tar.gz"
         def unarchiveMap = ["$targetArtifacts": "$wsDir/sequoiadb.tar.gz"]
         util.println(unarchiveMap.toMapString())
         util.unarchive(unarchiveMap)
