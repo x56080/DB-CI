@@ -1,11 +1,37 @@
 properties = [:]
 properties.base_build = [:]
 
+/**
+ * =================================================================================================
+ *   CompileBuild CfgSet
+ */
+properties.base_build.supportCompileTypes = [
+    "enterprise_debug.x86",
+    "enterprise_debug.arm64",
+    "enterprise_debug_coverage.x86",
+    "enterprise_debug_coverage.arm64",
+    "enterprise_release.x86",
+    "enterprise_release.arm64",
+    "enterprise_release_hybrid.x86",
+    "enterprise_release_hybrid.arm64",
+    "community_release.x86",
+]
+/**
+ * Call child project name of test
+ */
+properties.base_build.testproject = [
+    "test_3.4_sequoiadb_configure",
+    "test_3.4_sequoiadb_sync",
+    "test_3.4_sequoiadb_normal_g3d3",
+    "test_3.4_sequoiadb_normal_standalone",
+]
+
+
+
 
 /**
  * =================================================================================================
- *  testbuild 配置项目
- *
+ *  TestBuild CfgSet
  */
 
 properties.base_build.BRANCH = 'v3.4'
@@ -70,29 +96,29 @@ properties.base_build.arm64.CONFIGURE.EXEC_NODE = 'test_sequoiadb_arm_0'
 properties.base_build.arm64.CONFIGURE.DEPLOY_NODE = ['CI-X-23', 'CI-Y-23', 'CI-Z-23',]
 properties.base_build.arm64.CONFIGURE.ANT_TARGET = 'configure_test_build'
 properties.base_build.arm64.CONFIGURE.ANT_ARGS = [ISMVCC: true,]
-//properties.base_build.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo_python,story_java,driver_c,driver_cpp',]
-properties.base_build.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.base_build.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo_python,story_java,driver_c,driver_cpp',]
+//properties.base_build.arm64.CONFIGURE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 properties.base_build.arm64.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_arm_1'
 properties.base_build.arm64.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-X-27']
 properties.base_build.arm64.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.base_build.arm64.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
-//properties.base_build.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_java,driver_python,driver_php,driver_c,driver_cpp',]
-properties.base_build.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.base_build.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_java,driver_python,driver_php,driver_c,driver_cpp',]
+//properties.base_build.arm64.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 properties.base_build.arm64.NORMAL_G3D3.EXEC_NODE = 'test_sequoiadb_arm_0'
 properties.base_build.arm64.NORMAL_G3D3.DEPLOY_NODE = ['CI-X-21', 'CI-Y-21', 'CI-Z-21',]
 properties.base_build.arm64.NORMAL_G3D3.ANT_TARGET = 'normal_test_build'
 properties.base_build.arm64.NORMAL_G3D3.ANT_ARGS = [:]
-//properties.base_build.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,story_java,driver_c,driver_cpp',]
-properties.base_build.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.base_build.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_java,driver_python,story_java,driver_c,driver_cpp',]
+//properties.base_build.arm64.NORMAL_G3D3.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 
 properties.base_build.arm64.SYNC.EXEC_NODE = 'test_sequoiadb_arm_1'
 properties.base_build.arm64.SYNC.DEPLOY_NODE = ['CI-X-22', 'CI-Y-22', 'CI-Z-22',]
 properties.base_build.arm64.SYNC.ANT_TARGET = 'sync_test_build'
 properties.base_build.arm64.SYNC.ANT_ARGS = [BREAK_ON_FAILURE: true,]
-//properties.base_build.arm64.SYNC.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
-properties.base_build.arm64.SYNC.TESTCASE_TYPE = [defVal: 'driver_python',]
+properties.base_build.arm64.SYNC.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
+//properties.base_build.arm64.SYNC.TESTCASE_TYPE = [defVal: 'driver_python',]
 
 return this

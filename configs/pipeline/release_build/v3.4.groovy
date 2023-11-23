@@ -1,15 +1,5 @@
 properties = [:]
 /**
- * Call child project name of test
- */
-properties.testproject = [
-    "test_3.4_sequoiadb_configure",
-    "test_3.4_sequoiadb_sync",
-    "test_3.4_sequoiadb_normal_g3d3",
-    "test_3.4_sequoiadb_normal_standalone",
-]
-
-/**
  * Branch compile type
  */
 properties.callBuildSdbType = [

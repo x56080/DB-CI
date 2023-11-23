@@ -69,7 +69,7 @@ node('master') {
                     node(label) {
                         dir('script') {
                             checkout scm
-                            println("test run node: $env.COMPILE_SDB_NODE\ntest script: $env.TEST_SH_PATH\ntarget dir: $WORKSPACE")
+                            println("test run node: $env.NODE_NAME\ntest script: $env.TEST_SH_PATH\ntarget dir: $env.WORKSPACE")
                             def isSuccess = sh(script: "bash $env.TEST_SH_PATH $WORKSPACE", returnStatus: true) == 0
                             if (!isSuccess) statusUtil.status(StatusUtil.Status.FAILURE, "exec test status：$isSuccess")
                         }
@@ -79,7 +79,12 @@ node('master') {
 
             } finally {
                 stage('Post Stage') {
-                    if (statusUtil.isStatusFailure()) commonUtil.emailext(true)
+                    if (env.event_name != null && env.user_name != null) {
+                        currentBuild.description = "Started by GitLab ${env.event_name} by ${env.user_name}"
+                    }
+                    if (statusUtil.isStatusFailure()) {
+                        commonUtil.emailext()
+                    }
                     IPageOption pageOption = new PageOption(commonUtil, configMgr)
                     IPageOption buildImpl = new CommitBuildImpl(pageOption)
                     properties(buildImpl.getPageArgs())
