@@ -10,7 +10,7 @@ import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.StatusUtil
 
-@Library("db_ci@global-1")
+@Library("db_ci@global")
 import com.sequoiadb.ci.service.build.CompileStage
 import com.sequoiadb.ci.page.impl.compilebuild.DailyBuildImpl
 import com.sequoiadb.ci.service.build.CallTestStage

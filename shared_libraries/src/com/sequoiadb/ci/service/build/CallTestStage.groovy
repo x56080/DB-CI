@@ -84,17 +84,14 @@ class CallTestStage {
         String stageName = testType.toLowerCase().replace("_", ".")
         readyEnv.node({
             try {
-
-                util.stage("CheEnv $stageName") {
+                util.stage("ReEnv $stageName") {
                     util.cleanWs()
                     readyEnv.init()
                     readyEnv.readyScript()
-                    //readyEnv.copyArchive(jobName, buildNum)
-                    readyEnv.copyArchive()
+                    readyEnv.copyArchive(jobName, buildNum)
+                    //readyEnv.copyArchive()
                     readyEnv.lock()
-                }
 
-                util.stage("ReEnv $stageName") {
                     BuildEnv buildEnv = new BuildEnv(util, mgr)
                     buildEnv.reset(readyEnv)
                 }
@@ -106,12 +103,11 @@ class CallTestStage {
                     info = new CollectInfo(util, mgr)
                     info.init(readyEnv)
                     buildAnt.junit()
+
+                    if (!buildAnt.getState()) {
+                        info.collectLogs(testType)
+                    }
                 }
-
-                util.stage("ColLog $stageName", {
-                    info.collectLogs(testType)
-                }, !buildAnt.getState())
-
             } finally {
                 readyEnv.unlock()
             }
