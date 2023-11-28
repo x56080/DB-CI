@@ -113,19 +113,23 @@ properties.base_build.machine = [
  */
 properties.release_build.archive = [
     buildrunArchives: ["release/*.run"],
-    compileArchive  : ["release/sequoiadb/VERSION",
-                       "release/**/sequoiadb.tar.gz",
-                       "release/*.tar.gz",
-                       "release/SequoiaDB_usermanuals_*",]
+    compileArchive  : [
+        "release/**/VERSION",
+        "release/**/sequoiadb.tar.gz",
+        "release/*.tar.gz",
+        "release/SequoiaDB_usermanuals_*",
+    ]
 ]
 properties.base_build.archive = [
     buildrunArchives: ["release/*.run"],
-    compileArchive  : ["release/**/sequoiadb.tar.gz",
-                       "release/sequoiadb-driver-*.tar.gz",
-                       "release/sequoiadb-*-bin.tar.gz",
-                       "release/*.log",
-                       "release/sequoiadb/VERSION",
-                       "release/SequoiaDB_usermanuals_*",],
+    compileArchive  : [
+        "release/**/VERSION",
+        "release/**/sequoiadb.tar.gz",
+        "release/sequoiadb-driver-*.tar.gz",
+        "release/sequoiadb-*-bin.tar.gz",
+        "release/**/*.log",
+        "release/SequoiaDB_usermanuals_*",
+    ],
 ]
 
 /**

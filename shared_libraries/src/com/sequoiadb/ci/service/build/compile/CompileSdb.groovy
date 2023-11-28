@@ -48,6 +48,12 @@ class CompileSdb extends SelfScript {
             ]
         ]
         compile(compileType, arch, args)
+
+        // 避免同路径多个类型编译生成覆盖
+        String releaseDirByType = "$releaseDir/${compileType}_${arch}"
+        util.move("$releaseDir/build.log" , releaseDirByType)
+        util.move("$releaseDir/sequoiadb.tar.gz", releaseDirByType)
+        util.move("$releaseDir/sequoiadb/VERSION" , releaseDirByType)
     }
 
 
@@ -109,10 +115,6 @@ class CompileSdb extends SelfScript {
             ret = ret ? util.sh("git clean -fxd") : false
         })
         if (!ret) throw new Exception('compile failure')
-
-        String src = "$releaseDir/sequoiadb.tar.gz"
-        String releaseDirByType = "$releaseDir/${compileType}_${arch}"
-        util.move(src, releaseDirByType)
     }
 
 

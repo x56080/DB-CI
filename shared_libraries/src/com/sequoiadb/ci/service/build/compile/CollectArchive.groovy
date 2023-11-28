@@ -89,7 +89,7 @@ class CollectArchive {
     }
 
     def getSdbVersion(String path) {
-        return util.shWithReturnStdout("cat $path/sequoiadb/VERSION |grep -i 'sequoiadb version' | awk '{print \$NF}'")
+        return util.shWithReturnStdout("cat $path/*/VERSION |grep -i 'sequoiadb version' | awk 'NR==1{print \$NF}'")
     }
 
     def tarRun(String src, String dst) {

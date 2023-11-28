@@ -75,7 +75,7 @@ node('master') {
 
             } finally {
                 stage('Post Stage') {
-                    //if (statusUtil.isStatusFailure()) commonUtil.emailext(true)
+                    if (statusUtil.isStatusFailure()) commonUtil.emailext(true)
                     IPageOption pageOption = new PageOption(commonUtil, configMgr)
                     IPageOption buildImpl = new DailyBuildImpl(pageOption)
                     properties(buildImpl.getPageArgs())
