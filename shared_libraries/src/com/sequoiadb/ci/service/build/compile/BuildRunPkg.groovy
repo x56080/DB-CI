@@ -1,7 +1,7 @@
 package com.sequoiadb.ci.service.build.compile
 
 import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.SubExtArgs
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 import com.sequoiadb.ci.utils.SelfScript

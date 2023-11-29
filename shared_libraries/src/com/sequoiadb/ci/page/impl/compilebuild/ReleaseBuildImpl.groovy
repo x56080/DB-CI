@@ -1,7 +1,7 @@
 package com.sequoiadb.ci.page.impl.compilebuild
 
 import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.SubExtArgs
 import com.sequoiadb.ci.page.IPageOption
 import com.sequoiadb.ci.page.PageOption
 

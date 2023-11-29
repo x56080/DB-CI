@@ -1,12 +1,12 @@
 package com.sequoiadb.ci.service.build
 
 import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.SubExtArgs
 import com.sequoiadb.ci.service.build.test.BuildAnt
 import com.sequoiadb.ci.service.build.test.BuildEnv
 import com.sequoiadb.ci.service.build.test.CollectInfo
 import com.sequoiadb.ci.service.build.test.ReadyEnv
-import com.sequoiadb.ci.service.entry.CompileType
+import com.sequoiadb.ci.service.entity.CompileType
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 
@@ -21,14 +21,21 @@ class CallTestStage {
         this.mgr = configMgr
     }
 
-
+    /**
+     * @description 调用测试子工程,不存在编译类型则默认调用x86架构的测试子工程
+     * @return
+     */
     def callTestJob() {
         def item = util.getEnv("${ExtArgs.COMPILE_TYPE}", 'abc.x86')
         def compileType = new CompileType(item)
         callJob(compileType.arch)
     }
 
-
+    /**
+     * @description 调用测试子工程,根据配置项testproject获取工程名称列表,名称格式: testproject.item+_+arch
+     * @param arch
+     * @return
+     */
     private def callJob(String arch) {
         def ret = [:]
         def params = [
@@ -53,7 +60,10 @@ class CallTestStage {
         util.parallel(ret)
     }
 
-
+    /**
+     * @description 使用parallel方法并行执行闭包中不同类型测试工程的调用步骤
+     * @return
+     */
     def callTest() {
         def stageMap = [:]
         String compileTypeStr = util.getEnv("${ExtArgs.COMPILE_TYPE}")

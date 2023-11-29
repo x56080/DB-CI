@@ -65,8 +65,8 @@ properties.base_build.ANT_ARGS.ISMVCC = false
 properties.base_build.ANT_ARGS.BUILD_NUMBER = "${BUILD_NUMBER}"
 
 properties.base_build.ANT_ARGS.CI_WORK_DIR = "/hdd/ci/workspace/${JOB_NAME}"
-properties.base_build.ANT_ARGS.INSTALL_DIR = "/hdd/ci/sequoiadb/${JOB_NAME}/sequoiadb"
-properties.base_build.ANT_ARGS.METADATA_DIR = "/ssd/ci/workspace/${JOB_NAME}/sequoiadb/database"
+properties.base_build.ANT_ARGS.INSTALL_DIR = "/hdd/sequoiadb"
+properties.base_build.ANT_ARGS.METADATA_DIR = "/ssd/sequoiadb/database"
 
 
 properties.base_build.x86 = [

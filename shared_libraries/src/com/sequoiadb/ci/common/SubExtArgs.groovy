@@ -1,4 +1,4 @@
-package com.sequoiadb.ci.common.Impl
+package com.sequoiadb.ci.common
 
 enum SubExtArgs {
     SKIP_CHECK_DIRTREE,

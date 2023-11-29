@@ -1,4 +1,4 @@
-import com.sequoiadb.ci.service.entry.CompileType
+import com.sequoiadb.ci.service.entity.CompileType
 import hudson.AbortException
 
 @Library("global_ci@main")

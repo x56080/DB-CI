@@ -1,11 +1,11 @@
 package com.sequoiadb.ci.service.build
 
 import com.sequoiadb.ci.common.ExtArgs
-import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.SubExtArgs
 import com.sequoiadb.ci.common.RunMode
 import com.sequoiadb.ci.service.build.compile.BuildRunPkg
 import com.sequoiadb.ci.service.build.compile.CompileSdb
-import com.sequoiadb.ci.service.entry.CompileType
+import com.sequoiadb.ci.service.entity.CompileType
 import com.sequoiadb.ci.utils.CommonUtil
 import com.sequoiadb.ci.utils.ConfigMgr
 
@@ -22,7 +22,10 @@ class CompileStage {
         this.mgr = configMgr
     }
 
-
+    /**
+     * @description 初始化编译列表,通过构建模式判断编译列表项的获取方式
+     * @return
+     */
     def init() {
         def mode = util.getEnv("${ExtArgs.RUN_MODE}")
         if (mode == RunMode.release_build.toString()) {

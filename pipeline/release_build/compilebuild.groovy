@@ -1,4 +1,4 @@
-import com.sequoiadb.ci.common.Impl.SubExtArgs
+import com.sequoiadb.ci.common.SubExtArgs
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 import hudson.AbortException
 

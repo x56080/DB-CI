@@ -1,4 +1,4 @@
-package com.sequoiadb.ci.service.entry
+package com.sequoiadb.ci.service.entity
 
 class CompileType {
     protected String type;
