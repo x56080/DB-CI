@@ -39,7 +39,7 @@ properties.base_build.BRANCH = 'master'
  *  TESTCASE_TYPE   用于设置页面multiChoice测试用例类型多选项
  *
  */
-properties.base_build.x86.BASE.CI_BRANCH = 'v3.6cgb_new_arm_modify_03'
+properties.base_build.x86.BASE.CI_BRANCH = 'v3.6_cgb'
 properties.base_build.x86.BASE.DEPNAME = 'dailybuild_master_sequoiadb_x86'
 properties.base_build.x86.BASE.RUNNAME = 'sequoiadb-*-linux_x86_64-enterprise-installer.run'
 properties.base_build.x86.BASE.DEPNANE_COPY = "release/${properties.base_build.x86.BASE.RUNNAME}"
@@ -77,7 +77,7 @@ properties.base_build.x86.SYNC.TESTCASE_TYPE = [defVal: 'tdd_mongoc,story_js,sto
  *  arm 配置
  *
  */
-properties.base_build.arm64.BASE.CI_BRANCH = 'v3.6cgb_new_arm_modify_03'
+properties.base_build.arm64.BASE.CI_BRANCH = 'v3.6_cgb'
 properties.base_build.arm64.BASE.DEPNAME = 'dailybuild_master_sequoiadb_arm64'
 properties.base_build.arm64.BASE.RUNNAME = 'sequoiadb-*-linux_aarch64-enterprise-installer.run'
 properties.base_build.arm64.BASE.DEPNANE_COPY = "release/${properties.base_build.arm64.BASE.RUNNAME}"

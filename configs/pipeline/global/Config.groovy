@@ -22,7 +22,7 @@ properties.base_build.supportTestType = ['CONFIGURE', 'NORMAL_STANDALONE', 'NORM
 properties.base_build.url = [
     db_testcase: "http://gitlab.sequoiadb.com/sequoiadb/sequoiadb.git",
     db_compile : "http://gitlab.sequoiadb.com/sequoiadb/sequoiadb.git",
-    db_ci      : "http://gitlab.sequoiadb.com/yaoyiming/db-ci.git",
+    db_ci      : "http://gitlab.sequoiadb.com/sequoiadb/ci/db-ci.git",
     buildrun   : "http://gitlab.sequoiadb.com/sequoiadb/build_run.git"
 ]
 
