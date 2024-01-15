@@ -11,7 +11,7 @@ properties.release_build = [:]
 /**
  * 支持选项
  */
-properties.base_build.supportBranch = ['master', 'v3.4',]
+properties.base_build.supportBranch = ['master', 'v3.4','v5.8']
 properties.base_build.supportArch = ['x86', 'arm64']
 properties.base_build.supportTestType = ['CONFIGURE', 'NORMAL_STANDALONE', 'NORMAL_G3D3', 'SYNC']
 
