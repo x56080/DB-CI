@@ -176,13 +176,13 @@ properties.release_build.collectTarget = [
     'Python-$VERSION-linux_aarch64.tar.gz'                            : 'aarch64/driver-$VERSION',
     'Spark-$VERSION-linux_aarch64.tar.gz'                             : 'aarch64/driver-$VERSION',
 
-    'SequoiaDB_usermanuals_$VERSION.chm'                              : '',
-    'SequoiaDB_usermanuals_$VERSION.pdf'                              : '',
-    'SequoiaDB_usermanuals_$VERSION.tar.gz'                           : '',
+    'SequoiaDB_usermanuals_v$VERSION.chm'                              : '',
+    'SequoiaDB_usermanuals_v$VERSION.pdf'                              : '',
+    'SequoiaDB_usermanuals_v$VERSION.tar.gz'                           : '',
 
-    "SequoiaDB_usermanuals_${BRANCH}.chm"                             : '',
-    "SequoiaDB_usermanuals_${BRANCH}.pdf"                             : '',
-    "SequoiaDB_usermanuals_${BRANCH}.tar.gz"                          : '',
+    "SequoiaDB_usermanuals_v${BRANCH}.chm"                             : '',
+    "SequoiaDB_usermanuals_v${BRANCH}.pdf"                             : '',
+    "SequoiaDB_usermanuals_v${BRANCH}.tar.gz"                          : '',
 ]
 return this
 
