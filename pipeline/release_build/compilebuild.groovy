@@ -91,6 +91,7 @@ node('master') {
                         statusUtil.failure(e)
                     }
                 }, !commonUtil.getEnvToBoolean("$ExtArgs.PIPELINE_DEBUG") &&
+                    commonUtil.getEnvToBoolean("$ExtArgs.EXECUTE_TEST") &&
                     statusUtil.isStatusNormal())
 
 
