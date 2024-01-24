@@ -30,10 +30,10 @@ properties.base_build.url = [
 /**
  * 构建保留
  */
-properties.daily_build.buildDiscarder = ['artifactNumToKeepStr': '7', 'numToKeepStr': '14', 'daysToKeepStr': '14', 'artifactDaysToKeepStr': '3']
-properties.commit_build.buildDiscarder = ['artifactNumToKeepStr': '3', 'numToKeepStr': '3', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '2']
-properties.release_build.buildDiscarder = ['artifactNumToKeepStr': '1', 'numToKeepStr': '1', 'daysToKeepStr': '60', 'artifactDaysToKeepStr': '60']
-properties.base_build.buildDiscarder = ['artifactNumToKeepStr': '3', 'numToKeepStr': '14', 'daysToKeepStr': '14', 'artifactDaysToKeepStr': '2']
+properties.daily_build.buildDiscarder = ['artifactNumToKeepStr': '5', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
+properties.commit_build.buildDiscarder = ['artifactNumToKeepStr': '3', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
+properties.release_build.buildDiscarder = ['artifactNumToKeepStr': '1', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
+properties.base_build.buildDiscarder = ['artifactNumToKeepStr': '5', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
 
 
 /**
