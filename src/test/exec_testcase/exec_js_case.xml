@@ -189,8 +189,8 @@
                   <if>
                      <equals arg1="${plat_form}" arg2="ARM" />
                      <then>
-                         <scp file="${report_dir}/.TESTCASE_FAIL"
-                              todir="${user}@@${host}:${CI_WORK_DIR}/report"
+                         <scp localFile="${report_dir}/.TESTCASE_FAIL"
+                              localTodir="${user}@@${host}:${CI_WORK_DIR}/report"
                               password="${passwd}"
                               trust="true"/>
                      </then>

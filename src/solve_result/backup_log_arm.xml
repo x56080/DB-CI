@@ -61,8 +61,8 @@
       <property name="remote_diagdir" location="${CI_WORK_DIR}/local_diaglog"/>      
       <for list="${testhost_list}" param="testhost" parallel="false">
          <sequential>         
-         <scp file="${user}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz"
-              todir="${backup_dir}"
+         <scp remoteFile="${user}@@@{testhost}:${remote_diagdir}/@{testhost}_diaglog.tar.gz"
+              localTodir="${backup_dir}"
               password="${passwd}"
               trust="true"/> 
          </sequential>
@@ -75,8 +75,8 @@
                      replace="" defaultValue="${testhost_list}"/>
 
       <mkdir dir="${CI_WORK_DIR}/${backup_reltdir}/bin"/>
-      <scp file="${ROOT_USER}@${firsthost}:${INSTALL_DIR}/bin/*"
-           todir="${CI_WORK_DIR}/${backup_reltdir}/bin"
+      <scp remoteFile="${ROOT_USER}@${firsthost}:${INSTALL_DIR}/bin/*"
+           localTodir="${CI_WORK_DIR}/${backup_reltdir}/bin"
            password="${ROOT_PWD}"
            trust="true"/>
       <chmod dir="${CI_WORK_DIR}/${backup_reltdir}/bin" perm="ugo+rx"
@@ -116,8 +116,8 @@
       <delete dir="${CI_WORK_DIR}/${backup_reltdir}"/>
       
       <echo>${line.separator}****begin to send diaglog to backup host</echo>
-      <scp file="${tar_fullname}"
-           todir="${user}@${JENKINS_HOST}:${BACKLOG_DIR}"
+      <scp localFile="${tar_fullname}"
+           remoteTodir="${user}@${JENKINS_HOST}:${BACKLOG_DIR}"
            password="${passwd}"
            trust="true"/> 
    </target>

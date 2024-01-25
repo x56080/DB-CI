@@ -18,10 +18,10 @@
          <available file="${CI_WORK_DIR}/sdb" type="file"/>
          <else>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
-            <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
+            <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
                  password="${SDBADMIN_PWD}"
                  trust="true"
-                 todir="${CI_WORK_DIR}"/>
+                 localTodir="${CI_WORK_DIR}"/>
             <sshexec host="localhost"
                      username="${ROOT_USER}"
                      password="${ROOT_PWD}"

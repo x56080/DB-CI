@@ -276,8 +276,8 @@
                      <then>
                          <property name="user" value="root" />
                          <property name="passwd" value="jenkins@123" />
-                         <scp file="${report_dir}/.TESTCASE_FAIL" 
-                              todir="${user}@@@{testhost}:${CI_WORK_DIR}/report"
+                         <scp localFile="${report_dir}/.TESTCASE_FAIL" 
+                              remoteTodir="${user}@@@{testhost}:${CI_WORK_DIR}/report"
                               password="${passwd}"
                               trust="true"/> 
                      </then>
