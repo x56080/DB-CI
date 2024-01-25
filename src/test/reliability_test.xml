@@ -52,7 +52,7 @@
       <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <!--拷贝脚本到同步脚本存放位置-->
-            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}"
+            <scp remoteTodir="${user}@@@{testhost}:${CI_WORK_DIR}"
                  password="${passwd}"
                  trust="true">
                <fileset dir="${basedir}/src/conf">

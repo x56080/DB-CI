@@ -48,7 +48,7 @@
       <hostinfo prefix="host"/>
       <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
-            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}"
+            <scp remoteTodir="${user}@@@{testhost}:${CI_WORK_DIR}"
                  password="${passwd}"
                  trust="true">
                <fileset dir="${basedir}/src/conf">
@@ -130,15 +130,15 @@
                      replace=""
                      defaultValue="${testhost_list}"/>
 
-      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+      <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
            password="${SDBADMIN_PWD}"
            trust="true"
-           todir="${client_dir}/include"/>
+           localTodir="${client_dir}/include"/>
 
-      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+      <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
            password="${SDBADMIN_PWD}"
            trust="true"
-           todir="${client_dir}/lib"/>
+           localTodir="${client_dir}/lib"/>
 
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
@@ -262,8 +262,8 @@
                            password="${passwd}" 
                            trust="true"
                            command="mkdir -p ${remote_casedir}" />
-                  <scp file="${tar_desdir}/${tar_filename}" 
-                       todir="${user}@@@{testhost}:${remote_casedir}"
+                  <scp localFile="${tar_desdir}/${tar_filename}" 
+                       remoteTodir="${user}@@@{testhost}:${remote_casedir}"
                        password="${passwd}"
                        trust="true"/> 
                   <!--untar-->
@@ -303,7 +303,7 @@
                      password="${passwd}" 
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/script" />
-            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}/script"
+            <scp remoteTodir="${user}@@@{testhost}:${CI_WORK_DIR}/script"
                  password="${passwd}" 
                  trust="true">
                  <fileset dir="${basedir}"/>
@@ -339,8 +339,8 @@
       <!--execute testcase in local host-->
       <delete dir="${WORKSPACE}/report"/>
       <mkdir dir="${WORKSPACE}/report"/>
-      <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
-           todir="${WORKSPACE}/report"
+      <scp remoteFile="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
+           localTodir="${WORKSPACE}/report"
            password="${ROOT_PWD}"
            trust="true"
            failonerror="false">

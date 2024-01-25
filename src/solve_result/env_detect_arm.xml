@@ -23,10 +23,10 @@
          <available file="${CI_WORK_DIR}/sdb" type="file"/>
          <else>
             <propertyregex property="firsthost" input="${testhost_list}" regexp=",(.*)" replace="" defaultValue="${testhost_list}"/>
-            <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
+            <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/bin/sdb"
                  password="${SDBADMIN_PWD}"
                  trust="true"
-                 todir="${CI_WORK_DIR}"/>
+                 localTodir="${CI_WORK_DIR}"/>
             <sshexec host="localhost"
                      username="${ROOT_USER}"
                      password="${ROOT_PWD}"
@@ -246,8 +246,8 @@
             <if>
                <available file="${backup_fullname}" type="file"/>
                <then>
-                  <scp file="${backup_fullname}"
-                       todir="${user}@${control_host}:${backup_dir}"
+                  <scp localFile="${backup_fullname}"
+                       remoteTodir="${user}@${control_host}:${backup_dir}"
                        password="${passwd}" 
                        trust="true">
                   </scp>
@@ -256,8 +256,8 @@
             <if>
                <available file="${backup_fullname2}" type="file"/>
                <then>
-                  <scp file="${backup_fullname2}"
-                       todir="${user}@${control_host}:${backup_dir}"
+                  <scp localFile="${backup_fullname2}"
+                       remoteTodir="${user}@${control_host}:${backup_dir}"
                        password="${passwd}" 
                        trust="true">
                   </scp>
@@ -276,8 +276,8 @@
       <if>
          <equals arg1="${control_host}" arg2="${host.NAME}" />
          <else>
-            <scp file="${backup_fullname}"
-                 todir="${user}@${control_host}:${backup_dir}"
+            <scp localFile="${backup_fullname}"
+                 remoteTodir="${user}@${control_host}:${backup_dir}"
                  password="${passwd}" 
                  trust="true">
             </scp>
@@ -498,8 +498,8 @@
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTCASE_TYPE" value="detect_env"/>
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTSUIT_NAME" value="detect_node"/>
             <replace file="${report_dir}/${host.NAME}_node_lsof_report.xml" token="TESTCASE_NAME" value="node_lsof"/>
-            <scp file="${report_dir}/${host.NAME}_node_lsof_report.xml"
-                 todir="${user}@${control_host}:${CI_WORK_DIR}/report/env_detect"
+            <scp localFile="${report_dir}/${host.NAME}_node_lsof_report.xml"
+                 remoteTodir="${user}@${control_host}:${CI_WORK_DIR}/report/env_detect"
                  password="${passwd}" 
                  trust="true">
             </scp>

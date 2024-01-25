@@ -48,7 +48,7 @@
       <for list="${myhostname},${testhost_list}" param="testhost">
          <sequential>
             <!--拷贝脚本到同步脚本存放位置-->
-            <scp todir="${user}@@@{testhost}:${CI_WORK_DIR}"
+            <scp remoteTodir="${user}@@@{testhost}:${CI_WORK_DIR}"
                  password="${passwd}"
                  trust="true">
                <fileset dir="${basedir}/src/conf">
@@ -111,15 +111,15 @@
                      replace=""
                      defaultValue="${testhost_list}"/>
 
-      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
+      <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/include/*"
            password="${SDBADMIN_PWD}"
            trust="true"
-           todir="${client_dir}/include"/>
+           localTodir="${client_dir}/include"/>
 
-      <scp file="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
+      <scp remoteFile="${SDBADMIN_USER}@${firsthost}:${INSTALL_DIR}/lib/*"
            password="${SDBADMIN_PWD}"
            trust="true"
-           todir="${client_dir}/lib"/>
+           localTodir="${client_dir}/lib"/>
       <!--ready boost lib-->
       <delete dir="${WORKSPACE}/sequoiadb/thirdparty" failonerror="false" />
       <mkdir dir="${WORKSPACE}/sequoiadb/thirdparty"/>
@@ -185,7 +185,7 @@
                      password="${passwd}"
                      trust="true"
                      command="mkdir -p ${CI_WORK_DIR}/testcase"/>
-            <scp todir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
+            <scp remoteTodir="${user}@@@{tmphost}:${CI_WORK_DIR}/testcase"
                  password="${passwd}"
                  trust="true">
                <fileset dir="${case_basedir}"/>
@@ -258,8 +258,8 @@
       <hostinfo prefix="host" />
       <delete dir="${WORKSPACE}/report"/>
       <mkdir dir="${WORKSPACE}/report"/>
-      <scp file="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
-           todir="${WORKSPACE}/report"
+      <scp remoteFile="${ROOT_USER}@${firsthost}:${CI_WORK_DIR}/report/*"
+           localTodir="${WORKSPACE}/report"
            password="${ROOT_PWD}"
            trust="true"
            failonerror="false">
