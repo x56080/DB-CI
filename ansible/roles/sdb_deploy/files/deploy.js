@@ -33,6 +33,7 @@ for (var n = 0; n < retryTimes; ++n)
       {
          throw e;
       }
+      sleep(180000);
    }
 }
 
