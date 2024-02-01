@@ -35,6 +35,11 @@ properties.commit_build.buildDiscarder = ['artifactNumToKeepStr': '3', 'numToKee
 properties.release_build.buildDiscarder = ['artifactNumToKeepStr': '1', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
 properties.base_build.buildDiscarder = ['artifactNumToKeepStr': '5', 'numToKeepStr': '7', 'daysToKeepStr': '7', 'artifactDaysToKeepStr': '7']
 
+properties.daily_build.gitext = [[$class: 'CloneOption', timeout: 30, shallow: true, depth: 1]] 
+properties.commit_build.gitext = [[$class: 'CloneOption', timeout: 30, shallow: true, depth: 1]]
+properties.base_build.gitext = [[$class: 'CloneOption', timeout: 30, shallow: true, depth: 1]]
+properties.release_build.gitext = [[$class: 'CloneOption', timeout: 30, shallow: false]]
+
 
 /**
  * 外部必填参数
