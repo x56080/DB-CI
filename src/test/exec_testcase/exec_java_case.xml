@@ -40,14 +40,14 @@
             <propertyregex property="tmpversion" input="@{fullfilename}" regexp="${INSTALL_DIR}/java/sequoiadb-driver-(.*).jar" select="\1" casesensitive="false"/>
          </sequential>
       </for>
-      <for param="s3fullfilename">
+      <!--for param="s3fullfilename">
          <path>
             <fileset dir="${INSTALL_DIR}/tools/sequoias3/java" includes="sequoias3-client-*.jar"/>
          </path>
          <sequential>
             <propertyregex property="s3tmpversion" input="@{s3fullfilename}" regexp="${INSTALL_DIR}/tools/sequoias3/java/sequoias3-client-(.*).jar" select="\1" casesensitive="false"/>
          </sequential>
-      </for>
+      </for-->
       <if>
          <or>
              <equals arg1="${TEST_TYPE}" arg2="CONFIGURETEST"/>
@@ -102,11 +102,11 @@
                   <property name="svcname" value="${SVCNAME}"/>
                   <property name="eshostname" value="${ES_IP}"/>
                   <property name="essvcname" value="${ES_PORT}"/>
-                  <property name="s3svcname" value="${S3SVCNAME}"/>
-                  <property name="s3client" value="${s3tmpversion}" />
+                  <!--property name="s3svcname" value="${S3SVCNAME}"/>
+                  <property name="s3client" value="${s3tmpversion}" /-->
 		          <property name="remoteuser" value="${user}" />
 		          <property name="remotepwd" value="${passwd}" />
-                  <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
+                  <!--property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/-->
                   <property name="testhost_list" value="${testhost_list}"/>
                   <property name="rootpwd" value="${passwd}" />
                   <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
@@ -128,11 +128,11 @@
                <property name="svcname" value="${SVCNAME}"/>
                <property name="eshostname" value="${ES_IP}"/>
                <property name="essvcname" value="${ES_PORT}"/>
-               <property name="s3svcname" value="${S3SVCNAME}"/>
-               <property name="s3client" value="${s3tmpversion}" />
+               <!--property name="s3svcname" value="${S3SVCNAME}"/>
+               <property name="s3client" value="${s3tmpversion}" /-->
 	           <property name="remoteuser" value="${user}" />
 	           <property name="remotepwd" value="${passwd}" />
-               <property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/>
+               <!--property name="s3clientDir" value="${INSTALL_DIR}/tools/sequoias3/java"/-->
                <property name="testhost_list" value="${testhost_list}"/>
                <property name="rootpwd" value="${passwd}" />
                <property name="rsrvnodedir" value="${INSTALL_DIR}/database/" />
@@ -220,7 +220,7 @@
       <sequential>
          <echo message="testcase dir: @{testBasedir}"/>
          <property name="cfg_file_list"
-                   value="testng,largedata,configure,smoke,sync,testng_release,s3testng"/>
+                   value="testng,largedata,configure,smoke,sync,testng_release"/>
 
          <for list="${cfg_file_list}" param="cfgPrefix" delimiter=",">
             <sequential>
