@@ -27,12 +27,14 @@ var cataConf  = { diaglevel:diagLevel,
                   ftfusingtimeout:300,
                   logfilenum:40,
                   diagpath: INSTALL_DIR + '/database/cata/[svcname]/diaglog',
+                  netcompressor:'LZ4'
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
                   diagpath: INSTALL_DIR + '/database/coord/[svcname]/diaglog',
+                  netcompressor:'LZ4'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
@@ -43,5 +45,6 @@ var dataConf  = { diaglevel:diagLevel,
                   ftmask:'NONE',
                   indexpath: METADATA_DIR + '/[svcname]/',
                   lobmetapath:  METADATA_DIR + '/[svcname]/',
+                  netcompressor:'LZ4'
                 };
                 
