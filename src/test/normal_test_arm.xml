@@ -239,10 +239,10 @@
                <dividecase basedir="${case_basedir}" reltdir="${case_reltdir}"
                            outputdir="${testcase_outdir}" hostlist="${testhost_list}">
                   <dividedfileele>
-                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="**/*.js" excludes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*,*/libs/**/*,*/data/**/*"/>
                   </dividedfileele>
                   <commonfileele>
-                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*"/>
+                     <fileset dir="${case_dir}" includes="lib/**/*,**/commlib.js,*/dataFile/**/*,*/logFile/**/*,*/libs/**/*,*/data/**/*"/>
                   </commonfileele>
                </dividecase>
             </case>
