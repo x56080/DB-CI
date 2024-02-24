@@ -466,7 +466,7 @@
       <for list="${output}" param="itempid" delimiter="${line.separator}">
          <sequential>
             <var name="openfilenum" unset="true"/>
-            <exec executable="sh" 
+            <exec executable="bash"
                   outputproperty="openfilenum" 
                   failonerror="false">
                <arg value="-c"/>
