@@ -470,7 +470,7 @@
                   outputproperty="openfilenum" 
                   failonerror="false">
                <arg value="-c"/>
-               <arg value="test -f /usr/bin/uosinfo &amp;&amp; alias lsof='lsof -e /run/user/987/gvfs';lsof -p @{itempid} | wc -l | tail -n 2 | head -n 1 " />
+               <arg value="lsof -p @{itempid} 2>/dev/null | wc -l | tail -n 2 | head -n 1 " />
             </exec>
             <var name="re" unset="true"/>
             <var name="testresult" unset="true"/>
