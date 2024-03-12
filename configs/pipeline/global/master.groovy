@@ -52,7 +52,7 @@ properties.base_build.x86.CONFIGURE.ANT_TARGET = 'configure_test_build'
 properties.base_build.x86.CONFIGURE.TESTCASE_TYPE = [defVal: 'story_js,sdv_js,driver_php,sdv_java,driver_c,driver_cpp,driver_java,driver_python,thirdparty_fapmongo_fap3-java-mongo3,thirdparty_fapmongo,thirdparty_fapmongo_python,story_java',]
 
 properties.base_build.x86.NORMAL_STANDALONE.EXEC_NODE = 'test_sequoiadb_1'
-properties.base_build.x86.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-A-22']
+properties.base_build.x86.NORMAL_STANDALONE.DEPLOY_NODE = ['CI-B_50']
 properties.base_build.x86.NORMAL_STANDALONE.ANT_TARGET = 'normal_test_build'
 properties.base_build.x86.NORMAL_STANDALONE.ANT_ARGS = [DEPLOY_MODE: 'STANDALONE',]
 properties.base_build.x86.NORMAL_STANDALONE.TESTCASE_TYPE = [defVal: 'story_js,story_java,sdv_js,sdv_java,driver_c,driver_cpp,driver_java,driver_python,driver_php',]
