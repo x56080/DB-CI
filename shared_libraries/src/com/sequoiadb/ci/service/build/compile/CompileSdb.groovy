@@ -92,7 +92,6 @@ class CompileSdb extends SelfScript {
             ]]
 
         util.clearDir(wsDocDir)
-        util.mkdir(wsDocDir)
         String url = mgr.get('url/db_compile')
         String branch = util.getEnv("$ExtArgs.GIT_SHA", util.getEnv("${ExtArgs.BRANCH}"))
         util.gitClone(wsDocDir, url, branch, false, extensions)
