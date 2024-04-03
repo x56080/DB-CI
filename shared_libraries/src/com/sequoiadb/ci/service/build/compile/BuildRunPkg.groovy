@@ -35,7 +35,7 @@ class BuildRunPkg extends SelfScript {
         cmd += util.getEnvToBoolean("$SubExtArgs.SKIP_CHECK_DIRTREE") ? '-s' : ''
 
         boolean ret = false
-        util.gitClone("${super.getJkWorkspace()}/$wsDir", mgr.get("url/buildrun") as String, 'master', true)
+        util.gitClone("${super.getJkWorkspace()}/$wsDir", mgr.get("url/buildrun") as String, 'master', false)
 
         String targetArtifacts = "release/${compileType}_${arch}/sequoiadb.tar.gz"
         def unarchiveMap = ["$targetArtifacts": "$wsDir/sequoiadb.tar.gz"]
