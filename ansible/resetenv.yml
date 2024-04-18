@@ -65,7 +65,7 @@
       register: sdbcm_stat_ret
 
     - name: 'restart sdbcm proc'
-      shell: 'sdbcmtop;sdbcmart;'
+      shell: 'sdbcmtop && sdbcmart;'
       register: sdbcm_stat_ret
       when: sdbcm_stat_ret.rc != 0
 
