@@ -48,6 +48,7 @@ function main()
    {
       removeStandaloneNode();
       deployStandalone();
+      checkSdbcm()
    }
    else
    {
