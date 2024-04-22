@@ -49,7 +49,7 @@ pipeline {
                         try {
                             def targetDir = "${WORKSPACE}/${env.git_dir}"
                             def branch = commonUtil.getEnv("git_sha", env.git_branch as String)
-                            commonUtil.gitClone(targetDir, "${env.git_url}", branch, false)
+                            commonUtil.gitClone(targetDir, "${env.git_url}", branch, true)
                             dir(targetDir) {
                                 def status = sh(script: 'python3 build.py', returnStatus: true) == 0
                                 if (!status) throw new Exception('pipeline build failure')
