@@ -44,7 +44,7 @@ node('master') {
                 readyEnv = new ReadyEnv(commonUtil, configMgr)
                 readyEnv.initCfg()
                 readyEnv.node({
-                    cleanWs()
+                    //cleanWs()
                     readyEnv.init()
 
                     stage('CheckBuildEnv') {

@@ -13,7 +13,7 @@ class TestBuildConfigMgr extends  ConfigMgr{
     }
 
     def checkoutScm(){
-        util.cleanWs()
+        //util.cleanWs()
         util.checkoutScm()
     }
 

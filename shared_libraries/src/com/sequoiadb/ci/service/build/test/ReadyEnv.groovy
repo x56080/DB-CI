@@ -103,7 +103,7 @@ class ReadyEnv extends SelfScript {
             this.getTestPjtCfg().get(ExtArgs.CI_BRANCH.toString()) :
             commonUtil.getEnv(ExtArgs.CI_BRANCH.toString())
         this.gitClone("sequoiadb", "db_testcase")
-        util.gitClone(ciCloneDir, dbCiUrl, ciBranch, true)
+        util.gitClone(ciCloneDir, dbCiUrl, ciBranch, false)
         util.dir(pipCloneDir, { util.checkoutScm() })
 
         String src = "$sdbCloneDir/testcase_new/*"
