@@ -64,7 +64,7 @@ class ReadyEnv extends SelfScript {
         String buildNum = util.getEnv("$ExtArgs.BUILD_NUMBER")
         String jobName = util.getEnv("$ExtArgs.JOB_NAME")
         String flag = (this.getTestPjtCfg().get("DEPLOY_NODE") as List<String>)[0].toLowerCase()
-        if (!util.isFileExists($pipCloneDir/script/checkBuildEnv.sh)){
+        if (!util.isFileExists("$pipCloneDir/script/checkBuildEnv.sh")){
            util.dir(pipCloneDir, { util.checkoutScm() })
         }
         boolean ret = util.sh("bash -x $pipCloneDir/script/checkBuildEnv.sh -m lock -f $flag -b $buildNum -j $jobName")
