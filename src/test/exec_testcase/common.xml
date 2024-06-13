@@ -11,7 +11,7 @@
          <hostinfo prefix="host" />
          <var name="testtype" value="Test_"/>
          <var name="hostname" unset="true"/>
-         <!--var name="hostname" value="${host.NAME}"/-->
+         <var name="hostname" value="${host.NAME}"/>
          <propertyregex property="hostname" input="${host.NAME}" regexp="[^a-zA-Z0-9]" replace=""/>
          <var name="endflag" value="_end"/>
          <var name="@{resultproperty}" unset="true"/>
