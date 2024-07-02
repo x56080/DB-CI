@@ -96,7 +96,7 @@ function updateConf( db )
      try
      {
         var ssh = new Ssh(hostNameorIp,"sdbadmin", "Admin@1024",22)
-        ssh.exec("sdbstop --all && sdbcmtop && sdbcmart");
+        ssh.exec("sdbstop --all && sdbcmtop && sleep 10 && sdbcmart");
 
         var remote = new Remote (hostNameorIp, cmPort );
         var installDir = getInstallDir(remote);
@@ -105,7 +105,7 @@ function updateConf( db )
      }
      catch(e)
      {
-        println("exec sdbstop --all && sdbcmtop && sdbcmart:" + e);
+        println("exec sdbstop --all && sdbcmtop && sleep 10 && sdbcmart:" + e);
         // ignore error
      }
  }
