@@ -36,5 +36,6 @@ var nodeConf  = { diaglevel:diagLevel,
                   logfilenum:40,
                   fap:fapValue,
                   indexpath: METADATA_DIR + '/[svcname]/',
-                  lobmetapath: METADATA_DIR + '/[svcname]/'
+                  lobmetapath: METADATA_DIR + '/[svcname]/',
+                  mongroupmask:'all:detail'
                 };
