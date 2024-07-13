@@ -34,13 +34,15 @@ var cataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
                   diagnum:60,
                   ftfusingtimeout:300,
-                  logfilenum:40
+                  logfilenum:40,
+                  mongroupmask:'all:detail'
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   logfilenum:40,
                   ftfusingtimeout:300,
-                  fap:fapValue
+                  fap:fapValue,
+                  mongroupmask:'all:detail'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
@@ -48,6 +50,6 @@ var dataConf  = { diaglevel:diagLevel,
                   ftfusingtimeout:300,
                   logfilenum:40,
                   indexpath: METADATA_DIR + '/[svcname]/',
-                  lobmetapath: METADATA_DIR + '/[svcname]/'
-
+                  lobmetapath: METADATA_DIR + '/[svcname]/',
+                  mongroupmask:'all:detail'
                 };
