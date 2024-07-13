@@ -35,14 +35,16 @@ var cataConf  = { diaglevel:diagLevel,
                   diagnum:60,
                   ftfusingtimeout:300,
                   logfilenum:40,
-                  netcompressor:'LZ4'
+                  netcompressor:'LZ4',
+                  mongroupmask:'all:detail'
                 };
 var coordConf = { diaglevel:diagLevel,
                   diagnum:60,
                   logfilenum:40,
                   ftfusingtimeout:300,
                   fap:fapValue,
-                  netcompressor:'LZ4'
+                  netcompressor:'LZ4',
+                  mongroupmask:'all:detail'
                 };
 var dataConf  = { diaglevel:diagLevel,
                   sharingbreak:30000,
@@ -51,5 +53,6 @@ var dataConf  = { diaglevel:diagLevel,
                   logfilenum:40,
                   indexpath: METADATA_DIR + '/[svcname]/',
                   lobmetapath: METADATA_DIR + '/[svcname]/',
-                  netcompressor:'LZ4'
+                  netcompressor:'LZ4',
+                  mongroupmask:'all:detail'
                 };
