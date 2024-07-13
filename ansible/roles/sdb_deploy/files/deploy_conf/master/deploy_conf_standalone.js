@@ -37,5 +37,6 @@ var nodeConf  = { diaglevel:diagLevel,
                   fap:fapValue,
                   indexpath: METADATA_DIR + '/[svcname]/',
                   lobmetapath:  METADATA_DIR + '/[svcname]/',
-                  netcompressor:'LZ4'
+                  netcompressor:'LZ4',
+                  mongroupmask:'all:detail'
                 };
