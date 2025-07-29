@@ -2,27 +2,27 @@
   "synced_branches": {
     "v6.0": "v6.0", 
     "v3.4": "v3.4", 
-    "v3.4_new": "v3.4_new", 
+    "tools": "tools", 
     "global": "global", 
     "v3.6_cgb": "v3.6_cgb", 
     "master_new": "master_new", 
     "master": "master", 
     "v5.0": "v5.0", 
     "new_v5.0": "tmp1_v5.0", 
-    "tools": "tools"
+    "v3.4_new": "v3.4_new"
   }, 
   "last_commits": {
     "v6.0": "2fa9aaaf0dbed033c284e0885763ce374b88a9b7", 
     "new_v5.0->tmp1_v5.0": "9b3c6e8b624a14062fbaf5edb328c449218d2c8f", 
     "v3.4": "9f1ffca5f60f8c708988d4504fb200bfd1dcf5bc", 
-    "v3.4_new": "39a53b0de14b87da169cbf22c8d9887623e59681", 
+    "tools": "bd07dbb3311a5ab00da5ac78b5316eb6d8e02e87", 
     "global": "e48e5e512e5ee8f6a58c28c07919c748529a1e46", 
     "v3.6_cgb": "2d85f7c539e646e541b588fa79b7b1847f9d5af0", 
     "master_new": "39bac04573f3ca03b36837ebcbd09a3f4b2824c9", 
     "master": "209937c454e5685300d9044523323d8a4ad33f94", 
     "v5.0": "3f4e55343434845896cfccee1022f4d42b02d9bb", 
     "new_v5.0": "9b3c6e8b624a14062fbaf5edb328c449218d2c8f", 
-    "tools": "bd07dbb3311a5ab00da5ac78b5316eb6d8e02e87"
+    "v3.4_new": "39a53b0de14b87da169cbf22c8d9887623e59681"
   }, 
-  "last_sync": "2025-07-29T18:44:22.822393"
+  "last_sync": "2025-07-29T22:09:26.680403"
 }
