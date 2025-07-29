@@ -1,7 +1,6 @@
 {
   "synced_branches": {
     "v6.0": "v6.0", 
-    "tmp_v5.0": "tmp_v5.0", 
     "v3.4": "v3.4", 
     "tools": "tools", 
     "global": "global", 
@@ -14,7 +13,6 @@
   }, 
   "last_commits": {
     "v6.0": "2fa9aaaf0dbed033c284e0885763ce374b88a9b7", 
-    "tmp_v5.0": "9b3c6e8b624a14062fbaf5edb328c449218d2c8f", 
     "v3.4": "9f1ffca5f60f8c708988d4504fb200bfd1dcf5bc", 
     "tools": "bd07dbb3311a5ab00da5ac78b5316eb6d8e02e87", 
     "global": "e48e5e512e5ee8f6a58c28c07919c748529a1e46", 
